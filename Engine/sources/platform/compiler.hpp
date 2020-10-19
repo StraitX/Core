@@ -38,10 +38,10 @@
 
 #ifdef NDEBUG
     #define SX_RELEASE
-    #define SX_BUILD_TYPE "Release"
+    #define SX_BUILD_TYPE_NAME "Release"
 #else
     #define SX_DEBUG
-    #define SX_BUILD_TYPE "Debug"
+    #define SX_BUILD_TYPE_NAME "Debug"
 #endif
 
 // sx_inline will force inline in release mode
