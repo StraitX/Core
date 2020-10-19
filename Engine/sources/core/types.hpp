@@ -2,7 +2,7 @@
 #define STRAITX_TYPES_HPP
 
 #include "platform/platform.hpp"
-
+#include "platform/compiler.hpp"
 #include <cstddef>
 
 // for now
@@ -16,7 +16,7 @@ typedef unsigned short u16;
 typedef signed   int i32;
 typedef unsigned int u32;
 
-#if defined(_MSC_VER)
+#if defined(SX_COMPILER_MSVC)
     typedef signed   __int64 i64;
     typedef unsigned __int64 u64;
 #else
