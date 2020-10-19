@@ -36,11 +36,25 @@
 
 
 
-#ifndef NDEBUG
+#ifdef NDEBUG
+    #define SX_RELEASE
+    #define SX_BUILD_TYPE "Release"
+#else
     #define SX_DEBUG
     #define SX_BUILD_TYPE "Debug"
+#endif
+
+// sx_inline will force inline in release mode
+#ifdef SX_RELEASE
+    #if defined(SX_COMPILER_GCC)
+        #define sx_inline __attribute__((always_inline)) inline
+    #elif defined(SX_COMPILER_MSVC)
+        #define sx_inline __forceinline
+    #else
+        #define sx_inline inline
+    #endif
 #else
-    #define SX_BUILD_TYPE "Release"
+   #define sx_inline inline 
 #endif
 
 #endif // STRAITX_COMPILER_HPP
