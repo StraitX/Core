@@ -35,4 +35,12 @@
 #endif
 
 
+
+#ifndef NDEBUG
+    #define SX_DEBUG
+    #define SX_BUILD_TYPE "Debug"
+#else
+    #define SX_BUILD_TYPE "Release"
+#endif
+
 #endif // STRAITX_COMPILER_HPP
