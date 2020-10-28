@@ -1,7 +1,7 @@
 #ifndef STRAITX_VECTOR2_HPP
 #define STRAITX_VECTOR2_HPP
 
-#include "core/types.hpp"
+#include "platform/types.hpp"
 #include "core/assert.hpp"
 #include "platform/compiler.hpp"
 

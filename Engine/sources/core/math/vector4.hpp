@@ -1,9 +1,8 @@
 #ifndef STRAITX_VECTOR4_HPP
 #define STRAITX_VECTOR4_HPP
 
-#include "core/types.hpp"
+#include "platform/types.hpp"
 #include "core/assert.hpp"
-#include "platform/compiler.hpp"
 
 namespace StraitX{
 

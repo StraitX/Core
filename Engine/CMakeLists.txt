@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 00)
-set(VERSION_PATCH 7)
+set(VERSION_PATCH 8)
 
 project(
     StraitXEngine 
@@ -16,6 +16,8 @@ set(SOURCES_DIR sources)
 
 set(SOURCES
     ${SOURCES_DIR}/core/assert.cpp
+    ${SOURCES_DIR}/main/engine.cpp
+    ${SOURCES_DIR}/main/main.cpp
 )
 
 set(INCLUDES
