@@ -46,9 +46,9 @@ Error Engine::Finalize(){
 }
 
 void Engine::MainLoop(){
-    for(;;){
+    //for(;;){
         mApplication->OnUpdate();
-    }
+    //}
 }
 
 }; // namespace StraitX::

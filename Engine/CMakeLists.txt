@@ -31,10 +31,11 @@ if(STRAITX_PLATFORM_LINUX)
 
     set(PLATFORM_SOURCES
         ${SOURCES_DIR}/platform/linux/platform.cpp
+        ${SOURCES_DIR}/platform/linux/display.cpp
     )
 
-    set(PLATFROM_LIBS
-    
+    set(PLATFORM_LIBS
+        X11
     )
 
 else()
