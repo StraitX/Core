@@ -15,12 +15,16 @@ Display::Display():
     mHandle(nullptr)
 {}
 
-int Display::Open(){
+Error Display::Open(){
     mHandle = XOpenDisplay(nullptr);
     return mHandle ? ErrorCode::Success : ErrorCode::Failure;
 }
-int Display::Close(){
+Error Display::Close(){
     return XCloseDisplay(mHandle);
+}
+
+bool Display::IsOpened(){
+    return mHandle;
 }
 
 ::Display *Display::Handle(){

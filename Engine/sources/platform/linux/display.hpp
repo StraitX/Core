@@ -12,8 +12,10 @@ private:
 public:
     Display();
 
-    int Open();
-    int Close();
+    Error Open();
+    Error Close();
+
+    bool IsOpened();
 
     ::_XDisplay *Handle();
 
