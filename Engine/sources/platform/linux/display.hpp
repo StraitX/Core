@@ -1,6 +1,8 @@
 #ifndef STRAITX_LINUX_DISPLAY_HPP
 #define STRATIX_LINUX_DISPLAY_HPP
 
+#include "platform/error.hpp"
+
 struct _XDisplay;
 
 namespace StraitX{
