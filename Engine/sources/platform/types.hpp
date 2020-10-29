@@ -1,7 +1,6 @@
 #ifndef STRAITX_TYPES_HPP
 #define STRAITX_TYPES_HPP
 
-#include "platform/platform.hpp"
 #include "platform/compiler.hpp"
 #include <cstddef>
 

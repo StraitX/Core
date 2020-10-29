@@ -15,6 +15,8 @@ public:
 
     virtual void OnFinalize(){};
 
+    virtual void OnUpdate(){};
+
 };
 
 }; // namespace StraitX::
