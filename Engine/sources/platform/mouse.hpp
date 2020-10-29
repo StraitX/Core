@@ -14,13 +14,13 @@ namespace Mouse{
         Middle,
         XButton1,   //The first extra mouse button
         XButton2,   //The second extra mouse button
-        
+
         ButtonCount
     };
 
     bool IsButtonPressed(Button button);
 
-    //Vector2i GlobalPosition();
+    Vector2i GlobalPosition();
     //static Vector2i RelativePosition(const Window &window);
 
 }; // namespace Mouse::
