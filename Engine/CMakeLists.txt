@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 00)
-set(VERSION_PATCH 8)
+set(VERSION_PATCH 9)
 
 project(
     StraitXEngine 
@@ -12,7 +12,10 @@ project(
     LANGUAGES CXX
 )
 
-set(SOURCES_DIR sources)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+set(SOURCES_DIR ${PROJECT_SOURCE_DIR}/sources)
+
+include(Config)
 
 set(SOURCES
     ${SOURCES_DIR}/core/assert.cpp
@@ -20,10 +23,26 @@ set(SOURCES
     ${SOURCES_DIR}/main/main.cpp
 )
 
-set(INCLUDES
-    sources/
+set(INCLUDES 
+    ${SOURCES_DIR}
 )
 
+if(STRAITX_PLATFORM_LINUX)
 
-add_library(StraitX STATIC ${SOURCES})
+    set(PLATFORM_SOURCES
+        ${SOURCES_DIR}/platform/linux/platform.cpp
+    )
+
+    set(PLATFROM_LIBS
+    
+    )
+
+else()
+    message(FATAL_ERROR "Your platform is not supported yet")
+endif()
+
+
+
+add_library(StraitX STATIC ${SOURCES} ${PLATFORM_SOURCES})
 target_include_directories(StraitX PUBLIC ${INCLUDES})
+target_link_libraries(StraitX PUBLIC ${PLATFORM_LIBS})
