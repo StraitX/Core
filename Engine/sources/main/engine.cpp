@@ -5,7 +5,7 @@
 
 // should be defined at client side
 extern StraitX::Application *StraitXMain();
-extern int StraitXExit(StraitX::Application *);
+extern StraitX::Error StraitXExit(StraitX::Application *);
 
 namespace StraitX{
 
@@ -19,7 +19,7 @@ Engine::~Engine(){
 }
 
 
-int Engine::Run(){
+Error Engine::Run(){
     Initialize();
     MainLoop();
     Finalize();
@@ -27,7 +27,7 @@ int Engine::Run(){
     return 0;
 }
 
-int Engine::Initialize(){
+Error Engine::Initialize(){
     Platform::Initialize();
 
     //Engine should be completely initialized at this moment
@@ -37,7 +37,7 @@ int Engine::Initialize(){
 
 }
 
-int Engine::Finalize(){
+Error Engine::Finalize(){
     mApplication->OnFinalize();
 
     StraitXExit(mApplication);

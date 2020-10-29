@@ -1,12 +1,14 @@
 #ifndef STRAITX_PLATFORM_HPP
 #define STRAITX_PLATFORM_HPP
 
+#include "platform/error.hpp"
+
 namespace StraitX{
 
 class Platform{
 public:
-    static int Initialize();
-    static int Finalize();
+    static Error Initialize();
+    static Error Finalize();
 };
 
 }; // namespace StraitX::

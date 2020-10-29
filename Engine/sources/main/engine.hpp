@@ -1,6 +1,7 @@
 #ifndef STRAITX_ENGINE_HPP
 #define STRAITX_ENGINE_HPP
 
+#include "platform/error.hpp"
 
 namespace StraitX{
 
@@ -13,10 +14,10 @@ public:
     Engine();
     ~Engine();
 
-    int Run();
+    Error Run();
 private:
-    int Initialize();
-    int Finalize();
+    Error Initialize();
+    Error Finalize();
     void MainLoop();
 };
 
