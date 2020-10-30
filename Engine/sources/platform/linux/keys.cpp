@@ -1,0 +1,131 @@
+#include "platform/linux/keys.hpp"
+#include <X11/keysym.h>
+namespace StraitX{
+namespace Linux{
+
+KeySym StraitXKeyToXKeySym(Keyboard::KeyCode code){
+    switch (code){
+        case Keyboard::Unknown: return 0;
+        case Keyboard::Space: return XK_space;
+        case Keyboard::Aphostrophe: return XK_apostrophe;
+        case Keyboard::Comma: return XK_comma;
+        case Keyboard::Minus: return XK_minus; 
+        case Keyboard::Period: return XK_period; 
+        case Keyboard::Slash: return XK_slash; 
+        case Keyboard::Key_0: return XK_0; 
+        case Keyboard::Key_1: return XK_1; 
+        case Keyboard::Key_2: return XK_2; 
+        case Keyboard::Key_3: return XK_3; 
+        case Keyboard::Key_4: return XK_4; 
+        case Keyboard::Key_5: return XK_5; 
+        case Keyboard::Key_6: return XK_6; 
+        case Keyboard::Key_7: return XK_7; 
+        case Keyboard::Key_8: return XK_8; 
+        case Keyboard::Key_9: return XK_9; 
+        case Keyboard::Semicolon: return XK_semicolon; 
+        case Keyboard::Equal: return XK_equal; 
+        case Keyboard::A: return XK_A; 
+        case Keyboard::B: return XK_B; 
+        case Keyboard::C: return XK_C; 
+        case Keyboard::D: return XK_D; 
+        case Keyboard::E: return XK_E; 
+        case Keyboard::F: return XK_F; 
+        case Keyboard::G: return XK_G; 
+        case Keyboard::H: return XK_H; 
+        case Keyboard::I: return XK_I; 
+        case Keyboard::J: return XK_J; 
+        case Keyboard::K: return XK_K; 
+        case Keyboard::L: return XK_L; 
+        case Keyboard::M: return XK_M; 
+        case Keyboard::N: return XK_N; 
+        case Keyboard::O: return XK_O; 
+        case Keyboard::P: return XK_P; 
+        case Keyboard::Q: return XK_Q; 
+        case Keyboard::R: return XK_R; 
+        case Keyboard::S: return XK_S; 
+        case Keyboard::T: return XK_T; 
+        case Keyboard::U: return XK_U; 
+        case Keyboard::V: return XK_V; 
+        case Keyboard::W: return XK_W; 
+        case Keyboard::X: return XK_X; 
+        case Keyboard::Y: return XK_Y; 
+        case Keyboard::Z: return XK_Z; 
+        case Keyboard::LeftBracket: return XK_bracketleft; 
+        case Keyboard::Backslash: return XK_backslash;
+        case Keyboard::RightBracket: return XK_bracketright;
+        case Keyboard::GraveAccent: return XK_grave;
+        case Keyboard::Escape: return XK_Escape; 
+        case Keyboard::Enter: return XK_Return; 
+        case Keyboard::Tab: return XK_Tab; 
+        case Keyboard::Backspace: return XK_BackSpace; 
+        case Keyboard::Insert: return XK_Insert; 
+        case Keyboard::Delete: return XK_Delete; 
+        case Keyboard::Right: return XK_Right; 
+        case Keyboard::Left: return XK_Left; 
+        case Keyboard::Down: return XK_Down; 
+        case Keyboard::Up: return XK_Up; 
+        case Keyboard::PageUp: return XK_Page_Up; 
+        case Keyboard::PageDown: return XK_Page_Down; 
+        case Keyboard::Home: return XK_Home; 
+        case Keyboard::End: return XK_End; 
+        case Keyboard::CapsLock: return XK_Caps_Lock; 
+        case Keyboard::ScrollLock: return XK_Scroll_Lock; 
+        case Keyboard::NumLock: return XK_Num_Lock; 
+        case Keyboard::PrintScreen: return XK_Print; 
+        case Keyboard::Pause: return XK_Pause; 
+        case Keyboard::F1: return XK_F1; 
+        case Keyboard::F2: return XK_F2;
+        case Keyboard::F3: return XK_F3;
+        case Keyboard::F4: return XK_F4;
+        case Keyboard::F5: return XK_F5;
+        case Keyboard::F6: return XK_F6;
+        case Keyboard::F7: return XK_F7;
+        case Keyboard::F8: return XK_F8;
+        case Keyboard::F9: return XK_F9;
+        case Keyboard::F10: return XK_F10;
+        case Keyboard::F11: return XK_F11;
+        case Keyboard::F12: return XK_F12;
+        case Keyboard::F13: return XK_F13;
+        case Keyboard::F14: return XK_F14;
+        case Keyboard::F15: return XK_F15;
+        case Keyboard::F16: return XK_F16;
+        case Keyboard::F17: return XK_F17;
+        case Keyboard::F18: return XK_F18;
+        case Keyboard::F19: return XK_F19;
+        case Keyboard::F20: return XK_F20;
+        case Keyboard::F21: return XK_F21;
+        case Keyboard::F22: return XK_F22;
+        case Keyboard::F23: return XK_F23;
+        case Keyboard::F24: return XK_F24;
+        case Keyboard::F25: return XK_F25;
+        case Keyboard::Keypad_0: return XK_KP_0; 
+        case Keyboard::Keypad_1: return XK_KP_1;
+        case Keyboard::Keypad_2: return XK_KP_2; 
+        case Keyboard::Keypad_3: return XK_KP_3; 
+        case Keyboard::Keypad_4: return XK_KP_4; 
+        case Keyboard::Keypad_5: return XK_KP_5; 
+        case Keyboard::Keypad_6: return XK_KP_6; 
+        case Keyboard::Keypad_7: return XK_KP_7; 
+        case Keyboard::Keypad_8: return XK_KP_8; 
+        case Keyboard::Keypad_9: return XK_KP_9; 
+        case Keyboard::KeypadDecimal: return XK_KP_Decimal; 
+        case Keyboard::KeypadDivide: return XK_KP_Divide; 
+        case Keyboard::KeypadMultiply: return XK_KP_Multiply; 
+        case Keyboard::KeypadSubstract: return XK_KP_Subtract; 
+        case Keyboard::KeypadAdd: return XK_KP_Add; 
+        case Keyboard::KeypadEnter: return XK_KP_Enter; 
+        case Keyboard::KeypadEqual: return XK_KP_Equal; 
+        case Keyboard::LeftShift: return XK_Shift_L; 
+        case Keyboard::LeftControl: return XK_Control_L; 
+        case Keyboard::LeftAlt: return XK_Alt_L; 
+        case Keyboard::LeftSuper: return XK_Super_L; 
+        case Keyboard::RightShift: return XK_Shift_R; 
+        case Keyboard::RightControl: return XK_Control_R; 
+        case Keyboard::RightAlt: return XK_Alt_R; 
+        case Keyboard::RightSuper: return XK_Super_R; 
+        default: return 0;
+    }
+}
+
+};// namespace Linux::
+};// namespace StraitX::

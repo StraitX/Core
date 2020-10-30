@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 00)
-set(VERSION_PATCH 12)
+set(VERSION_PATCH 13)
 
 project(
     StraitXEngine 
@@ -33,6 +33,8 @@ if(STRAITX_PLATFORM_LINUX)
         ${SOURCES_DIR}/platform/linux/platform.cpp
         ${SOURCES_DIR}/platform/linux/display.cpp
         ${SOURCES_DIR}/platform/linux/mouse.cpp
+        ${SOURCES_DIR}/platform/linux/keyboard.cpp
+        ${SOURCES_DIR}/platform/linux/keys.cpp
     )
 
     set(PLATFORM_LIBS
