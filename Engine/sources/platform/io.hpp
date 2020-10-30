@@ -8,17 +8,17 @@
 namespace StraitX{
 
 
-char *VPrintf(char *buffer, const char *string);
-char *VPrintf(char *buffer, const char &ch);
-char *VPrintf(char *buffer, const int &num);
-char *VPrintf(char *buffer, const long &num);
-char *VPrintf(char *buffer, const long long &num);
-char *VPrintf(char *buffer, const unsigned int &num);
-char *VPrintf(char *buffer, const unsigned long &num);
-char *VPrintf(char *buffer, const unsigned long long &num);
-char *VPrintf(char *buffer, const float &num);
-char *VPrintf(char *buffer, const double &num);
-char *VPrintf(char *buffer, const void *ptr);
+char *BufferPrint(char *buffer, const char *string);
+char *BufferPrint(char *buffer, const char &ch);
+char *BufferPrint(char *buffer, const int &num);
+char *BufferPrint(char *buffer, const long &num);
+char *BufferPrint(char *buffer, const long long &num);
+char *BufferPrint(char *buffer, const unsigned int &num);
+char *BufferPrint(char *buffer, const unsigned long &num);
+char *BufferPrint(char *buffer, const unsigned long long &num);
+char *BufferPrint(char *buffer, const float &num);
+char *BufferPrint(char *buffer, const double &num);
+char *BufferPrint(char *buffer, const void *ptr);
 
 class Output{
 public:
@@ -32,22 +32,22 @@ public:
         char buffer[256];
         // just for now
         memset(buffer,0,256);
-        SVPrintf(buffer,fmt,arg,args...);
+        SBufferPrint(buffer,fmt,arg,args...);
         Printf(buffer);
     }
 
     template <typename T, typename...Args>
-    static void SVPrintf(char *buffer, const char *fmt, T arg, Args...args){
+    static void SBufferPrint(char *buffer, const char *fmt, T arg, Args...args){
         while(*fmt!=0){
             if(*fmt=='%'){
-                return SVPrintf(VPrintf(buffer,arg),fmt+1,args...);
+                return SBufferPrint(BufferPrint(buffer,arg),fmt+1,args...);
             }
             *buffer = *fmt;
             ++fmt;
             ++buffer;
         }
     }
-    static void SVPrintf(char *buffer, const char *fmt);
+    static void SBufferPrint(char *buffer, const char *fmt);
     
 };
 
