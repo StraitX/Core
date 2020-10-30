@@ -1,5 +1,6 @@
 #include "platform/memory.hpp"
 #include <cstdlib>
+#include <cstring>
 namespace StraitX{
 
 
@@ -13,5 +14,8 @@ void *Memory::Realloc(void *pointer, size_t size){
     return std::realloc(pointer,size);
 }
 
+void Memory::Set(void *memory, char byte, size_t size){
+    memset(memory,byte,size);
+}
 
 }; // namespace StraitX::

@@ -3,7 +3,7 @@
 
 #include "platform/error.hpp"
 #include "platform/compiler.hpp"
-#include "string.h"
+#include "platform/memory.hpp"
 
 namespace StraitX{
 
@@ -30,8 +30,7 @@ public:
     static void Printf(const char *fmt, T arg, Args...args){
         // i do not belive in buffer overflow
         char buffer[256];
-        // just for now
-        memset(buffer,0,256);
+        Memory::Set(buffer,0,256);
         SBufferPrint(buffer,fmt,arg,args...);
         Printf(buffer);
     }

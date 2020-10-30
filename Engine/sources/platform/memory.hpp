@@ -13,6 +13,8 @@ public:
 
     static void *Realloc(void *pointer, size_t size);
 
+    static void Set(void *memory, char byte, size_t size);
+
 };
 
 }; // namespace StraitX::
