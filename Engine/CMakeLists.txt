@@ -22,6 +22,7 @@ set(SOURCES
     ${SOURCES_DIR}/main/engine.cpp
     ${SOURCES_DIR}/main/main.cpp
     ${SOURCES_DIR}/platform/io.cpp
+    ${SOURCES_DIR}/platform/memory.cpp
 )
 
 set(INCLUDES 
