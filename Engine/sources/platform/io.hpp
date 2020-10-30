@@ -1,8 +1,6 @@
 #ifndef STRAITX_IO_HPP
 #define STRAITX_IO_HPP
 
-#include "platform/error.hpp"
-#include "platform/compiler.hpp"
 #include "platform/memory.hpp"
 
 namespace StraitX{
@@ -31,7 +29,7 @@ public:
         // i do not belive in buffer overflow
         char buffer[256];
         Memory::Set(buffer,0,256);
-        SBufferPrint(buffer,fmt,arg,args...);
+        BufferPrintf(buffer,fmt,arg,args...);
         Printf(buffer);
     }
 
@@ -39,7 +37,7 @@ public:
     static void BufferPrintf(char *buffer, const char *fmt, T arg, Args...args){
         while(*fmt!=0){
             if(*fmt=='%'){
-                return SBufferPrint(BufferPrint(buffer,arg),fmt+1,args...);
+                return BufferPrintf(BufferPrint(buffer,arg),fmt+1,args...);
             }
             *buffer = *fmt;
             ++fmt;

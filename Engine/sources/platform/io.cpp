@@ -1,5 +1,5 @@
 #include "platform/io.hpp"
-#include <iostream>
+#include <cstdio>
 
 namespace StraitX{
 
@@ -55,12 +55,11 @@ char *BufferPrint(char *buffer, const void *ptr){
 
 
 void Output::Print(const char *string){
-    std::cout << string << "\n";
+    puts(string);
 }
 
 void Output::Printf(const char *fmt){
-    std::cout << fmt;
-    std::cout.flush();
+    printf("%s",fmt);
 }
 
 
