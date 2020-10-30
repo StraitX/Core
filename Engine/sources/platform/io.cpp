@@ -30,6 +30,18 @@ char *VPrintf(char *buffer, const long long &num){
     return buffer + sprintf(buffer,"%lli",num);
 }
 
+char *VPrintf(char *buffer, const unsigned int &num){
+    return buffer + sprintf(buffer,"%u",num);
+}
+
+char *VPrintf(char *buffer, const unsigned long &num){
+    return buffer + sprintf(buffer,"%lu",num);
+}
+
+char *VPrintf(char *buffer, const unsigned long long &num){
+    return buffer + sprintf(buffer,"%llu",num);
+}
+
 char *VPrintf(char *buffer, const float &num){
     return buffer + sprintf(buffer,"%f",num);
 }

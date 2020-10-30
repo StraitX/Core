@@ -208,4 +208,19 @@ typedef Vector2<double> Vector2d;
 
 }; // namespace StraitX::
 
+namespace StraitX{
+
+    char *VPrintf(char *buffer, const char &arg);
+    char *VPrintf(char *buffer, const int &arg);
+    char *VPrintf(char *buffer, const unsigned int &arg);
+    char *VPrintf(char *buffer, const float &arg);
+    char *VPrintf(char *buffer, const double &arg);
+
+    template<typename T>
+    sx_inline char *VPrintf(char *buffer, const Vector2<T> &vector){
+        return VPrintf(VPrintf(VPrintf(VPrintf(VPrintf(buffer,'('),vector.x),','),vector.y),')');
+    }
+}; // namespace StraitX::
+
+
 #endif // STRAITX_VECTOR2_HPP
