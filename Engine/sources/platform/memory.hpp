@@ -15,6 +15,8 @@ public:
 
     static void Set(void *memory, char byte, size_t size);
 
+    static void Copy(void *source, void *destination, size_t size);
+
 };
 
 }; // namespace StraitX::
