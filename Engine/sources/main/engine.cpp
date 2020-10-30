@@ -34,7 +34,7 @@ Error Engine::Initialize(){
     mApplication = StraitXMain();
 
     mApplication->OnInitialize();
-
+    return ErrorCode::Success;
 }
 
 Error Engine::Finalize(){
@@ -43,6 +43,7 @@ Error Engine::Finalize(){
     StraitXExit(mApplication);
 
     Platform::Finalize();
+    return ErrorCode::Success;
 }
 
 void Engine::MainLoop(){
