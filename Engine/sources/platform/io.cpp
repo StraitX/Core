@@ -65,7 +65,7 @@ void Output::Printf(const char *fmt){
 
 
 
-void Output::SBufferPrint(char *buffer, const char *string){
+void Output::BufferPrintf(char *buffer, const char *string){
     while(*string!=0){
         *buffer=*string;
         ++buffer;

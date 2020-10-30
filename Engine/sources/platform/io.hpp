@@ -36,7 +36,7 @@ public:
     }
 
     template <typename T, typename...Args>
-    static void SBufferPrint(char *buffer, const char *fmt, T arg, Args...args){
+    static void BufferPrintf(char *buffer, const char *fmt, T arg, Args...args){
         while(*fmt!=0){
             if(*fmt=='%'){
                 return SBufferPrint(BufferPrint(buffer,arg),fmt+1,args...);
@@ -46,7 +46,7 @@ public:
             ++buffer;
         }
     }
-    static void SBufferPrint(char *buffer, const char *fmt);
+    static void BufferPrintf(char *buffer, const char *fmt);
     
 };
 
