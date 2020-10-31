@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 00)
-set(VERSION_PATCH 15)
+set(VERSION_PATCH 16)
 
 project(
     StraitXEngine 
@@ -47,6 +47,7 @@ elseif(STRAITX_PLATFORM_WINDOWS)
        ${SOURCES_DIR}/platform/windows/platform.cpp
 	   ${SOURCES_DIR}/platform/windows/hinstance.cpp
        ${SOURCES_DIR}/platform/windows/mouse.cpp
+       ${SOURCES_DIR}/platform/windows/keyboard.cpp
        ${SOURCES_DIR}/platform/windows/virtual_keys.cpp
     )
 

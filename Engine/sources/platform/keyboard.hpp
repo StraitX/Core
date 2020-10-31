@@ -9,7 +9,7 @@ namespace Keyboard{
         Unknown = 0,
         /* Printable keys */
         Space = 32,
-        Aphostrophe=39,  /* ' */
+        Quote=39,  /* ' */
         Comma = 44,  /* , */
         Minus = 45,  /* - */
         Period = 46,  /* . */
@@ -101,7 +101,6 @@ namespace Keyboard{
         F22 = 311,
         F23 = 312,
         F24 = 313,
-        F25 = 314,
         Keypad_0 = 320,
         Keypad_1 = 321,
         Keypad_2 = 322,

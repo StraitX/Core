@@ -7,7 +7,7 @@ KeySym StraitXKeyToXKeySym(Keyboard::KeyCode code){
     switch (code){
         case Keyboard::Unknown: return 0;
         case Keyboard::Space: return XK_space;
-        case Keyboard::Aphostrophe: return XK_apostrophe;
+        case Keyboard::Quote: return XK_apostrophe;
         case Keyboard::Comma: return XK_comma;
         case Keyboard::Minus: return XK_minus; 
         case Keyboard::Period: return XK_period; 
@@ -97,7 +97,6 @@ KeySym StraitXKeyToXKeySym(Keyboard::KeyCode code){
         case Keyboard::F22: return XK_F22;
         case Keyboard::F23: return XK_F23;
         case Keyboard::F24: return XK_F24;
-        case Keyboard::F25: return XK_F25;
         case Keyboard::Keypad_0: return XK_KP_0; 
         case Keyboard::Keypad_1: return XK_KP_1;
         case Keyboard::Keypad_2: return XK_KP_2; 
