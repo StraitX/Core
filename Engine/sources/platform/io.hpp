@@ -25,7 +25,7 @@ public:
     static void Printf(const char *fmt);
 
     template<typename T, typename...Args>
-    static void Printf(const char *fmt, T arg, Args...args){
+    static void Printf(const char *fmt, T arg,const Args&...args){
         // i do not belive in buffer overflow
         char buffer[256];
         Memory::Set(buffer,0,256);
@@ -34,7 +34,7 @@ public:
     }
 
     template <typename T, typename...Args>
-    static void BufferPrintf(char *buffer, const char *fmt, T arg, Args...args){
+    static void BufferPrintf(char *buffer, const char *fmt, T arg,const Args&...args){
         while(*fmt!=0){
             if(*fmt=='%'){
                 return BufferPrintf(BufferPrint(buffer,arg),fmt+1,args...);
