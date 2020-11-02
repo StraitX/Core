@@ -8,7 +8,8 @@ namespace StraitX{
 namespace Mouse{
 
     enum Button{
-        Left = 0,
+        Unknown = 0,
+        Left,
         Right,
         Middle,
         XButton1,   //The first extra mouse button

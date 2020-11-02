@@ -7,6 +7,7 @@ namespace Windows {
 short MouseButtonToVirtualKey(Mouse::Button button) {
 	switch (button)
 	{
+    case StraitX::Mouse::Unknown:   return 0;
     case StraitX::Mouse::Left:      return VK_LBUTTON;
     case StraitX::Mouse::Right:     return VK_RBUTTON;
     case StraitX::Mouse::Middle:    return VK_MBUTTON;
