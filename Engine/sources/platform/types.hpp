@@ -26,4 +26,9 @@ typedef unsigned int u32;
 typedef std::size_t size_t;
 
 
+struct Point{
+    i32 x;
+    i32 y;
+};
+
 #endif // STRAITX_TYPES_HPP

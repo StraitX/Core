@@ -1,8 +1,7 @@
 #ifndef STRAITX_MOUSE_HPP
 #define STRAITX_MOUSE_HPP
 
-#include "core/math/vector2.hpp"
-
+#include "platform/types.hpp"
 
 
 namespace StraitX{
@@ -20,7 +19,7 @@ namespace Mouse{
 
     bool IsButtonPressed(Button button);
 
-    Vector2i GlobalPosition();
+    Point GlobalPosition();
     //static Vector2i RelativePosition(const Window &window);
 
 }; // namespace Mouse::

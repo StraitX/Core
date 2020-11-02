@@ -24,11 +24,11 @@ bool Mouse::IsButtonPressed(Mouse::Button button){
     }
 }
 
-Vector2i Mouse::GlobalPosition(){
+Point Mouse::GlobalPosition(){
     Display *display = Linux::Display::Instance().Handle();
 
     Window root,child;
-    Vector2i choosen,global;
+    Point choosen,global;
     unsigned int mask;
     
     XQueryPointer(display,RootWindow(display,DefaultScreen(display)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);

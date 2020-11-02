@@ -8,10 +8,10 @@ bool Mouse::IsButtonPressed(Mouse::Button button) {
     return (GetAsyncKeyState(Windows::MouseButtonToVirtualKey(button)) & 0x8000) != 0;
 }
 
-Vector2i Mouse::GlobalPosition() {
+Point Mouse::GlobalPosition() {
     POINT position = { 0 };
     GetCursorPos(&position);
-    return Vector2i(position.x,position.y);
+    return (Point){position.x,position.y};
 }
 
 }; // namespace StraitX::
