@@ -4,14 +4,12 @@
 namespace StraitX{
 
 Error Platform::Initialize(){
-    Linux::Display::Instance().Open();
-
+    return Linux::Display::Instance().Open();
 }
 
 
 Error Platform::Finalize(){
-
-    Linux::Display::Instance().Close();
+    return Linux::Display::Instance().Close();
 }
 
 }; // namespace StratiX::

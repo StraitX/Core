@@ -14,7 +14,7 @@ private:
 public:
     HInstance();
 
-    void Initialize();
+    ErrorCode Initialize();
 
     HINSTANCE &Handle();
 

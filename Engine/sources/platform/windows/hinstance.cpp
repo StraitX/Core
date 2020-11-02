@@ -9,8 +9,10 @@ HInstance::HInstance():
 	mInstanceHandle(0)
 {}
 
-void HInstance::Initialize() {
+ErrorCode HInstance::Initialize() {
 	mInstanceHandle = (HINSTANCE)GetModuleHandle(nullptr);
+	// for now;
+	return ErrorCode::Success;
 }
 
 

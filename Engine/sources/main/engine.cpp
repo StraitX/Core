@@ -1,7 +1,7 @@
 #include "main/engine.hpp"
 #include "main/application.hpp"
 #include "platform/platform.hpp"
-
+#include "platform/io.hpp"
 
 // should be defined at client side
 extern StraitX::Application *StraitXMain();
@@ -20,21 +20,35 @@ Engine::~Engine(){
 
 
 Error Engine::Run(){
-    Initialize();
+    Output::Print("Engine: Initialize: Started");
+    if(Initialize()==ErrorCode::Success)
+        Output::Print("Engine::Initialize: Success");
+    else{
+        Output::Print("Engine::Initialize: Failed");
+        return ErrorCode::Failure;
+    }
+    Output::Print("Engine: Starting main loop");
     MainLoop();
-    Finalize();
-    // for now
-    return 0;
+    Output::Print("Engine: Finalize: Started");
+    if(Finalize()==ErrorCode::Success){
+        Output::Print("Engine::Finalize: Success");
+        return ErrorCode::Success;
+    }else{
+        Output::Print("Engine::Finalize: Failed");
+        return ErrorCode::Failure;
+    }
 }
 
 Error Engine::Initialize(){
-    Platform::Initialize();
+    Error initCode = Platform::Initialize();
 
     //Engine should be completely initialized at this moment
     mApplication = StraitXMain();
+    if(mApplication == nullptr)
+        return ErrorCode::Failure;
 
     mApplication->OnInitialize();
-    return ErrorCode::Success;
+    return initCode;
 }
 
 Error Engine::Finalize(){
@@ -42,8 +56,7 @@ Error Engine::Finalize(){
 
     StraitXExit(mApplication);
 
-    Platform::Finalize();
-    return ErrorCode::Success;
+    return Platform::Finalize();
 }
 
 void Engine::MainLoop(){

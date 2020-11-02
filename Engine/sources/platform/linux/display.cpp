@@ -20,7 +20,7 @@ Error Display::Open(){
     return mHandle ? ErrorCode::Success : ErrorCode::Failure;
 }
 Error Display::Close(){
-    return XCloseDisplay(mHandle);
+    return XCloseDisplay(mHandle)==0 ? ErrorCode::Success : ErrorCode::Failure;
 }
 
 bool Display::IsOpened(){
