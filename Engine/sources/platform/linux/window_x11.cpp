@@ -26,8 +26,6 @@ WindowX11::~WindowX11(){
     ::Display *display = Linux::Display::Instance().Handle();
 
     XDestroyWindow(display,mHandle);
-    XEvent e;
-    XNextEvent(display,&e);
 }
 
 void WindowX11::SetTitle(const char *title){
