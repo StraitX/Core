@@ -41,6 +41,12 @@ void WindowX11::SetTitle(const char *title){
     XSetTextProperty(display,mHandle,&titleText,atom);
 }
 
+void WindowX11::SetSize(int width, int height){
+    ::Display *display = Linux::Display::Instance().Handle();
+
+    XResizeWindow(display,mHandle,width,height);
+}
+
 bool WindowX11::PollEvent(Event &event){
     ::Display *display = Linux::Display::Instance().Handle();
     XEvent x11event;

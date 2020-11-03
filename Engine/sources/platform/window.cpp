@@ -17,6 +17,9 @@ void Window::SetTitle(const char *title){
     mImpl.SetTitle(title);
 }
 
+void Window::SetSize(int width, int height){
+    mImpl.SetSize(width,height);
+}
 
 bool Window::PollEvent(Event &event){
     return mImpl.PollEvent(event);

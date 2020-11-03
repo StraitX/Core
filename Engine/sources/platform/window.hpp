@@ -22,6 +22,8 @@ public:
 
     void SetTitle(const char *title);
 
+    void SetSize(int width, int height);
+
     bool PollEvent(Event &event);
 };
 
