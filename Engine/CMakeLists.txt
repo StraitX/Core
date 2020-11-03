@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 00)
-set(VERSION_PATCH 19)
+set(VERSION_PATCH 20)
 
 project(
     StraitXEngine 
@@ -19,6 +19,7 @@ include(Config)
 
 set(SOURCES
     ${SOURCES_DIR}/core/assert.cpp
+    ${SOURCES_DIR}/core/time_quant.cpp
     ${SOURCES_DIR}/main/engine.cpp
     ${SOURCES_DIR}/main/main.cpp
     ${SOURCES_DIR}/platform/io.cpp

@@ -28,4 +28,4 @@ namespace Mouse{
 
 }; // namespace StraitX::
 
-#endif // STRAITX_KEYBOARD_HPP
+#endif // STRAITX_MOUSE_HPP
