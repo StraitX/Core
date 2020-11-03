@@ -1,0 +1,27 @@
+#ifndef STRAITX_WINDOW_HPP
+#define STRAITX_WINDOW_HPP
+
+#include "platform/platform_detection.hpp"
+
+#ifdef SX_PLATFORM_LINUX
+    #include "platform/linux/window_x11.hpp"
+    typedef StraitX::Linux::WindowX11 WindowImpl;
+#else
+    #error "Your platform does not support window creation"
+#endif
+
+namespace StraitX{
+
+class Window{
+private:
+    WindowImpl mImpl;
+public:
+    Window(int width, int height, const char *title);
+    ~Window();
+
+    void SetTitle(const char *title);
+};
+
+}; // namespace StraitX::
+
+#endif // STRAITX_WINDOW_HPP
