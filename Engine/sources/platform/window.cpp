@@ -17,4 +17,9 @@ void Window::SetTitle(const char *title){
     mImpl.SetTitle(title);
 }
 
+
+bool Window::PollEvent(Event &event){
+    return mImpl.PollEvent(event);
+}
+
 };//namespace StraitX::

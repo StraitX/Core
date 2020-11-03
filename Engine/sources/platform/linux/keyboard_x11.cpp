@@ -1,7 +1,7 @@
 
 #include "platform/keyboard.hpp"
 #include "platform/linux/display.hpp"
-#include "platform/linux/keys.hpp"
+#include "platform/linux/keys_x11.hpp"
 #include <X11/Xlib.h>
 #include "unistd.h"
 namespace StraitX{

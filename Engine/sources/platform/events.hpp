@@ -1,5 +1,5 @@
 #ifndef STRAITX_EVENTS_HPP
-#define STRATIX_EVENTS_HPP
+#define STRAITX_EVENTS_HPP
 
 #include "platform/compiler.hpp"
 #include "platform/keyboard.hpp"
@@ -8,16 +8,22 @@ namespace StraitX{
 
 enum EventType{
     Unknown = 0,
+    WindowOpen,
     WindowClose,
     WindowResize,
-    MouseButtonPressed,
-    KeyPressed
+    WindowDraw,
+    MouseButtonPress,
+    MouseButtonRelease,
+    KeyPress,
+    KeyRelease
 };
 
 struct BaseEvent{
     EventType Type;
 };
 
+struct WindowOpenEvent: BaseEvent{
+};
 struct WindowCloseEvent: BaseEvent{
 };
 
@@ -26,13 +32,16 @@ struct WindowResizeEvent: BaseEvent{
     u32 y;
 };
 
-struct MouseButtonPressedEvent: BaseEvent{
+struct WindowDrawEvent: BaseEvent{
+};
+
+struct MouseButtonEvent: BaseEvent{
     Mouse::Button Button;
     u32 x;
     u32 y;
 };
 
-struct KeyPressedEvent: BaseEvent{
+struct KeyEvent: BaseEvent{
     Keyboard::KeyCode KeyCode;
 };
 
@@ -40,9 +49,13 @@ struct KeyPressedEvent: BaseEvent{
 union Event{
     EventType Type;
     WindowCloseEvent WindowClose;
+    WindowOpenEvent WindowOpen;
     WindowResizeEvent WindowResize;
-    MouseButtonPressedEvent MouseButtonPressed;
-    KeyPressedEvent KeyPressed;
+    WindowDrawEvent WindowDraw;
+    MouseButtonEvent MouseButtonPress;
+    MouseButtonEvent MouseButtonRelease;
+    KeyEvent KeyPress;
+    KeyEvent KeyRelease;
 };
 
 }; // namespace StraitX::

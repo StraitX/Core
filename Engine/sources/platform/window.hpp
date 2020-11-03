@@ -2,6 +2,7 @@
 #define STRAITX_WINDOW_HPP
 
 #include "platform/platform_detection.hpp"
+#include "platform/events.hpp"
 
 #ifdef SX_PLATFORM_LINUX
     #include "platform/linux/window_x11.hpp"
@@ -20,6 +21,8 @@ public:
     ~Window();
 
     void SetTitle(const char *title);
+
+    bool PollEvent(Event &event);
 };
 
 }; // namespace StraitX::

@@ -1,6 +1,7 @@
 #ifndef STRAITX_WINDOW_X11_HPP
-#define STRATIX_WINDOW_X11_HPP
+#define STRAITX_WINDOW_X11_HPP
 
+#include "platform/events.hpp"
 
 namespace StraitX{
 namespace Linux{
@@ -14,6 +15,8 @@ public:
     ~WindowX11();
 
     void SetTitle(const char *title);
+
+    bool PollEvent(Event &event);
 };
 
 }; //namespace Linux::
