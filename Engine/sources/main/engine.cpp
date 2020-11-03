@@ -21,22 +21,35 @@ Engine::~Engine(){
 
 Error Engine::Run(){
     Output::Print("Engine: Initialize: Started");
-    if(Initialize()==ErrorCode::Success)
+
+    Error initCode = Initialize();
+
+    if(initCode==ErrorCode::Success)
         Output::Print("Engine::Initialize: Success");
     else{
         Output::Print("Engine::Initialize: Failed");
         return ErrorCode::Failure;
     }
-    Output::Print("Engine: Starting main loop");
+
+    Output::Print("Engine: Enter main loop");
+
     MainLoop();
+
     Output::Print("Engine: Finalize: Started");
-    if(Finalize()==ErrorCode::Success){
+
+    Error finalizeCode = Finalize();
+
+    if(finalizeCode==ErrorCode::Success){
         Output::Print("Engine::Finalize: Success");
         return ErrorCode::Success;
     }else{
         Output::Print("Engine::Finalize: Failed");
         return ErrorCode::Failure;
     }
+}
+
+void Engine::Stop(){
+    mRunning = false;
 }
 
 Error Engine::Initialize(){
@@ -46,6 +59,8 @@ Error Engine::Initialize(){
     mApplication = StraitXMain();
     if(mApplication == nullptr)
         return ErrorCode::Failure;
+    
+    mApplication->SetEngine(this);
 
     mApplication->OnInitialize();
     return initCode;
@@ -60,7 +75,7 @@ Error Engine::Finalize(){
 }
 
 void Engine::MainLoop(){
-    for(;;){
+    while(mRunning){
         mApplication->OnUpdate();
     }
 }

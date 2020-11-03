@@ -21,6 +21,7 @@ set(SOURCES
     ${SOURCES_DIR}/core/assert.cpp
     ${SOURCES_DIR}/core/time_quant.cpp
     ${SOURCES_DIR}/main/engine.cpp
+    ${SOURCES_DIR}/main/application.cpp
     ${SOURCES_DIR}/main/main.cpp
     ${SOURCES_DIR}/platform/io.cpp
     ${SOURCES_DIR}/platform/memory.cpp

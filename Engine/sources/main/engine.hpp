@@ -10,11 +10,15 @@ class Application;
 class Engine{
 private:
     Application *mApplication;
+    bool mRunning;
 public:
     Engine();
     ~Engine();
 
     Error Run();
+
+    void Stop();
+    
 private:
     Error Initialize();
     Error Finalize();
