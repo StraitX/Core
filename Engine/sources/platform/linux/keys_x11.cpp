@@ -3,7 +3,7 @@
 namespace StraitX{
 namespace Linux{
 
-KeySym StraitXKeyToXKeySym(Keyboard::KeyCode code){
+KeySym KeyCodeToXKeySym(Keyboard::KeyCode code){
     switch (code){
         case Keyboard::Unknown: return 0;
         case Keyboard::Space: return XK_space;
@@ -126,7 +126,7 @@ KeySym StraitXKeyToXKeySym(Keyboard::KeyCode code){
     }
 }
 
-Keyboard::KeyCode XKeyCodeToStraitX(unsigned int keyCode){
+Keyboard::KeyCode XKeyCodeToKeyCode(unsigned int keyCode){
     switch (keyCode){
         case XK_space: return Keyboard::Space;
         case XK_apostrophe: return Keyboard::Quote;
@@ -249,7 +249,7 @@ Keyboard::KeyCode XKeyCodeToStraitX(unsigned int keyCode){
 }
 
 
-Mouse::Button XButtonToStraitX(unsigned int button){
+Mouse::Button XButtonToMouseButton(unsigned int button){
     switch(button)
     {
         case Button1: return Mouse::Left;

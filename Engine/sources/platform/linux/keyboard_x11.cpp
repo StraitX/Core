@@ -10,7 +10,7 @@ namespace Keyboard{
 bool IsKeyPressed(KeyCode code){
     ::Display *display = Linux::Display::Instance().Handle();
 
-    KeySym sym = Linux::StraitXKeyToXKeySym(code);
+    KeySym sym = Linux::KeyCodeToXKeySym(code);
     ::KeyCode keyCode = XKeysymToKeycode(display,sym);  
 
     if(keyCode != 0){

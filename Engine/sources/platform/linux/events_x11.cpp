@@ -36,7 +36,7 @@ Event ToStraitXEvent(const XEvent &event){
         sxEvent.Type = EventType::KeyPress;
         sxEvent.KeyPress.KeyCode = Keyboard::Unknown;
         for(int i = 0; i<4; i++){
-            sxEvent.KeyPress.KeyCode = XKeyCodeToStraitX(XLookupKeysym((XKeyEvent*)&event.xkey,i));
+            sxEvent.KeyPress.KeyCode = XKeyCodeToKeyCode(XLookupKeysym((XKeyEvent*)&event.xkey,i));
             if(sxEvent.KeyPress.KeyCode != Keyboard::Unknown)
                 break;
         }
@@ -47,7 +47,7 @@ Event ToStraitXEvent(const XEvent &event){
         sxEvent.Type = EventType::KeyRelease;
         sxEvent.KeyRelease.KeyCode = Keyboard::Unknown;
         for(int i = 0; i<4; i++){
-            sxEvent.KeyRelease.KeyCode = XKeyCodeToStraitX(XLookupKeysym((XKeyEvent*)&event.xkey,i));
+            sxEvent.KeyRelease.KeyCode = XKeyCodeToKeyCode(XLookupKeysym((XKeyEvent*)&event.xkey,i));
             if(sxEvent.KeyRelease.KeyCode != Keyboard::Unknown)
                 break;
         }
@@ -55,14 +55,14 @@ Event ToStraitXEvent(const XEvent &event){
 
     case ButtonPress:
         sxEvent.Type = EventType::MouseButtonPress;
-        sxEvent.MouseButtonPress.Button = XButtonToStraitX(event.xbutton.button);
+        sxEvent.MouseButtonPress.Button = XButtonToMouseButton(event.xbutton.button);
         sxEvent.MouseButtonPress.x = event.xbutton.x;
         sxEvent.MouseButtonPress.y = event.xbutton.y;
         return sxEvent;
 
     case ButtonRelease:
         sxEvent.Type = EventType::MouseButtonRelease;
-        sxEvent.MouseButtonRelease.Button = XButtonToStraitX(event.xbutton.button);
+        sxEvent.MouseButtonRelease.Button = XButtonToMouseButton(event.xbutton.button);
         sxEvent.MouseButtonRelease.x = event.xbutton.x;
         sxEvent.MouseButtonRelease.y = event.xbutton.y;
         return sxEvent;

@@ -9,11 +9,11 @@
 namespace StraitX{
 namespace Linux{
 
-KeySym StraitXKeyToXKeySym(Keyboard::KeyCode code);
+KeySym KeyCodeToXKeySym(Keyboard::KeyCode code);
 
-Keyboard::KeyCode XKeyCodeToStraitX(unsigned int key);
+Keyboard::KeyCode XKeyCodeToKeyCode(unsigned int key);
 
-Mouse::Button XButtonToStraitX(unsigned int button);
+Mouse::Button XButtonToMouseButton(unsigned int button);
 
 };// namespace Linux::
 };// namespace StraitX::
