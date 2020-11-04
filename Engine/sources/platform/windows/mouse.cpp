@@ -11,7 +11,7 @@ bool Mouse::IsButtonPressed(Mouse::Button button) {
 Point Mouse::GlobalPosition() {
     POINT position = { 0 };
     GetCursorPos(&position);
-    return (Point){position.x,position.y};
+    return {position.x,position.y};
 }
 
 }; // namespace StraitX::
