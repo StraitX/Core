@@ -114,7 +114,7 @@ short KeyCodeToVirtualKey(Keyboard::KeyCode code) {
     case StraitX::Keyboard::LeftSuper: return VK_LWIN;
     case StraitX::Keyboard::RightShift: return VK_RSHIFT;
     case StraitX::Keyboard::RightControl: return VK_RCONTROL;
-    case StraitX::Keyboard::RightAlt: return VK_LMENU;
+    case StraitX::Keyboard::RightAlt: return VK_RMENU;
     case StraitX::Keyboard::RightSuper: return VK_RWIN;
     case StraitX::Keyboard::Menu: return VK_APPS;
     default: return 0;
@@ -203,7 +203,7 @@ Keyboard::KeyCode VirtualKeyToKeyCode(short code) {
     case VK_LWIN: return StraitX::Keyboard::LeftSuper;
     case VK_RSHIFT: return StraitX::Keyboard::RightShift;
     case VK_RCONTROL: return StraitX::Keyboard::RightControl;
-    case VK_LMENU: return StraitX::Keyboard::RightAlt;
+    case VK_RMENU: return StraitX::Keyboard::RightAlt;
     case VK_RWIN: return StraitX::Keyboard::RightSuper;
     case VK_APPS: return StraitX::Keyboard::Menu;
     default: return StraitX::Keyboard::Unknown;
