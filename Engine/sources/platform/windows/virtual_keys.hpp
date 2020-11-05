@@ -10,6 +10,9 @@ namespace Windows {
 short MouseButtonToVirtualKey(Mouse::Button button);
 short KeyCodeToVirtualKey(Keyboard::KeyCode code);
 
+short MouseButtonToVirtualKey(Mouse::Button button);
+Keyboard::KeyCode VirtualKeyToKeyCode(short code);
+
 }; // namespace Windows::
 }; // namespace StraitX::
 
