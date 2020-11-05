@@ -13,18 +13,15 @@ Event ToStraitXEvent(const XEvent &event){
     Event sxEvent;
     switch (event.type)
     {
-    case CreateNotify:
-        sxEvent.Type = EventType::WindowOpen;
-        return sxEvent;
-
+    // Event recieved on window Close button 
     case DestroyNotify:
         sxEvent.Type = EventType::WindowClose;
         return sxEvent;
 
     case ResizeRequest:
-        sxEvent.Type = EventType::WindowResize;
-        sxEvent.WindowResize.x = event.xresizerequest.width;
-        sxEvent.WindowResize.y = event.xresizerequest.height;
+        sxEvent.Type = EventType::WindowResized;
+        sxEvent.WindowResized.x = event.xresizerequest.width;
+        sxEvent.WindowResized.y = event.xresizerequest.height;
         return sxEvent;
 
     case Expose:

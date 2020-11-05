@@ -8,9 +8,9 @@ namespace StraitX{
 
 enum EventType{
     Unknown = 0,
-    WindowOpen,
+    // posted when window close request arrives
     WindowClose,
-    WindowResize,
+    WindowResized,
     WindowDraw,
     MouseButtonPress,
     MouseButtonRelease,
@@ -22,12 +22,10 @@ struct BaseEvent{
     EventType Type;
 };
 
-struct WindowOpenEvent: BaseEvent{
-};
 struct WindowCloseEvent: BaseEvent{
 };
 
-struct WindowResizeEvent: BaseEvent{
+struct WindowResizedEvent: BaseEvent{
     u32 x;
     u32 y;
 };
@@ -49,8 +47,7 @@ struct KeyEvent: BaseEvent{
 union Event{
     EventType Type;
     WindowCloseEvent WindowClose;
-    WindowOpenEvent WindowOpen;
-    WindowResizeEvent WindowResize;
+    WindowResizedEvent WindowResized;
     WindowDrawEvent WindowDraw;
     MouseButtonEvent MouseButtonPress;
     MouseButtonEvent MouseButtonRelease;
