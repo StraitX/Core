@@ -54,7 +54,6 @@ elseif(STRAITX_PLATFORM_WINDOWS)
        ${SOURCES_DIR}/platform/windows/mouse.cpp
        ${SOURCES_DIR}/platform/windows/keyboard.cpp
        ${SOURCES_DIR}/platform/windows/virtual_keys.cpp
-       ${SOURCES_DIR}/platform/windows/window_win32.cpp
     )
 
     set(PLATFORM_LIBS
