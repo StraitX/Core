@@ -7,6 +7,9 @@
 #ifdef SX_PLATFORM_LINUX
     #include "platform/linux/window_x11.hpp"
     typedef StraitX::Linux::WindowX11 WindowImpl;
+#elif defined(SX_PLATFORM_WINDOWS)
+    #include "platform/windows/window_win32.hpp"
+    typedef StraitX::Windows::WindowWin32 WindowImpl;
 #else
     #error "Your platform does not support window creation"
 #endif
