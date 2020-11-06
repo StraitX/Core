@@ -3,6 +3,7 @@
 
 #include "platform/mouse.hpp"
 #include "platform/keyboard.hpp"
+#include <windows.h>
 
 namespace StraitX {
 namespace Windows {
@@ -12,6 +13,7 @@ short KeyCodeToVirtualKey(Keyboard::KeyCode code);
 
 short MouseButtonToVirtualKey(Mouse::Button button);
 Keyboard::KeyCode VirtualKeyToKeyCode(short code);
+Keyboard::KeyCode VirtualKeyExtendedToKeyCode(WPARAM key, LPARAM flags);
 
 }; // namespace Windows::
 }; // namespace StraitX::

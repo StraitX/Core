@@ -210,5 +210,22 @@ Keyboard::KeyCode VirtualKeyToKeyCode(short code) {
     }
 }
 
+Keyboard::KeyCode VirtualKeyExtendedToKeyCode(WPARAM key, LPARAM flags) {
+	switch (key) {
+	case VK_SHIFT:
+        static UINT lShift = MapVirtualKeyW(VK_LSHIFT, MAPVK_VK_TO_VSC);
+        return static_cast<UINT>((flags & (0xFF << 16)) >> 16) == lShift ? Keyboard::LeftShift : Keyboard::RightShift;
+        
+    case VK_MENU: 
+		return (HIWORD(flags) & KF_EXTENDED) ? Keyboard::RightAlt : Keyboard::LeftAlt;
+
+	case VK_CONTROL: 
+		return (HIWORD(flags) & KF_EXTENDED) ? Keyboard::RightControl : Keyboard::LeftControl;
+
+	default:
+		return VirtualKeyToKeyCode(key);
+	}
+}
+
 }; // namespace Windows::
 }; // namespace StraitX::
