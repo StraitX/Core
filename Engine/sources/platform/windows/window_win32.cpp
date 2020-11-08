@@ -13,7 +13,6 @@ WindowWin32::WindowWin32(int width, int height):
     mHandle(nullptr),
     mWidth(width),
     mHeight(height),
-    mWindowShouldClose(false),
     mUnhandledResize(false)
 {
     mHandle = CreateWindow(windowClassName, windowTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, (HINSTANCE)GetModuleHandle(nullptr), this);
@@ -58,10 +57,6 @@ void WindowWin32::OnResize(int width, int height) {
     mHeight = height;
 }
 
-void WindowWin32::OnClose() {
-    mWindowShouldClose = true;
-}
-
 
 bool WindowWin32::FetchInternalEvents(Event &event) {
     if (mUnhandledResize){
@@ -69,11 +64,6 @@ bool WindowWin32::FetchInternalEvents(Event &event) {
         event.WindowResized.x = mWidth;
         event.WindowResized.y = mHeight;
         mUnhandledResize = false;
-        return true;
-    }
-    if (mWindowShouldClose) {
-        event.Type = EventType::WindowClose;
-        mWindowShouldClose = false;
         return true;
     }
     return false;
@@ -93,7 +83,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     switch (uMsg)
     {
     case WM_CLOSE:
-        window->OnClose();
+        PostMessage(hwnd, WM_SX_CLOSE, wParam, lParam);
         break;
     case WM_SIZE:
         window->OnResize(LOWORD(lParam), HIWORD(lParam));

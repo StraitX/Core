@@ -7,7 +7,7 @@ namespace Windows{
 bool ToStraitXEvent(MSG& message, Event& event) {
 	switch (message.message)
 	{
-	case WM_CLOSE:
+	case WM_SX_CLOSE:
 		event.Type = EventType::WindowClose;
 		return true;
 

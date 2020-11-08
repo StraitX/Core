@@ -4,8 +4,9 @@
 #include "platform/events.hpp"
 #include <windows.h>
 
-#define WM_SX_KEYDOWN WM_USER + 1
-#define WM_SX_KEYUP WM_USER + 2
+#define WM_SX_KEYDOWN	WM_USER + 1
+#define WM_SX_KEYUP		WM_USER + 2
+#define WM_SX_CLOSE		WM_USER + 3
 
 namespace StraitX{
 namespace Windows{
