@@ -18,41 +18,40 @@ enum EventType{
     KeyRelease
 };
 
-struct BaseEvent{
-    EventType Type;
+
+struct WindowCloseEvent{
 };
 
-struct WindowCloseEvent: BaseEvent{
-};
-
-struct WindowResizedEvent: BaseEvent{
+struct WindowResizedEvent{
     u32 x;
     u32 y;
 };
 
-struct WindowDrawEvent: BaseEvent{
+struct WindowDrawEvent{
 };
 
-struct MouseButtonEvent: BaseEvent{
+struct MouseButtonEvent{
     Mouse::Button Button;
     u32 x;
     u32 y;
 };
 
-struct KeyEvent: BaseEvent{
+struct KeyEvent{
     Keyboard::KeyCode KeyCode;
 };
 
 
-union Event{
+struct Event{
     EventType Type;
-    WindowCloseEvent WindowClose;
-    WindowResizedEvent WindowResized;
-    WindowDrawEvent WindowDraw;
-    MouseButtonEvent MouseButtonPress;
-    MouseButtonEvent MouseButtonRelease;
-    KeyEvent KeyPress;
-    KeyEvent KeyRelease;
+    union {
+        WindowCloseEvent WindowClose;
+        WindowResizedEvent WindowResized;
+        WindowDrawEvent WindowDraw;
+        MouseButtonEvent MouseButtonPress;
+        MouseButtonEvent MouseButtonRelease;
+        KeyEvent KeyPress;
+        KeyEvent KeyRelease;
+    };
 };
 
 }; // namespace StraitX::
