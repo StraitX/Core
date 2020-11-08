@@ -1,5 +1,5 @@
 #ifndef STRAITX_LINUX_KEYS_HPP
-#define STRATIX_LINUX_KEYS_HPP
+#define STRAITX_LINUX_KEYS_HPP
 
 #include "platform/keyboard.hpp"
 #include "platform/mouse.hpp"

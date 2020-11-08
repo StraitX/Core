@@ -1,5 +1,5 @@
 #ifndef STRAITX_LINUX_DISPLAY_HPP
-#define STRATIX_LINUX_DISPLAY_HPP
+#define STRAITX_LINUX_DISPLAY_HPP
 
 #include "platform/error.hpp"
 #include <X11/Xlib.h>
