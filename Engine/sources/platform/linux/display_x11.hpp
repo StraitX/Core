@@ -2,26 +2,25 @@
 #define STRATIX_LINUX_DISPLAY_HPP
 
 #include "platform/error.hpp"
-
-struct _XDisplay;
+#include <X11/Xlib.h>
 
 namespace StraitX{
 namespace Linux{
 
-class Display{
+class DisplayX11{
 private:
-    ::_XDisplay *mHandle;
+    ::Display *mHandle;
 public:
-    Display();
+    DisplayX11();
 
     Error Open();
     Error Close();
 
     bool IsOpened();
 
-    ::_XDisplay *Handle();
+    ::Display *Handle();
 
-    static Display &Instance();
+    static DisplayX11 &Instance();
 };
 
 };// namespace Linux::

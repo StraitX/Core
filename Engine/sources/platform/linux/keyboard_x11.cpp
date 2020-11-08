@@ -1,6 +1,6 @@
 
 #include "platform/keyboard.hpp"
-#include "platform/linux/display.hpp"
+#include "platform/linux/display_x11.hpp"
 #include "platform/linux/keys_x11.hpp"
 #include <X11/Xlib.h>
 #include "unistd.h"
@@ -8,7 +8,7 @@ namespace StraitX{
 namespace Keyboard{
 
 bool IsKeyPressed(KeyCode code){
-    ::Display *display = Linux::Display::Instance().Handle();
+    ::Display *display = Linux::DisplayX11::Instance().Handle();
 
     KeySym sym = Linux::KeyCodeToXKeySym(code);
     ::KeyCode keyCode = XKeysymToKeycode(display,sym);  

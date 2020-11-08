@@ -11,7 +11,7 @@ namespace Linux{
 FBConfigX11::FBConfigX11(const PixelFormat &desired, PixelFormat &resulted):
     m_Handle(nullptr)
 {
-    ::Display *display = Display::Instance().Handle();
+    ::Display *display = DisplayX11::Instance().Handle();
 
     int glxAttributes[]={
 		GLX_X_RENDERABLE    , True,

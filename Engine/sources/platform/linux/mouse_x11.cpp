@@ -1,12 +1,12 @@
 #include <X11/Xlib.h>
 #undef Success
 #include "platform/mouse.hpp"
-#include "platform/linux/display.hpp"
+#include "platform/linux/display_x11.hpp"
 
 namespace StraitX{
 
 bool Mouse::IsButtonPressed(Mouse::Button button){
-    Display *display = Linux::Display::Instance().Handle();
+    Display *display = Linux::DisplayX11::Instance().Handle();
 
     Window root,child;
     int x,y;
@@ -25,7 +25,7 @@ bool Mouse::IsButtonPressed(Mouse::Button button){
 }
 
 Point Mouse::GlobalPosition(){
-    Display *display = Linux::Display::Instance().Handle();
+    Display *display = Linux::DisplayX11::Instance().Handle();
 
     Window root,child;
     Point choosen,global;

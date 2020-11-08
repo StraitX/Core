@@ -1,5 +1,5 @@
 #include "platform/linux/window_x11.hpp"
-#include "platform/linux/display.hpp"
+#include "platform/linux/display_x11.hpp"
 #include "platform/linux/events_x11.hpp"
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -12,7 +12,7 @@ WindowX11::WindowX11(int width, int height):
     mHandle(0),
     mScreenIndex(-1)
 {
-    ::Display *display = Linux::Display::Instance().Handle();
+    ::Display *display = Linux::DisplayX11::Instance().Handle();
     mScreenIndex = DefaultScreen(display);
 
     mHandle = XCreateSimpleWindow(display,RootWindow(display,mScreenIndex),0,0,width,height,0,BlackPixel(display,mScreenIndex),WhitePixel(display,mScreenIndex));
@@ -23,13 +23,13 @@ WindowX11::WindowX11(int width, int height):
 }
 
 WindowX11::~WindowX11(){
-    ::Display *display = Linux::Display::Instance().Handle();
+    ::Display *display = Linux::DisplayX11::Instance().Handle();
 
     XDestroyWindow(display,mHandle);
 }
 
 void WindowX11::SetTitle(const char *title){
-    ::Display *display = Linux::Display::Instance().Handle();
+    ::Display *display = Linux::DisplayX11::Instance().Handle();
 
     Atom atom = XInternAtom(display,"WM_NAME",0);
     
@@ -40,13 +40,13 @@ void WindowX11::SetTitle(const char *title){
 }
 
 void WindowX11::SetSize(int width, int height){
-    ::Display *display = Linux::Display::Instance().Handle();
+    ::Display *display = Linux::DisplayX11::Instance().Handle();
 
     XResizeWindow(display,mHandle,width,height);
 }
 
 bool WindowX11::PollEvent(Event &event){
-    ::Display *display = Linux::Display::Instance().Handle();
+    ::Display *display = Linux::DisplayX11::Instance().Handle();
     XEvent x11event;
     if(XCheckIfEvent(display,&x11event,&CheckEvent,reinterpret_cast<XPointer>(mHandle))){
         event = ToStraitXEvent(x11event);

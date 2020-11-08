@@ -1,4 +1,4 @@
-#include "platform/linux/display.hpp"
+#include "platform/linux/display_x11.hpp"
 #include "X11/Xlib.h"
 //undef X11 macro to resolve conflicts
 #undef Success
@@ -8,30 +8,30 @@
 namespace StraitX{
 namespace Linux{
 
-static Display display;
+static DisplayX11 display;
 
 
-Display::Display():
+DisplayX11::DisplayX11():
     mHandle(nullptr)
 {}
 
-Error Display::Open(){
+Error DisplayX11::Open(){
     mHandle = XOpenDisplay(nullptr);
     return mHandle ? ErrorCode::Success : ErrorCode::Failure;
 }
-Error Display::Close(){
+Error DisplayX11::Close(){
     return XCloseDisplay(mHandle)==0 ? ErrorCode::Success : ErrorCode::Failure;
 }
 
-bool Display::IsOpened(){
+bool DisplayX11::IsOpened(){
     return mHandle;
 }
 
-::Display *Display::Handle(){
+::Display *DisplayX11::Handle(){
     return mHandle;
 }
 
-Display &Display::Instance(){
+DisplayX11 &DisplayX11::Instance(){
     return display;
 }
 
