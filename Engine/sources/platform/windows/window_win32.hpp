@@ -13,6 +13,10 @@ namespace Windows{
 class WindowWin32{
 private:
     void *mHandle;
+    int mWidth;
+    int mHeight;
+    bool mWindowShouldClose : 1;
+    bool mUnhandledResize : 1;
     friend class Platform;
 public:
     WindowWin32(int width, int height);
@@ -24,7 +28,12 @@ public:
 
     bool PollEvent(Event &event);
 
+    void OnResize(int width, int height);
+
+    void OnClose();
 private:
+    bool FetchInternalEvents(Event &event);
+
     static void RegClass();
 };
 

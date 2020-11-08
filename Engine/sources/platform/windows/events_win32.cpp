@@ -10,11 +10,6 @@ bool ToStraitXEvent(MSG& message, Event& event) {
 	case WM_CLOSE:
 		event.Type = EventType::WindowClose;
 		return true;
-	case WM_SIZE:
-		event.Type = EventType::WindowResized;
-		event.WindowResized.x = LOWORD(message.lParam);
-		event.WindowResized.y = HIWORD(message.lParam);
-		return true;
 
 	case WM_PAINT:
 		event.Type = EventType::WindowDraw;
@@ -76,19 +71,16 @@ bool ToStraitXEvent(MSG& message, Event& event) {
 		event.MouseButtonRelease.y = HIWORD(message.lParam);
 		return true;
 
-	case WM_KEYDOWN:
-	case WM_SYSKEYDOWN:
-		return false;
+	case WM_SX_KEYDOWN:
 		event.Type = EventType::KeyPress;
-		event.KeyPress.KeyCode = VirtualKeyExtendedToKeyCode(message.lParam, message.wParam);
+		event.KeyPress.KeyCode = VirtualKeyExtendedToKeyCode(message.wParam,message.lParam);
 		return true;
 
-	case WM_KEYUP:
-	case WM_SYSKEYUP:
-		return false;
+	case WM_SX_KEYUP:
 		event.Type = EventType::KeyRelease;
-		event.KeyRelease.KeyCode = VirtualKeyExtendedToKeyCode(message.lParam, message.wParam);
+		event.KeyRelease.KeyCode = VirtualKeyExtendedToKeyCode(message.wParam,message.lParam);
 		return true;
+
 	default:
 		// we don't care
 		return false;
