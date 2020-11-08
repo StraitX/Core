@@ -6,7 +6,7 @@
 #include "platform/mouse.hpp"
 namespace StraitX{
 
-enum EventType{
+enum class EventType{
     Unknown = 0,
     // posted when window close request arrives
     WindowClose,
