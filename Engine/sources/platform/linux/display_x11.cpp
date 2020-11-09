@@ -17,7 +17,7 @@ DisplayX11::DisplayX11():
 
 Error DisplayX11::Open(){
     mHandle = XOpenDisplay(nullptr);
-    return mHandle ? ErrorCode::Success : ErrorCode::Failure;
+    return mHandle != nullptr ? ErrorCode::Success : ErrorCode::Failure;
 }
 Error DisplayX11::Close(){
     return XCloseDisplay(mHandle)==0 ? ErrorCode::Success : ErrorCode::Failure;

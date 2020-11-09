@@ -16,8 +16,8 @@ Window::~Window(){
     m_Impl.Close();
 }
 
-Error Window::Open(int width, int height, const char *title){
-    return m_Impl.Open(width,height, title);
+Error Window::Open(int width, int height){
+    return m_Impl.Open(width,height);
 }
 
 Error Window::Close(){

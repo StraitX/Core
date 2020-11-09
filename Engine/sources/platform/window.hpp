@@ -29,7 +29,7 @@ public:
 
     ~Window();
 
-    Error Open(int width, int height, const char *title);
+    Error Open(int width, int height);
 
     Error Close();
 

@@ -14,9 +14,9 @@ public:
     Application(const char *name);
     virtual ~Application() = default;
 
-    virtual void OnInitialize(){};
+    virtual Error OnInitialize(){return ErrorCode::Success;};
 
-    virtual void OnFinalize(){};
+    virtual Error OnFinalize(){return ErrorCode::Success;};
 
     virtual void OnUpdate(){};
 

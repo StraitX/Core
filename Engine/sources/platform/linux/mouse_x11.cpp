@@ -1,5 +1,6 @@
 #include <X11/Xlib.h>
 #undef Success
+#undef None
 #include "platform/mouse.hpp"
 #include "platform/linux/display_x11.hpp"
 

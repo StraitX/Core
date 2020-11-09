@@ -23,7 +23,7 @@ WindowX11::WindowX11(WindowX11 &&other){
 }
 
 
-Error WindowX11::Open(int width, int height, const char *title){
+Error WindowX11::Open(int width, int height){
     if(!IsOpen()){
         ::Display *display = Linux::DisplayX11::Instance().Handle();
         mScreenIndex = DefaultScreen(display);
@@ -35,8 +35,6 @@ Error WindowX11::Open(int width, int height, const char *title){
         long mask = ExposureMask | KeyPressMask| KeyReleaseMask| ButtonPressMask| ButtonReleaseMask| ResizeRedirectMask;
         XSelectInput(display,mHandle,mask);
         XMapWindow(display,mHandle);
-
-        SetTitle(title);
 
         return ErrorCode::Success;
     }

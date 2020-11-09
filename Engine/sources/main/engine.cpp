@@ -1,7 +1,11 @@
 #include "main/engine.hpp"
 #include "main/application.hpp"
+#include "core/log.hpp"
 #include "platform/platform.hpp"
 #include "platform/io.hpp"
+
+
+#define InitAssert(code,message) if(!(code == ErrorCode::Success)){LogError(message); return ErrorCode::Failure;}
 
 // should be defined at client side
 extern StraitX::Application *StraitXMain();
@@ -11,7 +15,11 @@ namespace StraitX{
 
 
 Engine::Engine():
-    mRunning(true)
+    m_Running(true),
+    m_Window(),
+    m_ErrorWindow(ErrorCode::None), 
+    m_ErrorPlatform(ErrorCode::None), 
+    m_ErrorApplication(ErrorCode::None)
 {
 
 }
@@ -22,63 +30,103 @@ Engine::~Engine(){
 
 
 Error Engine::Run(){
-    Output::Print("Engine: Initialize: Started");
+    LogTrace("Engine::Initialize()");
 
     Error initCode = Initialize();
 
-    if(initCode==ErrorCode::Success)
-        Output::Print("Engine::Initialize: Success");
-    else{
-        Output::Print("Engine::Initialize: Failed");
-        return ErrorCode::Failure;
+    if(initCode != ErrorCode::Success){
+        LogError("Engine::Initialize: Failed");
+        LogWarn("Engine: Force Finalizing");
+    }else{
+        LogInfo("Engine::Initialize: Finished");
+    }
+    LogSeparator();
+
+    if(initCode == ErrorCode::Success){
+        LogInfo("Engine: Enter Main loop");
+        MainLoop();
+        LogInfo("Engine: Left Main loop");
+    }else{
+        LogWarn("Engine: Main loop was skipped due to Initialization failure");
     }
 
-    Output::Print("Engine: Enter main loop");
+    LogSeparator();
 
-    MainLoop();
-
-    Output::Print("Engine: Finalize: Started");
-
+    LogTrace("Engine: Finalize()");
     Error finalizeCode = Finalize();
 
     if(finalizeCode==ErrorCode::Success){
-        Output::Print("Engine::Finalize: Success");
-        return ErrorCode::Success;
+        LogInfo("Engine::Finalize: Success");
     }else{
-        Output::Print("Engine::Finalize: Failed");
-        return ErrorCode::Failure;
+        LogError("Engine::Finalize: Failed");
     }
+
+    if(finalizeCode != ErrorCode::Success || initCode != ErrorCode::Success)
+        return ErrorCode::Failure;
+
+    return 0;
 }
 
 void Engine::Stop(){
-    mRunning = false;
+    m_Running = false;
 }
 
 Error Engine::Initialize(){
-    Error initCode = Platform::Initialize();
+    LogTrace("Platform::Initialize()");
+    m_ErrorPlatform = Platform::Initialize();
+    InitAssert(m_ErrorPlatform,"Platform::Initialize: Failed");
 
+    LogTrace("Window::Open()");
+    m_ErrorWindow = m_Window.Open(1280,720);
+    InitAssert(m_ErrorWindow,"Window::Open: Can't open a window");
+
+    LogTrace("StraitXMain()");
     //Engine should be completely initialized at this moment
-    mApplication = StraitXMain();
-    if(mApplication == nullptr)
-        return ErrorCode::Failure;
-    
-    mApplication->SetEngine(this);
+    m_Application = StraitXMain();
+    m_ErrorMX = m_Application == nullptr ? ErrorCode::Failure : ErrorCode::Success;
+    InitAssert(m_ErrorMX,"StraitXMain: Application was not provided");
 
-    mApplication->OnInitialize();
-    return initCode;
+    m_Window.SetTitle(m_Application->Name());
+    
+    m_Application->SetEngine(this);
+    LogTrace("Application::OnInitialize()");
+    m_ErrorApplication = m_Application->OnInitialize();
+    InitAssert(m_ErrorApplication,"Application::OnInitialize: Failed");
+
+    return ErrorCode::Success;
 }
 
 Error Engine::Finalize(){
-    mApplication->OnFinalize();
 
-    StraitXExit(mApplication);
+    if(m_ErrorApplication==ErrorCode::Success){
+        LogTrace("Application::OnFinalize()");
+        m_ErrorApplication = m_Application->OnFinalize();
+        InitAssert(m_ErrorApplication,"Application::OnFinalize: Failed");
+    }
 
-    return Platform::Finalize();
+    if(m_ErrorMX == ErrorCode::Success){
+        LogTrace("StraitXExit()");
+        m_ErrorMX = StraitXExit(m_Application);
+        InitAssert(m_ErrorMX,"StraitXExit: returned Failure");
+    }
+
+    if(m_ErrorWindow == ErrorCode::Success){
+        LogTrace("Window::Close()");
+        m_ErrorWindow = m_Window.Close();
+        InitAssert(m_ErrorWindow,"Window::Close: Failed");
+    }
+    if(m_ErrorPlatform == ErrorCode::Success){
+        LogTrace("Platform::Finalize()");
+        m_ErrorPlatform = Platform::Finalize();
+        InitAssert(m_ErrorPlatform,"Platform::Finalize: Failed");
+    }
+
+    return ErrorCode::Success;
 }
 
 void Engine::MainLoop(){
-    while(mRunning){
-        mApplication->OnUpdate();
+    while(m_Running){
+        m_Application->OnUpdate();
     }
 }
 

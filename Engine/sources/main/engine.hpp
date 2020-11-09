@@ -2,6 +2,8 @@
 #define STRAITX_ENGINE_HPP
 
 #include "platform/error.hpp"
+#include "platform/window.hpp"
+
 
 namespace StraitX{
 
@@ -9,8 +11,10 @@ class Application;
 
 class Engine{
 private:
-    Application *mApplication;
-    bool mRunning;
+    Application *m_Application;
+    bool m_Running;
+    Window m_Window;
+    Error m_ErrorWindow, m_ErrorPlatform, m_ErrorApplication, m_ErrorMX;
 public:
     Engine();
     ~Engine();
