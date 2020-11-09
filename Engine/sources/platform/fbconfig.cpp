@@ -3,18 +3,26 @@
 
 namespace StraitX{
 
+FBConfig::FBConfig():
+    m_Impl()
+{}
+
 FBConfig::FBConfig(const PixelFormat &desired):
-    m_Impl(desired,m_PixelFormat)
+    m_Impl(desired)
 {
 
 }
 
-FBConfigImpl FBConfig::Impl(){
+FBConfigImpl &FBConfig::Impl(){
     return m_Impl;
 }
 
+bool FBConfig::IsValid(){
+    return m_Impl.IsValid();
+}
+
 const PixelFormat &FBConfig::Pixel(){
-    return m_PixelFormat;
+    return m_Impl.Pixel();
 }
 
 }; // namespace StraitX::

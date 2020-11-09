@@ -15,12 +15,15 @@ namespace StraitX{
 
 class FBConfig{
 private:
-    PixelFormat m_PixelFormat;
     FBConfigImpl m_Impl;
 public:
+    FBConfig();
+
     FBConfig(const PixelFormat &desired);
 
-    FBConfigImpl Impl();
+    FBConfigImpl &Impl();
+
+    bool IsValid();
 
     const PixelFormat &Pixel();
 };

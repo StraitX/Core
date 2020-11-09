@@ -8,10 +8,16 @@ namespace Linux{
 
 class FBConfigX11{
 private:
+    PixelFormat m_PixelFormat;
     void *m_Handle;
 public:
-    FBConfigX11(const PixelFormat &desired, PixelFormat &resulted);
+    FBConfigX11();
 
+    FBConfigX11(const PixelFormat &desired);
+
+    bool IsValid() const;
+
+    const PixelFormat &Pixel() const;
 
     void *Handle();
 

@@ -7,8 +7,56 @@
 namespace StraitX{
 namespace Linux{
 
+FBConfigX11::FBConfigX11():
+    m_Handle(nullptr)
+{
+    ::Display *display = DisplayX11::Instance().Handle();
 
-FBConfigX11::FBConfigX11(const PixelFormat &desired, PixelFormat &resulted):
+
+    int configsCount = 0;
+    GLXFBConfig *configs = glXGetFBConfigs(display,DefaultScreen(display),&configsCount);
+
+    // in case if we have not find any FBConfig
+    if(configsCount == 0){
+        m_PixelFormat = PixelFormat();
+        return;
+    }
+
+    int bestIndex = 0;
+    float bestScore = -100;
+    PixelFormat best;
+
+
+    for(int i = 0; i<configsCount; i++){
+        PixelFormat current;
+        
+        glXGetFBConfigAttrib(display, configs[i], GLX_RED_SIZE,     &current.Red);
+        glXGetFBConfigAttrib(display, configs[i], GLX_GREEN_SIZE,   &current.Green);
+        glXGetFBConfigAttrib(display, configs[i], GLX_BLUE_SIZE,    &current.Blue);
+        glXGetFBConfigAttrib(display, configs[i], GLX_ALPHA_SIZE,   &current.Alpha);
+        glXGetFBConfigAttrib(display, configs[i], GLX_DEPTH_SIZE,   &current.Depth);
+        glXGetFBConfigAttrib(display, configs[i], GLX_STENCIL_SIZE, &current.Stencil);
+        glXGetFBConfigAttrib(display, configs[i], GLX_SAMPLES,      &current.Samples);
+
+        float score = float(current.Red)/8.f + float(current.Green)/8.f + float(current.Blue)/8.f + 
+                float(current.Alpha)/8.f + float(current.Depth)/24.f + float(current.Stencil)/8.f + float(current.Samples)/4.f;
+        
+        if(score > bestScore){
+            score = bestScore;
+            bestIndex = i;
+            best = current;
+        }
+    }
+
+
+    m_Handle = configs[bestIndex];
+    m_PixelFormat = best;
+
+    XFree(configs);
+}
+
+
+FBConfigX11::FBConfigX11(const PixelFormat &desired):
     m_Handle(nullptr)
 {
     ::Display *display = DisplayX11::Instance().Handle();
@@ -34,13 +82,13 @@ FBConfigX11::FBConfigX11(const PixelFormat &desired, PixelFormat &resulted):
     int configsCount = 0;
     GLXFBConfig *configs = glXChooseFBConfig(display,DefaultScreen(display),glxAttributes,&configsCount);
 
-    // in case if we has not find any suitable FBConfig
+    // in case if we have not find any suitable FBConfig
     if(configsCount == 0){
-        resulted = PixelFormat();
+        m_PixelFormat = PixelFormat();
         return;
     }
 
-    int bestIndex = -1;
+    int bestIndex = 0;
     float bestScore = 0;
     PixelFormat best;
 
@@ -68,11 +116,18 @@ FBConfigX11::FBConfigX11(const PixelFormat &desired, PixelFormat &resulted):
 
 
     m_Handle = configs[bestIndex];
-    resulted = best;
+    m_PixelFormat = best;
 
     XFree(configs);
 }
 
+bool FBConfigX11::IsValid() const{
+    return m_Handle == nullptr ? false : true;
+}
+
+const PixelFormat &FBConfigX11::Pixel() const{
+    return m_PixelFormat;
+}
 
 void* FBConfigX11::Handle(){
     return m_Handle;
