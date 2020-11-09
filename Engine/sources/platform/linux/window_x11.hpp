@@ -2,6 +2,8 @@
 #define STRAITX_WINDOW_X11_HPP
 
 #include "platform/events.hpp"
+#include "platform/error.hpp"
+#include "platform/linux/fbconfig_x11.hpp"
 
 namespace StraitX{
 namespace Linux{
@@ -11,13 +13,15 @@ private:
     unsigned long mHandle;
     int mScreenIndex;
 public:
-    WindowX11(int width, int height);
+    WindowX11();
 
     WindowX11(const WindowX11 &other) = delete;
 
     WindowX11(WindowX11 &&other);
 
-    ~WindowX11();
+    Error Open(int width, int height, const char *title);
+
+    Error Close();
 
     bool IsOpen();
 

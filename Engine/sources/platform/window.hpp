@@ -20,13 +20,18 @@ class Window{
 private:
     WindowImpl m_Impl;
 public:
-    Window(int width, int height, const char *title);
+
+    Window();
 
     Window(const Window &other) = delete;
 
     Window(Window &&other);
 
     ~Window();
+
+    Error Open(int width, int height, const char *title);
+
+    Error Close();
 
     bool IsOpen();
 

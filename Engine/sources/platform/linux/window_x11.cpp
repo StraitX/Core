@@ -4,23 +4,16 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
+#undef Success
+
 
 namespace StraitX{
 namespace Linux{
 
-WindowX11::WindowX11(int width, int height):
+WindowX11::WindowX11():
     mHandle(0),
     mScreenIndex(-1)
-{
-    ::Display *display = Linux::DisplayX11::Instance().Handle();
-    mScreenIndex = DefaultScreen(display);
-
-    mHandle = XCreateSimpleWindow(display,RootWindow(display,mScreenIndex),0,0,width,height,0,BlackPixel(display,mScreenIndex),WhitePixel(display,mScreenIndex));
-
-    long mask = ExposureMask | KeyPressMask| KeyReleaseMask| ButtonPressMask| ButtonReleaseMask| ResizeRedirectMask;
-    XSelectInput(display,mHandle,mask);
-    XMapWindow(display,mHandle);
-}
+{}
 
 WindowX11::WindowX11(WindowX11 &&other){
     mHandle = other.mHandle;
@@ -29,16 +22,43 @@ WindowX11::WindowX11(WindowX11 &&other){
     other.mScreenIndex = -1;
 }
 
-WindowX11::~WindowX11(){
+
+Error WindowX11::Open(int width, int height, const char *title){
+    if(!IsOpen()){
+        ::Display *display = Linux::DisplayX11::Instance().Handle();
+        mScreenIndex = DefaultScreen(display);
+
+        mHandle = XCreateSimpleWindow(display,RootWindow(display,mScreenIndex),0,0,width,height,0,BlackPixel(display,mScreenIndex),WhitePixel(display,mScreenIndex));
+        if(mHandle == 0)
+            return ErrorCode::Failure;
+        
+        long mask = ExposureMask | KeyPressMask| KeyReleaseMask| ButtonPressMask| ButtonReleaseMask| ResizeRedirectMask;
+        XSelectInput(display,mHandle,mask);
+        XMapWindow(display,mHandle);
+
+        SetTitle(title);
+
+        return ErrorCode::Success;
+    }
+    return ErrorCode::AlreadyDone;
+}
+
+
+
+Error WindowX11::Close(){
     if(IsOpen()){
         ::Display *display = Linux::DisplayX11::Instance().Handle();
-
         XDestroyWindow(display,mHandle);
+
+        mHandle = 0;
+        mScreenIndex = -1;
+        return ErrorCode::Success;
     }
+    return ErrorCode::DoesNotExist;
 }
 
 bool WindowX11::IsOpen(){
-    return mHandle == 0 ? false : true;
+    return mHandle;
 }
 
 void WindowX11::SetTitle(const char *title){

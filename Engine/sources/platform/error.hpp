@@ -10,8 +10,10 @@ namespace ErrorCode{
         Success = 0,
         Failure,
         NotFound,
-        WrongArgs,
-        NoMatch
+        InvalidArgs,
+        NoMatch,
+        DoesNotExist,
+        AlreadyDone
     };
 }; // namespace Error::
 

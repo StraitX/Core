@@ -2,11 +2,9 @@
 
 namespace StraitX{
 
-Window::Window(int width, int height, const char *title):
-    m_Impl(width,height)
-{
-    SetTitle(title);
-}
+Window::Window():
+    m_Impl()
+{}
 
 Window::Window(Window &&other):
     m_Impl((WindowImpl&&)(other))
@@ -15,7 +13,15 @@ Window::Window(Window &&other):
 }
 
 Window::~Window(){
+    m_Impl.Close();
+}
 
+Error Window::Open(int width, int height, const char *title){
+    return m_Impl.Open(width,height, title);
+}
+
+Error Window::Close(){
+    return m_Impl.Close();
 }
 
 bool Window::IsOpen(){
