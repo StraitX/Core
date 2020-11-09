@@ -8,7 +8,10 @@ using Error = int;
 namespace ErrorCode{
     enum : int{
         Success = 0,
-        Failure
+        Failure,
+        NotFound,
+        WrongArgs,
+        NoMatch
     };
 }; // namespace Error::
 
