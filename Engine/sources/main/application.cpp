@@ -2,16 +2,21 @@
 
 namespace StraitX{
 
-
+Application::Application(const char *name):
+    m_Name(name)
+{}
 
 void Application::Stop(){
-    mEngine->Stop();
+    m_Engine->Stop();
 }
 
 
 void Application::SetEngine(Engine *engine){
-    mEngine = engine;
+    m_Engine = engine;
 }
 
+const char *Application::Name(){
+    return m_Name;
+}
 
 }; // namespace StraitX::

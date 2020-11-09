@@ -7,10 +7,11 @@ namespace StraitX{
 
 class Application{
 private:
-    Engine *mEngine;
+    Engine *m_Engine;
+    const char *m_Name;
     friend class Engine;
 public:
-    Application() = default;
+    Application(const char *name);
     virtual ~Application() = default;
 
     virtual void OnInitialize(){};
@@ -20,6 +21,8 @@ public:
     virtual void OnUpdate(){};
 
     void Stop();
+
+    const char *Name();
 
 private:
     void SetEngine(Engine *engine);
