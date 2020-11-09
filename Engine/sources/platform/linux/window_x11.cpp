@@ -22,38 +22,56 @@ WindowX11::WindowX11(int width, int height):
     XMapWindow(display,mHandle);
 }
 
-WindowX11::~WindowX11(){
-    ::Display *display = Linux::DisplayX11::Instance().Handle();
+WindowX11::WindowX11(WindowX11 &&other){
+    mHandle = other.mHandle;
+    other.mHandle = 0;
+    mScreenIndex = other.mScreenIndex;
+    other.mScreenIndex = -1;
+}
 
-    XDestroyWindow(display,mHandle);
+WindowX11::~WindowX11(){
+    if(IsOpen()){
+        ::Display *display = Linux::DisplayX11::Instance().Handle();
+
+        XDestroyWindow(display,mHandle);
+    }
+}
+
+bool WindowX11::IsOpen(){
+    return mHandle == 0 ? false : true;
 }
 
 void WindowX11::SetTitle(const char *title){
-    ::Display *display = Linux::DisplayX11::Instance().Handle();
+    if(IsOpen()){
+        ::Display *display = Linux::DisplayX11::Instance().Handle();
 
-    Atom atom = XInternAtom(display,"WM_NAME",0);
-    
-    XTextProperty titleText;
-    char * pTitle = (char *)title;
-    XStringListToTextProperty(&pTitle,1,&titleText);
-    XSetTextProperty(display,mHandle,&titleText,atom);
+        Atom atom = XInternAtom(display,"WM_NAME",0);
+        
+        XTextProperty titleText;
+        char * pTitle = (char *)title;
+        XStringListToTextProperty(&pTitle,1,&titleText);
+        XSetTextProperty(display,mHandle,&titleText,atom);
+    }
 }
 
 void WindowX11::SetSize(int width, int height){
-    ::Display *display = Linux::DisplayX11::Instance().Handle();
+    if(IsOpen()){
+        ::Display *display = Linux::DisplayX11::Instance().Handle();
 
-    XResizeWindow(display,mHandle,width,height);
+        XResizeWindow(display,mHandle,width,height);
+    }
 }
 
 bool WindowX11::PollEvent(Event &event){
-    ::Display *display = Linux::DisplayX11::Instance().Handle();
-    XEvent x11event;
-    if(XCheckIfEvent(display,&x11event,&CheckEvent,reinterpret_cast<XPointer>(mHandle))){
-        event = ToStraitXEvent(x11event);
-        return true;
-    }else{
-        return false;
+    if(IsOpen()){
+        ::Display *display = Linux::DisplayX11::Instance().Handle();
+        XEvent x11event;
+        if(XCheckIfEvent(display,&x11event,&CheckEvent,reinterpret_cast<XPointer>(mHandle))){
+            event = ToStraitXEvent(x11event);
+            return true;
+        }
     }
+    return false;
 }
 
 

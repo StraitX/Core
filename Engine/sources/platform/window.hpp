@@ -18,10 +18,17 @@ namespace StraitX{
 
 class Window{
 private:
-    WindowImpl mImpl;
+    WindowImpl m_Impl;
 public:
     Window(int width, int height, const char *title);
+
+    Window(const Window &other) = delete;
+
+    Window(Window &&other);
+
     ~Window();
+
+    bool IsOpen();
 
     void SetTitle(const char *title);
 

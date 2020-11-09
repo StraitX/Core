@@ -10,7 +10,9 @@ extern StraitX::Error StraitXExit(StraitX::Application *);
 namespace StraitX{
 
 
-Engine::Engine(){
+Engine::Engine():
+    mRunning(true)
+{
 
 }
 

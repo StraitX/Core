@@ -12,7 +12,14 @@ private:
     int mScreenIndex;
 public:
     WindowX11(int width, int height);
+
+    WindowX11(const WindowX11 &other) = delete;
+
+    WindowX11(WindowX11 &&other);
+
     ~WindowX11();
+
+    bool IsOpen();
 
     void SetTitle(const char *title);
 
