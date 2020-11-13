@@ -13,6 +13,10 @@ public:
     sx_inline bool operator!=(nullptr_t ptr){
         return !(*this==ptr);
     }
+
+    sx_inline bool IsNull(){
+        return *this==nullptr;
+    }
 };
 
 }; //namespace StraitX::
