@@ -25,6 +25,7 @@ typedef unsigned int u32;
 
 typedef std::size_t size_t;
 
+typedef decltype(nullptr) nullptr_t;
 
 struct Point{
     i32 x;
