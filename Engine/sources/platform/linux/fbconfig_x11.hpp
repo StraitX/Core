@@ -2,6 +2,7 @@
 #define STRAITX_FBCONFIG_X11_HPP
 
 #include "platform/types.hpp"
+#include "platform/error.hpp"
 
 namespace StraitX{
 namespace Linux{
@@ -10,16 +11,19 @@ class FBConfigX11{
 private:
     PixelFormat m_PixelFormat;
     void *m_Handle;
+    void *m_VisualInfo;
 public:
     FBConfigX11();
 
-    FBConfigX11(const PixelFormat &desired);
+    Error PickDefault();
 
-    bool IsValid() const;
+    Error PickDesired(const PixelFormat &desired);
 
     const PixelFormat &Pixel() const;
 
-    void *Handle();
+    void *Handle() const;
+
+    void *VisualInfo()const;
 
 };
 

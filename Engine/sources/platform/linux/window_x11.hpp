@@ -19,11 +19,11 @@ public:
 
     WindowX11(WindowX11 &&other);
 
-    Error Open(int width, int height);
+    Error Open(int width, int height, const FBConfigX11 &fbconfig);
 
     Error Close();
 
-    bool IsOpen();
+    bool IsOpen() const;
 
     void SetTitle(const char *title);
 

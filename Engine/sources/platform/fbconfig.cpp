@@ -7,21 +7,24 @@ FBConfig::FBConfig():
     m_Impl()
 {}
 
-FBConfig::FBConfig(const PixelFormat &desired):
-    m_Impl(desired)
-{
+Error FBConfig::PickDefault(){
+    return m_Impl.PickDefault();
+}
 
+Error FBConfig::PickDesired(const PixelFormat &desired){
+    return m_Impl.PickDesired(desired);
 }
 
 FBConfigImpl &FBConfig::Impl(){
     return m_Impl;
 }
 
-bool FBConfig::IsValid(){
-    return m_Impl.IsValid();
+const FBConfigImpl &FBConfig::Impl()const{
+    return m_Impl;
 }
 
-const PixelFormat &FBConfig::Pixel(){
+
+const PixelFormat &FBConfig::Pixel()const{
     return m_Impl.Pixel();
 }
 

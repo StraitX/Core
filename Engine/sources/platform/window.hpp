@@ -3,6 +3,7 @@
 
 #include "platform/platform_detection.hpp"
 #include "platform/events.hpp"
+#include "platform/fbconfig.hpp"
 
 #ifdef SX_PLATFORM_LINUX
     #include "platform/linux/window_x11.hpp"
@@ -29,11 +30,11 @@ public:
 
     ~Window();
 
-    Error Open(int width, int height);
+    Error Open(int width, int height, const FBConfig &config);
 
     Error Close();
 
-    bool IsOpen();
+    bool IsOpen()const;
 
     void SetTitle(const char *title);
 

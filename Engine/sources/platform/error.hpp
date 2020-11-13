@@ -12,9 +12,11 @@ namespace ErrorCode{
         Failure,
         NotFound,
         InvalidArgs,
-        NoMatch,
-        DoesNotExist,
-        AlreadyDone
+        NullObject,
+        AlreadyDone,
+        NotSupported,
+
+        ErrorCodesCount
     };
 }; // namespace Error::
 

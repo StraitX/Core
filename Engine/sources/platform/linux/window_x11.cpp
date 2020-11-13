@@ -4,9 +4,10 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
+#include <GL/glx.h>
 #undef Success
 
-
+#include "stdio.h"
 namespace StraitX{
 namespace Linux{
 
@@ -23,20 +24,39 @@ WindowX11::WindowX11(WindowX11 &&other){
 }
 
 
-Error WindowX11::Open(int width, int height){
+Error WindowX11::Open(int width, int height, const FBConfigX11 &config){
     if(!IsOpen()){
         ::Display *display = Linux::DisplayX11::Instance().Handle();
         mScreenIndex = DefaultScreen(display);
 
-        mHandle = XCreateSimpleWindow(display,RootWindow(display,mScreenIndex),0,0,width,height,0,BlackPixel(display,mScreenIndex),WhitePixel(display,mScreenIndex));
+
+        GLXFBConfig fbconfig = (GLXFBConfig)config.Handle();
+
+        if(fbconfig==nullptr)
+            return ErrorCode::InvalidArgs;
+
+        XVisualInfo *visualInfo = glXGetVisualFromFBConfig(display, fbconfig);
+
+        if(visualInfo == nullptr)
+            return ErrorCode::Failure;
+        
+        XSetWindowAttributes attributes;
+        attributes.background_pixel = BlackPixel(display, mScreenIndex);
+        attributes.colormap = XCreateColormap(display, RootWindow(display,mScreenIndex), visualInfo->visual, AllocNone);
+        attributes.event_mask = ExposureMask | KeyPressMask| KeyReleaseMask| ButtonPressMask| ButtonReleaseMask| ResizeRedirectMask;
+
+        mHandle = XCreateWindow(display, RootWindow(display,mScreenIndex), 0, 0, width, height, 0, visualInfo->depth,
+            InputOutput, visualInfo->visual, CWBackPixel | CWColormap | CWEventMask, &attributes);
+
+        XFree(visualInfo);
+
         if(mHandle == 0)
             return ErrorCode::Failure;
         
-        long mask = ExposureMask | KeyPressMask| KeyReleaseMask| ButtonPressMask| ButtonReleaseMask| ResizeRedirectMask;
-        XSelectInput(display,mHandle,mask);
         XMapWindow(display,mHandle);
-
         return ErrorCode::Success;
+                //long mask = ExposureMask | KeyPressMask| KeyReleaseMask| ButtonPressMask| ButtonReleaseMask| ResizeRedirectMask;
+        //XSelectInput(display,mHandle,mask);
     }
     return ErrorCode::AlreadyDone;
 }
@@ -52,10 +72,10 @@ Error WindowX11::Close(){
         mScreenIndex = -1;
         return ErrorCode::Success;
     }
-    return ErrorCode::DoesNotExist;
+    return ErrorCode::NullObject;
 }
 
-bool WindowX11::IsOpen(){
+bool WindowX11::IsOpen()const{
     return mHandle;
 }
 

@@ -76,8 +76,22 @@ Error Engine::Initialize(){
     m_ErrorPlatform = Platform::Initialize();
     InitAssert(m_ErrorPlatform,"Platform::Initialize: Failed");
 
+    PixelFormat pixel;
+    pixel.Red = 8;
+    pixel.Green = 8;
+    pixel.Blue = 8;
+    pixel.Alpha = 8;
+    pixel.Depth = 24;
+    pixel.Stencil = 8;
+    pixel.Samples = 4;
+    FBConfig config;
+
+    Error ErrorFBConfig = config.PickDesired(pixel);
+    
+    InitAssert(ErrorFBConfig,"FBConfig is not supported");
+
     LogTrace("Window::Open()");
-    m_ErrorWindow = m_Window.Open(1280,720);
+    m_ErrorWindow = m_Window.Open(1280,720,config);
     InitAssert(m_ErrorWindow,"Window::Open: Can't open a window");
 
     LogTrace("StraitXMain()");
@@ -92,6 +106,7 @@ Error Engine::Initialize(){
     LogTrace("Application::OnInitialize()");
     m_ErrorApplication = m_Application->OnInitialize();
     InitAssert(m_ErrorApplication,"Application::OnInitialize: Failed");
+    LogInfo("Application::OnInitialize: Finished");
 
     return ErrorCode::Success;
 }
@@ -102,6 +117,7 @@ Error Engine::Finalize(){
         LogTrace("Application::OnFinalize()");
         m_ErrorApplication = m_Application->OnFinalize();
         InitAssert(m_ErrorApplication,"Application::OnFinalize: Failed");
+        LogInfo("Application::OnFinalize: Finished");
     }
 
     if(m_ErrorMX == ErrorCode::Success){

@@ -16,15 +16,15 @@ Window::~Window(){
     m_Impl.Close();
 }
 
-Error Window::Open(int width, int height){
-    return m_Impl.Open(width,height);
+Error Window::Open(int width, int height, const FBConfig &config){
+    return m_Impl.Open(width, height, config.Impl());
 }
 
 Error Window::Close(){
     return m_Impl.Close();
 }
 
-bool Window::IsOpen(){
+bool Window::IsOpen()const{
     return m_Impl.IsOpen();
 }
 

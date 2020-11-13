@@ -2,6 +2,7 @@
 #define STRAITX_FBCONFIG_HPP
 
 #include "platform/types.hpp"
+#include "platform/error.hpp"
 #include "platform/platform_detection.hpp"
 
 #ifdef SX_PLATFORM_LINUX
@@ -19,13 +20,15 @@ private:
 public:
     FBConfig();
 
-    FBConfig(const PixelFormat &desired);
+    Error PickDefault();
+
+    Error PickDesired(const PixelFormat &desired);
 
     FBConfigImpl &Impl();
 
-    bool IsValid();
+    const FBConfigImpl &Impl()const;
 
-    const PixelFormat &Pixel();
+    const PixelFormat &Pixel()const;
 };
 
 }; // namespace StraitX::
