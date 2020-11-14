@@ -3,22 +3,22 @@
 
 namespace StraitX{
 
-using Error = int;
 
-namespace ErrorCode{
-    enum : int{
-        None = 0,
-        Success,
-        Failure,
-        NotFound,
-        InvalidArgs,
-        NullObject,
-        AlreadyDone,
-        NotSupported,
+enum class Error{
+    None = 0,
+    Success,
+    Failure,
+    NotFound,
+    InvalidArgs,
+    NullObject,
+    AlreadyDone,
+    NotSupported,
 
-        ErrorCodesCount
-    };
-}; // namespace Error::
+    ErrorCodesCount
+};
+
+extern const char *ErrorNames[(int)Error::ErrorCodesCount];
+
 
 }; // namespace StraitX::
 

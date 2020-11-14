@@ -7,12 +7,12 @@ namespace StraitX {
 Error Platform::Initialize() {
     Windows::HInstance::Instance().Initialize();
     Windows::WindowWin32::RegClass();
-    return ErrorCode::Success;
+    return Error::Success;
 }
 
 
 Error Platform::Finalize() {
-    return ErrorCode::Success;
+    return Error::Success;
 }
 
 }; // namespace StratiX::

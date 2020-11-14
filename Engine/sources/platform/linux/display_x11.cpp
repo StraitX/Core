@@ -17,10 +17,10 @@ DisplayX11::DisplayX11():
 
 Error DisplayX11::Open(){
     mHandle = XOpenDisplay(nullptr);
-    return mHandle != nullptr ? ErrorCode::Success : ErrorCode::Failure;
+    return mHandle != nullptr ? Error::Success : Error::Failure;
 }
 Error DisplayX11::Close(){
-    return XCloseDisplay(mHandle)==0 ? ErrorCode::Success : ErrorCode::Failure;
+    return XCloseDisplay(mHandle)==0 ? Error::Success : Error::Failure;
 }
 
 bool DisplayX11::IsOpened(){

@@ -55,7 +55,7 @@ Error FBConfigX11::PickDesired(const PixelFormat &desired){
     // in case if we have not find any suitable FBConfig
     if(configsCount == 0){
         m_PixelFormat = PixelFormat();
-        return ErrorCode::NotSupported;
+        return Error::NotSupported;
     }
 
     int bestIndex = 0;
@@ -88,7 +88,7 @@ Error FBConfigX11::PickDesired(const PixelFormat &desired){
     m_PixelFormat = best;
 
     XFree(configs);
-    return ErrorCode::Success;
+    return Error::Success;
 }
 
 const PixelFormat &FBConfigX11::Pixel() const{

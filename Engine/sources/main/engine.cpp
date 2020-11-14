@@ -5,7 +5,7 @@
 #include "platform/io.hpp"
 
 
-#define InitAssert(code,message) if(!(code == ErrorCode::Success)){LogError(message); return ErrorCode::Failure;}
+#define InitAssert(source,error) Log(source,error);if(error != Error::Success){return Error::Failure;}
 
 // should be defined at client side
 extern StraitX::Application *StraitXMain();
@@ -17,9 +17,9 @@ namespace StraitX{
 Engine::Engine():
     m_Running(true),
     m_Window(),
-    m_ErrorWindow(ErrorCode::None), 
-    m_ErrorPlatform(ErrorCode::None), 
-    m_ErrorApplication(ErrorCode::None)
+    m_ErrorWindow(Error::None), 
+    m_ErrorPlatform(Error::None), 
+    m_ErrorApplication(Error::None)
 {
 
 }
@@ -29,20 +29,16 @@ Engine::~Engine(){
 }
 
 
-Error Engine::Run(){
+int Engine::Run(){
     LogTrace("Engine::Initialize()");
 
     Error initCode = Initialize();
 
-    if(initCode != ErrorCode::Success){
-        LogError("Engine::Initialize: Failed");
-        LogWarn("Engine: Force Finalizing");
-    }else{
-        LogInfo("Engine::Initialize: Finished");
-    }
+    Log("Engine::Initialize",initCode);
+
     LogSeparator();
 
-    if(initCode == ErrorCode::Success){
+    if(initCode == Error::Success){
         LogInfo("Engine: Enter Main loop");
         MainLoop();
         LogInfo("Engine: Left Main loop");
@@ -53,16 +49,13 @@ Error Engine::Run(){
     LogSeparator();
 
     LogTrace("Engine: Finalize()");
+
     Error finalizeCode = Finalize();
 
-    if(finalizeCode==ErrorCode::Success){
-        LogInfo("Engine::Finalize: Success");
-    }else{
-        LogError("Engine::Finalize: Failed");
-    }
+    Log("Engine::Finalize",finalizeCode);
 
-    if(finalizeCode != ErrorCode::Success || initCode != ErrorCode::Success)
-        return ErrorCode::Failure;
+    if(finalizeCode != Error::Success || initCode != Error::Success)
+        return -1;
 
     return 0;
 }
@@ -74,7 +67,7 @@ void Engine::Stop(){
 Error Engine::Initialize(){
     LogTrace("Platform::Initialize()");
     m_ErrorPlatform = Platform::Initialize();
-    InitAssert(m_ErrorPlatform,"Platform::Initialize: Failed");
+    InitAssert("Platform::Initialize", m_ErrorPlatform);
 
     PixelFormat pixel;
     pixel.Red = 8;
@@ -88,56 +81,55 @@ Error Engine::Initialize(){
 
     Error ErrorFBConfig = config.PickDesired(pixel);
     
-    InitAssert(ErrorFBConfig,"FBConfig is not supported");
+    InitAssert("FBConfig::PickDesired",ErrorFBConfig);
 
     LogTrace("Window::Open()");
     m_ErrorWindow = m_Window.Open(1280,720,config);
-    InitAssert(m_ErrorWindow,"Window::Open: Can't open a window");
+    InitAssert("Window::Open",m_ErrorWindow);
 
-    LogTrace("StraitXMain()");
     //Engine should be completely initialized at this moment
+    LogTrace("StraitXMain()");
     m_Application = StraitXMain();
-    m_ErrorMX = m_Application == nullptr ? ErrorCode::Failure : ErrorCode::Success;
-    InitAssert(m_ErrorMX,"StraitXMain: Application was not provided");
+    m_ErrorMX = (m_Application == nullptr ? Error::NullObject : Error::Success);
+    InitAssert("StraitXMain",m_ErrorMX);
 
     m_Window.SetTitle(m_Application->Name());
     
     m_Application->SetEngine(this);
+
     LogTrace("Application::OnInitialize()");
     m_ErrorApplication = m_Application->OnInitialize();
-    InitAssert(m_ErrorApplication,"Application::OnInitialize: Failed");
-    LogInfo("Application::OnInitialize: Finished");
+    InitAssert("Application::OnInitialize",m_ErrorApplication);
 
-    return ErrorCode::Success;
+    return Error::Success;
 }
 
 Error Engine::Finalize(){
 
-    if(m_ErrorApplication==ErrorCode::Success){
+    if(m_ErrorApplication==Error::Success){
         LogTrace("Application::OnFinalize()");
         m_ErrorApplication = m_Application->OnFinalize();
-        InitAssert(m_ErrorApplication,"Application::OnFinalize: Failed");
-        LogInfo("Application::OnFinalize: Finished");
+        Log("Application::OnFinalize",m_ErrorApplication);
     }
 
-    if(m_ErrorMX == ErrorCode::Success){
+    if(m_ErrorMX == Error::Success){
         LogTrace("StraitXExit()");
         m_ErrorMX = StraitXExit(m_Application);
-        InitAssert(m_ErrorMX,"StraitXExit: returned Failure");
+        Log("StraitXExit",m_ErrorMX);
     }
 
-    if(m_ErrorWindow == ErrorCode::Success){
+    if(m_ErrorWindow == Error::Success){
         LogTrace("Window::Close()");
         m_ErrorWindow = m_Window.Close();
-        InitAssert(m_ErrorWindow,"Window::Close: Failed");
+        Log("Window::Close",m_ErrorWindow);
     }
-    if(m_ErrorPlatform == ErrorCode::Success){
+    if(m_ErrorPlatform == Error::Success){
         LogTrace("Platform::Finalize()");
         m_ErrorPlatform = Platform::Finalize();
-        InitAssert(m_ErrorPlatform,"Platform::Finalize: Failed");
+        Log("Platform::Finalize",m_ErrorPlatform);
     }
 
-    return ErrorCode::Success;
+    return Error::Success;
 }
 
 void Engine::MainLoop(){

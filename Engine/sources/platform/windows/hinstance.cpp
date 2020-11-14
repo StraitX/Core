@@ -12,7 +12,7 @@ HInstance::HInstance():
 Error HInstance::Initialize() {
 	mInstanceHandle = (HINSTANCE)GetModuleHandle(nullptr);
 	// for now;
-	return ErrorCode::Success;
+	return Error::Success;
 }
 
 

@@ -27,6 +27,7 @@ set(SOURCES
     ${SOURCES_DIR}/platform/memory.cpp
     ${SOURCES_DIR}/platform/window.cpp
     ${SOURCES_DIR}/platform/fbconfig.cpp
+    ${SOURCES_DIR}/platform/error.cpp
 )
 
 set(INCLUDES 

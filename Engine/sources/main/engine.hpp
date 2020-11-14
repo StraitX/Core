@@ -19,7 +19,7 @@ public:
     Engine();
     ~Engine();
 
-    Error Run();
+    int Run();
 
     void Stop();
     

@@ -31,6 +31,12 @@ struct Point{
     i32 x;
     i32 y;
 };
+template <typename T>
+struct Size2{
+    T width;
+    T height;
+};
+typedef Size2<int> Size2i;
 
 struct PixelFormat{
     int Red = 0;

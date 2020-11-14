@@ -33,12 +33,12 @@ Error WindowX11::Open(int width, int height, const FBConfigX11 &config){
         GLXFBConfig fbconfig = (GLXFBConfig)config.Handle();
 
         if(fbconfig==nullptr)
-            return ErrorCode::InvalidArgs;
+            return Error::InvalidArgs;
 
         XVisualInfo *visualInfo = glXGetVisualFromFBConfig(display, fbconfig);
 
         if(visualInfo == nullptr)
-            return ErrorCode::Failure;
+            return Error::Failure;
         
         XSetWindowAttributes attributes;
         attributes.background_pixel = BlackPixel(display, mScreenIndex);
@@ -51,14 +51,14 @@ Error WindowX11::Open(int width, int height, const FBConfigX11 &config){
         XFree(visualInfo);
 
         if(mHandle == 0)
-            return ErrorCode::Failure;
+            return Error::Failure;
         
         XMapWindow(display,mHandle);
-        return ErrorCode::Success;
+        return Error::Success;
                 //long mask = ExposureMask | KeyPressMask| KeyReleaseMask| ButtonPressMask| ButtonReleaseMask| ResizeRedirectMask;
         //XSelectInput(display,mHandle,mask);
     }
-    return ErrorCode::AlreadyDone;
+    return Error::AlreadyDone;
 }
 
 
@@ -70,9 +70,9 @@ Error WindowX11::Close(){
 
         mHandle = 0;
         mScreenIndex = -1;
-        return ErrorCode::Success;
+        return Error::Success;
     }
-    return ErrorCode::NullObject;
+    return Error::NullObject;
 }
 
 bool WindowX11::IsOpen()const{
