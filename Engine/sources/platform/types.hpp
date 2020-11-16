@@ -37,6 +37,7 @@ struct Size2{
     T height;
 };
 typedef Size2<int> Size2i;
+typedef Size2<float> Size2f;
 
 struct PixelFormat{
     int Red = 0;

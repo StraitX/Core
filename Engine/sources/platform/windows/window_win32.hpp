@@ -7,6 +7,8 @@ namespace StraitX {
 class Platform;
 }; // namespace StraitX::
 
+// struct HWND__;
+
 namespace StraitX{
 namespace Windows{
 

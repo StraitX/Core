@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 00)
-set(VERSION_PATCH 26)
+set(VERSION_PATCH 27)
 
 project(
     StraitXEngine 
@@ -27,6 +27,7 @@ set(SOURCES
     ${SOURCES_DIR}/platform/memory.cpp
     ${SOURCES_DIR}/platform/window.cpp
     ${SOURCES_DIR}/platform/fbconfig.cpp
+    ${SOURCES_DIR}/platform/screen.cpp
     ${SOURCES_DIR}/platform/error.cpp
 )
 
@@ -45,6 +46,7 @@ if(STRAITX_PLATFORM_LINUX)
         ${SOURCES_DIR}/platform/linux/window_x11.cpp
         ${SOURCES_DIR}/platform/linux/events_x11.cpp
         ${SOURCES_DIR}/platform/linux/fbconfig_x11.cpp
+        ${SOURCES_DIR}/platform/linux/screen_x11.cpp
     )
 
     set(PLATFORM_LIBS
