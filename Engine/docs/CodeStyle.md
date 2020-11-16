@@ -19,10 +19,10 @@ PerformTask();
 int playersCount;
 GameObject mainBoss;
 ```
-- member variables have prefix m
+- member variables have prefix m_
 ```c++
 class Entity{
-    AnotherClass mVariable
+    AnotherClass m_Variable
     ...
 };
 ```
@@ -37,7 +37,7 @@ struct Props{
 
 ```c++
 class GameObject{
-    String sName = "GameObject"
+    String s_Name = "GameObject"
     ...
 };
 ```
@@ -45,13 +45,13 @@ class GameObject{
 - setters are named like a regular function
 ```c++
 class MyClass{
-    int mCounter;
+    int m_Counter;
 
     int Counter();
     void SetCounter(int counter);
 };
 ```
-- constant variables have prefix k. If const variable is static, s prefix should be ignored
+- constant variables have prefix k. If const variable is static, s_ prefix should be ignored
 ```c++
 String kApplicationName = "TheBestApp"
 ```
