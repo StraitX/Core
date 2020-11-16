@@ -11,9 +11,9 @@ namespace Linux{
 
 class DisplayX11{
 private:
-    ::_XDisplay *mHandle;
+    ::_XDisplay *mHandle = nullptr;
 public:
-    DisplayX11();
+    DisplayX11() = default;
 
     Error Open();
 
@@ -24,8 +24,6 @@ public:
     ScreenX11 MainScreen();
 
     ::_XDisplay *Handle();
-
-    static DisplayX11 &Instance();
 };
 
 };// namespace Linux::

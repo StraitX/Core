@@ -1,6 +1,7 @@
 #include "main/engine.hpp"
 #include "main/application.hpp"
 #include "core/log.hpp"
+#include "platform/display.hpp"
 #include "platform/platform.hpp"
 #include "platform/io.hpp"
 
@@ -18,7 +19,7 @@ Engine::Engine():
     m_Running(true),
     m_Window(),
     m_ErrorWindow(Error::None), 
-    m_ErrorPlatform(Error::None), 
+    m_ErrorDisplay(Error::None), 
     m_ErrorApplication(Error::None)
 {
 
@@ -65,9 +66,9 @@ void Engine::Stop(){
 }
 
 Error Engine::Initialize(){
-    LogTrace("Platform::Initialize()");
-    m_ErrorPlatform = Platform::Initialize();
-    InitAssert("Platform::Initialize", m_ErrorPlatform);
+    LogTrace("Display::Open()");
+    m_ErrorDisplay = Display::Instance().Open();
+    InitAssert("Display::Open", m_ErrorDisplay);
 
     PixelFormat pixel;
     pixel.Red = 8;
@@ -123,10 +124,10 @@ Error Engine::Finalize(){
         m_ErrorWindow = m_Window.Close();
         Log("Window::Close",m_ErrorWindow);
     }
-    if(m_ErrorPlatform == Error::Success){
-        LogTrace("Platform::Finalize()");
-        m_ErrorPlatform = Platform::Finalize();
-        Log("Platform::Finalize",m_ErrorPlatform);
+    if(m_ErrorDisplay == Error::Success){
+        LogTrace("Display::Close()");
+        m_ErrorDisplay = Display::Instance().Close();
+        Log("Display::Close",m_ErrorDisplay);
     }
 
     return Error::Success;

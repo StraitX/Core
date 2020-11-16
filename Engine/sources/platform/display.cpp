@@ -3,6 +3,8 @@
 namespace StraitX{
 
 
+Display Display::m_Instance;
+
 Error Display::Open(){
     return m_Impl.Open();
 }
@@ -21,6 +23,10 @@ Screen Display::MainScreen(){
 
 DisplayImpl &Display::Impl(){
     return m_Impl;
+}
+
+Display &Display::Instance(){
+    return m_Instance;
 }
 
 

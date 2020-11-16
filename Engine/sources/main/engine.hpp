@@ -14,7 +14,7 @@ private:
     Application *m_Application;
     bool m_Running;
     Window m_Window;
-    Error m_ErrorWindow, m_ErrorPlatform, m_ErrorApplication, m_ErrorMX;
+    Error m_ErrorWindow, m_ErrorDisplay, m_ErrorApplication, m_ErrorMX;
 public:
     Engine();
     ~Engine();

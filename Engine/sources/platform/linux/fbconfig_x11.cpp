@@ -1,5 +1,5 @@
 #include "platform/linux/fbconfig_x11.hpp"
-#include "platform/linux/display_x11.hpp"
+#include "platform/display.hpp"
 #include <X11/Xlib.h>
 #include <GL/glx.h>
 #undef Success
@@ -29,7 +29,7 @@ Error FBConfigX11::PickDefault(){
 
 
 Error FBConfigX11::PickDesired(const PixelFormat &desired){
-    ::Display *display = DisplayX11::Instance().Handle();
+    ::Display *display = Display::Instance().Impl().Handle();
 
     int glxAttributes[]={
 		GLX_X_RENDERABLE    , True,

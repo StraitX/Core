@@ -4,6 +4,7 @@
 #include "platform/events.hpp"
 #include "platform/error.hpp"
 #include "platform/linux/fbconfig_x11.hpp"
+#include "platform/display.hpp"
 
 namespace StraitX{
 namespace Linux{

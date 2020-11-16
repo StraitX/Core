@@ -17,6 +17,8 @@ namespace StraitX{
 class Display{
 private:
     DisplayImpl m_Impl;
+
+    static Display m_Instance;
 public:
 
     Error Open();
@@ -28,6 +30,8 @@ public:
     Screen MainScreen();
 
     DisplayImpl &Impl();
+
+    static Display &Instance();
 
 };
 

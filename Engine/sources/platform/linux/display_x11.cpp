@@ -10,13 +10,6 @@
 namespace StraitX{
 namespace Linux{
 
-static DisplayX11 display;
-
-
-DisplayX11::DisplayX11():
-    mHandle(nullptr)
-{}
-
 Error DisplayX11::Open(){
     mHandle = XOpenDisplay(nullptr);
     return mHandle != nullptr ? Error::Success : Error::Failure;
@@ -45,10 +38,6 @@ ScreenX11 DisplayX11::MainScreen(){
 
 ::Display *DisplayX11::Handle(){
     return mHandle;
-}
-
-DisplayX11 &DisplayX11::Instance(){
-    return display;
 }
 
 
