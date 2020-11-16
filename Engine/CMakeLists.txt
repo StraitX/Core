@@ -28,6 +28,7 @@ set(SOURCES
     ${SOURCES_DIR}/platform/window.cpp
     ${SOURCES_DIR}/platform/fbconfig.cpp
     ${SOURCES_DIR}/platform/screen.cpp
+    ${SOURCES_DIR}/platform/display.cpp
     ${SOURCES_DIR}/platform/error.cpp
 )
 
