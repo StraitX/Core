@@ -11,7 +11,7 @@ namespace Linux{
 
 class DisplayX11{
 private:
-    ::_XDisplay *mHandle = nullptr;
+    ::_XDisplay *m_Handle = nullptr;
 public:
     DisplayX11() = default;
 

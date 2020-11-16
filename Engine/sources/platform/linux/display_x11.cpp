@@ -11,19 +11,19 @@ namespace StraitX{
 namespace Linux{
 
 Error DisplayX11::Open(){
-    mHandle = XOpenDisplay(nullptr);
-    return mHandle != nullptr ? Error::Success : Error::Failure;
+    m_Handle = XOpenDisplay(nullptr);
+    return m_Handle != nullptr ? Error::Success : Error::Failure;
 }
 Error DisplayX11::Close(){
-    return XCloseDisplay(mHandle)==0 ? Error::Success : Error::Failure;
+    return XCloseDisplay(m_Handle)==0 ? Error::Success : Error::Failure;
 }
 
 bool DisplayX11::IsOpened(){
-    return mHandle;
+    return m_Handle;
 }
 
 ScreenX11 DisplayX11::MainScreen(){
-    Screen *screen = DefaultScreenOfDisplay(mHandle);
+    Screen *screen = DefaultScreenOfDisplay(m_Handle);
 
     Size2i size;
     size.width = XWidthOfScreen(screen);
@@ -33,11 +33,11 @@ ScreenX11 DisplayX11::MainScreen(){
     dpi.width = float(size.width) / (float(XWidthMMOfScreen(screen)) / 25.4f);
     dpi.height = float(size.height) / (float(XHeightMMOfScreen(screen)) / 25.4f);
 
-    return ScreenX11(DefaultScreen(mHandle),screen,size,dpi);
+    return ScreenX11(DefaultScreen(m_Handle),screen,size,dpi);
 }
 
 ::Display *DisplayX11::Handle(){
-    return mHandle;
+    return m_Handle;
 }
 
 
