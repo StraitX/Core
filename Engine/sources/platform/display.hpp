@@ -18,7 +18,7 @@ class Display{
 private:
     DisplayImpl m_Impl;
 
-    static Display m_Instance;
+    static Display s_Instance;
 public:
 
     Error Open();

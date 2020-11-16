@@ -3,7 +3,7 @@
 namespace StraitX{
 
 
-Display Display::m_Instance;
+Display Display::s_Instance;
 
 Error Display::Open(){
     return m_Impl.Open();
@@ -30,7 +30,7 @@ const DisplayImpl &Display::Impl()const{
 }
 
 Display &Display::Instance(){
-    return m_Instance;
+    return s_Instance;
 }
 
 
