@@ -30,7 +30,7 @@ public:
 
     ~Window();
 
-    Error Open(int width, int height, const FBConfig &config);
+    Error Open(const Screen &screen, int width, int height, const FBConfig &config);
 
     Error Close();
 

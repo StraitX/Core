@@ -16,4 +16,12 @@ const Size2f &Screen::DPI()const{
     return m_Impl.DPI();
 }
 
+ScreenImpl &Screen::Impl(){
+    return m_Impl;
+}
+
+const ScreenImpl &Screen::Impl()const{
+    return m_Impl;
+}
+
 }; // namespace StraitX::

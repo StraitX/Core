@@ -12,7 +12,6 @@ namespace Linux{
 class WindowX11{
 private:
     unsigned long mHandle;
-    int mScreenIndex;
 public:
     WindowX11();
 
@@ -20,7 +19,7 @@ public:
 
     WindowX11(WindowX11 &&other);
 
-    Error Open(int width, int height, const FBConfigX11 &fbconfig);
+    Error Open(const ScreenX11 &screen, int width, int height, const FBConfigX11 &fbconfig);
 
     Error Close();
 

@@ -85,7 +85,7 @@ Error Engine::Initialize(){
     InitAssert("FBConfig::PickDesired",ErrorFBConfig);
 
     LogTrace("Window::Open()");
-    m_ErrorWindow = m_Window.Open(1280,720,config);
+    m_ErrorWindow = m_Window.Open(Display::Instance().MainScreen(),1280,720,config);
     InitAssert("Window::Open",m_ErrorWindow);
 
     //Engine should be completely initialized at this moment

@@ -25,6 +25,10 @@ public:
 
     const Size2f &DPI()const;
 
+    ScreenImpl &Impl();
+
+    const ScreenImpl &Impl()const;
+
 };
 
 }; // namespace StraitX::

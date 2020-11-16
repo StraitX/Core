@@ -16,12 +16,16 @@ Window::~Window(){
     m_Impl.Close();
 }
 
-Error Window::Open(int width, int height, const FBConfig &config){
-    return m_Impl.Open(width, height, config.Impl());
+Error Window::Open(const Screen &screen, int width, int height, const FBConfig &config){
+    if(!IsOpen())
+        return m_Impl.Open(screen.Impl(), width, height, config.Impl());
+    return Error::AlreadyDone;
 }
 
 Error Window::Close(){
-    return m_Impl.Close();
+    if(IsOpen())
+        return m_Impl.Close();
+    return Error::NullObject;
 }
 
 bool Window::IsOpen()const{
@@ -29,11 +33,13 @@ bool Window::IsOpen()const{
 }
 
 void Window::SetTitle(const char *title){
-    m_Impl.SetTitle(title);
+    if(IsOpen())
+        m_Impl.SetTitle(title);
 }
 
 void Window::SetSize(int width, int height){
-    m_Impl.SetSize(width,height);
+    if(IsOpen())
+        m_Impl.SetSize(width,height);
 }
 
 bool Window::PollEvent(Event &event){
