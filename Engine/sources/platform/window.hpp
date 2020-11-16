@@ -4,6 +4,8 @@
 #include "platform/platform_detection.hpp"
 #include "platform/events.hpp"
 #include "platform/fbconfig.hpp"
+#include "platform/screen.hpp"
+#include "platform/display.hpp"
 
 #ifdef SX_PLATFORM_LINUX
     #include "platform/linux/window_x11.hpp"
@@ -22,7 +24,7 @@ private:
     WindowImpl m_Impl;
 public:
 
-    Window();
+    Window(Display &display);
 
     Window(const Window &other) = delete;
 

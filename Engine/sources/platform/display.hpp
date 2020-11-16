@@ -30,6 +30,8 @@ public:
     Screen MainScreen();
 
     DisplayImpl &Impl();
+    
+    const DisplayImpl &Impl()const;
 
     static Display &Instance();
 

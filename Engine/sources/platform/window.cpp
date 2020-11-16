@@ -1,9 +1,10 @@
 #include "platform/window.hpp"
+#include "platform/display.hpp"
 
 namespace StraitX{
 
-Window::Window():
-    m_Impl()
+Window::Window(Display &display):
+    m_Impl(display.Impl())
 {}
 
 Window::Window(Window &&other):

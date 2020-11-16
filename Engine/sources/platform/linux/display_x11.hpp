@@ -15,6 +15,8 @@ private:
 public:
     DisplayX11() = default;
 
+    DisplayX11(const DisplayX11 &other) = default;
+
     Error Open();
 
     Error Close();

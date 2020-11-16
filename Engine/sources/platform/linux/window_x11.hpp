@@ -4,16 +4,18 @@
 #include "platform/events.hpp"
 #include "platform/error.hpp"
 #include "platform/linux/fbconfig_x11.hpp"
-#include "platform/display.hpp"
+#include "platform/linux/display_x11.hpp"
 
 namespace StraitX{
 namespace Linux{
 
 class WindowX11{
 private:
-    unsigned long mHandle;
+    unsigned long m_Handle = 0;
+    DisplayX11 &m_Display;
 public:
-    WindowX11();
+
+    WindowX11(DisplayX11 &display);
 
     WindowX11(const WindowX11 &other) = delete;
 

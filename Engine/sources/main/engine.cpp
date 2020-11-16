@@ -17,7 +17,7 @@ namespace StraitX{
 
 Engine::Engine():
     m_Running(true),
-    m_Window(),
+    m_Window(Display::Instance()),
     m_ErrorWindow(Error::None), 
     m_ErrorDisplay(Error::None), 
     m_ErrorApplication(Error::None)

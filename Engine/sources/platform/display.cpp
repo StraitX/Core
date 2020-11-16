@@ -25,6 +25,10 @@ DisplayImpl &Display::Impl(){
     return m_Impl;
 }
 
+const DisplayImpl &Display::Impl()const{
+    return m_Impl;
+}
+
 Display &Display::Instance(){
     return m_Instance;
 }
