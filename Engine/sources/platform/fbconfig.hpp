@@ -4,6 +4,8 @@
 #include "platform/types.hpp"
 #include "platform/error.hpp"
 #include "platform/platform_detection.hpp"
+#include "platform/display.hpp"
+#include "platform/screen.hpp"
 
 #ifdef SX_PLATFORM_LINUX
     #include "platform/linux/fbconfig_x11.hpp"
@@ -18,11 +20,11 @@ class FBConfig{
 private:
     FBConfigImpl m_Impl;
 public:
-    FBConfig();
+    FBConfig(Display &display);
 
-    Error PickDefault();
+    Error PickDefault(const Screen &screen);
 
-    Error PickDesired(const PixelFormat &desired);
+    Error PickDesired(const PixelFormat &desired, const Screen &screen);
 
     FBConfigImpl &Impl();
 

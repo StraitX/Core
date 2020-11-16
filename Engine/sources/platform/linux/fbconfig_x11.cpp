@@ -1,5 +1,4 @@
 #include "platform/linux/fbconfig_x11.hpp"
-#include "platform/display.hpp"
 #include <X11/Xlib.h>
 #include <GL/glx.h>
 #undef Success
@@ -9,12 +8,13 @@
 namespace StraitX{
 namespace Linux{
 
-FBConfigX11::FBConfigX11():
-    m_Handle(nullptr)
+FBConfigX11::FBConfigX11(DisplayX11 &display):
+    m_Handle(nullptr),
+    m_Display(display)
 {}
 
 
-Error FBConfigX11::PickDefault(){
+Error FBConfigX11::PickDefault(const ScreenX11 &screen){
     return PickDesired({
         .Red = 1,
         .Green = 1,
@@ -23,13 +23,13 @@ Error FBConfigX11::PickDefault(){
         .Depth = 0,
         .Stencil = 0,
         .Samples = 0
-    });
+    },screen);
 }
 
 
 
-Error FBConfigX11::PickDesired(const PixelFormat &desired){
-    ::Display *display = Display::Instance().Impl().Handle();
+Error FBConfigX11::PickDesired(const PixelFormat &desired, const ScreenX11 &screen){
+    ::Display *display = m_Display.Handle();
 
     int glxAttributes[]={
 		GLX_X_RENDERABLE    , True,
@@ -50,7 +50,7 @@ Error FBConfigX11::PickDesired(const PixelFormat &desired){
     };
 
     int configsCount = 0;
-    GLXFBConfig *configs = glXChooseFBConfig(display,DefaultScreen(display),glxAttributes,&configsCount);
+    GLXFBConfig *configs = glXChooseFBConfig(display,screen.m_Index,glxAttributes,&configsCount);
 
     // in case if we have not find any suitable FBConfig
     if(configsCount == 0){

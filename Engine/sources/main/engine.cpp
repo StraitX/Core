@@ -78,9 +78,9 @@ Error Engine::Initialize(){
     pixel.Depth = 24;
     pixel.Stencil = 8;
     pixel.Samples = 4;
-    FBConfig config;
+    FBConfig config(Display::Instance());
 
-    Error ErrorFBConfig = config.PickDesired(pixel);
+    Error ErrorFBConfig = config.PickDesired(pixel,Display::Instance().MainScreen());
     
     InitAssert("FBConfig::PickDesired",ErrorFBConfig);
 

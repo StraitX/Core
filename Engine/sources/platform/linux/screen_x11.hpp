@@ -7,6 +7,7 @@ namespace StraitX{
 namespace Linux{
 
 class WindowX11;
+class FBConfigX11;
 
 class ScreenX11{
 private:
@@ -16,6 +17,7 @@ private:
     Size2f m_DPI;
 
     friend class WindowX11;
+    friend class FBConfigX11;
 public:
     ScreenX11(unsigned int index, void *handle, const Size2i &size, const Size2f &dpi);
 
