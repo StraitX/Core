@@ -18,7 +18,7 @@ namespace StraitX{
 
 Engine::Engine():
     m_Running(true),
-    m_Display(Display::Instance()),
+    m_Display(),
     m_Window(m_Display),
     m_ErrorWindow(Error::None), 
     m_ErrorDisplay(Error::None), 
@@ -81,10 +81,10 @@ Error Engine::Initialize(){
     LogTrace("Display::Support Checks: Done");
 
     LogTrace("Keyboard::Initialze");
-    Keyboard::Initialize(Display::Instance().Impl());
+    Keyboard::Initialize(m_Display.Impl());
 
     LogTrace("Mouse::Initialize");
-    Mouse::Initialize(Display::Instance().Impl());
+    Mouse::Initialize(m_Display.Impl());
 
     PixelFormat pixel;
     pixel.Red = 8;
@@ -94,14 +94,14 @@ Error Engine::Initialize(){
     pixel.Depth = 24;
     pixel.Stencil = 8;
     pixel.Samples = 4;
-    FBConfig config(Display::Instance());
+    FBConfig config(m_Display);
 
-    Error ErrorFBConfig = config.PickDesired(pixel,Display::Instance().MainScreen());
+    Error ErrorFBConfig = config.PickDesired(pixel,m_Display.MainScreen());
     
     InitAssert("FBConfig::PickDesired",ErrorFBConfig);
 
     LogTrace("Window::Open()");
-    m_ErrorWindow = m_Window.Open(Display::Instance().MainScreen(),1280,720,config);
+    m_ErrorWindow = m_Window.Open(m_Display.MainScreen(),1280,720,config);
     InitAssert("Window::Open",m_ErrorWindow);
 
     //Engine should be completely initialized at this moment
@@ -142,7 +142,7 @@ Error Engine::Finalize(){
     }
     if(m_ErrorDisplay == Error::Success){
         LogTrace("Display::Close()");
-        m_ErrorDisplay = Display::Instance().Close();
+        m_ErrorDisplay = m_Display.Close();
         Log("Display::Close",m_ErrorDisplay);
     }
 

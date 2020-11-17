@@ -19,8 +19,6 @@ namespace StraitX{
 class Display{
 private:
     DisplayImpl m_Impl;
-
-    static Display s_Instance;
 public:
 
     enum class Ext{
@@ -42,8 +40,6 @@ public:
     DisplayImpl &Impl();
     
     const DisplayImpl &Impl()const;
-
-    static Display &Instance();
 
 };
 

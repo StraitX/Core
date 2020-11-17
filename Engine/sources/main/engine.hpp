@@ -13,7 +13,7 @@ class Engine{
 private:
     Application *m_Application;
     bool m_Running;
-    Display &m_Display;
+    Display m_Display;
     Window m_Window;
     Error m_ErrorWindow, m_ErrorDisplay, m_ErrorApplication, m_ErrorMX;
 public:

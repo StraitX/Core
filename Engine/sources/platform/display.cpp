@@ -2,9 +2,6 @@
 
 namespace StraitX{
 
-
-Display Display::s_Instance;
-
 Error Display::Open(){
     return m_Impl.Open();
 }
@@ -32,10 +29,5 @@ DisplayImpl &Display::Impl(){
 const DisplayImpl &Display::Impl()const{
     return m_Impl;
 }
-
-Display &Display::Instance(){
-    return s_Instance;
-}
-
 
 }; // namespace StraitX::

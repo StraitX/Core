@@ -48,7 +48,7 @@ if(STRAITX_PLATFORM_LINUX)
         ${SOURCES_DIR}/platform/linux/events_x11.cpp
         ${SOURCES_DIR}/platform/linux/fbconfig_x11.cpp
         ${SOURCES_DIR}/platform/linux/screen_x11.cpp
-        ${SOURCES_DIR}/platform/linux/glcontext_x11.cpp
+        #${SOURCES_DIR}/platform/linux/glcontext_x11.cpp
     )
 
     set(PLATFORM_LIBS
