@@ -70,6 +70,10 @@ Error Engine::Initialize(){
     m_ErrorDisplay = Display::Instance().Open();
     InitAssert("Display::Open", m_ErrorDisplay);
 
+    Keyboard::Initialize(Display::Instance().Impl());
+
+    Mouse::Initialize(Display::Instance().Impl());
+
     PixelFormat pixel;
     pixel.Red = 8;
     pixel.Green = 8;

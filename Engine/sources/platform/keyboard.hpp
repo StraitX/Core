@@ -1,6 +1,7 @@
 #ifndef STRAITX_KEYBOARD_HPP
 #define STRAITX_KEYBOARD_HPP
 
+#include "platform/display.hpp"
 
 namespace StraitX{
 namespace Keyboard{
@@ -130,6 +131,8 @@ namespace Keyboard{
 
         Last = Menu
     };
+
+    void Initialize(const DisplayImpl &display);
 
     bool IsKeyPressed(KeyCode code);
 

@@ -2,7 +2,7 @@
 #define STRAITX_MOUSE_HPP
 
 #include "platform/types.hpp"
-
+#include "platform/display.hpp"
 
 namespace StraitX{
 namespace Mouse{
@@ -17,6 +17,8 @@ namespace Mouse{
 
         ButtonCount
     };
+
+    void Initialize(const DisplayImpl &display);
 
     bool IsButtonPressed(Button button);
 

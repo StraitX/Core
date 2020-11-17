@@ -1,14 +1,21 @@
 
 #include "platform/keyboard.hpp"
-#include "platform/display.hpp"
+#include "platform/linux/display_x11.hpp"
 #include "platform/linux/keys_x11.hpp"
 #include <X11/Xlib.h>
-#include "unistd.h"
+
 namespace StraitX{
 namespace Keyboard{
 
+static Linux::DisplayX11 s_Display;
+
+
+void Initialize(const Linux::DisplayX11 &display){
+    s_Display = display;
+}
+
 bool IsKeyPressed(KeyCode code){
-    ::Display *display = Display::Instance().Impl().Handle();
+    ::Display *display = s_Display.Handle();
 
     KeySym sym = Linux::KeyCodeToXKeySym(code);
     ::KeyCode keyCode = XKeysymToKeycode(display,sym);  
@@ -18,7 +25,6 @@ bool IsKeyPressed(KeyCode code){
         XQueryKeymap(display,keymap);
         return (keymap[keyCode/8] & (1 << (keyCode%8))) != 0;
     }else{
-        write(1,"Keyboard:: shit has happened",29);
         return false;
     }
 }
