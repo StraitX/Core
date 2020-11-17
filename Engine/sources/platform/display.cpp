@@ -17,6 +17,10 @@ bool Display::IsOpen(){
     return m_Impl.IsOpened();
 }
 
+bool Display::CheckSupport(Ext extension){
+    return m_Impl.CheckSupport((DisplayImpl::Ext)extension);
+}
+
 Screen Display::MainScreen(){
     return Screen(m_Impl.MainScreen());
 }

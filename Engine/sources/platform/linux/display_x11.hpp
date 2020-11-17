@@ -13,6 +13,13 @@ class DisplayX11{
 private:
     ::_XDisplay *m_Handle = nullptr;
 public:
+    enum class Ext{
+        DoubleBuffer = 0,
+        OpenGLLegacy,
+        OpenGLCore,
+        Count
+    };
+public:
     DisplayX11() = default;
 
     DisplayX11(const DisplayX11 &other) = default;
@@ -23,9 +30,15 @@ public:
 
     bool IsOpened();
 
+    bool CheckSupport(Ext extension);
+
     ScreenX11 MainScreen();
 
     ::_XDisplay *Handle();
+private:
+    bool CheckX11Extension(const char *name);
+
+    bool CheckGLXExtension(const char *name);
 };
 
 };// namespace Linux::

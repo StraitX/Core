@@ -14,6 +14,8 @@
 
 namespace StraitX{
 
+
+
 class Display{
 private:
     DisplayImpl m_Impl;
@@ -21,11 +23,19 @@ private:
     static Display s_Instance;
 public:
 
+    enum class Ext{
+        DoubleBuffer = 0,
+        OpenGLLegacy,
+        OpenGLCore
+    };
+
     Error Open();
 
     Error Close();
 
     bool IsOpen();
+
+    bool CheckSupport(Ext extension);
 
     Screen MainScreen();
 

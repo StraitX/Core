@@ -1,9 +1,12 @@
 #include "platform/linux/display_x11.hpp"
-#include "X11/Xlib.h"
+#include <X11/Xlib.h>
+#include <GL/glx.h>
+#include <string.h>
+#undef Success
 #include "platform/linux/screen_x11.hpp"
 #include "platform/types.hpp"
 //undef X11 macro to resolve conflicts
-#undef Success
+
 #include "platform/error.hpp"
 
 
@@ -20,6 +23,16 @@ Error DisplayX11::Close(){
 
 bool DisplayX11::IsOpened(){
     return m_Handle;
+}
+
+bool DisplayX11::CheckSupport(Ext extension){
+    switch (extension) {
+    case Ext::DoubleBuffer: return CheckX11Extension("DOUBLE-BUFFER");
+    case Ext::OpenGLLegacy: return CheckX11Extension("GLX");
+    case Ext::OpenGLCore: return (CheckX11Extension("GLX") ? CheckGLXExtension("GLX_ARB_create_context") : false);
+    case Ext::Count: return false;
+    }
+    return false;
 }
 
 ScreenX11 DisplayX11::MainScreen(){
@@ -40,6 +53,16 @@ ScreenX11 DisplayX11::MainScreen(){
     return m_Handle;
 }
 
+bool DisplayX11::CheckX11Extension(const char *name){
+    int opcode, event_base, error_base;
+    return XQueryExtension(m_Handle, name, &opcode, &event_base, &error_base);
+}
+
+bool DisplayX11::CheckGLXExtension(const char *name){
+    const char *extensions = glXQueryExtensionsString(m_Handle, DefaultScreen(m_Handle));
+
+    return strstr(extensions, name) != 0;
+}
 
 };// namespace Linux::
 };// namespace StraitX::

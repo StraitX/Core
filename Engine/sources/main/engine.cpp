@@ -7,6 +7,7 @@
 
 
 #define InitAssert(source,error) Log(source,error);if(error != Error::Success){return Error::Failure;}
+#define SupportAssert(b, name) if(b){ LogInfo(name ": Supported"); }else{ LogError(name ": Is Not Supported"); return Error::Failure;}
 
 // should be defined at client side
 extern StraitX::Application *StraitXMain();
@@ -17,7 +18,8 @@ namespace StraitX{
 
 Engine::Engine():
     m_Running(true),
-    m_Window(Display::Instance()),
+    m_Display(Display::Instance()),
+    m_Window(m_Display),
     m_ErrorWindow(Error::None), 
     m_ErrorDisplay(Error::None), 
     m_ErrorApplication(Error::None)
@@ -67,11 +69,21 @@ void Engine::Stop(){
 
 Error Engine::Initialize(){
     LogTrace("Display::Open()");
-    m_ErrorDisplay = Display::Instance().Open();
+    m_ErrorDisplay = m_Display.Open();
     InitAssert("Display::Open", m_ErrorDisplay);
 
+    LogTrace("Display: Strarting Support Checks...");
+
+    SupportAssert(m_Display.CheckSupport(Display::Ext::DoubleBuffer),"Display::DoubleBuffer ");
+    SupportAssert(m_Display.CheckSupport(Display::Ext::OpenGLLegacy),"Display::OpenGL Legacy");
+    SupportAssert(m_Display.CheckSupport(Display::Ext::OpenGLCore),"Display::OpenGL Core  ");
+
+    LogTrace("Display::Support Checks: Done");
+
+    LogTrace("Keyboard::Initialze");
     Keyboard::Initialize(Display::Instance().Impl());
 
+    LogTrace("Mouse::Initialize");
     Mouse::Initialize(Display::Instance().Impl());
 
     PixelFormat pixel;
