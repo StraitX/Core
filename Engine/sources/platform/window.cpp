@@ -29,6 +29,14 @@ Error Window::Close(){
     return Error::NullObject;
 }
 
+WindowImpl &Window::Impl(){
+    return m_Impl;
+}
+
+const WindowImpl &Window::Impl()const{
+    return m_Impl;
+}
+
 bool Window::IsOpen()const{
     return m_Impl.IsOpen();
 }

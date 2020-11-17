@@ -1,7 +1,10 @@
 #include <X11/Xlib.h>
 #undef Success
 #undef None
+#undef KeyPress
+#undef KeyRelease
 #include "platform/mouse.hpp"
+#include "platform/window.hpp"
 #include "platform/linux/display_x11.hpp"
 
 namespace StraitX{
@@ -15,7 +18,7 @@ void Mouse::Initialize(const Linux::DisplayX11 &display){
 bool Mouse::IsButtonPressed(Mouse::Button button){
     ::Display *display = s_Display.Handle();
 
-    Window root,child;
+    ::Window root,child;
     int x,y;
     unsigned int button_mask;
     XQueryPointer(display,RootWindow(display,DefaultScreen(display)),&root,&child,&x,&y,&x,&y,&button_mask);
@@ -34,13 +37,24 @@ bool Mouse::IsButtonPressed(Mouse::Button button){
 Point Mouse::GlobalPosition(){
     ::Display *display = s_Display.Handle();
 
-    Window root,child;
+    ::Window root,child;
     Point choosen,global;
     unsigned int mask;
     
     XQueryPointer(display,RootWindow(display,DefaultScreen(display)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
 
     return global;
+}
+
+Point Mouse::RelativePosition(const Window &window){
+    ::Display *display = s_Display.Handle();
+
+    ::Window root,child;
+    Point choosen,global;
+    unsigned int mask;
+    
+    XQueryPointer(display,window.Impl().Handle(),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
+    return choosen;
 }
 
 };

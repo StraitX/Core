@@ -36,6 +36,10 @@ public:
 
     Error Close();
 
+    WindowImpl &Impl();
+
+    const WindowImpl &Impl()const;
+
     bool IsOpen()const;
 
     void SetTitle(const char *title);

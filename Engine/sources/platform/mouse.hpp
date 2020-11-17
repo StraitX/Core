@@ -5,6 +5,10 @@
 #include "platform/display.hpp"
 
 namespace StraitX{
+    class Window;
+};
+
+namespace StraitX{
 namespace Mouse{
 
     enum Button{
@@ -23,7 +27,8 @@ namespace Mouse{
     bool IsButtonPressed(Button button);
 
     Point GlobalPosition();
-    //static Vector2i RelativePosition(const Window &window);
+
+    Point RelativePosition(const Window &window);
 
 }; // namespace Mouse::
 

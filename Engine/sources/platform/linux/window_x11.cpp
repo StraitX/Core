@@ -61,6 +61,10 @@ Error WindowX11::Close(){
     return Error::Success;
 }
 
+unsigned long WindowX11::Handle()const{
+    return m_Handle;
+}
+
 bool WindowX11::IsOpen()const{
     return m_Handle;
 }

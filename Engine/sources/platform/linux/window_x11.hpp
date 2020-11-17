@@ -25,6 +25,8 @@ public:
 
     Error Close();
 
+    unsigned long Handle()const;
+
     bool IsOpen() const;
 
     void SetTitle(const char *title);
