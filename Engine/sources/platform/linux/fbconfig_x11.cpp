@@ -8,14 +8,13 @@
 namespace StraitX{
 namespace Linux{
 
-FBConfigX11::FBConfigX11(DisplayX11 &display):
+FBConfigX11::FBConfigX11():
     m_Handle(nullptr),
-    m_Display(display)
+    m_VisualInfo(nullptr)
 {}
 
-
-Error FBConfigX11::PickDefault(const ScreenX11 &screen){
-    return PickDesired({
+Error FBConfigX11::PickDefault(DisplayX11 &display,const ScreenX11 &screen){
+    return PickDesired(display,screen,{
         .Red = 1,
         .Green = 1,
         .Blue = 1,
@@ -23,13 +22,11 @@ Error FBConfigX11::PickDefault(const ScreenX11 &screen){
         .Depth = 0,
         .Stencil = 0,
         .Samples = 0
-    },screen);
+    });
 }
 
-
-
-Error FBConfigX11::PickDesired(const PixelFormat &desired, const ScreenX11 &screen){
-    ::Display *display = m_Display.Handle();
+Error FBConfigX11::PickDesired(DisplayX11 &display_x11, const ScreenX11 &screen, const PixelFormat &desired){
+    ::Display *display = display_x11.Handle();
 
     int glxAttributes[]={
 		GLX_X_RENDERABLE    , True,

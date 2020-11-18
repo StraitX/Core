@@ -12,15 +12,14 @@ namespace Linux{
 class FBConfigX11{
 private:
     PixelFormat m_PixelFormat;
-    DisplayX11 &m_Display;
     void *m_Handle;
     void *m_VisualInfo;
 public:
-    FBConfigX11(DisplayX11 &display);
+    FBConfigX11();
 
-    Error PickDefault(const ScreenX11 &screen);
+    Error PickDefault(DisplayX11 &m_Display, const ScreenX11 &screen);
 
-    Error PickDesired(const PixelFormat &desired, const ScreenX11 &screen);
+    Error PickDesired(DisplayX11 &m_Display, const ScreenX11 &screen, const PixelFormat &desired);
 
     const PixelFormat &Pixel() const;
 

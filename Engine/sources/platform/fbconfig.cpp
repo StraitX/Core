@@ -3,16 +3,16 @@
 
 namespace StraitX{
 
-FBConfig::FBConfig(StraitX::Display &display):
-    m_Impl(display.Impl())
+FBConfig::FBConfig():
+    m_Impl()
 {}
 
-Error FBConfig::PickDefault(const Screen &screen){
-    return m_Impl.PickDefault(screen.Impl());
+Error FBConfig::PickDefault(Display &display, const Screen &screen){
+    return m_Impl.PickDefault(display.Impl(), screen.Impl());
 }
 
-Error FBConfig::PickDesired(const PixelFormat &desired, const Screen &screen){
-    return m_Impl.PickDesired(desired,screen.Impl());
+Error FBConfig::PickDesired(Display &display, const Screen &screen,const PixelFormat &desired){
+    return m_Impl.PickDesired(display.Impl(),screen.Impl(),desired);
 }
 
 FBConfigImpl &FBConfig::Impl(){

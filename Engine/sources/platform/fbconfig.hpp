@@ -20,11 +20,11 @@ class FBConfig{
 private:
     FBConfigImpl m_Impl;
 public:
-    FBConfig(Display &display);
+    FBConfig();
 
-    Error PickDefault(const Screen &screen);
+    Error PickDefault(Display &display, const Screen &screen);
 
-    Error PickDesired(const PixelFormat &desired, const Screen &screen);
+    Error PickDesired(Display &display, const Screen &screen,const PixelFormat &desired);
 
     FBConfigImpl &Impl();
 
