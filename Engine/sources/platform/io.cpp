@@ -52,6 +52,9 @@ char *BufferPrint(char *buffer, const double &num){
 char *BufferPrint(char *buffer, const void *ptr){
     return buffer + sprintf(buffer,"%p",ptr);
 }
+char *BufferPrint(char *buffer, const Version &version){
+    return BufferPrint(BufferPrint(BufferPrint(BufferPrint(BufferPrint(buffer,version.Major),'.'),version.Minor),'.'),version.Patch);
+}
 
 
 void Output::Print(const char *string){

@@ -17,6 +17,7 @@ char *BufferPrint(char *buffer, const unsigned long long &num);
 char *BufferPrint(char *buffer, const float &num);
 char *BufferPrint(char *buffer, const double &num);
 char *BufferPrint(char *buffer, const void *ptr);
+char *BufferPrint(char *buffer, const Version &version);
 
 class Output{
 public:
