@@ -11,11 +11,17 @@ Bool CheckEvent(::Display *display, XEvent *event, XPointer userData){
 
 Event ToStraitXEvent(const XEvent &event){
     Event sxEvent;
+    Atom close_atom;
     switch (event.type)
     {
     // Event recieved on window Close button 
-    case DestroyNotify:
-        sxEvent.Type = EventType::WindowClose;
+    case ClientMessage:
+        close_atom = XInternAtom(event.xany.display,"WM_DELETE_WINDOW",0);
+        if (event.xclient.data.l[0] == close_atom) {
+            sxEvent.Type = EventType::WindowClose;
+        }else{
+            sxEvent.Type = EventType::Unknown;
+        }
         return sxEvent;
 
     case ResizeRequest:

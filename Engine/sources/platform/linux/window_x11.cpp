@@ -49,6 +49,11 @@ Error WindowX11::Open(const ScreenX11 &screen, int width, int height, const FBCo
     if(m_Handle == 0)
         return Error::Failure;
     
+    //intercept close event
+    Atom close_atom = XInternAtom(display,"WM_DELETE_WINDOW",0);
+    XSetWMProtocols(display,m_Handle,&close_atom,1);
+
+
     XMapWindow(display,m_Handle);
     // do not forget to save window config after creation
     m_FBConfig = config;
