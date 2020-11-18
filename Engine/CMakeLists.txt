@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 00)
-set(VERSION_PATCH 29)
+set(VERSION_PATCH 30)
 
 project(
     StraitXEngine 
@@ -14,6 +14,7 @@ project(
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 set(SOURCES_DIR ${PROJECT_SOURCE_DIR}/sources)
+set(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/thirdparty)
 
 include(Config)
 
@@ -30,10 +31,17 @@ set(SOURCES
     ${SOURCES_DIR}/platform/screen.cpp
     ${SOURCES_DIR}/platform/display.cpp
     ${SOURCES_DIR}/platform/error.cpp
+    ${SOURCES_DIR}/platform/glloader.cpp
+    ${SOURCES_DIR}/platform/glcontext.cpp
+)
+
+set(LIBS 
+    glad
 )
 
 set(INCLUDES 
     ${SOURCES_DIR}
+    ${THIRDPARTY_DIR}/glad/include
 )
 
 if(STRAITX_PLATFORM_LINUX)
@@ -48,11 +56,15 @@ if(STRAITX_PLATFORM_LINUX)
         ${SOURCES_DIR}/platform/linux/events_x11.cpp
         ${SOURCES_DIR}/platform/linux/fbconfig_x11.cpp
         ${SOURCES_DIR}/platform/linux/screen_x11.cpp
-        #${SOURCES_DIR}/platform/linux/glcontext_x11.cpp
+        ${SOURCES_DIR}/platform/linux/glloader_x11.cpp
+        ${SOURCES_DIR}/platform/linux/glcontext_x11.cpp
     )
 
     set(PLATFORM_LIBS
-        X11 GLX
+        X11 
+        GLX
+        GL
+        dl
     )
 elseif(STRAITX_PLATFORM_WINDOWS)
     set(PLATFORM_SOURCES
@@ -78,4 +90,4 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/glad)
 
 add_library(StraitX STATIC ${SOURCES} ${PLATFORM_SOURCES})
 target_include_directories(StraitX PUBLIC ${INCLUDES})
-target_link_libraries(StraitX PUBLIC ${PLATFORM_LIBS})
+target_link_libraries(StraitX PUBLIC ${PLATFORM_LIBS} ${LIBS})

@@ -13,6 +13,7 @@ class WindowX11{
 private:
     unsigned long m_Handle = 0;
     DisplayX11 &m_Display;
+    FBConfigX11 m_FBConfig;
 public:
 
     WindowX11(DisplayX11 &display);
@@ -26,6 +27,10 @@ public:
     Error Close();
 
     unsigned long Handle()const;
+
+    DisplayX11 &Display();
+
+    const FBConfigX11 &FBConfig()const;
 
     bool IsOpen() const;
 

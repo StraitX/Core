@@ -3,7 +3,7 @@
 
 #include "platform/error.hpp"
 #include "platform/window.hpp"
-
+#include "platform/glcontext.hpp"
 
 namespace StraitX{
 
@@ -15,6 +15,7 @@ private:
     bool m_Running;
     Display m_Display;
     Window m_Window;
+    GLContext m_Context;
     Error m_ErrorWindow, m_ErrorDisplay, m_ErrorApplication, m_ErrorMX;
 public:
     Engine();

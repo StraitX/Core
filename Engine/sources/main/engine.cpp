@@ -4,6 +4,9 @@
 #include "platform/display.hpp"
 #include "platform/platform.hpp"
 #include "platform/io.hpp"
+#include "platform/glloader.hpp"
+#include "platform/glcontext.hpp"
+#include "platform/opengl.hpp"
 
 
 #define InitAssert(source,error) Log(source,error);if(error != Error::Success){return Error::Failure;}
@@ -20,6 +23,7 @@ Engine::Engine():
     m_Running(true),
     m_Display(),
     m_Window(m_Display),
+    m_Context(m_Window),
     m_ErrorWindow(Error::None), 
     m_ErrorDisplay(Error::None), 
     m_ErrorApplication(Error::None)
@@ -94,15 +98,36 @@ Error Engine::Initialize(){
     pixel.Depth = 24;
     pixel.Stencil = 8;
     pixel.Samples = 4;
-    FBConfig config(m_Display);
+    FBConfig config;
 
-    Error ErrorFBConfig = config.PickDesired(pixel,m_Display.MainScreen());
+    Error ErrorFBConfig = config.PickDesired(m_Display,m_Display.MainScreen(),pixel);
     
     InitAssert("FBConfig::PickDesired",ErrorFBConfig);
 
     LogTrace("Window::Open()");
     m_ErrorWindow = m_Window.Open(m_Display.MainScreen(),1280,720,config);
     InitAssert("Window::Open",m_ErrorWindow);
+
+    Version glVersion = {4,6,0};
+
+    LogTrace("OpenGL Context::Create()");
+    Error ErrorContext = m_Context.Create(config, glVersion);
+    InitAssert("OpenGL Context::Create", ErrorContext);
+
+    LogTrace("OpenGL Context::MakeCurrent()");
+    InitAssert("OpenGL Context::MakeCurrent",m_Context.MakeCurrent());
+
+    LogTrace("OpenGLLoader::Load()");
+    Error ErrorOpenGL = OpenGLLoader::Load();
+    InitAssert("OpenGLLoader::Load", ErrorOpenGL);
+
+    LogTrace("OpenGLLoader: Checks");
+    glVersion = OpenGLLoader::OpenGLVersion();
+    Output::Printf("OpenGLLoader: OpenGL %\n",glVersion);
+
+    Output::Printf("OpenGL Renderer: %\n", (const char *)glGetString(GL_RENDERER));
+    Output::Printf("OpenGL Version : %\n", (const char *)glGetString(GL_VERSION));
+    Output::Printf("OpenGL Vendor  : %\n", (const char *)glGetString(GL_VENDOR));
 
     //Engine should be completely initialized at this moment
     LogTrace("StraitXMain()");
@@ -152,6 +177,7 @@ Error Engine::Finalize(){
 void Engine::MainLoop(){
     while(m_Running){
         m_Application->OnUpdate();
+        m_Context.SwapBuffers();
     }
 }
 

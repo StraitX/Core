@@ -19,6 +19,7 @@ WindowX11::WindowX11(WindowX11 &&other):
 {
     m_Handle = other.m_Handle;
     other.m_Handle = 0;
+    m_FBConfig = other.m_FBConfig;
 }
 
 
@@ -49,6 +50,8 @@ Error WindowX11::Open(const ScreenX11 &screen, int width, int height, const FBCo
         return Error::Failure;
     
     XMapWindow(display,m_Handle);
+    // do not forget to save window config after creation
+    m_FBConfig = config;
     return Error::Success;
 }
 
@@ -63,6 +66,14 @@ Error WindowX11::Close(){
 
 unsigned long WindowX11::Handle()const{
     return m_Handle;
+}
+
+DisplayX11 &WindowX11::Display(){
+    return m_Display; 
+}
+
+const FBConfigX11 &WindowX11::FBConfig()const{
+    return m_FBConfig;
 }
 
 bool WindowX11::IsOpen()const{
