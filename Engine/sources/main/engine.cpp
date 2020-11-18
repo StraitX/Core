@@ -176,6 +176,11 @@ Error Engine::Finalize(){
 
 void Engine::MainLoop(){
     while(m_Running){
+        Event e;
+        while(m_Window.PollEvent(e)){
+            if(e.Type == EventType::WindowClose)
+                Stop();
+        }
         m_Application->OnUpdate();
         m_Context.SwapBuffers();
     }
