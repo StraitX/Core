@@ -39,6 +39,12 @@ struct Size2{
 typedef Size2<int> Size2i;
 typedef Size2<float> Size2f;
 
+struct Version{
+    u16 Major;
+    u16 Minor;
+    u32 Patch;
+};
+
 struct PixelFormat{
     int Red = 0;
     int Green = 0;

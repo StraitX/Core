@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 00)
-set(VERSION_PATCH 28)
+set(VERSION_PATCH 29)
 
 project(
     StraitXEngine 
@@ -74,6 +74,7 @@ else()
 endif()
 
 
+add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/glad)
 
 add_library(StraitX STATIC ${SOURCES} ${PLATFORM_SOURCES})
 target_include_directories(StraitX PUBLIC ${INCLUDES})
