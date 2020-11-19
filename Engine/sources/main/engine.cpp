@@ -11,7 +11,7 @@
 
 #define InitAssert(source,error) Log(source,error);if(error != Error::Success){return Error::Failure;}
 #define SupportAssert(b, name) if(b){ LogInfo(name ": Supported"); }else{ LogError(name ": Is Not Supported"); return Error::Failure;}
-
+//#define I(call,name) {Error __err = call; Log(name,__err); if(__err!=Error::Success){return Error::Failure;}}
 // should be defined at client side
 extern StraitX::Application *StraitXMain();
 extern StraitX::Error StraitXExit(StraitX::Application *);
@@ -84,12 +84,6 @@ Error Engine::Initialize(){
 
     LogTrace("Display::Support Checks: Done");
 
-    LogTrace("Keyboard::Initialze");
-    Keyboard::Initialize(m_Display.Impl());
-
-    LogTrace("Mouse::Initialize");
-    Mouse::Initialize(m_Display.Impl());
-
     PixelFormat pixel;
     pixel.Red = 8;
     pixel.Green = 8;
@@ -108,26 +102,31 @@ Error Engine::Initialize(){
     m_ErrorWindow = m_Window.Open(m_Display.MainScreen(),1280,720,config);
     InitAssert("Window::Open",m_ErrorWindow);
 
-    Version glVersion = {4,6,0};
-
     LogTrace("OpenGL Context::Create()");
-    Error ErrorContext = m_Context.Create(config, glVersion);
+    Error ErrorContext = m_Context.Create(config, {4,6,0});
     InitAssert("OpenGL Context::Create", ErrorContext);
 
     LogTrace("OpenGL Context::MakeCurrent()");
     InitAssert("OpenGL Context::MakeCurrent",m_Context.MakeCurrent());
 
-    LogTrace("OpenGLLoader::Load()");
+    LogTrace("OpenGL Loader::Load()");
     Error ErrorOpenGL = OpenGLLoader::Load();
-    InitAssert("OpenGLLoader::Load", ErrorOpenGL);
+    InitAssert("OpenGL Loader::Load", ErrorOpenGL);
 
-    LogTrace("OpenGLLoader: Checks");
-    glVersion = OpenGLLoader::OpenGLVersion();
-    Output::Printf("OpenGLLoader: OpenGL %\n",glVersion);
+    LogTrace("OpenGL Loader: Checks");
+    auto glVersion = OpenGLLoader::OpenGLVersion();
+    Output::Printf("OpenGL Loader: OpenGL %\n",glVersion);
 
     Output::Printf("OpenGL Renderer: %\n", (const char *)glGetString(GL_RENDERER));
     Output::Printf("OpenGL Version : %\n", (const char *)glGetString(GL_VERSION));
     Output::Printf("OpenGL Vendor  : %\n", (const char *)glGetString(GL_VENDOR));
+
+    LogTrace("Keyboard::Initialze");
+    Keyboard::Initialize(m_Display.Impl());
+
+    LogTrace("Mouse::Initialize");
+    Mouse::Initialize(m_Display.Impl());
+
 
     //Engine should be completely initialized at this moment
     LogTrace("StraitXMain()");

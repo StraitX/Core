@@ -12,7 +12,7 @@ Error OpenGLLoader::Load(){
 Version OpenGLLoader::OpenGLVersion(){
     Version result = {0};
     const char *version = (const char *)glGetString(GL_VERSION);
-    sscanf(version,"%hu.%hu",&result.Major,&result.Minor);
+    sscanf(version,"%hu.%hu.%u",&result.Major,&result.Minor, &result.Patch);
     return result;
 }
 
