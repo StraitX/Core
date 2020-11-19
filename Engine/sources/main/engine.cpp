@@ -10,7 +10,6 @@
 
 
 #define InitAssert(source,error) Log(source,error);if(error != Error::Success){return Error::Failure;}
-#define SupportAssert(b, name) if(b){ LogInfo(name ": Supported"); }else{ LogError(name ": Is Not Supported"); return Error::Failure;}
 //#define I(call,name) {Error __err = call; Log(name,__err); if(__err!=Error::Success){return Error::Failure;}}
 // should be defined at client side
 extern StraitX::Application *StraitXMain();
@@ -21,11 +20,7 @@ namespace StraitX{
 
 Engine::Engine():
     m_Running(true),
-    m_Display(),
-    m_Window(m_Display),
-    m_Context(m_Window),
-    m_ErrorWindow(Error::None), 
-    m_ErrorDisplay(Error::None), 
+    m_Context(m_DisplayServer.m_Window),
     m_ErrorApplication(Error::None)
 {
 
@@ -37,7 +32,7 @@ Engine::~Engine(){
 
 
 int Engine::Run(){
-    LogTrace("Engine::Initialize()");
+    LogTrace("Engine::Initialize: Begin");
 
     Error initCode = Initialize();
 
@@ -55,7 +50,7 @@ int Engine::Run(){
 
     LogSeparator();
 
-    LogTrace("Engine: Finalize()");
+    LogTrace("Engine: Finalize: Begin");
 
     Error finalizeCode = Finalize();
 
@@ -72,19 +67,8 @@ void Engine::Stop(){
 }
 
 Error Engine::Initialize(){
-    LogTrace("Display::Open()");
-    m_ErrorDisplay = m_Display.Open();
-    InitAssert("Display::Open", m_ErrorDisplay);
-
-    LogTrace("Display: Strarting Support Checks...");
-
-    SupportAssert(m_Display.CheckSupport(Display::Ext::DoubleBuffer),"Display::DoubleBuffer ");
-    SupportAssert(m_Display.CheckSupport(Display::Ext::OpenGLLegacy),"Display::OpenGL Legacy");
-    SupportAssert(m_Display.CheckSupport(Display::Ext::OpenGLCore),"Display::OpenGL Core  ");
-
-    LogTrace("Display::Support Checks: Done");
-
-    PixelFormat pixel;
+    LogTrace("========= First stage init =========");
+    PixelFormat pixel = {0};
     pixel.Red = 8;
     pixel.Green = 8;
     pixel.Blue = 8;
@@ -92,28 +76,21 @@ Error Engine::Initialize(){
     pixel.Depth = 24;
     pixel.Stencil = 8;
     pixel.Samples = 4;
-    FBConfig config;
 
-    Error ErrorFBConfig = config.PickDesired(m_Display,m_Display.MainScreen(),pixel);
-    
-    InitAssert("FBConfig::PickDesired",ErrorFBConfig);
+    LogTrace("DisplayServer::Initialize: Begin");
+    m_ErrorDisplayServer = m_DisplayServer.Initialize(pixel, Display::Ext::OpenGLCore);
+    InitAssert("DisplayServer::Initialize", m_ErrorDisplayServer);
 
-    LogTrace("Window::Open()");
-    m_ErrorWindow = m_Window.Open(m_Display.MainScreen(),1280,720,config);
-    InitAssert("Window::Open",m_ErrorWindow);
+    LogTrace("========= Second stage init =========");
 
-    LogTrace("OpenGL Context::Create()");
-    Error ErrorContext = m_Context.Create(config, {4,6,0});
+    Error ErrorContext = m_Context.Create(m_DisplayServer.m_Window.FBConfig(), {4,6,0});
     InitAssert("OpenGL Context::Create", ErrorContext);
 
-    LogTrace("OpenGL Context::MakeCurrent()");
     InitAssert("OpenGL Context::MakeCurrent",m_Context.MakeCurrent());
 
-    LogTrace("OpenGL Loader::Load()");
     Error ErrorOpenGL = OpenGLLoader::Load();
     InitAssert("OpenGL Loader::Load", ErrorOpenGL);
 
-    LogTrace("OpenGL Loader: Checks");
     auto glVersion = OpenGLLoader::OpenGLVersion();
     Output::Printf("OpenGL Loader: OpenGL %\n",glVersion);
 
@@ -121,24 +98,19 @@ Error Engine::Initialize(){
     Output::Printf("OpenGL Version : %\n", (const char *)glGetString(GL_VERSION));
     Output::Printf("OpenGL Vendor  : %\n", (const char *)glGetString(GL_VENDOR));
 
-    LogTrace("Keyboard::Initialze");
-    Keyboard::Initialize(m_Display.Impl());
-
-    LogTrace("Mouse::Initialize");
-    Mouse::Initialize(m_Display.Impl());
-
+    LogTrace("========= Third stage init =========");
 
     //Engine should be completely initialized at this moment
-    LogTrace("StraitXMain()");
+    LogTrace("StraitXMain: Begin");
     m_Application = StraitXMain();
     m_ErrorMX = (m_Application == nullptr ? Error::NullObject : Error::Success);
     InitAssert("StraitXMain",m_ErrorMX);
 
-    m_Window.SetTitle(m_Application->Name());
+    m_DisplayServer.m_Window.SetTitle(m_Application->Name());
     
     m_Application->SetEngine(this);
 
-    LogTrace("Application::OnInitialize()");
+    LogTrace("Application::OnInitialize: Begin");
     m_ErrorApplication = m_Application->OnInitialize();
     InitAssert("Application::OnInitialize",m_ErrorApplication);
 
@@ -148,26 +120,21 @@ Error Engine::Initialize(){
 Error Engine::Finalize(){
 
     if(m_ErrorApplication==Error::Success){
-        LogTrace("Application::OnFinalize()");
+        LogTrace("Application::OnFinalize: Begin");
         m_ErrorApplication = m_Application->OnFinalize();
         Log("Application::OnFinalize",m_ErrorApplication);
     }
 
     if(m_ErrorMX == Error::Success){
-        LogTrace("StraitXExit()");
+        LogTrace("StraitXExit: Begin");
         m_ErrorMX = StraitXExit(m_Application);
         Log("StraitXExit",m_ErrorMX);
     }
 
-    if(m_ErrorWindow == Error::Success){
-        LogTrace("Window::Close()");
-        m_ErrorWindow = m_Window.Close();
-        Log("Window::Close",m_ErrorWindow);
-    }
-    if(m_ErrorDisplay == Error::Success){
-        LogTrace("Display::Close()");
-        m_ErrorDisplay = m_Display.Close();
-        Log("Display::Close",m_ErrorDisplay);
+    if(m_ErrorDisplayServer == Error::Success){
+        LogTrace("DisplayServer::Finalize: Begin");
+        m_ErrorDisplayServer = m_DisplayServer.Finalize();
+        Log("DisplayServer::Finalize", m_ErrorDisplayServer);
     }
 
     return Error::Success;
@@ -176,7 +143,7 @@ Error Engine::Finalize(){
 void Engine::MainLoop(){
     while(m_Running){
         Event e;
-        while(m_Window.PollEvent(e)){
+        while(m_DisplayServer.m_Window.PollEvent(e)){
             if(e.Type == EventType::WindowClose)
                 Stop();
         }

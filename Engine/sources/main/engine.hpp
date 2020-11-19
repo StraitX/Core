@@ -2,8 +2,8 @@
 #define STRAITX_ENGINE_HPP
 
 #include "platform/error.hpp"
-#include "platform/window.hpp"
 #include "platform/glcontext.hpp"
+#include "servers/display_server.hpp"
 
 namespace StraitX{
 
@@ -13,10 +13,9 @@ class Engine{
 private:
     Application *m_Application;
     bool m_Running;
-    Display m_Display;
-    Window m_Window;
+    DisplayServer m_DisplayServer;
     GLContext m_Context;
-    Error m_ErrorWindow, m_ErrorDisplay, m_ErrorApplication, m_ErrorMX;
+    Error m_ErrorDisplayServer, m_ErrorApplication, m_ErrorMX;
 public:
     Engine();
     ~Engine();

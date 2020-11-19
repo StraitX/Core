@@ -32,9 +32,11 @@ public:
 
     ~Window();
 
-    Error Open(const Screen &screen, int width, int height, const FBConfig &config);
+    Error Open(const Screen &screen, int width, int height, const class FBConfig &config);
 
     Error Close();
+
+    const FBConfig &FBConfig()const;
 
     WindowImpl &Impl();
 

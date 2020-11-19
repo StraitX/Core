@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 00)
-set(VERSION_PATCH 30)
+set(VERSION_PATCH 31)
 
 project(
     StraitXEngine 
@@ -18,12 +18,7 @@ set(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/thirdparty)
 
 include(Config)
 
-set(SOURCES
-    ${SOURCES_DIR}/core/assert.cpp
-    ${SOURCES_DIR}/core/time_quant.cpp
-    ${SOURCES_DIR}/main/engine.cpp
-    ${SOURCES_DIR}/main/application.cpp
-    ${SOURCES_DIR}/main/main.cpp
+set(SOURCES_PLATFORM_I
     ${SOURCES_DIR}/platform/io.cpp
     ${SOURCES_DIR}/platform/memory.cpp
     ${SOURCES_DIR}/platform/window.cpp
@@ -35,7 +30,22 @@ set(SOURCES
     ${SOURCES_DIR}/platform/glcontext.cpp
 )
 
-set(LIBS 
+set(SOURCES_CORE
+    ${SOURCES_DIR}/core/assert.cpp
+    ${SOURCES_DIR}/core/time_quant.cpp
+)
+
+set(SOURCES_SERVERS
+    ${SOURCES_DIR}/servers/display_server.cpp
+)
+
+set(SOURCES_MAIN
+    ${SOURCES_DIR}/main/engine.cpp
+    ${SOURCES_DIR}/main/application.cpp
+    ${SOURCES_DIR}/main/main.cpp
+)
+
+set(LIBS_ENGINE
     glad
 )
 
@@ -46,7 +56,7 @@ set(INCLUDES
 
 if(STRAITX_PLATFORM_LINUX)
 
-    set(PLATFORM_SOURCES
+    set(SOURCES_PLATFORM_D
         ${SOURCES_DIR}/platform/linux/platform.cpp
         ${SOURCES_DIR}/platform/linux/display_x11.cpp
         ${SOURCES_DIR}/platform/linux/mouse_x11.cpp
@@ -60,14 +70,14 @@ if(STRAITX_PLATFORM_LINUX)
         ${SOURCES_DIR}/platform/linux/glcontext_x11.cpp
     )
 
-    set(PLATFORM_LIBS
+    set(LIBS_PLATFORM
         X11 
         GLX
         GL
         dl
     )
 elseif(STRAITX_PLATFORM_WINDOWS)
-    set(PLATFORM_SOURCES
+    set(SOURCES_PLATFORM_D
        ${SOURCES_DIR}/platform/windows/platform.cpp
 	   ${SOURCES_DIR}/platform/windows/hinstance.cpp
        ${SOURCES_DIR}/platform/windows/mouse.cpp
@@ -77,7 +87,7 @@ elseif(STRAITX_PLATFORM_WINDOWS)
        ${SOURCES_DIR}/platform/windows/events_win32.cpp
     )
 
-    set(PLATFORM_LIBS
+    set(LIBS_PLATFORM
 
     )
 
@@ -88,6 +98,15 @@ endif()
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/glad)
 
-add_library(StraitX STATIC ${SOURCES} ${PLATFORM_SOURCES})
+add_library(StraitX STATIC 
+    ${SOURCES_PLATFORM_D} 
+    ${SOURCES_PLATFORM_I}
+    ${SOURCES_CORE}
+    ${SOURCES_SERVERS}
+    ${SOURCES_MAIN}
+)
 target_include_directories(StraitX PUBLIC ${INCLUDES})
-target_link_libraries(StraitX PUBLIC ${PLATFORM_LIBS} ${LIBS})
+target_link_libraries(StraitX PUBLIC 
+    ${LIBS_PLATFORM}
+    ${LIBS_ENGINE}
+)
