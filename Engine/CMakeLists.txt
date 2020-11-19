@@ -74,7 +74,6 @@ if(STRAITX_PLATFORM_LINUX)
         X11 
         GLX
         GL
-        dl
     )
 elseif(STRAITX_PLATFORM_WINDOWS)
     set(SOURCES_PLATFORM_D
@@ -109,4 +108,5 @@ target_include_directories(StraitX PUBLIC ${INCLUDES})
 target_link_libraries(StraitX PUBLIC 
     ${LIBS_PLATFORM}
     ${LIBS_ENGINE}
+    ${CMAKE_DL_LIBS}
 )

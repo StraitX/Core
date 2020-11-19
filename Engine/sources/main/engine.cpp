@@ -83,7 +83,7 @@ Error Engine::Initialize(){
 
     LogTrace("========= Second stage init =========");
 
-    Error ErrorContext = m_Context.Create(m_DisplayServer.m_Window.FBConfig(), {4,6,0});
+    Error ErrorContext = m_Context.Create(m_DisplayServer.m_Window.GetFBConfig(), {4,6,0});
     InitAssert("OpenGL Context::Create", ErrorContext);
 
     InitAssert("OpenGL Context::MakeCurrent",m_Context.MakeCurrent());

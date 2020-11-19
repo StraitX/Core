@@ -36,7 +36,7 @@ public:
 
     Error Close();
 
-    const FBConfig &FBConfig()const;
+    const FBConfig &GetFBConfig()const;
 
     WindowImpl &Impl();
 
