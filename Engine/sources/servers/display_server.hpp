@@ -23,7 +23,7 @@ public:
 
     ~DisplayServer();
 
-    Error Initialize(const PixelFormat &format, const Display::Ext api);
+    Error Initialize(const PixelFormat &format);
 
     Error Finalize();
 

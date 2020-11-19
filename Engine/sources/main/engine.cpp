@@ -11,6 +11,8 @@
 
 #define InitAssert(source,error) Log(source,error);if(error != Error::Success){return Error::Failure;}
 //#define I(call,name) {Error __err = call; Log(name,__err); if(__err!=Error::Success){return Error::Failure;}}
+#define SupportAssert(b, name) if(b){ LogInfo(name ": Supported"); }else{ LogError(name ": Is Not Supported"); return Error::Failure;}
+
 // should be defined at client side
 extern StraitX::Application *StraitXMain();
 extern StraitX::Error StraitXExit(StraitX::Application *);
@@ -78,10 +80,13 @@ Error Engine::Initialize(){
     pixel.Samples = 4;
 
     LogTrace("DisplayServer::Initialize: Begin");
-    m_ErrorDisplayServer = m_DisplayServer.Initialize(pixel, Display::Ext::OpenGLCore);
+    m_ErrorDisplayServer = m_DisplayServer.Initialize(pixel);
     InitAssert("DisplayServer::Initialize", m_ErrorDisplayServer);
 
     LogTrace("========= Second stage init =========");
+
+    SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::DoubleBuffer), "Display::DoubleBuffer");
+    SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::OpenGLCore), "Display::OpenGL Core");
 
     Error ErrorContext = m_Context.Create(m_DisplayServer.m_Window.GetFBConfig(), {4,6,0});
     InitAssert("OpenGL Context::Create", ErrorContext);

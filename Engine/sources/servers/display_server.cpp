@@ -2,7 +2,6 @@
 #include "core/log.hpp"
 
 #define InitAssert(name, error) Log(name, error);if(error != Error::Success){return Error::Failure;}
-#define SupportAssert(b, name) if(b){ LogInfo(name ": Supported"); }else{ LogError(name ": Is Not Supported"); return Error::Failure;}
 
 namespace StraitX{
 
@@ -30,12 +29,9 @@ DisplayServer::~DisplayServer(){
     }
 }
 
-Error DisplayServer::Initialize(const PixelFormat &format, const Display::Ext api){
+Error DisplayServer::Initialize(const PixelFormat &format){
     m_ErrDisplay = m_Display.Open();
     InitAssert("Display::Open", m_ErrDisplay);
-
-    SupportAssert(m_Display.CheckSupport(Display::Ext::DoubleBuffer), "Display::DoubleBuffer");
-    SupportAssert(m_Display.CheckSupport(api), "Display::GraphicsAPI");
 
     Screen defaultScreen = m_Display.MainScreen();
 
