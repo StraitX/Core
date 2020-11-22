@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 01)
-set(VERSION_PATCH 00)
+set(VERSION_PATCH 02)
 
 project(
     StraitXEngine 
@@ -84,6 +84,7 @@ elseif(STRAITX_PLATFORM_WINDOWS)
        ${SOURCES_DIR}/platform/windows/virtual_keys.cpp
        ${SOURCES_DIR}/platform/windows/window_win32.cpp
        ${SOURCES_DIR}/platform/windows/events_win32.cpp
+       ${SOURCES_DIR}/platform/windows/screen_win32.cpp
     )
 
     set(LIBS_PLATFORM

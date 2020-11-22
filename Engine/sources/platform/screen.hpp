@@ -7,7 +7,10 @@
 #ifdef SX_PLATFORM_LINUX
     #include "platform/linux/screen_x11.hpp"
     typedef StraitX::Linux::ScreenX11 ScreenImpl;
-#else
+#elif defined(SX_PLATFORM_WINDOWS)
+    #include "platform/windows/screen_win32.hpp"
+    typedef StraitX::Windows::ScreenWin32 ScreenImpl;
+#else 
     #error "Your platform does not support Screen"
 #endif
 
