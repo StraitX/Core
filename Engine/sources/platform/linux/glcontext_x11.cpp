@@ -47,7 +47,7 @@ Error GLContextX11::Create(const FBConfigX11 &config, const Version &version){
         return Error::Failure;
     }
 
-    return MakeCurrent();
+    return Error::Success;
 }
 
 void GLContextX11::Destory(){
