@@ -49,7 +49,7 @@ ScreenX11 DisplayX11::MainScreen(){
     return ScreenX11(DefaultScreen(m_Handle),screen,size,dpi);
 }
 
-::Display *DisplayX11::Handle(){
+::Display *DisplayX11::Handle()const{
     return m_Handle;
 }
 

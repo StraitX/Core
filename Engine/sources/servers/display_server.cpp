@@ -35,11 +35,7 @@ Error DisplayServer::Initialize(const PixelFormat &format){
 
     Screen defaultScreen = m_Display.MainScreen();
 
-    FBConfig fbconfig;
-    Error ErrFB = fbconfig.PickDesired(m_Display, defaultScreen, format);
-    InitAssert("FBConfig::PickDesired", ErrFB);
-
-    m_ErrWindow = m_Window.Open(defaultScreen, 1280, 720, fbconfig);
+    m_ErrWindow = m_Window.Open(defaultScreen, 1280, 720);
     InitAssert("Window::Open", m_ErrWindow);
 
     LogTrace("Keyboard::Initialze");

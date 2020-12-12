@@ -19,7 +19,7 @@ GLContextX11::GLContextX11(WindowX11 &window):
     m_Window(window)
 {}
 
-Error GLContextX11::Create(const FBConfigX11 &config, const Version &version){
+Error GLContextX11::Create(const Version &version){
     glXCreateContextAttribsARBProc glXCreateContextAttribsARB = nullptr;
     glXCreateContextAttribsARB = (glXCreateContextAttribsARBProc)glXGetProcAddressARB((const GLubyte *)"glXCreateContextAttribsARB");
 
@@ -37,7 +37,7 @@ Error GLContextX11::Create(const FBConfigX11 &config, const Version &version){
     if(version.Major >= 3)
         XSetErrorHandler(&ctxErrorHandler);
     
-    m_Handle = glXCreateContextAttribsARB(m_Window.Display().Handle(),(GLXFBConfig)m_Window.FBConfig().Handle(), 0, true, contextAttribs);
+    m_Handle = glXCreateContextAttribsARB(m_Window.Display().Handle(),(GLXFBConfig)m_Window.FBConfig(), 0, true, contextAttribs);
 
     if(m_Handle == nullptr)
         return Error::NotSupported;

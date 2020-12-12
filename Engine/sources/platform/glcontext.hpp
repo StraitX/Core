@@ -2,7 +2,6 @@
 #define STRAITX_GLCONTEXT_HPP
 
 #include "platform/platform_detection.hpp"
-#include "platform/fbconfig.hpp"
 
 #ifdef SX_PLATFORM_LINUX
     #include "platform/linux/glcontext_x11.hpp"
@@ -19,7 +18,7 @@ private:
 public:
     GLContext(Window &window);
 
-    Error Create(const FBConfig &config, const Version &version);
+    Error Create(const Version &version);
 
     void Destory();
 

@@ -34,7 +34,7 @@ public:
 
     ScreenX11 MainScreen();
 
-    ::_XDisplay *Handle();
+    ::_XDisplay *Handle()const;
 private:
     bool CheckX11Extension(const char *name);
 

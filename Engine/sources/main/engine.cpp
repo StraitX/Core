@@ -88,7 +88,7 @@ Error Engine::Initialize(){
     SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::DoubleBuffer), "Display::DoubleBuffer");
     SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::OpenGLCore), "Display::OpenGL Core");
 
-    Error ErrorContext = m_Context.Create(m_DisplayServer.m_Window.GetFBConfig(), {4,6,0});
+    Error ErrorContext = m_Context.Create({4,6,0});
     InitAssert("OpenGL Context::Create", ErrorContext);
 
     InitAssert("OpenGL Context::MakeCurrent",m_Context.MakeCurrent());

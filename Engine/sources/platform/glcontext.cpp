@@ -8,8 +8,8 @@ GLContext::GLContext(Window &window):
     m_Impl(window.Impl())
 {}
 
-Error GLContext::Create(const FBConfig &config, const Version &version){
-    return m_Impl.Create(config.Impl(), version);
+Error GLContext::Create(const Version &version){
+    return m_Impl.Create(version);
 }
 
 void GLContext::Destory(){

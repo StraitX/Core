@@ -22,7 +22,6 @@ set(SOURCES_PLATFORM_I
     ${SOURCES_DIR}/platform/io.cpp
     ${SOURCES_DIR}/platform/memory.cpp
     ${SOURCES_DIR}/platform/window.cpp
-    ${SOURCES_DIR}/platform/fbconfig.cpp
     ${SOURCES_DIR}/platform/screen.cpp
     ${SOURCES_DIR}/platform/display.cpp
     ${SOURCES_DIR}/platform/error.cpp
@@ -64,7 +63,6 @@ if(STRAITX_PLATFORM_LINUX)
         ${SOURCES_DIR}/platform/linux/keys_x11.cpp
         ${SOURCES_DIR}/platform/linux/window_x11.cpp
         ${SOURCES_DIR}/platform/linux/events_x11.cpp
-        ${SOURCES_DIR}/platform/linux/fbconfig_x11.cpp
         ${SOURCES_DIR}/platform/linux/screen_x11.cpp
         ${SOURCES_DIR}/platform/linux/glloader_x11.cpp
         ${SOURCES_DIR}/platform/linux/glcontext_x11.cpp

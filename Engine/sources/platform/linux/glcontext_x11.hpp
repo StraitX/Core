@@ -17,7 +17,7 @@ private:
 public:
     GLContextX11(WindowX11 &window);
 
-    Error Create(const FBConfigX11 &config, const Version &version);
+    Error Create(const Version &version);
 
     void Destory();
 

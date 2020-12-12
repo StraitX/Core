@@ -17,9 +17,9 @@ Window::~Window(){
     m_Impl.Close();
 }
 
-Error Window::Open(const Screen &screen, int width, int height, const FBConfig &config){
+Error Window::Open(const Screen &screen, int width, int height){
     if(!IsOpen())
-        return m_Impl.Open(screen.Impl(), width, height, config.Impl());
+        return m_Impl.Open(screen.Impl(), width, height);
     return Error::AlreadyDone;
 }
 
@@ -27,10 +27,6 @@ Error Window::Close(){
     if(IsOpen())
         return m_Impl.Close();
     return Error::NullObject;
-}
-
-const FBConfig &Window::GetFBConfig()const{
-    return *(FBConfig*)(&m_Impl.FBConfig());
 }
 
 WindowImpl &Window::Impl(){

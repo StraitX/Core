@@ -3,7 +3,6 @@
 
 #include "platform/platform_detection.hpp"
 #include "platform/events.hpp"
-#include "platform/fbconfig.hpp"
 #include "platform/screen.hpp"
 #include "platform/display.hpp"
 
@@ -32,11 +31,9 @@ public:
 
     ~Window();
 
-    Error Open(const Screen &screen, int width, int height, const class FBConfig &config);
+    Error Open(const Screen &screen, int width, int height);
 
     Error Close();
-
-    const FBConfig &GetFBConfig()const;
 
     WindowImpl &Impl();
 

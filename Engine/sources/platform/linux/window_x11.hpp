@@ -3,7 +3,6 @@
 
 #include "platform/events.hpp"
 #include "platform/error.hpp"
-#include "platform/linux/fbconfig_x11.hpp"
 #include "platform/linux/display_x11.hpp"
 
 namespace StraitX{
@@ -11,9 +10,9 @@ namespace Linux{
 
 class WindowX11{
 private:
-    unsigned long m_Handle = 0;
     DisplayX11 &m_Display;
-    FBConfigX11 m_FBConfig;
+    unsigned long m_Handle = 0;
+    void *m_FBConfig = nullptr;
 public:
 
     WindowX11(DisplayX11 &display);
@@ -22,15 +21,15 @@ public:
 
     WindowX11(WindowX11 &&other);
 
-    Error Open(const ScreenX11 &screen, int width, int height, const FBConfigX11 &fbconfig);
+    Error Open(const ScreenX11 &screen, int width, int height);
 
     Error Close();
 
-    unsigned long Handle()const;
-
     DisplayX11 &Display();
 
-    const FBConfigX11 &FBConfig()const;
+    unsigned long Handle()const;
+
+    void *FBConfig();
 
     bool IsOpen() const;
 
@@ -39,6 +38,9 @@ public:
     void SetSize(int width, int height);
 
     bool PollEvent(Event &event);
+private:
+
+    void *PickBestFBConfig(const DisplayX11 &display, const ScreenX11 &screen);
 };
 
 }; //namespace Linux::

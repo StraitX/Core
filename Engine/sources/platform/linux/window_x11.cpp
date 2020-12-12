@@ -23,15 +23,13 @@ WindowX11::WindowX11(WindowX11 &&other):
 }
 
 
-Error WindowX11::Open(const ScreenX11 &screen, int width, int height, const FBConfigX11 &config){
+Error WindowX11::Open(const ScreenX11 &screen, int width, int height){
     ::Display *display = m_Display.Handle();
 
-    GLXFBConfig fbconfig = (GLXFBConfig)config.Handle();
+    m_FBConfig = PickBestFBConfig(m_Display, screen);
 
-    if(fbconfig==nullptr)
-        return Error::InvalidArgs;
 
-    XVisualInfo *visualInfo = glXGetVisualFromFBConfig(display, fbconfig);
+    XVisualInfo *visualInfo = glXGetVisualFromFBConfig(display, (GLXFBConfig)m_FBConfig);
 
     if(visualInfo == nullptr)
         return Error::Failure;
@@ -55,8 +53,7 @@ Error WindowX11::Open(const ScreenX11 &screen, int width, int height, const FBCo
 
 
     XMapWindow(display,m_Handle);
-    // do not forget to save window config after creation
-    m_FBConfig = config;
+
     return Error::Success;
 }
 
@@ -69,15 +66,15 @@ Error WindowX11::Close(){
     return Error::Success;
 }
 
-unsigned long WindowX11::Handle()const{
-    return m_Handle;
-}
-
 DisplayX11 &WindowX11::Display(){
     return m_Display; 
 }
 
-const FBConfigX11 &WindowX11::FBConfig()const{
+unsigned long WindowX11::Handle()const{
+    return m_Handle;
+}
+
+void *WindowX11::FBConfig(){
     return m_FBConfig;
 }
 
@@ -108,6 +105,68 @@ bool WindowX11::PollEvent(Event &event){
         return true;
     }
     return false;
+}
+
+
+void *WindowX11::PickBestFBConfig(const DisplayX11 &display_x11, const ScreenX11 &screen){
+    ::Display *display = display_x11.Handle();
+    void *result = nullptr;
+
+    // if client system doesn't have such a FBConfig, we are going to drop it
+    int glxAttributes[]={
+		GLX_X_RENDERABLE    , True,
+		GLX_DRAWABLE_TYPE   , GLX_WINDOW_BIT,
+		GLX_RENDER_TYPE     , GLX_RGBA_BIT,
+		GLX_X_VISUAL_TYPE   , GLX_TRUE_COLOR,
+		GLX_DOUBLEBUFFER    , True,
+		None // NULL Terminated arg array
+    };
+
+    int configsCount = 0;
+    GLXFBConfig *configs = glXChooseFBConfig(display,screen.m_Index,glxAttributes,&configsCount);
+
+    // in case if we have not find any suitable FBConfig
+    if(configsCount == 0)
+        return nullptr;
+
+    int bestIndex = 0;
+    float bestScore = 0;
+
+    constexpr PixelFormat desired = {
+        .Red = 8,
+        .Green = 8,
+        .Blue = 8,
+        .Alpha = 8,
+        .Depth = 24,
+        .Stencil = 8,
+        .Samples = 1
+    };
+
+    for(int i = 0; i<configsCount; i++){
+        PixelFormat current;
+        glXGetFBConfigAttrib(display, configs[i], GLX_RED_SIZE,     &current.Red);
+        glXGetFBConfigAttrib(display, configs[i], GLX_GREEN_SIZE,   &current.Green);
+        glXGetFBConfigAttrib(display, configs[i], GLX_BLUE_SIZE,    &current.Blue);
+        glXGetFBConfigAttrib(display, configs[i], GLX_ALPHA_SIZE,   &current.Alpha);
+        glXGetFBConfigAttrib(display, configs[i], GLX_DEPTH_SIZE,   &current.Depth);
+        glXGetFBConfigAttrib(display, configs[i], GLX_STENCIL_SIZE, &current.Stencil);
+        glXGetFBConfigAttrib(display, configs[i], GLX_SAMPLES,      &current.Samples);
+
+        float score = float(current.Red)/float(desired.Red) + float(current.Green)/float(desired.Green) + float(current.Blue)/float(desired.Blue) + 
+                float(current.Alpha)/float(desired.Alpha) + float(current.Depth)/float(desired.Depth) + float(current.Stencil)/float(desired.Stencil) + float(current.Samples)/float(desired.Samples) - 7;
+        
+        if(score > bestScore){
+            bestScore = score;
+            bestIndex = i;
+        }
+    }
+
+
+    result = (void*)configs[bestIndex];
+
+    XFree(configs);
+
+    return result;
 }
 
 
