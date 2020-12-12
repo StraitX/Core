@@ -24,7 +24,7 @@ Error GLContextX11::Create(const Version &version){
     glXCreateContextAttribsARB = (glXCreateContextAttribsARBProc)glXGetProcAddressARB((const GLubyte *)"glXCreateContextAttribsARB");
 
     if(glXCreateContextAttribsARB == nullptr)
-        return Error::NotSupported;
+        return Error::Unsupported;
 
     int contextAttribs[] = {
 		GLX_CONTEXT_MAJOR_VERSION_ARB, version.Major,
@@ -40,7 +40,7 @@ Error GLContextX11::Create(const Version &version){
     m_Handle = glXCreateContextAttribsARB(m_Window.Display().Handle(),(GLXFBConfig)m_Window.FBConfig(), 0, true, contextAttribs);
 
     if(m_Handle == nullptr)
-        return Error::NotSupported;
+        return Error::Unsupported;
 
 	if (!glXIsDirect (m_Window.Display().Handle(), m_Handle)){
         Destory();

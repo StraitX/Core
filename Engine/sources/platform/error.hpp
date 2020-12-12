@@ -12,7 +12,7 @@ enum class Error{
     InvalidArgs,
     NullObject,
     AlreadyDone,
-    NotSupported,
+    Unsupported,
 
     ErrorCodesCount
 };

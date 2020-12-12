@@ -27,7 +27,8 @@ Error WindowX11::Open(const ScreenX11 &screen, int width, int height){
     ::Display *display = m_Display.Handle();
 
     m_FBConfig = PickBestFBConfig(m_Display, screen);
-
+    if(m_FBConfig == nullptr)
+        return Error::Unsupported;
 
     XVisualInfo *visualInfo = glXGetVisualFromFBConfig(display, (GLXFBConfig)m_FBConfig);
 

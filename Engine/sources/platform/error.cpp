@@ -13,7 +13,7 @@ const char *ErrorNames[(int)Error::ErrorCodesCount] = {
     S(InvalidArgs),
     S(NullObject),
     S(AlreadyDone),
-    S(NotSupported),
+    S(Unsupported),
 };
 
 }; // namespace StraitX::
