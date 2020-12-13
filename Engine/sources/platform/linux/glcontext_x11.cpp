@@ -37,12 +37,12 @@ Error GLContextX11::Create(const Version &version){
     if(version.Major >= 3)
         XSetErrorHandler(&ctxErrorHandler);
     
-    m_Handle = glXCreateContextAttribsARB(m_Window.Display().Handle(),(GLXFBConfig)m_Window.FBConfig(), 0, true, contextAttribs);
+    m_Handle = glXCreateContextAttribsARB(m_Window.Display.Handle(),(GLXFBConfig)m_Window.FBConfig, 0, true, contextAttribs);
 
     if(m_Handle == nullptr)
         return Error::Unsupported;
 
-	if (!glXIsDirect (m_Window.Display().Handle(), m_Handle)){
+	if (!glXIsDirect (m_Window.Display.Handle(), m_Handle)){
         Destory();
         return Error::Failure;
     }
@@ -51,17 +51,17 @@ Error GLContextX11::Create(const Version &version){
 }
 
 void GLContextX11::Destory(){
-    glXDestroyContext(m_Window.Display().Handle(), m_Handle);
+    glXDestroyContext(m_Window.Display.Handle(), m_Handle);
 }
 
 Error GLContextX11::MakeCurrent(){
-    if(glXMakeCurrent(m_Window.Display().Handle(), m_Window.Handle(), m_Handle))
+    if(glXMakeCurrent(m_Window.Display.Handle(), m_Window.Handle, m_Handle))
         return Error::Success;
     return Error::Failure;
 }
 
 void GLContextX11::SwapBuffers(){
-    glXSwapBuffers(m_Window.Display().Handle(), m_Window.Handle());
+    glXSwapBuffers(m_Window.Display.Handle(), m_Window.Handle);
 }
 
 };

@@ -8,12 +8,10 @@
 namespace StraitX{
 namespace Linux{
 
-class WindowX11{
-private:
-    DisplayX11 &m_Display;
-    unsigned long m_Handle = 0;
-    void *m_FBConfig = nullptr;
-public:
+struct WindowX11{
+    DisplayX11 &Display;
+    unsigned long Handle = 0;
+    void *FBConfig = nullptr;
 
     WindowX11(DisplayX11 &display);
 
@@ -25,12 +23,6 @@ public:
 
     Error Close();
 
-    DisplayX11 &Display();
-
-    unsigned long Handle()const;
-
-    void *FBConfig();
-
     bool IsOpen() const;
 
     void SetTitle(const char *title);
@@ -38,9 +30,8 @@ public:
     void SetSize(int width, int height);
 
     bool PollEvent(Event &event);
-private:
 
-    void *PickBestFBConfig(const DisplayX11 &display, const ScreenX11 &screen);
+    static void *PickBestFBConfig(const DisplayX11 &display, const ScreenX11 &screen);
 };
 
 }; //namespace Linux::

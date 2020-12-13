@@ -10,27 +10,27 @@ namespace StraitX{
 namespace Linux{
 
 WindowX11::WindowX11(DisplayX11 &display):
-    m_Handle(0),
-    m_Display(display)
+    Handle(0),
+    Display(display)
 {}
 
 WindowX11::WindowX11(WindowX11 &&other):
-    m_Display(other.m_Display)
+    Display(other.Display)
 {
-    m_Handle = other.m_Handle;
-    other.m_Handle = 0;
-    m_FBConfig = other.m_FBConfig;
+    Handle = other.Handle;
+    other.Handle = 0;
+    FBConfig = other.FBConfig;
 }
 
 
 Error WindowX11::Open(const ScreenX11 &screen, int width, int height){
-    ::Display *display = m_Display.Handle();
+    ::Display *display = Display.Handle();
 
-    m_FBConfig = PickBestFBConfig(m_Display, screen);
-    if(m_FBConfig == nullptr)
+    FBConfig = PickBestFBConfig(Display, screen);
+    if(FBConfig == nullptr)
         return Error::Unsupported;
 
-    XVisualInfo *visualInfo = glXGetVisualFromFBConfig(display, (GLXFBConfig)m_FBConfig);
+    XVisualInfo *visualInfo = glXGetVisualFromFBConfig(display, (GLXFBConfig)FBConfig);
 
     if(visualInfo == nullptr)
         return Error::Failure;
@@ -40,20 +40,20 @@ Error WindowX11::Open(const ScreenX11 &screen, int width, int height){
     attributes.colormap = XCreateColormap(display, RootWindow(display,screen.m_Index), visualInfo->visual, AllocNone);
     attributes.event_mask = ExposureMask | KeyPressMask| KeyReleaseMask| ButtonPressMask| ButtonReleaseMask| ResizeRedirectMask;
 
-    m_Handle = XCreateWindow(display, RootWindow(display,screen.m_Index), 0, 0, width, height, 0, visualInfo->depth,
+    Handle = XCreateWindow(display, RootWindow(display,screen.m_Index), 0, 0, width, height, 0, visualInfo->depth,
         InputOutput, visualInfo->visual, CWBackPixel | CWColormap | CWEventMask, &attributes);
 
     XFree(visualInfo);
 
-    if(m_Handle == 0)
+    if(Handle == 0)
         return Error::Failure;
     
     //intercept close event
     Atom close_atom = XInternAtom(display,"WM_DELETE_WINDOW",0);
-    XSetWMProtocols(display,m_Handle,&close_atom,1);
+    XSetWMProtocols(display,Handle,&close_atom,1);
 
 
-    XMapWindow(display,m_Handle);
+    XMapWindow(display,Handle);
 
     return Error::Success;
 }
@@ -61,47 +61,35 @@ Error WindowX11::Open(const ScreenX11 &screen, int width, int height){
 
 
 Error WindowX11::Close(){
-    XDestroyWindow(m_Display.Handle(),m_Handle);
+    XDestroyWindow(Display.Handle(),Handle);
 
-    m_Handle = 0;
+    Handle = 0;
     return Error::Success;
 }
 
-DisplayX11 &WindowX11::Display(){
-    return m_Display; 
-}
-
-unsigned long WindowX11::Handle()const{
-    return m_Handle;
-}
-
-void *WindowX11::FBConfig(){
-    return m_FBConfig;
-}
-
 bool WindowX11::IsOpen()const{
-    return m_Handle;
+    return Handle;
 }
 
 void WindowX11::SetTitle(const char *title){
-    ::Display *display = m_Display.Handle();
+    ::Display *display = Display.Handle();
 
     Atom atom = XInternAtom(display,"WM_NAME",0);
     
     XTextProperty titleText;
     char * pTitle = (char *)title;
     XStringListToTextProperty(&pTitle,1,&titleText);
-    XSetTextProperty(display,m_Handle,&titleText,atom);
+    XSetTextProperty(display,Handle,&titleText,atom);
 }
 
 void WindowX11::SetSize(int width, int height){
 
-    XResizeWindow(m_Display.Handle(),m_Handle,width,height);
+    XResizeWindow(Display.Handle(),Handle,width,height);
 }
 
 bool WindowX11::PollEvent(Event &event){
     XEvent x11event;
-    if(XCheckIfEvent(m_Display.Handle(),&x11event,&CheckEvent,reinterpret_cast<XPointer>(m_Handle))){
+    if(XCheckIfEvent(Display.Handle(),&x11event,&CheckEvent,reinterpret_cast<XPointer>(Handle))){
         event = ToStraitXEvent(x11event);
         return true;
     }

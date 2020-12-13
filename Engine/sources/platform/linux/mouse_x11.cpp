@@ -53,7 +53,7 @@ Point Mouse::RelativePosition(const Window &window){
     Point choosen,global;
     unsigned int mask;
     
-    XQueryPointer(display,window.Impl().Handle(),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
+    XQueryPointer(display,window.Impl().Handle,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
     return choosen;
 }
 
