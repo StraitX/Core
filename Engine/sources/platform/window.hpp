@@ -35,9 +35,13 @@ public:
 
     Error Close();
 
-    WindowImpl &Impl();
+    sx_inline WindowImpl &Impl(){
+        return m_Impl;
+    }
 
-    const WindowImpl &Impl()const;
+    sx_inline const WindowImpl &Impl()const{
+        return m_Impl;
+    }
 
     bool IsOpen()const;
 
