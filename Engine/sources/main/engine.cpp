@@ -88,6 +88,10 @@ Error Engine::Initialize(){
     SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::DoubleBuffer), "Display::DoubleBuffer");
     SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::OpenGLCore), "Display::OpenGL Core");
 
+
+    Error ErrorInstance = m_VkInstance.Create({1,0,0}, nullptr, 0, nullptr, 0);
+    InitAssert("Vulkan Instance::Create",ErrorInstance);
+
     Error ErrorContext = m_Context.Create({4,6,0});
     InitAssert("OpenGL Context::Create", ErrorContext);
 

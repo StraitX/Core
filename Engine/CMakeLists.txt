@@ -34,6 +34,14 @@ set(SOURCES_CORE
     ${SOURCES_DIR}/core/time_quant.cpp
 )
 
+set(SOURCES_GRAPHICS_VULKAN
+    ${SOURCES_DIR}/graphics/vulkan/instance.cpp
+)
+
+set(SOURCES_GRAPHICS 
+    ${SOURCES_GRAPHICS_VULKAN}
+)
+
 set(SOURCES_SERVERS
     ${SOURCES_DIR}/servers/display_server.cpp
 )
@@ -72,6 +80,7 @@ if(STRAITX_PLATFORM_LINUX)
         X11 
         GLX
         GL
+        vulkan
     )
 elseif(STRAITX_PLATFORM_WINDOWS)
     set(SOURCES_PLATFORM_D
@@ -100,6 +109,7 @@ add_library(StraitX STATIC
     ${SOURCES_PLATFORM_D} 
     ${SOURCES_PLATFORM_I}
     ${SOURCES_CORE}
+    ${SOURCES_GRAPHICS}
     ${SOURCES_SERVERS}
     ${SOURCES_MAIN}
 )
