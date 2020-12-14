@@ -8,12 +8,12 @@
 
 #ifdef SX_DEBUG
 
-#define DLog(source,error) Output::Printf("[%]: %: %\n",error==Error::Success? "Info " : "Error",source, ErrorNames[(int)error])
-#define DLogTrace(msg) Output::Print("[Trace]: " msg)
-#define DLogInfo(msg)  Output::Print("[Info ]: " msg)
-#define DLogWarn(msg)  Output::Print("[Warn ]: " msg)
-#define DLogError(msg) Output::Print("[Error]: " msg)
-#define DLogSeparator() Output::Print("===============================================================")
+#define DLog(source,error) StraitX::Output::Printf("[%]: %: %\n",error==Error::Success? "Info " : "Error",source, ErrorNames[(int)error])
+#define DLogTrace(msg) StraitX::Output::Printf("[Trace]: %\n", msg)
+#define DLogInfo(msg)  StraitX::Output::Printf("[Info ]: %\n", msg)
+#define DLogWarn(msg)  StraitX::Output::Printf("[Warn ]: %\n", msg)
+#define DLogError(msg) StraitX::Output::Printf("[Error]: %\n", msg)
+#define DLogSeparator() StraitX::Output::Print("===============================================================")
 
 #else
 
@@ -26,11 +26,11 @@
 
 #endif
 
-#define Log(source,error) Output::Printf("[%]: %: %\n",error==Error::Success? "Info " : "Error",source, ErrorNames[(int)error])
-#define LogTrace(msg) Output::Print("[Trace]: " msg)
-#define LogInfo(msg)  Output::Print("[Info ]: " msg)
-#define LogWarn(msg)  Output::Print("[Warn ]: " msg)
-#define LogError(msg) Output::Print("[Error]: " msg)
-#define LogSeparator() Output::Print("===============================================================")
+#define Log(source,error) StraitX::Output::Printf("[%]: %: %\n",error==Error::Success? "Info " : "Error",source, ErrorNames[(int)error])
+#define LogTrace(msg) StraitX::Output::Printf("[Trace]: %\n", msg)
+#define LogInfo(msg)  StraitX::Output::Printf("[Info ]: %\n", msg)
+#define LogWarn(msg)  StraitX::Output::Printf("[Warn ]: %\n", msg)
+#define LogError(msg) StraitX::Output::Printf("[Error]: %\n", msg)
+#define LogSeparator() StraitX::Output::Print("===============================================================")
 
 #endif // STRAITX_LOG_HPP
