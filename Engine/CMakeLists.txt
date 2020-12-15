@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 01)
-set(VERSION_PATCH 03)
+set(VERSION_PATCH 04)
 
 project(
     StraitXEngine 
@@ -32,6 +32,7 @@ set(SOURCES_PLATFORM_I
 set(SOURCES_CORE
     ${SOURCES_DIR}/core/assert.cpp
     ${SOURCES_DIR}/core/time_quant.cpp
+    ${SOURCES_DIR}/core/memory/stack_allocator.cpp
 )
 
 set(SOURCES_GRAPHICS_VULKAN
