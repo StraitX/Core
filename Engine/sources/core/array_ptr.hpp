@@ -7,17 +7,17 @@
 namespace StraitX{
 
 // it has no idea about allocations
-template <typename T>
+template <typename T, typename SizeT = size_t>
 struct ArrayPtr{
     T *Pointer;
-    size_t Size;
+    SizeT Size;
 
     sx_inline ArrayPtr():
         Pointer(nullptr),
         Size(0)
     {}
 
-    sx_inline ArrayPtr(T *pointer, size_t size):
+    sx_inline ArrayPtr(T *pointer, SizeT size):
         Pointer(pointer),
         Size(size)
     {}
@@ -35,14 +35,26 @@ struct ArrayPtr{
         other.Size = 0;
     }
 
-    sx_inline T &operator[](size_t index){
+    sx_inline T &operator[](SizeT index){
         CoreAssert(index < Size && index >= 0, "ArrayPtr: can't index more that ArrayPtr::Size elements");
         return Pointer[index]; 
     }
 
-    sx_inline const T &operator[](size_t index)const{
+    sx_inline const T &operator[](SizeT index)const{
         CoreAssert(index < Size && index >= 0, "ArrayPtr: can't index more that ArrayPtr::Size elements");
         return Pointer[index]; 
+    }
+
+    sx_inline ArrayPtr &operator=(const ArrayPtr &other){
+        Pointer = other.Pointer;
+        Size = other.Size;
+    }
+
+    sx_inline ArrayPtr &operator=(ArrayPtr &&other){
+        Pointer = other.Pointer;
+        Size = other.Size;
+        other.Pointer = nullptr;
+        other.Size = 0;
     }
     
     using iterator = T *;
