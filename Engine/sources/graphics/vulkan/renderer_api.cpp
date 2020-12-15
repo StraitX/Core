@@ -1,5 +1,6 @@
-#include "graphics/vulkan/renderer_api.hpp"
 #include <new>
+#include "core/log.hpp"
+#include "graphics/vulkan/renderer_api.hpp"
 namespace StraitX{
 namespace Vk{
 
@@ -32,6 +33,24 @@ Error RendererAPI::Initialize(){
     m_Allocator.Free(devices.Size*sizeof(VkPhysicalDevice));
     
     
+    int best_index = -1;
+    u8 best_score = 0;
+    for(int i = 0; i<m_PhysicalDeivces.Size; i++){
+        const auto &dev = m_PhysicalDeivces.Pointer[i];
+        // it's a game engine, we want to have graphics!
+        if(dev.GraphicsQueueFamily == -1)
+            break;
+            
+        u8 score =       (dev.Type == DeviceType::DiscreteGPU ? 3 : 0) 
+        + (dev.TransferQueueFamily != dev.GraphicsQueueFamily)
+        + (dev.ComputeQueueFamily  != dev.TransferQueueFamily);
+
+        if(score > best_score)
+            best_index = i;
+    }
+
+    if(best_index == -1)
+        return Error::Unsupported;
 
 
     return Error::Success;

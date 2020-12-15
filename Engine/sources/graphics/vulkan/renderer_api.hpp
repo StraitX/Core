@@ -4,10 +4,11 @@
 #include "platform/vulkan.hpp"
 #include "platform/types.hpp"
 #include "platform/error.hpp"
+#include "core/array_ptr.hpp"
+#include "core/memory/stack_allocator.hpp"
 #include "graphics/vulkan/instance.hpp"
 #include "graphics/vulkan/physical_device.hpp"
-#include "core/memory/stack_allocator.hpp"
-#include "core/array_ptr.hpp"
+#include "graphics/vulkan/logical_device.hpp"
 
 namespace StraitX{
 namespace Vk{

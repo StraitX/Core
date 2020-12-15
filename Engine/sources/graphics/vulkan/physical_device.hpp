@@ -19,12 +19,23 @@ struct PhysicalDevice{
 
     DeviceType Type = DeviceType::Unknown;
 
-    u32 VRAM    = -1;
-    u32 RAM     = -1;
+    u32 VRAM        = -1;
+    size_t VRAMSize =  0;
+    u32 RAM         = -1;
+    size_t RAMSize  =  0;
     //optional
     u32 DynamicVRAM = -1;
+    size_t DynamicVRAMSize = 0;
+
+    u32 GraphicsQueueFamily  = -1;
+    u32 ComputeQueueFamily   = -1;
+    u32 TransferQueueFamily  = -1; 
 
     PhysicalDevice(VkPhysicalDevice device);
+
+    void QueryMemoryTypes();
+
+    void QueryQueues();
 
 };
 
