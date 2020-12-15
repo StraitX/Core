@@ -88,9 +88,9 @@ Error Engine::Initialize(){
     SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::DoubleBuffer), "Display::DoubleBuffer");
     SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::OpenGLCore), "Display::OpenGL Core");
 
-
-    Error ErrorInstance = m_VkInstance.Create({1,0,0}, nullptr, 0, nullptr, 0);
-    InitAssert("Vulkan Instance::Create",ErrorInstance);
+    LogTrace("RendererAPI::Initialize: Begin");
+    m_ErrorRendererAPI = Vk::RendererAPI::Instance.Initialize();
+    InitAssert("RendererAPI::Initialize",m_ErrorRendererAPI);
 
     Error ErrorContext = m_Context.Create({4,6,0});
     InitAssert("OpenGL Context::Create", ErrorContext);
@@ -138,6 +138,12 @@ Error Engine::Finalize(){
         LogTrace("StraitXExit: Begin");
         m_ErrorMX = StraitXExit(m_Application);
         Log("StraitXExit",m_ErrorMX);
+    }
+
+    if(m_ErrorRendererAPI == Error::Success){
+        LogTrace("RendererAPI::Finalize: Begin");
+        m_ErrorRendererAPI = Vk::RendererAPI::Instance.Finalize();
+        Log("RendererAPI::Finalize",m_ErrorRendererAPI);
     }
 
     if(m_ErrorDisplayServer == Error::Success){

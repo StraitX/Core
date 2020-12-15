@@ -4,7 +4,7 @@
 #include "platform/error.hpp"
 #include "platform/glcontext.hpp"
 #include "servers/display_server.hpp"
-#include "graphics/vulkan/instance.hpp"
+#include "graphics/vulkan/renderer_api.hpp"
 
 namespace StraitX{
 
@@ -16,7 +16,7 @@ private:
     bool m_Running;
     DisplayServer m_DisplayServer;
     GLContext m_Context;
-    Vk::Instance m_VkInstance;
+    Error m_ErrorRendererAPI;
     Error m_ErrorDisplayServer, m_ErrorApplication, m_ErrorMX;
 public:
     Engine();
