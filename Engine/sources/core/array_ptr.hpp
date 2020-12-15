@@ -12,6 +12,11 @@ struct ArrayPtr{
     T *Pointer;
     size_t Size;
 
+    sx_inline ArrayPtr():
+        Pointer(nullptr),
+        Size(0)
+    {}
+
     sx_inline ArrayPtr(T *pointer, size_t size):
         Pointer(pointer),
         Size(size)
