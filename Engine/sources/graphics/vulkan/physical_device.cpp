@@ -86,25 +86,22 @@ void PhysicalDevice::QueryMemoryTypes(){
 }
 
 sx_inline bool IsGraphics(VkQueueFlags flags){
-    return flags & VK_QUEUE_SPARSE_BINDING_BIT
-    &&     flags & VK_QUEUE_TRANSFER_BIT
-    &&     flags & VK_QUEUE_GRAPHICS_BIT
-    &&     flags & VK_QUEUE_COMPUTE_BIT;
+    return flags & VK_QUEUE_GRAPHICS_BIT
+    &&     flags & VK_QUEUE_COMPUTE_BIT
+    &&     flags & VK_QUEUE_TRANSFER_BIT;
 }
 
 // pure compute queue // Most probably a DMA engine queue
 sx_inline bool IsTransfer(VkQueueFlags flags){
-    return   flags & VK_QUEUE_SPARSE_BINDING_BIT
-    &&       flags & VK_QUEUE_TRANSFER_BIT
-    &&     !(flags & VK_QUEUE_GRAPHICS_BIT)
-    &&     !(flags & VK_QUEUE_COMPUTE_BIT);
+    return !(flags & VK_QUEUE_GRAPHICS_BIT)
+    &&     !(flags & VK_QUEUE_COMPUTE_BIT)
+    &&       flags & VK_QUEUE_TRANSFER_BIT;
 }
 // we treat non-graphics queue as compute
 sx_inline bool IsCompute(VkQueueFlags flags){
-    return    flags & VK_QUEUE_SPARSE_BINDING_BIT
-    &&        flags & VK_QUEUE_TRANSFER_BIT
-    &&      !(flags & VK_QUEUE_GRAPHICS_BIT)
-    &&        flags & VK_QUEUE_COMPUTE_BIT;
+    return  !(flags & VK_QUEUE_GRAPHICS_BIT)
+    &&        flags & VK_QUEUE_COMPUTE_BIT
+    &&        flags & VK_QUEUE_TRANSFER_BIT;
 }
 
 void PhysicalDevice::QueryQueues(){
@@ -130,12 +127,14 @@ void PhysicalDevice::QueryQueues(){
 
     //higher level queue fallback
     //we are going to have one queue instance of each family
-    if(ComputeQueueFamily == -1 && props[GraphicsQueueFamily].queueCount >= 2){
-        ComputeQueueFamily = GraphicsQueueFamily;
-        props[GraphicsQueueFamily].queueCount-=1;
-    }
-    if(TransferQueueFamily == -1 && props[ComputeQueueFamily].queueCount >= 2){
-        TransferQueueFamily = ComputeQueueFamily;
+    if(GraphicsQueueFamily != -1){
+        if(ComputeQueueFamily == -1 && props[GraphicsQueueFamily].queueCount >= 2){
+            ComputeQueueFamily = GraphicsQueueFamily;
+            props[GraphicsQueueFamily].queueCount-=1;
+        }
+        if(TransferQueueFamily == -1 && props[ComputeQueueFamily].queueCount >= 2){
+            TransferQueueFamily = ComputeQueueFamily;
+        }
     }
 
 }
