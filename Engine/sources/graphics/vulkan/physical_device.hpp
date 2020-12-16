@@ -37,6 +37,12 @@ struct PhysicalDevice{
 
     void QueryQueues();
 
+    sx_inline bool IsSupported()const{
+        return GraphicsQueueFamily != -1
+        &&      ComputeQueueFamily != -1
+        &&     TransferQueueFamily != -1;
+    }
+
 };
 
 };//namespace Vk::

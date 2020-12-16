@@ -38,22 +38,30 @@ Error RendererAPI::Initialize(){
     for(int i = 0; i<m_PhysicalDeivces.Size; i++){
         const auto &dev = m_PhysicalDeivces.Pointer[i];
         // it's a game engine, we want to have graphics!
-        if(dev.GraphicsQueueFamily == -1)
+        if(!dev.IsSupported())
             break;
             
         u8 score =       (dev.Type == DeviceType::DiscreteGPU ? 3 : 0) 
         + (dev.TransferQueueFamily != dev.GraphicsQueueFamily)
         + (dev.ComputeQueueFamily  != dev.TransferQueueFamily);
 
-        if(score > best_score)
+        if(score > best_score){
             best_index = i;
+            best_score = score;
+        }
     }
 
     if(best_index == -1)
         return Error::Unsupported;
 
+    const char *dev_extensions[]={
 
-    return Error::Success;
+    };
+    const char *dev_layers[]={
+
+    };
+    return m_Device.Create(&m_PhysicalDeivces[best_index], {(char**)dev_extensions, sizeof(dev_extensions)/sizeof(char*)},
+        {(char**)dev_layers, sizeof(dev_layers)/sizeof(char*)});
 }
 
 

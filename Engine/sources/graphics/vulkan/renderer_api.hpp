@@ -20,6 +20,7 @@ private:
     StackAllocator m_Allocator = {(sizeof(VkPhysicalDevice)+sizeof(Vk::PhysicalDevice)) * MaxExpectedDevices};
     Vk::Instance m_Instance;
     ArrayPtr<Vk::PhysicalDevice> m_PhysicalDeivces;
+    Vk::LogicalDevice m_Device;
 public:
     static RendererAPI Instance;
 

@@ -127,11 +127,16 @@ void PhysicalDevice::QueryQueues(){
     DLogInfo("Vulkan: ComputeQueue   %",ComputeQueueFamily != -1);
     DLogInfo("Vulkan: TransferQueue  %",TransferQueueFamily != -1);
 
+
     //higher level queue fallback
-    if(ComputeQueueFamily == -1)
+    //we are going to have one queue instance of each family
+    if(ComputeQueueFamily == -1 && props[GraphicsQueueFamily].queueCount >= 2){
         ComputeQueueFamily = GraphicsQueueFamily;
-    if(TransferQueueFamily == -1)
+        props[GraphicsQueueFamily].queueCount-=1;
+    }
+    if(TransferQueueFamily == -1 && props[ComputeQueueFamily].queueCount >= 2){
         TransferQueueFamily = ComputeQueueFamily;
+    }
 
 }
 
