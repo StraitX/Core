@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 01)
-set(VERSION_PATCH 07)
+set(VERSION_PATCH 08)
 
 project(
     StraitXEngine 
@@ -78,6 +78,7 @@ if(STRAITX_PLATFORM_LINUX)
         ${SOURCES_DIR}/platform/linux/screen_x11.cpp
         ${SOURCES_DIR}/platform/linux/glloader_x11.cpp
         ${SOURCES_DIR}/platform/linux/glcontext_x11.cpp
+        ${SOURCES_DIR}/platform/linux/vk_surface_x11.cpp
     )
 
     set(LIBS_PLATFORM
