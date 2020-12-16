@@ -4,6 +4,7 @@
 #include "platform/vulkan.hpp"
 #include "platform/types.hpp"
 #include "platform/error.hpp"
+#include "platform/window.hpp"
 #include "core/array_ptr.hpp"
 #include "core/memory/stack_allocator.hpp"
 #include "graphics/vulkan/instance.hpp"
@@ -24,10 +25,13 @@ private:
 public:
     static RendererAPI Instance;
 
-    Error Initialize();
+    Error InitializeHardware();
 
+    Error InitializeRender(const Window &window);
 
-    Error Finalize();
+    Error FinalizeRender();
+
+    Error FinalizeHardware();
 
 };
 

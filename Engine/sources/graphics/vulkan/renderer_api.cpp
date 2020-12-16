@@ -6,7 +6,7 @@ namespace Vk{
 
 RendererAPI RendererAPI::Instance;
 
-Error RendererAPI::Initialize(){
+Error RendererAPI::InitializeHardware(){
     constexpr Version vk_version = {1,0,0};
     const char *extensions[]={
         
@@ -14,10 +14,18 @@ Error RendererAPI::Initialize(){
     const char *layers[]={
 
     };
-    m_Instance.Create(vk_version, extensions, sizeof(extensions)/sizeof(char*), layers, sizeof(layers)/sizeof(char*));
+    if(m_Instance.Create(vk_version, extensions, sizeof(extensions)/sizeof(char*), layers, sizeof(layers)/sizeof(char*)) != Error::Success){
+        LogError("Vulkna: Failed to create Instance");
+        return Error::Unsupported;
+    }
 
     ArrayPtr<VkPhysicalDevice,u32> devices;
     vkEnumeratePhysicalDevices(m_Instance.Handle,&devices.Size,nullptr);
+
+    if(!devices.Size){
+        LogError("Vulkan: Can not find Vulkan Compatible devices");
+        return Error::Unsupported;
+    }
 
     m_PhysicalDeivces.Size = devices.Size;
     m_PhysicalDeivces.Pointer = (Vk::PhysicalDevice *)m_Allocator.Alloc(sizeof(Vk::PhysicalDevice)*m_PhysicalDeivces.Size);
@@ -64,8 +72,21 @@ Error RendererAPI::Initialize(){
         {(char**)dev_layers, sizeof(dev_layers)/sizeof(char*)});
 }
 
+Error RendererAPI::InitializeRender(const Window &window){
 
-Error RendererAPI::Finalize(){
+
+    return Error::Success;
+}
+
+
+
+Error RendererAPI::FinalizeRender(){
+
+    return Error::Success;
+}
+
+Error RendererAPI::FinalizeHardware(){
+    m_Device.Destroy();
     return Error::Success;
 }
 

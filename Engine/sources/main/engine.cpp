@@ -70,6 +70,13 @@ void Engine::Stop(){
 
 Error Engine::Initialize(){
     LogTrace("========= First stage init =========");
+
+    LogTrace("RendererAPI::InitializeHardware: Begin");
+    m_ErrorRendererAPI = Vk::RendererAPI::Instance.InitializeHardware();
+    InitAssert("RendererAPI::InitializeHardware",m_ErrorRendererAPI);
+
+    LogTrace("========= Second stage init =========");
+
     PixelFormat pixel = {0};
     pixel.Red = 8;
     pixel.Green = 8;
@@ -83,14 +90,8 @@ Error Engine::Initialize(){
     m_ErrorDisplayServer = m_DisplayServer.Initialize(pixel);
     InitAssert("DisplayServer::Initialize", m_ErrorDisplayServer);
 
-    LogTrace("========= Second stage init =========");
-
     SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::DoubleBuffer), "Display::DoubleBuffer");
     SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::OpenGLCore), "Display::OpenGL Core");
-
-    LogTrace("RendererAPI::Initialize: Begin");
-    m_ErrorRendererAPI = Vk::RendererAPI::Instance.Initialize();
-    InitAssert("RendererAPI::Initialize",m_ErrorRendererAPI);
 
     Error ErrorContext = m_Context.Create({4,6,0});
     InitAssert("OpenGL Context::Create", ErrorContext);
@@ -140,17 +141,19 @@ Error Engine::Finalize(){
         Log("StraitXExit",m_ErrorMX);
     }
 
-    if(m_ErrorRendererAPI == Error::Success){
-        LogTrace("RendererAPI::Finalize: Begin");
-        m_ErrorRendererAPI = Vk::RendererAPI::Instance.Finalize();
-        Log("RendererAPI::Finalize",m_ErrorRendererAPI);
-    }
-
     if(m_ErrorDisplayServer == Error::Success){
         LogTrace("DisplayServer::Finalize: Begin");
         m_ErrorDisplayServer = m_DisplayServer.Finalize();
         Log("DisplayServer::Finalize", m_ErrorDisplayServer);
     }
+
+    if(m_ErrorRendererAPI == Error::Success){
+        LogTrace("RendererAPI::FinalizeHardware: Begin");
+        m_ErrorRendererAPI = Vk::RendererAPI::Instance.FinalizeHardware();
+        Log("RendererAPI::FinalizeHardware",m_ErrorRendererAPI);
+    }
+
+
 
     return Error::Success;
 }
