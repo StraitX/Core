@@ -20,6 +20,27 @@ StackAllocator::~StackAllocator(){
     Finalize();
 }
 
+StackAllocator::StackAllocator(StackAllocator &&other):
+    m_Memory(other.m_Memory),
+    m_Capacity(other.m_Capacity),
+    m_Size(other.m_Size)
+{
+    other.m_Memory = nullptr;
+    other.m_Capacity = 0;
+    other.m_Size = 0;
+}
+
+StackAllocator &StackAllocator::operator=(StackAllocator &&other){
+    CoreAssert(m_Memory == nullptr,"StackAllocator: Can't move into non-Finalized instance");
+    m_Memory = other.m_Memory;
+    m_Capacity = other.m_Capacity;
+    m_Size = other.m_Size;
+    other.m_Memory = nullptr;
+    other.m_Capacity = 0;
+    other.m_Size = 0;
+    return *this;
+}
+
 void StackAllocator::Finalize(){
     Memory::Free(m_Memory);
     m_Memory = nullptr;

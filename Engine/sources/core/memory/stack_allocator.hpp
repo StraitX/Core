@@ -15,6 +15,14 @@ public:
 
     ~StackAllocator();
 
+    StackAllocator(const StackAllocator &other) = delete;
+
+    StackAllocator(StackAllocator &&other);
+
+    StackAllocator &operator=(const StackAllocator &other) = delete;
+
+    StackAllocator &operator=(StackAllocator &&other);
+
     void Finalize();
 
     void *Alloc(size_t size);
