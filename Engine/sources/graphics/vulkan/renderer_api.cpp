@@ -14,7 +14,8 @@ Error RendererAPI::InitializeHardware(){
     const char *layers[]={
 
     };
-    if(m_Instance.Create(vk_version, extensions, sizeof(extensions)/sizeof(char*), layers, sizeof(layers)/sizeof(char*)) != Error::Success){
+    if(m_Instance.Create(vk_version, {(char**)RequiredPlatformExtensions, RequiredPlatformExtensionsCount}, 
+            {(char**)RequiredPlatformLayers,RequiredPlatformLayersCount}) != Error::Success){
         LogError("Vulkna: Failed to create Instance");
         return Error::Unsupported;
     }
@@ -73,16 +74,13 @@ Error RendererAPI::InitializeHardware(){
 }
 
 Error RendererAPI::InitializeRender(const Window &window){
-
-
-    return Error::Success;
+    return m_Surface.Create(m_Instance.Handle, window);
 }
 
 
 
 Error RendererAPI::FinalizeRender(){
-
-    return Error::Success;
+    return m_Surface.Destroy();
 }
 
 Error RendererAPI::FinalizeHardware(){

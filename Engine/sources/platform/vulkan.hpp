@@ -9,4 +9,16 @@
     #error "Your platform does not support vulkan yet."
 #endif
 
+namespace StraitX{
+namespace Vk{
+
+extern const char *RequiredPlatformExtensions[];
+extern size_t RequiredPlatformExtensionsCount;
+extern const char *RequiredPlatformLayers[];
+extern size_t RequiredPlatformLayersCount;
+
+};//namespace Vk::
+};//namespace StraitX::
+
+
 #endif // STRAITX_VULKAN_HPP

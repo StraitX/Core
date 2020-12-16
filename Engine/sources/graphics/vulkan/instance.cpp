@@ -3,7 +3,7 @@
 namespace StraitX{
 namespace Vk{
 
-Error Instance::Create(const Version &version, const char **extensions, size_t ecount, const char **layers, size_t lcount){
+Error Instance::Create(const Version &version, const ArrayPtr<char *> &extensions, const ArrayPtr<char *> &layers){
     VkApplicationInfo app_info;
     app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     app_info.pNext = nullptr;
@@ -19,10 +19,10 @@ Error Instance::Create(const Version &version, const char **extensions, size_t e
     create_info.pNext = nullptr;
     create_info.flags = 0;
     create_info.pApplicationInfo = &app_info;
-    create_info.enabledExtensionCount = ecount;
-    create_info.ppEnabledExtensionNames = extensions;
-    create_info.enabledLayerCount = lcount;
-    create_info.ppEnabledLayerNames = layers;
+    create_info.enabledExtensionCount = extensions.Size;
+    create_info.ppEnabledExtensionNames = extensions.Pointer;
+    create_info.enabledLayerCount = layers.Size;
+    create_info.ppEnabledLayerNames = layers.Pointer;
     
     if(vkCreateInstance(&create_info, nullptr, &Handle) != VK_SUCCESS)
         return Error::Failure;

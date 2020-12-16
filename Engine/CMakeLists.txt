@@ -78,6 +78,7 @@ if(STRAITX_PLATFORM_LINUX)
         ${SOURCES_DIR}/platform/linux/screen_x11.cpp
         ${SOURCES_DIR}/platform/linux/glloader_x11.cpp
         ${SOURCES_DIR}/platform/linux/glcontext_x11.cpp
+        ${SOURCES_DIR}/platform/linux/vulkan.cpp
         ${SOURCES_DIR}/platform/linux/vk_surface_x11.cpp
     )
 

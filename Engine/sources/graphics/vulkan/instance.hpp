@@ -4,6 +4,7 @@
 #include "platform/vulkan.hpp"
 #include "platform/error.hpp"
 #include "platform/types.hpp"
+#include "core/array_ptr.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -11,7 +12,7 @@ namespace Vk{
 struct Instance{
     VkInstance Handle = VK_NULL_HANDLE;
 
-    Error Create(const Version &version, const char **extensions, size_t ecount, const char **layers, size_t lcount);
+    Error Create(const Version &version, const ArrayPtr<char *> &extensions, const ArrayPtr<char *> &layers);
 
     void Destroy();
 };

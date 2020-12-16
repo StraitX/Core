@@ -2,6 +2,7 @@
 #define STRAITX_VULKAN_RENDERER_HPP
 
 #include "platform/vulkan.hpp"
+#include "platform/vk_surface.hpp"
 #include "platform/types.hpp"
 #include "platform/error.hpp"
 #include "platform/window.hpp"
@@ -22,6 +23,7 @@ private:
     Vk::Instance m_Instance;
     ArrayPtr<Vk::PhysicalDevice> m_PhysicalDeivces;
     Vk::LogicalDevice m_Device;
+    Vk::Surface m_Surface;
 public:
     static RendererAPI Instance;
 
