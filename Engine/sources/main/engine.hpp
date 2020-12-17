@@ -15,7 +15,6 @@ private:
     Application *m_Application;
     bool m_Running;
     DisplayServer m_DisplayServer;
-    GLContext m_Context;
     Error m_ErrorRendererHW, m_ErrorRendererAPI;
     Error m_ErrorDisplayServer, m_ErrorApplication, m_ErrorMX;
 public:

@@ -64,7 +64,7 @@ Error RendererAPI::InitializeHardware(){
         return Error::Unsupported;
 
     const char *dev_extensions[]={
-
+        VK_KHR_SWAPCHAIN_EXTENSION_NAME
     };
     const char *dev_layers[]={
 
@@ -74,13 +74,18 @@ Error RendererAPI::InitializeHardware(){
 }
 
 Error RendererAPI::InitializeRender(const Window &window){
-    return m_Surface.Create(m_Instance.Handle, window);
+    if(m_Surface.Create(m_Instance.Handle, window) != Error::Success)
+        return Error::Failure;
+
+    return m_Swapchain.Create(m_Format, &m_Device, m_Surface);
 }
 
 
 
 Error RendererAPI::FinalizeRender(){
-    return m_Surface.Destroy();
+    m_Surface.Destroy();
+    m_Swapchain.Destroy();
+    return Error::Success;
 }
 
 Error RendererAPI::FinalizeHardware(){

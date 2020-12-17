@@ -26,9 +26,8 @@ Error Surface::Create(VkInstance owner, const Window &window){
     return Error::Success;
 }
 
-Error Surface::Destroy(){
+void Surface::Destroy(){
     vkDestroySurfaceKHR(Owner, Handle, nullptr);
-    return Error::Success;
 }
 
 };//namespace Vk::

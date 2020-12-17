@@ -14,7 +14,7 @@ struct Surface{
 
     Error Create(VkInstance owner, const Window &window);
 
-    Error Destroy();
+    void Destroy();
 };
 
 };//namespace Vk::

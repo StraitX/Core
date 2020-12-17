@@ -22,7 +22,6 @@ namespace StraitX{
 
 Engine::Engine():
     m_Running(true),
-    m_Context(m_DisplayServer.m_Window),
     m_ErrorApplication(Error::None)
 {
 
@@ -97,21 +96,6 @@ Error Engine::Initialize(){
     m_ErrorRendererAPI = Vk::RendererAPI::Instance.InitializeRender(m_DisplayServer.m_Window);
     InitAssert("RendererAPI::InitializeRender",m_ErrorRendererAPI);
 
-    Error ErrorContext = m_Context.Create({4,6,0});
-    InitAssert("OpenGL Context::Create", ErrorContext);
-
-    InitAssert("OpenGL Context::MakeCurrent",m_Context.MakeCurrent());
-
-    Error ErrorOpenGL = OpenGLLoader::Load();
-    InitAssert("OpenGL Loader::Load", ErrorOpenGL);
-
-    auto glVersion = OpenGLLoader::OpenGLVersion();
-    Output::Printf("OpenGL Loader: OpenGL %\n",glVersion);
-
-    Output::Printf("OpenGL Renderer: %\n", (const char *)glGetString(GL_RENDERER));
-    Output::Printf("OpenGL Version : %\n", (const char *)glGetString(GL_VERSION));
-    Output::Printf("OpenGL Vendor  : %\n", (const char *)glGetString(GL_VENDOR));
-
     LogTrace("========= Third stage init =========");
 
     //Engine should be completely initialized at this moment
@@ -174,7 +158,6 @@ void Engine::MainLoop(){
                 Stop();
         }
         m_Application->OnUpdate();
-        m_Context.SwapBuffers();
     }
 }
 

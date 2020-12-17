@@ -11,6 +11,7 @@
 #include "graphics/vulkan/instance.hpp"
 #include "graphics/vulkan/physical_device.hpp"
 #include "graphics/vulkan/logical_device.hpp"
+#include "graphics/vulkan/swapchain.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -24,6 +25,8 @@ private:
     ArrayPtr<Vk::PhysicalDevice> m_PhysicalDeivces;
     Vk::LogicalDevice m_Device;
     Vk::Surface m_Surface;
+    VkSurfaceFormatKHR m_Format = {VK_FORMAT_B8G8R8A8_UNORM, VK_COLORSPACE_SRGB_NONLINEAR_KHR};
+    Vk::Swapchain m_Swapchain;
 public:
     static RendererAPI Instance;
 
