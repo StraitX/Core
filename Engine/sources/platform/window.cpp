@@ -13,10 +13,6 @@ Window::Window(Window &&other):
 
 }
 
-Window::~Window(){
-    m_Impl.Close();
-}
-
 Error Window::Open(const Screen &screen, int width, int height){
     if(!IsOpen())
         return m_Impl.Open(screen.Impl(), width, height);

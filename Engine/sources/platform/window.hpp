@@ -29,8 +29,6 @@ public:
 
     Window(Window &&other);
 
-    ~Window();
-
     Error Open(const Screen &screen, int width, int height);
 
     Error Close();
