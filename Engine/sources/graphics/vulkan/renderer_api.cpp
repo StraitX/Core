@@ -48,12 +48,12 @@ Error RendererAPI::InitializeHardware(){
         const auto &dev = m_PhysicalDeivces.Pointer[i];
         // it's a game engine, we want to have graphics!
         if(!dev.IsSupported())
-            break;
-            
+            continue;
+    	
         u8 score =       (dev.Type == DeviceType::DiscreteGPU ? 3 : 0) 
         + (dev.TransferQueueFamily != dev.GraphicsQueueFamily)
         + (dev.ComputeQueueFamily  != dev.TransferQueueFamily);
-
+	
         if(score > best_score){
             best_index = i;
             best_score = score;
