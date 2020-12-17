@@ -27,6 +27,11 @@ private:
     Vk::Surface m_Surface;
     VkSurfaceFormatKHR m_Format = {VK_FORMAT_B8G8R8A8_UNORM, VK_COLORSPACE_SRGB_NONLINEAR_KHR};
     Vk::Swapchain m_Swapchain;
+
+    Error m_ErrInstance = Error::None;
+    Error m_ErrDevice = Error::None;
+    Error m_ErrSurface = Error::None;
+    Error m_ErrSwapchain = Error::None;
 public:
     static RendererAPI Instance;
 

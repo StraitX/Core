@@ -14,10 +14,11 @@ Error RendererAPI::InitializeHardware(){
     const char *layers[]={
 
     };
-    if(m_Instance.Create(vk_version, {(char**)RequiredPlatformExtensions, RequiredPlatformExtensionsCount}, 
-            {(char**)RequiredPlatformLayers,RequiredPlatformLayersCount}) != Error::Success){
-        LogError("Vulkna: Failed to create Instance");
-        return Error::Unsupported;
+    m_ErrInstance = m_Instance.Create(vk_version, {(char**)RequiredPlatformExtensions, RequiredPlatformExtensionsCount}, 
+            {(char**)RequiredPlatformLayers,RequiredPlatformLayersCount});
+    if(m_ErrInstance != Error::Success){
+        LogError("Vulkan: Failed to create Instance");
+        return m_ErrInstance;
     }
 
     ArrayPtr<VkPhysicalDevice,u32> devices;
@@ -40,7 +41,6 @@ Error RendererAPI::InitializeHardware(){
     }
     // here we go
     m_Allocator.Free(devices.Size*sizeof(VkPhysicalDevice));
-    
     
     int best_index = -1;
     u8 best_score = 0;
@@ -69,30 +69,47 @@ Error RendererAPI::InitializeHardware(){
     const char *dev_layers[]={
 
     };
-    return m_Device.Create(&m_PhysicalDeivces[best_index], {(char**)dev_extensions, sizeof(dev_extensions)/sizeof(char*)},
+    m_ErrDevice = m_Device.Create(&m_PhysicalDeivces[best_index], {(char**)dev_extensions, sizeof(dev_extensions)/sizeof(char*)},
         {(char**)dev_layers, sizeof(dev_layers)/sizeof(char*)});
+    if(m_ErrDevice != Error::Success){
+	LogError("Vulkan: Can't create LogicalDevice");
+	return m_ErrDevice;
+    }
+    return Error::Success;
 }
 
 Error RendererAPI::InitializeRender(const Window &window){
-    if(m_Surface.Create(m_Instance.Handle, window) != Error::Success)
-        return Error::Failure;
-
-    return m_Swapchain.Create(m_Format, &m_Device, m_Surface);
+    m_ErrSurface = m_Surface.Create(m_Instance.Handle, window);
+    if(m_ErrSurface != Error::Success){
+	LogError("Vulkan: Can't create Surface");
+        return m_ErrSurface;
+    }
+    m_ErrSwapchain = m_Swapchain.Create(m_Format, &m_Device, m_Surface);
+    if(m_ErrSwapchain != Error::Success){
+	LogError("Vulkan: Can't create Swapchain");
+	return m_ErrSwapchain;
+    }
+    return Error::Success;
 }
 
-
-
 Error RendererAPI::FinalizeRender(){
-    m_Surface.Destroy();
-    m_Swapchain.Destroy();
+    if(m_ErrSurface == Error::Success)
+        m_Surface.Destroy();
+    if(m_ErrSwapchain == Error::Success)
+    	m_Swapchain.Destroy();
     return Error::Success;
 }
 
 Error RendererAPI::FinalizeHardware(){
-    m_Device.Destroy();
+    if(m_ErrDevice == Error::Success)
+        m_Device.Destroy();
+
+    m_Allocator.Finalize();
+
+    if(m_ErrInstance == Error::Success)
+	m_Instance.Destroy();
     return Error::Success;
 }
-
 
 };//namespace Vk::
 };//namespace StraitX::
