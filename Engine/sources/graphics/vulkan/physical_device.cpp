@@ -131,11 +131,17 @@ void PhysicalDevice::QueryQueues(){
         if(ComputeQueueFamily == -1 && props[GraphicsQueueFamily].queueCount >= 2){
             ComputeQueueFamily = GraphicsQueueFamily;
             props[GraphicsQueueFamily].queueCount-=1;
-            if(TransferQueueFamily == -1 && props[ComputeQueueFamily].queueCount >= 2){
-                TransferQueueFamily = ComputeQueueFamily;
-            }
 	    }
+        if(TransferQueueFamily == -1 && props[GraphicsQueueFamily].queueCount >= 2){
+            TransferQueueFamily = GraphicsQueueFamily;
+        }
+        if(TransferQueueFamily == -1 && ComputeQueueFamily != -1 && props[ComputeQueueFamily].queueCount >= 2){
+            TransferQueueFamily = ComputeQueueFamily;
+        }
     }
+    DLogInfo("Vulkan: Fallback GraphicsQueue  %",GraphicsQueueFamily != -1);
+    DLogInfo("Vulkan: Fallback ComputeQueue   %",ComputeQueueFamily != -1);
+    DLogInfo("Vulkan: Fallback TransferQueue  %",TransferQueueFamily != -1);
 
 }
 
