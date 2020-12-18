@@ -69,11 +69,15 @@ Error RendererAPI::InitializeHardware(){
     const char *dev_layers[]={
 
     };
-    m_ErrDevice = m_Device.Create(&m_PhysicalDeivces[best_index], {(char**)dev_extensions, sizeof(dev_extensions)/sizeof(char*)},
-        {(char**)dev_layers, sizeof(dev_layers)/sizeof(char*)});
+    m_ErrDevice = m_Device.Create(
+        &m_PhysicalDeivces[best_index], 
+        {(char**)dev_extensions, sizeof(dev_extensions)/sizeof(char*)}, 
+        {(char**)dev_layers, sizeof(dev_layers)/sizeof(char*)}
+    );
+
     if(m_ErrDevice != Error::Success){
-	LogError("Vulkan: Can't create LogicalDevice");
-	return m_ErrDevice;
+	    LogError("Vulkan: Can't create LogicalDevice");
+	    return m_ErrDevice;
     }
     return Error::Success;
 }
@@ -81,13 +85,14 @@ Error RendererAPI::InitializeHardware(){
 Error RendererAPI::InitializeRender(const Window &window){
     m_ErrSurface = m_Surface.Create(m_Instance.Handle, window);
     if(m_ErrSurface != Error::Success){
-	LogError("Vulkan: Can't create Surface");
+	    LogError("Vulkan: Can't create Surface");
         return m_ErrSurface;
     }
-    m_ErrSwapchain = m_Swapchain.Create(m_Format, &m_Device, m_Surface);
+
+    m_ErrSwapchain = m_Swapchain.Create(&m_Surface, &m_Device, m_Format);
     if(m_ErrSwapchain != Error::Success){
-	LogError("Vulkan: Can't create Swapchain");
-	return m_ErrSwapchain;
+	    LogError("Vulkan: Can't create Swapchain");
+	    return m_ErrSwapchain;
     }
     return Error::Success;
 }
