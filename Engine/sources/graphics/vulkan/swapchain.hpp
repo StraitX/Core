@@ -4,6 +4,7 @@
 #include "platform/vulkan.hpp"
 #include "platform/error.hpp"
 #include "platform/vk_surface.hpp"
+#include "core/math/vector2.hpp"
 #include "graphics/vulkan/logical_device.hpp"
 
 namespace StraitX{
@@ -12,16 +13,28 @@ namespace Vk{
 constexpr size_t MaxSwapchainImages = 3;
 
 struct Swapchain{
+    Vk::Surface *Surface = nullptr;
     Vk::LogicalDevice *Owner = nullptr;
     VkSwapchainKHR Handle = VK_NULL_HANDLE;
+
     VkColorSpaceKHR Colorspace;
     VkFormat Format;
-    size_t ImagesCount = 0;
+
+    Vector2u SurfaceSize = {0,0}; 
+    u32 ImagesCount = 0;
     VkImage Images[MaxSwapchainImages];
-    VkImageView ImageVies[MaxSwapchainImages];
+    VkImageView ImageViews[MaxSwapchainImages];
     VkFramebuffer Framebuffers[MaxSwapchainImages];
 
-    Error Create(VkSurfaceFormatKHR format, Vk::LogicalDevice *owner, const Vk::Surface &surface);
+    Error Create(Vk::Surface *surface, Vk::LogicalDevice *owner, VkSurfaceFormatKHR format);
+
+    Error CreateChain();
+
+    Error CreateImageViews();
+
+    void DestroyImageViews();
+
+    void DestroyChain();
 
     void Destroy();
 };
