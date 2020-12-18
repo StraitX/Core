@@ -20,9 +20,8 @@ constexpr size_t MaxExpectedDevices = 4;
 
 class RendererAPI{
 private:
-    StackAllocator m_Allocator = {(sizeof(VkPhysicalDevice)+sizeof(Vk::PhysicalDevice)) * MaxExpectedDevices};
     Vk::Instance m_Instance;
-    ArrayPtr<Vk::PhysicalDevice> m_PhysicalDeivces;
+    Vk::PhysicalDevice m_PhysicalDevice;
     Vk::LogicalDevice m_Device;
     Vk::Surface m_Surface;
     VkSurfaceFormatKHR m_Format = {VK_FORMAT_B8G8R8A8_UNORM, VK_COLORSPACE_SRGB_NONLINEAR_KHR};
@@ -42,6 +41,8 @@ public:
     Error FinalizeRender();
 
     Error FinalizeHardware();
+private:
+    Error PickBestPhysicalDevice();
 
 };
 

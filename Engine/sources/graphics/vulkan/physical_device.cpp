@@ -13,9 +13,9 @@ const char *DeviceTypes[]={
     "IntegratedGPU"
 };
 
-PhysicalDevice::PhysicalDevice(VkPhysicalDevice device):
-    Handle(device)
-{
+void PhysicalDevice::Create(VkPhysicalDevice device){
+    Handle = device;
+    
     VkPhysicalDeviceProperties props;
     vkGetPhysicalDeviceProperties(Handle,&props);
     switch (props.deviceType) {

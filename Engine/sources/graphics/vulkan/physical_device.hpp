@@ -31,7 +31,7 @@ struct PhysicalDevice{
     u32 ComputeQueueFamily   = -1;
     u32 TransferQueueFamily  = -1; 
 
-    PhysicalDevice(VkPhysicalDevice device);
+    void Create(VkPhysicalDevice device);
 
     void QueryMemoryTypes();
 

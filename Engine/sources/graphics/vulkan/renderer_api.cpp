@@ -1,4 +1,5 @@
 #include <new>
+#include <alloca.h>
 #include "core/log.hpp"
 #include "graphics/vulkan/renderer_api.hpp"
 
@@ -31,20 +32,15 @@ Error RendererAPI::InitializeHardware(){
         return m_ErrInstance;
     }
 
-    QueryPhysicalDevices();
-
-    if(!m_PhysicalDeivces.Size){
-        LogError("Vulkan: Can not find Vulkan Compatible devices");
-        return Error::Unsupported;
+    Error dev = PickBestPhysicalDevice();
+    if(dev != Error::Success){
+        LogError("Vulkan: Can not find a compatible device");
+        return dev;
     }
     
-    int best_index = ChoseBestPhysicalDevice(m_PhysicalDeivces);
-
-    if(best_index == -1)
-        return Error::Unsupported;
 
     m_ErrDevice = m_Device.Create(
-        &m_PhysicalDeivces[best_index], 
+        &m_PhysicalDevice, 
         {(char**)DeviceExtensions,  DeviceExtensionsCount}, 
         {(char**)DeviceLayers,      DeviceLayersCount}
     );
@@ -83,35 +79,26 @@ Error RendererAPI::FinalizeHardware(){
     if(m_ErrDevice == Error::Success)
         m_Device.Destroy();
 
-    m_Allocator.Finalize();
-
     if(m_ErrInstance == Error::Success)
 	m_Instance.Destroy();
     return Error::Success;
 }
 
-void RendererAPI::QueryPhysicalDevices(){
-    ArrayPtr<VkPhysicalDevice,u32> devices;
-    vkEnumeratePhysicalDevices(m_Instance.Handle,&devices.Size,nullptr);
+Error RendererAPI::PickBestPhysicalDevice(){
+    ArrayPtr<VkPhysicalDevice, u32> available_devices;
+    vkEnumeratePhysicalDevices(m_Instance.Handle, &available_devices.Size,nullptr);
+    if(available_devices.Size == 0)
+        return Error::NotFound;
+    available_devices.Pointer = (VkPhysicalDevice *)alloca(available_devices.Size * sizeof(VkPhysicalDevice));
+    vkEnumeratePhysicalDevices(m_Instance.Handle, &available_devices.Size, available_devices.Pointer);
 
-    if(!devices.Size)
-        return;
-
-    m_PhysicalDeivces.Size = devices.Size;
-    m_PhysicalDeivces.Pointer = (Vk::PhysicalDevice *)m_Allocator.Alloc(sizeof(Vk::PhysicalDevice)*m_PhysicalDeivces.Size);
-
-    // allocate memory for physical deices to free them in StackAllocator fashion
-    devices.Pointer = (VkPhysicalDevice *)m_Allocator.Alloc(devices.Size * sizeof(VkPhysicalDevice));
-    vkEnumeratePhysicalDevices(m_Instance.Handle,&devices.Size,devices.Pointer);
+    ArrayPtr<Vk::PhysicalDevice> devices(nullptr, available_devices.Size);
+    devices.Pointer = (Vk::PhysicalDevice*)alloca(devices.Size * sizeof(Vk::PhysicalDevice));
 
     for(int i = 0; i<devices.Size; i++){
-        new (m_PhysicalDeivces.Pointer + i) Vk::PhysicalDevice(devices[i]);
+        devices.Pointer[i].Create(available_devices.Pointer[i]);
     }
-    // here we go
-    m_Allocator.Free(devices.Size*sizeof(VkPhysicalDevice));
-}
 
-int RendererAPI::ChoseBestPhysicalDevice(const ArrayPtr<Vk::PhysicalDevice> &devices){
     int best_index = -1;
     u8 best_score = 0;
     for(int i = 0; i<devices.Size; i++){
@@ -129,7 +116,11 @@ int RendererAPI::ChoseBestPhysicalDevice(const ArrayPtr<Vk::PhysicalDevice> &dev
             best_score = score;
         }
     }
-    return best_index;
+    if(best_index == -1)
+        return Error::Unsupported;
+
+    m_PhysicalDevice = devices.Pointer[best_index];
+    return Error::Success;
 }
 
 };//namespace Vk::
