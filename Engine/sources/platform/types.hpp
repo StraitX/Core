@@ -2,6 +2,7 @@
 #define STRAITX_TYPES_HPP
 
 #include "platform/compiler.hpp"
+#include "platform/arch.hpp"
 #include <cstddef>
 
 // for now
@@ -21,6 +22,14 @@ typedef unsigned int u32;
 #else
     typedef signed   long long i64;
     typedef unsigned long long u64;
+#endif
+
+#if defined(SX_ARCH_X86)
+    typedef u32 ptr_t; 
+#elif defined(SX_ARCH_X86_64)
+    typedef u64 ptr_t;
+#else
+    #error "Your architecture does not support pointer types"
 #endif
 
 typedef std::size_t size_t;

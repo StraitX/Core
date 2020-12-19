@@ -13,6 +13,8 @@ enum class Error{
     NullObject,
     AlreadyDone,
     Unsupported,
+    Overflow,
+    Unavailable,
 
     ErrorCodesCount
 };

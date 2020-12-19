@@ -8,29 +8,29 @@
 
 #ifdef SX_DEBUG
 
-#define DLog(source,error) Output::Printf("[%]: %: %\n",error==Error::Success? "Info " : "Error",source, ErrorNames[(int)error])
-#define DLogTrace(msg) Output::Print("[Trace]: " msg)
-#define DLogInfo(msg)  Output::Print("[Info ]: " msg)
-#define DLogWarn(msg)  Output::Print("[Warn ]: " msg)
-#define DLogError(msg) Output::Print("[Error]: " msg)
-#define DLogSeparator() Output::Print("===============================================================")
+#define DLog(source,error) StraitX::Output::Printf("[%]: %: %\n",error==Error::Success? "Info " : "Error",source, ErrorNames[(int)error])
+#define DLogTrace(...) {StraitX::Output::Printf("[Trace]: "); StraitX::Output::Printf(__VA_ARGS__); StraitX::Output::Printf("\n");}
+#define DLogInfo(...)  {StraitX::Output::Printf("[Info ]: "); StraitX::Output::Printf(__VA_ARGS__); StraitX::Output::Printf("\n");}
+#define DLogWarn(...)  {StraitX::Output::Printf("[Warn ]: "); StraitX::Output::Printf(__VA_ARGS__); StraitX::Output::Printf("\n");}
+#define DLogError(...) {StraitX::Output::Printf("[Error]: "); StraitX::Output::Printf(__VA_ARGS__); StraitX::Output::Printf("\n");}
+#define DLogSeparator() StraitX::Output::Print("===============================================================")
 
 #else
 
-#define DLog(source,error)
-#define DLogTrace(msg)
-#define DLogInfo(msg)
-#define DLogWarn(msg)
-#define DLogError(msg)
-#define DLogSeparator()
+#define DLog(source,error)  ((void)0)
+#define DLogTrace(msg)      ((void)0)
+#define DLogInfo(msg)       ((void)0)
+#define DLogWarn(msg)       ((void)0)
+#define DLogError(msg)      ((void)0)
+#define DLogSeparator()     ((void)0)
 
 #endif
 
-#define Log(source,error) Output::Printf("[%]: %: %\n",error==Error::Success? "Info " : "Error",source, ErrorNames[(int)error])
-#define LogTrace(msg) Output::Print("[Trace]: " msg)
-#define LogInfo(msg)  Output::Print("[Info ]: " msg)
-#define LogWarn(msg)  Output::Print("[Warn ]: " msg)
-#define LogError(msg) Output::Print("[Error]: " msg)
-#define LogSeparator() Output::Print("===============================================================")
+#define Log(source,error) StraitX::Output::Printf("[%]: %: %\n",error==Error::Success? "Info " : "Error",source, ErrorNames[(int)error])
+#define LogTrace(...) {StraitX::Output::Printf("[Trace]: "); StraitX::Output::Printf(__VA_ARGS__); StraitX::Output::Printf("\n");}
+#define LogInfo(...)  {StraitX::Output::Printf("[Info ]: "); StraitX::Output::Printf(__VA_ARGS__); StraitX::Output::Printf("\n");}
+#define LogWarn(...)  {StraitX::Output::Printf("[Warn ]: "); StraitX::Output::Printf(__VA_ARGS__); StraitX::Output::Printf("\n");}
+#define LogError(...) {StraitX::Output::Printf("[Error]: "); StraitX::Output::Printf(__VA_ARGS__); StraitX::Output::Printf("\n");}
+#define LogSeparator() StraitX::Output::Print("===============================================================")
 
 #endif // STRAITX_LOG_HPP

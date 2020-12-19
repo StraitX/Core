@@ -20,17 +20,29 @@ class Screen{
 private:
     ScreenImpl m_Impl;
 public:
-    Screen(const ScreenImpl &impl);
+    sx_inline Screen(const ScreenImpl &impl):
+        m_Impl(impl)
+    {}
+
+    Screen(const Screen &other) = default;
 
     ~Screen() = default;
 
-    const Size2i &Size()const;
+    sx_inline const Size2i &Size()const{
+        return m_Impl.Size();
+    }
 
-    const Size2f &DPI()const;
+    sx_inline const Size2f &DPI()const{
+        return m_Impl.DPI();
+    }
 
-    ScreenImpl &Impl();
+    sx_inline ScreenImpl &Impl(){
+        return m_Impl;
+    }
 
-    const ScreenImpl &Impl()const;
+    sx_inline const ScreenImpl &Impl()const{
+        return m_Impl;
+    }
 
 };
 

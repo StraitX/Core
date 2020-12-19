@@ -22,7 +22,6 @@ namespace StraitX{
 
 Engine::Engine():
     m_Running(true),
-    m_Context(m_DisplayServer.m_Window),
     m_ErrorApplication(Error::None)
 {
 
@@ -70,6 +69,13 @@ void Engine::Stop(){
 
 Error Engine::Initialize(){
     LogTrace("========= First stage init =========");
+
+    LogTrace("RendererAPI::InitializeHardware: Begin");
+    m_ErrorRendererHW = Vk::RendererAPI::Instance.InitializeHardware();
+    InitAssert("RendererAPI::InitializeHardware",m_ErrorRendererHW);
+
+    LogTrace("========= Second stage init =========");
+
     PixelFormat pixel = {0};
     pixel.Red = 8;
     pixel.Green = 8;
@@ -83,25 +89,12 @@ Error Engine::Initialize(){
     m_ErrorDisplayServer = m_DisplayServer.Initialize(pixel);
     InitAssert("DisplayServer::Initialize", m_ErrorDisplayServer);
 
-    LogTrace("========= Second stage init =========");
-
     SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::DoubleBuffer), "Display::DoubleBuffer");
     SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::OpenGLCore), "Display::OpenGL Core");
 
-    Error ErrorContext = m_Context.Create({4,6,0});
-    InitAssert("OpenGL Context::Create", ErrorContext);
-
-    InitAssert("OpenGL Context::MakeCurrent",m_Context.MakeCurrent());
-
-    Error ErrorOpenGL = OpenGLLoader::Load();
-    InitAssert("OpenGL Loader::Load", ErrorOpenGL);
-
-    auto glVersion = OpenGLLoader::OpenGLVersion();
-    Output::Printf("OpenGL Loader: OpenGL %\n",glVersion);
-
-    Output::Printf("OpenGL Renderer: %\n", (const char *)glGetString(GL_RENDERER));
-    Output::Printf("OpenGL Version : %\n", (const char *)glGetString(GL_VERSION));
-    Output::Printf("OpenGL Vendor  : %\n", (const char *)glGetString(GL_VENDOR));
+    LogTrace("RendererAPI::InitializeRender: Begin");
+    m_ErrorRendererAPI = Vk::RendererAPI::Instance.InitializeRender(m_DisplayServer.m_Window);
+    InitAssert("RendererAPI::InitializeRender",m_ErrorRendererAPI);
 
     LogTrace("========= Third stage init =========");
 
@@ -136,10 +129,22 @@ Error Engine::Finalize(){
         Log("StraitXExit",m_ErrorMX);
     }
 
+    if(m_ErrorRendererAPI == Error::Success){
+        LogTrace("RendererAPI::FinalizeRender: Begin");
+        m_ErrorRendererAPI = Vk::RendererAPI::Instance.FinalizeRender();
+        Log("RendererAPI::FinalizeRender",m_ErrorRendererAPI);
+    }
+
     if(m_ErrorDisplayServer == Error::Success){
         LogTrace("DisplayServer::Finalize: Begin");
         m_ErrorDisplayServer = m_DisplayServer.Finalize();
         Log("DisplayServer::Finalize", m_ErrorDisplayServer);
+    }
+
+    if(m_ErrorRendererHW == Error::Success){
+        LogTrace("RendererAPI::FinalizeHardware: Begin");
+        m_ErrorRendererHW = Vk::RendererAPI::Instance.FinalizeHardware();
+        Log("RendererAPI::FinalizeHardware",m_ErrorRendererHW);
     }
 
     return Error::Success;
@@ -153,7 +158,6 @@ void Engine::MainLoop(){
                 Stop();
         }
         m_Application->OnUpdate();
-        m_Context.SwapBuffers();
     }
 }
 

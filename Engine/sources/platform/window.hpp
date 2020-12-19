@@ -5,6 +5,7 @@
 #include "platform/events.hpp"
 #include "platform/screen.hpp"
 #include "platform/display.hpp"
+#include "platform/noncopyable.hpp"
 
 #ifdef SX_PLATFORM_LINUX
     #include "platform/linux/window_x11.hpp"
@@ -18,34 +19,46 @@
 
 namespace StraitX{
 
-class Window{
+class Window: public NonCopyable{
 private:
     WindowImpl m_Impl;
 public:
 
-    Window(Display &display);
+    sx_inline Window(Display &display):
+        m_Impl(display.Impl())
+    {}
 
-    Window(const Window &other) = delete;
+    sx_inline Window(Window &&other):
+        m_Impl((WindowImpl&&)other.Impl())
+    {}
 
-    Window(Window &&other);
+    sx_inline Error Open(const Screen &screen, int width, int height){
+        return m_Impl.Open(screen.Impl(), width, height);
+    }
 
-    ~Window();
+    sx_inline Error Close(){
+        return m_Impl.Close();
+    }
 
-    Error Open(const Screen &screen, int width, int height);
+    sx_inline WindowImpl &Impl(){
+        return m_Impl;
+    }
 
-    Error Close();
+    sx_inline const WindowImpl &Impl()const{
+        return m_Impl;
+    }
 
-    WindowImpl &Impl();
+    sx_inline bool IsOpen()const{
+        return m_Impl.IsOpen();
+    }
 
-    const WindowImpl &Impl()const;
+    sx_inline void SetTitle(const char *title){
+        m_Impl.SetTitle(title);
+    }
 
-    bool IsOpen()const;
-
-    void SetTitle(const char *title);
-
-    void SetSize(int width, int height);
-
-    bool PollEvent(Event &event);
+    sx_inline bool PollEvent(Event &event){
+        return m_Impl.PollEvent(event);
+    }
 };
 
 }; // namespace StraitX::

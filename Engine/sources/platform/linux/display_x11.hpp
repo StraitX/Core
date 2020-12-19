@@ -28,7 +28,7 @@ public:
 
     Error Close();
 
-    bool IsOpened();
+    bool IsOpen();
 
     bool CheckSupport(Ext extension);
 

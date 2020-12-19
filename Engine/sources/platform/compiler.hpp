@@ -51,6 +51,7 @@
     #elif defined(SX_COMPILER_MSVC)
         #define sx_inline __forceinline
     #else
+        #warning "Your compiler does not support sx_inline"
         #define sx_inline inline
     #endif
 #else

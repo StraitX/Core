@@ -2,6 +2,8 @@
 #define STRAITX_GLCONTEXT_HPP
 
 #include "platform/platform_detection.hpp"
+#include "platform/window.hpp"
+#include "platform/noncopyable.hpp"
 
 #ifdef SX_PLATFORM_LINUX
     #include "platform/linux/glcontext_x11.hpp"
@@ -12,19 +14,30 @@
 
 namespace StraitX{
 
-class GLContext{
+class GLContext: public NonCopyable{
 private:
     GLContextImpl m_Impl;
 public:
-    GLContext(Window &window);
 
-    Error Create(const Version &version);
+    sx_inline GLContext(Window &window):
+        m_Impl(window.Impl())
+    {}
 
-    void Destory();
+    sx_inline Error Create(const Version &version){
+        return m_Impl.Create(version);
+    }
 
-    Error MakeCurrent();
+    sx_inline void Destory(){
+        m_Impl.Destory();
+    }
 
-    void SwapBuffers();
+    sx_inline Error MakeCurrent(){
+        return m_Impl.MakeCurrent();
+    }
+
+    sx_inline void SwapBuffers(){
+        m_Impl.SwapBuffers();
+    }
 };
 
 }; // namespace StraitX::

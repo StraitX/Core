@@ -14,6 +14,8 @@ const char *ErrorNames[(int)Error::ErrorCodesCount] = {
     S(NullObject),
     S(AlreadyDone),
     S(Unsupported),
+    S(Overflow),
+    S(Unavailable)
 };
 
 }; // namespace StraitX::
