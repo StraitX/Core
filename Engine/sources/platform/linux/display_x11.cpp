@@ -21,7 +21,7 @@ Error DisplayX11::Close(){
     return XCloseDisplay(m_Handle)==0 ? Error::Success : Error::Failure;
 }
 
-bool DisplayX11::IsOpened(){
+bool DisplayX11::IsOpen(){
     return m_Handle;
 }
 

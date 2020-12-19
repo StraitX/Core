@@ -21,12 +21,8 @@ include(Config)
 set(SOURCES_PLATFORM_I
     ${SOURCES_DIR}/platform/io.cpp
     ${SOURCES_DIR}/platform/memory.cpp
-    ${SOURCES_DIR}/platform/window.cpp
-    ${SOURCES_DIR}/platform/screen.cpp
-    ${SOURCES_DIR}/platform/display.cpp
     ${SOURCES_DIR}/platform/error.cpp
     ${SOURCES_DIR}/platform/glloader.cpp
-    ${SOURCES_DIR}/platform/glcontext.cpp
 )
 
 set(SOURCES_CORE
