@@ -2,7 +2,6 @@
 #define STRAITX_ENGINE_HPP
 
 #include "platform/error.hpp"
-#include "platform/glcontext.hpp"
 #include "servers/display_server.hpp"
 #include "graphics/vulkan/renderer_api.hpp"
 

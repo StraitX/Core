@@ -13,7 +13,6 @@
         #error "Your arch is not supported yet"
     #endif
 #elif defined(SX_COMPILER_MSVC)
-    #warning "Check if works on windows"
     #if defined(_M_IX86)
         #define SX_ARCH_X86
     #elif defined(_M_X64)

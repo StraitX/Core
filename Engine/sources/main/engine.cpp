@@ -4,9 +4,6 @@
 #include "platform/display.hpp"
 #include "platform/platform.hpp"
 #include "platform/io.hpp"
-#include "platform/glloader.hpp"
-#include "platform/glcontext.hpp"
-#include "platform/opengl.hpp"
 
 
 #define InitAssert(source,error) Log(source,error);if(error != Error::Success){return Error::Failure;}
