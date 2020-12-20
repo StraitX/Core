@@ -23,7 +23,7 @@ public:
         m_Impl(window.Impl())
     {}
 
-    sx_inline Error Create(const Version &version){
+    sx_inline Result Create(const Version &version){
         return m_Impl.Create(version);
     }
 
@@ -31,7 +31,7 @@ public:
         m_Impl.Destory();
     }
 
-    sx_inline Error MakeCurrent(){
+    sx_inline Result MakeCurrent(){
         return m_Impl.MakeCurrent();
     }
 

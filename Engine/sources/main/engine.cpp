@@ -6,20 +6,20 @@
 #include "platform/io.hpp"
 
 
-#define InitAssert(source,error) Log(source,error);if(error != Error::Success){return Error::Failure;}
-//#define I(call,name) {Error __err = call; Log(name,__err); if(__err!=Error::Success){return Error::Failure;}}
-#define SupportAssert(b, name) if(b){ LogInfo(name ": Supported"); }else{ LogError(name ": Is Not Supported"); return Error::Failure;}
+#define InitAssert(source,error) Log(source,error);if(error != Result::Success){return Result::Failure;}
+//#define I(call,name) {Result __err = call; Log(name,__err); if(__err!=Result::Success){return Result::Failure;}}
+#define SupportAssert(b, name) if(b){ LogInfo(name ": Supported"); }else{ LogError(name ": Is Not Supported"); return Result::Failure;}
 
 // should be defined at client side
 extern StraitX::Application *StraitXMain();
-extern StraitX::Error StraitXExit(StraitX::Application *);
+extern StraitX::Result StraitXExit(StraitX::Application *);
 
 namespace StraitX{
 
 
 Engine::Engine():
     m_Running(true),
-    m_ErrorApplication(Error::None)
+    m_ErrorApplication(Result::None)
 {
 
 }
@@ -32,13 +32,13 @@ Engine::~Engine(){
 int Engine::Run(){
     LogTrace("Engine::Initialize: Begin");
 
-    Error initCode = Initialize();
+    Result initCode = Initialize();
 
     Log("Engine::Initialize",initCode);
 
     LogSeparator();
 
-    if(initCode == Error::Success){
+    if(initCode == Result::Success){
         LogInfo("Engine: Enter Main loop");
         MainLoop();
         LogInfo("Engine: Left Main loop");
@@ -50,11 +50,11 @@ int Engine::Run(){
 
     LogTrace("Engine: Finalize: Begin");
 
-    Error finalizeCode = Finalize();
+    Result finalizeCode = Finalize();
 
     Log("Engine::Finalize",finalizeCode);
 
-    if(finalizeCode != Error::Success || initCode != Error::Success)
+    if(finalizeCode != Result::Success || initCode != Result::Success)
         return -1;
 
     return 0;
@@ -64,7 +64,7 @@ void Engine::Stop(){
     m_Running = false;
 }
 
-Error Engine::Initialize(){
+Result Engine::Initialize(){
     LogTrace("========= First stage init =========");
 
     LogTrace("RendererAPI::InitializeHardware: Begin");
@@ -98,7 +98,7 @@ Error Engine::Initialize(){
     //Engine should be completely initialized at this moment
     LogTrace("StraitXMain: Begin");
     m_Application = StraitXMain();
-    m_ErrorMX = (m_Application == nullptr ? Error::NullObject : Error::Success);
+    m_ErrorMX = (m_Application == nullptr ? Result::NullObject : Result::Success);
     InitAssert("StraitXMain",m_ErrorMX);
 
     m_DisplayServer.m_Window.SetTitle(m_Application->Name());
@@ -109,42 +109,42 @@ Error Engine::Initialize(){
     m_ErrorApplication = m_Application->OnInitialize();
     InitAssert("Application::OnInitialize",m_ErrorApplication);
 
-    return Error::Success;
+    return Result::Success;
 }
 
-Error Engine::Finalize(){
+Result Engine::Finalize(){
 
-    if(m_ErrorApplication==Error::Success){
+    if(m_ErrorApplication==Result::Success){
         LogTrace("Application::OnFinalize: Begin");
         m_ErrorApplication = m_Application->OnFinalize();
         Log("Application::OnFinalize",m_ErrorApplication);
     }
 
-    if(m_ErrorMX == Error::Success){
+    if(m_ErrorMX == Result::Success){
         LogTrace("StraitXExit: Begin");
         m_ErrorMX = StraitXExit(m_Application);
         Log("StraitXExit",m_ErrorMX);
     }
 
-    if(m_ErrorRendererAPI == Error::Success){
+    if(m_ErrorRendererAPI == Result::Success){
         LogTrace("RendererAPI::FinalizeRender: Begin");
         m_ErrorRendererAPI = Vk::RendererAPI::Instance.FinalizeRender();
         Log("RendererAPI::FinalizeRender",m_ErrorRendererAPI);
     }
 
-    if(m_ErrorDisplayServer == Error::Success){
+    if(m_ErrorDisplayServer == Result::Success){
         LogTrace("DisplayServer::Finalize: Begin");
         m_ErrorDisplayServer = m_DisplayServer.Finalize();
         Log("DisplayServer::Finalize", m_ErrorDisplayServer);
     }
 
-    if(m_ErrorRendererHW == Error::Success){
+    if(m_ErrorRendererHW == Result::Success){
         LogTrace("RendererAPI::FinalizeHardware: Begin");
         m_ErrorRendererHW = Vk::RendererAPI::Instance.FinalizeHardware();
         Log("RendererAPI::FinalizeHardware",m_ErrorRendererHW);
     }
 
-    return Error::Success;
+    return Result::Success;
 }
 
 void Engine::MainLoop(){

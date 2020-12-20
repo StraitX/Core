@@ -2,7 +2,7 @@
 #define STRAITX_WINDOW_X11_HPP
 
 #include "platform/events.hpp"
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 #include "platform/linux/display_x11.hpp"
 
 namespace StraitX{
@@ -19,9 +19,9 @@ struct WindowX11{
 
     WindowX11(WindowX11 &&other);
 
-    Error Open(const ScreenX11 &screen, int width, int height);
+    Result Open(const ScreenX11 &screen, int width, int height);
 
-    Error Close();
+    Result Close();
 
     bool IsOpen() const;
 

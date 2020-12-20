@@ -44,7 +44,7 @@ VkPresentModeKHR BestMode(Vk::LogicalDevice *presenter, const Vk::Surface &surfa
 }
 
 
-Error Swapchain::Create(Vk::Surface *surface, Vk::LogicalDevice *owner, VkSurfaceFormatKHR format){
+Result Swapchain::Create(Vk::Surface *surface, Vk::LogicalDevice *owner, VkSurfaceFormatKHR format){
     Owner = owner;
     Surface = surface;
 
@@ -52,25 +52,25 @@ Error Swapchain::Create(Vk::Surface *surface, Vk::LogicalDevice *owner, VkSurfac
     vkGetPhysicalDeviceSurfaceSupportKHR(Owner->Parent->Handle, Owner->Parent->GraphicsQueueFamily, Surface->Handle, &support);
 
     if(support == false)
-        return Error::Unsupported;
+        return Result::Unsupported;
 
     if(!CheckFormat(owner, *Surface, format))
-        return Error::Unsupported;
+        return Result::Unsupported;
 
     Colorspace = format.colorSpace;
     Format = format.format;
     
-    Error chain = CreateChain();
-    if(chain != Error::Success)
+    Result chain = CreateChain();
+    if(chain != Result::Success)
         return chain;
 
-    Error views = CreateImageViews();
-    if(views != Error::Success)
+    Result views = CreateImageViews();
+    if(views != Result::Success)
         return views;
 
-    return Error::Success;
+    return Result::Success;
 }
-Error Swapchain::CreateChain(){
+Result Swapchain::CreateChain(){
     VkSurfaceCapabilitiesKHR capabilities;
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(Owner->Parent->Handle, Surface->Handle, &capabilities);
 
@@ -84,7 +84,7 @@ Error Swapchain::CreateChain(){
         desired_images = 3;
 
     if(capabilities.minImageCount > MaxSwapchainImages)
-        return Error::Unsupported;
+        return Result::Unsupported;
 
     LogInfo("Vulkan: Swapchain: Requrest % Images",desired_images);
     VkSwapchainCreateInfoKHR info;
@@ -108,18 +108,18 @@ Error Swapchain::CreateChain(){
     info.imageColorSpace = Colorspace;
 
     if(vkCreateSwapchainKHR(Owner->Handle,&info,nullptr,&Handle) != VK_SUCCESS)
-        return Error::Failure;
+        return Result::Failure;
 
-    return Error::Success;
+    return Result::Success;
 }
 
-Error Swapchain::CreateImageViews(){
+Result Swapchain::CreateImageViews(){
     vkGetSwapchainImagesKHR(Owner->Handle, Handle, &ImagesCount, nullptr);
     LogInfo("Vulkan: Swapchain: Got % images",ImagesCount);
     if(ImagesCount > MaxSwapchainImages)
-        return Error::Overflow;
+        return Result::Overflow;
     if(vkGetSwapchainImagesKHR(Owner->Handle, Handle, &ImagesCount, Images) != VK_SUCCESS)
-        return Error::Unavailable;
+        return Result::Unavailable;
 
     VkImageViewCreateInfo info;
     info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -142,9 +142,9 @@ Error Swapchain::CreateImageViews(){
     for(int i = 0; i<ImagesCount; i++){
         info.image = Images[i];
         if(vkCreateImageView(Owner->Handle, &info, nullptr, &ImageViews[i]) != VK_SUCCESS)
-            return Error::Failure;
+            return Result::Failure;
     }
-    return Error::Success;
+    return Result::Success;
 }
 
 void Swapchain::DestroyImageViews(){

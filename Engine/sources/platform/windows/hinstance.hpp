@@ -2,7 +2,7 @@
 #define STRAITX_WINDOWS_INSTANCE_HPP
 
 #include <windows.h>
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 
 
 namespace StraitX {
@@ -14,7 +14,7 @@ private:
 public:
     HInstance();
 
-    Error Initialize();
+    Result Initialize();
 
     HINSTANCE &Handle();
 

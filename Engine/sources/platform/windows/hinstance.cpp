@@ -9,10 +9,10 @@ HInstance::HInstance():
 	mInstanceHandle(0)
 {}
 
-Error HInstance::Initialize() {
+Result HInstance::Initialize() {
 	mInstanceHandle = (HINSTANCE)GetModuleHandle(nullptr);
 	// for now;
-	return Error::Success;
+	return Result::Success;
 }
 
 

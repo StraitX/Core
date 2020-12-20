@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_INSTANCE_HPP
 
 #include "platform/vulkan.hpp"
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 #include "platform/types.hpp"
 #include "core/array_ptr.hpp"
 
@@ -12,7 +12,7 @@ namespace Vk{
 struct Instance{
     VkInstance Handle = VK_NULL_HANDLE;
 
-    Error Create(const Version &version, const ArrayPtr<char *> &extensions, const ArrayPtr<char *> &layers);
+    Result Create(const Version &version, const ArrayPtr<char *> &extensions, const ArrayPtr<char *> &layers);
 
     void Destroy();
 };

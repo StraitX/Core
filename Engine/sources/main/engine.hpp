@@ -1,7 +1,7 @@
 #ifndef STRAITX_ENGINE_HPP
 #define STRAITX_ENGINE_HPP
 
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 #include "servers/display_server.hpp"
 #include "graphics/vulkan/renderer_api.hpp"
 
@@ -14,8 +14,8 @@ private:
     Application *m_Application;
     bool m_Running;
     DisplayServer m_DisplayServer;
-    Error m_ErrorRendererHW, m_ErrorRendererAPI;
-    Error m_ErrorDisplayServer, m_ErrorApplication, m_ErrorMX;
+    Result m_ErrorRendererHW, m_ErrorRendererAPI;
+    Result m_ErrorDisplayServer, m_ErrorApplication, m_ErrorMX;
 public:
     Engine();
     ~Engine();
@@ -25,8 +25,8 @@ public:
     void Stop();
     
 private:
-    Error Initialize();
-    Error Finalize();
+    Result Initialize();
+    Result Finalize();
     void MainLoop();
 };
 

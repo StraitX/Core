@@ -7,18 +7,18 @@
 #include "platform/types.hpp"
 //undef X11 macro to resolve conflicts
 
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 
 
 namespace StraitX{
 namespace Linux{
 
-Error DisplayX11::Open(){
+Result DisplayX11::Open(){
     m_Handle = XOpenDisplay(nullptr);
-    return m_Handle != nullptr ? Error::Success : Error::Failure;
+    return m_Handle != nullptr ? Result::Success : Result::Failure;
 }
-Error DisplayX11::Close(){
-    return XCloseDisplay(m_Handle)==0 ? Error::Success : Error::Failure;
+Result DisplayX11::Close(){
+    return XCloseDisplay(m_Handle)==0 ? Result::Success : Result::Failure;
 }
 
 bool DisplayX11::IsOpen(){

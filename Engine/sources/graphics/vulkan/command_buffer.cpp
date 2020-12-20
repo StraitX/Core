@@ -4,7 +4,7 @@
 namespace StraitX{
 namespace Vk{
 
-Error CommandBuffer::Create(Vk::CommandPool *pool){
+Result CommandBuffer::Create(Vk::CommandPool *pool){
     Pool = pool;
     VkCommandBufferAllocateInfo info;
     info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -14,8 +14,8 @@ Error CommandBuffer::Create(Vk::CommandPool *pool){
     info.commandBufferCount = 1;
 
     if(vkAllocateCommandBuffers(Pool->Owner->Handle, &info, &Handle) != VK_SUCCESS)
-        return Error::Failure;
-    return Error::Success;
+        return Result::Failure;
+    return Result::Success;
 }
 
 

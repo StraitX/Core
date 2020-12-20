@@ -23,17 +23,17 @@ WindowX11::WindowX11(WindowX11 &&other):
 }
 
 
-Error WindowX11::Open(const ScreenX11 &screen, int width, int height){
+Result WindowX11::Open(const ScreenX11 &screen, int width, int height){
     ::Display *display = Display.Handle();
 
     FBConfig = PickBestFBConfig(Display, screen);
     if(FBConfig == nullptr)
-        return Error::Unsupported;
+        return Result::Unsupported;
 
     XVisualInfo *visualInfo = glXGetVisualFromFBConfig(display, (GLXFBConfig)FBConfig);
 
     if(visualInfo == nullptr)
-        return Error::Failure;
+        return Result::Failure;
     
     XSetWindowAttributes attributes;
     attributes.background_pixel = BlackPixel(display, screen.m_Index);
@@ -46,7 +46,7 @@ Error WindowX11::Open(const ScreenX11 &screen, int width, int height){
     XFree(visualInfo);
 
     if(Handle == 0)
-        return Error::Failure;
+        return Result::Failure;
     
     //intercept close event
     Atom close_atom = XInternAtom(display,"WM_DELETE_WINDOW",0);
@@ -55,16 +55,16 @@ Error WindowX11::Open(const ScreenX11 &screen, int width, int height){
 
     XMapWindow(display,Handle);
 
-    return Error::Success;
+    return Result::Success;
 }
 
 
 
-Error WindowX11::Close(){
+Result WindowX11::Close(){
     XDestroyWindow(Display.Handle(),Handle);
 
     Handle = 0;
-    return Error::Success;
+    return Result::Success;
 }
 
 bool WindowX11::IsOpen()const{

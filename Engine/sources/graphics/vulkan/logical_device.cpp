@@ -4,7 +4,7 @@
 namespace StraitX{
 namespace Vk{
 
-Error LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<char*>& extensions, const ArrayPtr<char*> &layers){
+Result LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<char*>& extensions, const ArrayPtr<char*> &layers){
     Parent = parent;
     GraphicsQueue.FamilyIndex = parent->GraphicsQueueFamily;
     TransferQueue.FamilyIndex = parent->TransferQueueFamily;
@@ -44,7 +44,7 @@ Error LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<char*>& exten
     info.pQueueCreateInfos = qinfo;
 
     if(vkCreateDevice(Parent->Handle,&info,nullptr,&Handle) != VK_SUCCESS)
-        return Error::Failure;
+        return Result::Failure;
     
     //                                   we support only one queue of each type
     vkGetDeviceQueue(Handle, GraphicsQueue.FamilyIndex, 0, &GraphicsQueue.Handle);
@@ -54,7 +54,7 @@ Error LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<char*>& exten
     CoreAssert(GraphicsQueue.Handle != VK_NULL_HANDLE, "LogicalDevice: can't retrieve GraphicsQueue handle");
     CoreAssert(TransferQueue.Handle != VK_NULL_HANDLE, "LogicalDevice: can't retrieve TransferQueue handle");
 
-    return Error::Success;
+    return Result::Success;
 }
 
 void LogicalDevice::Destroy(){

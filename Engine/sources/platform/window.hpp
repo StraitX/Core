@@ -32,11 +32,11 @@ public:
         m_Impl((WindowImpl&&)other.Impl())
     {}
 
-    sx_inline Error Open(const Screen &screen, int width, int height){
+    sx_inline Result Open(const Screen &screen, int width, int height){
         return m_Impl.Open(screen.Impl(), width, height);
     }
 
-    sx_inline Error Close(){
+    sx_inline Result Close(){
         return m_Impl.Close();
     }
 

@@ -3,7 +3,7 @@
 
 #include "platform/vulkan.hpp"
 #include "platform/types.hpp"
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 
 namespace StraitX{
 namespace Vk{

@@ -4,7 +4,7 @@
 #include "platform/vulkan.hpp"
 #include "platform/vk_surface.hpp"
 #include "platform/types.hpp"
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 #include "platform/window.hpp"
 #include "core/array_ptr.hpp"
 #include "core/memory/stack_allocator.hpp"
@@ -27,22 +27,22 @@ private:
     VkSurfaceFormatKHR m_Format = {VK_FORMAT_B8G8R8A8_UNORM, VK_COLORSPACE_SRGB_NONLINEAR_KHR};
     Vk::Swapchain m_Swapchain;
 
-    Error m_ErrInstance = Error::None;
-    Error m_ErrDevice = Error::None;
-    Error m_ErrSurface = Error::None;
-    Error m_ErrSwapchain = Error::None;
+    Result m_ErrInstance = Result::None;
+    Result m_ErrDevice = Result::None;
+    Result m_ErrSurface = Result::None;
+    Result m_ErrSwapchain = Result::None;
 public:
     static RendererAPI Instance;
 
-    Error InitializeHardware();
+    Result InitializeHardware();
 
-    Error InitializeRender(const Window &window);
+    Result InitializeRender(const Window &window);
 
-    Error FinalizeRender();
+    Result FinalizeRender();
 
-    Error FinalizeHardware();
+    Result FinalizeHardware();
 private:
-    Error PickBestPhysicalDevice();
+    Result PickBestPhysicalDevice();
 
 };
 

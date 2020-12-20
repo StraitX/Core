@@ -1,14 +1,14 @@
 #ifndef STRAITX_LOG_HPP
 #define STRAITX_LOG_HPP
 
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 #include "platform/io.hpp"
 #include "platform/compiler.hpp"
 
 
 #ifdef SX_DEBUG
 
-#define DLog(source,error) StraitX::Output::Printf("[%]: %: %\n",error==Error::Success? "Info " : "Error",source, ErrorNames[(int)error])
+#define DLog(source,error) StraitX::Output::Printf("[%]: %: %\n",error==Result::Success? "Info " : "Result",source, ResultNames[(int)error])
 #define DLogTrace(...) {StraitX::Output::Printf("[Trace]: "); StraitX::Output::Printf(__VA_ARGS__); StraitX::Output::Printf("\n");}
 #define DLogInfo(...)  {StraitX::Output::Printf("[Info ]: "); StraitX::Output::Printf(__VA_ARGS__); StraitX::Output::Printf("\n");}
 #define DLogWarn(...)  {StraitX::Output::Printf("[Warn ]: "); StraitX::Output::Printf(__VA_ARGS__); StraitX::Output::Printf("\n");}
@@ -26,7 +26,7 @@
 
 #endif
 
-#define Log(source,error) StraitX::Output::Printf("[%]: %: %\n",error==Error::Success? "Info " : "Error",source, ErrorNames[(int)error])
+#define Log(source,error) StraitX::Output::Printf("[%]: %: %\n",error==Result::Success? "Info " : "Result",source, ResultNames[(int)error])
 #define LogTrace(...) {StraitX::Output::Printf("[Trace]: "); StraitX::Output::Printf(__VA_ARGS__); StraitX::Output::Printf("\n");}
 #define LogInfo(...)  {StraitX::Output::Printf("[Info ]: "); StraitX::Output::Printf(__VA_ARGS__); StraitX::Output::Printf("\n");}
 #define LogWarn(...)  {StraitX::Output::Printf("[Warn ]: "); StraitX::Output::Printf(__VA_ARGS__); StraitX::Output::Printf("\n");}

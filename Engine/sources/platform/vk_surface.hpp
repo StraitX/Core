@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_SURFACE_HPP
 
 #include "platform/vulkan.hpp"
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 #include "platform/window.hpp"
 
 namespace StraitX{
@@ -12,7 +12,7 @@ struct Surface{
     VkSurfaceKHR Handle = VK_NULL_HANDLE;
     VkInstance Owner = VK_NULL_HANDLE;
 
-    Error Create(VkInstance owner, const Window &window);
+    Result Create(VkInstance owner, const Window &window);
 
     void Destroy();
 };

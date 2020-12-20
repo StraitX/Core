@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_COMMAND_POOL_HPP
 
 #include "platform/vulkan.hpp"
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 #include "graphics/vulkan/queue.hpp"
 #include "graphics/vulkan/logical_device.hpp"
 
@@ -14,7 +14,7 @@ struct CommandPool{
     Vk::LogicalDevice *Owner = nullptr;
     Vk::Queue Queue;
 
-    Error Create(Vk::LogicalDevice *owner, Vk::Queue queue);
+    Result Create(Vk::LogicalDevice *owner, Vk::Queue queue);
 
     void Destroy();
 

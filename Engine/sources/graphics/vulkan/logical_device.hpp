@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_LOGICAL_DEVICE_HPP
 
 #include "platform/vulkan.hpp"
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 #include "core/array_ptr.hpp"
 #include "graphics/vulkan/physical_device.hpp"
 #include "graphics/vulkan/queue.hpp"
@@ -17,7 +17,7 @@ struct LogicalDevice{
     Vk::Queue GraphicsQueue;
     Vk::Queue TransferQueue;
 
-    Error Create(PhysicalDevice *parent, const ArrayPtr<char*> &extensions, const ArrayPtr<char*> &layers);
+    Result Create(PhysicalDevice *parent, const ArrayPtr<char*> &extensions, const ArrayPtr<char*> &layers);
 
 
     void Destroy();

@@ -19,12 +19,12 @@ GLContextX11::GLContextX11(WindowX11 &window):
     m_Window(window)
 {}
 
-Error GLContextX11::Create(const Version &version){
+Result GLContextX11::Create(const Version &version){
     glXCreateContextAttribsARBProc glXCreateContextAttribsARB = nullptr;
     glXCreateContextAttribsARB = (glXCreateContextAttribsARBProc)glXGetProcAddressARB((const GLubyte *)"glXCreateContextAttribsARB");
 
     if(glXCreateContextAttribsARB == nullptr)
-        return Error::Unsupported;
+        return Result::Unsupported;
 
     int contextAttribs[] = {
 		GLX_CONTEXT_MAJOR_VERSION_ARB, version.Major,
@@ -40,24 +40,24 @@ Error GLContextX11::Create(const Version &version){
     m_Handle = glXCreateContextAttribsARB(m_Window.Display.Handle(),(GLXFBConfig)m_Window.FBConfig, 0, true, contextAttribs);
 
     if(m_Handle == nullptr)
-        return Error::Unsupported;
+        return Result::Unsupported;
 
 	if (!glXIsDirect (m_Window.Display.Handle(), m_Handle)){
         Destory();
-        return Error::Failure;
+        return Result::Failure;
     }
 
-    return Error::Success;
+    return Result::Success;
 }
 
 void GLContextX11::Destory(){
     glXDestroyContext(m_Window.Display.Handle(), m_Handle);
 }
 
-Error GLContextX11::MakeCurrent(){
+Result GLContextX11::MakeCurrent(){
     if(glXMakeCurrent(m_Window.Display.Handle(), m_Window.Handle, m_Handle))
-        return Error::Success;
-    return Error::Failure;
+        return Result::Success;
+    return Result::Failure;
 }
 
 void GLContextX11::SwapBuffers(){

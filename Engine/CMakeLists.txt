@@ -21,7 +21,7 @@ include(Config)
 set(SOURCES_PLATFORM_I
     ${SOURCES_DIR}/platform/io.cpp
     ${SOURCES_DIR}/platform/memory.cpp
-    ${SOURCES_DIR}/platform/error.cpp
+    ${SOURCES_DIR}/platform/result.cpp
     ${SOURCES_DIR}/platform/glloader.cpp
 )
 

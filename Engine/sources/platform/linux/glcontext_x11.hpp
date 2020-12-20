@@ -17,11 +17,11 @@ private:
 public:
     GLContextX11(WindowX11 &window);
 
-    Error Create(const Version &version);
+    Result Create(const Version &version);
 
     void Destory();
 
-    Error MakeCurrent();
+    Result MakeCurrent();
 
     void SwapBuffers();
 

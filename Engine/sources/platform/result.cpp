@@ -1,11 +1,11 @@
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 #include "platform/defs.hpp"
 
 
 namespace StraitX{
 
 
-const char *ErrorNames[(int)Error::ErrorCodesCount] = {
+const char *ResultNames[(int)Result::ResultCodesCount] = {
     S(None),
     S(Success),
     S(Failure),

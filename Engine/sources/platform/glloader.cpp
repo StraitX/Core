@@ -3,10 +3,10 @@
 #include <cstdio>
 namespace StraitX{
 
-Error OpenGLLoader::Load(){
+Result OpenGLLoader::Load(){
     if(gladLoadGLLoader((GLADloadproc)GetOpenGLProc))
-        return Error::Success;
-    return Error::Failure;
+        return Result::Success;
+    return Result::Failure;
 }
 
 Version OpenGLLoader::OpenGLVersion(){

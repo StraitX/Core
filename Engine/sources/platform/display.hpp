@@ -4,7 +4,7 @@
 #include "platform/platform_detection.hpp"
 #include "platform/screen.hpp"
 #include "platform/types.hpp"
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 
 #ifdef SX_PLATFORM_LINUX
     #include "platform/linux/display_x11.hpp"
@@ -43,11 +43,11 @@ public:
         OpenGLCore
     };
 
-    sx_inline Error Open(){
+    sx_inline Result Open(){
         return m_Impl.Open();
     }
 
-    sx_inline Error Close(){
+    sx_inline Result Close(){
         return m_Impl.Close();
     }
 

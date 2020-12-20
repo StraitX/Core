@@ -12,7 +12,7 @@ namespace StraitX{
 namespace Vk{
 
 
-Error Surface::Create(VkInstance owner, const Window &window){
+Result Surface::Create(VkInstance owner, const Window &window){
     Owner = owner;
     VkXlibSurfaceCreateInfoKHR info;
     info.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
@@ -22,8 +22,8 @@ Error Surface::Create(VkInstance owner, const Window &window){
     info.window = window.Impl().Handle;
 
     if(vkCreateXlibSurfaceKHR(Owner, &info, nullptr, &Handle) != VK_SUCCESS)
-        return Error::Failure;
-    return Error::Success;
+        return Result::Failure;
+    return Result::Success;
 }
 
 void Surface::Destroy(){

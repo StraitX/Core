@@ -18,7 +18,7 @@ constexpr size_t DeviceExtensionsCount = sizeof(DeviceExtensions)/sizeof(char*);
 static const char *DeviceLayers[]={};
 constexpr size_t DeviceLayersCount = sizeof(DeviceLayers)/sizeof(char*);
 
-Error RendererAPI::InitializeHardware(){
+Result RendererAPI::InitializeHardware(){
     constexpr Version vk_version = {1,0,0};
 
     m_ErrInstance = m_Instance.Create(
@@ -27,13 +27,13 @@ Error RendererAPI::InitializeHardware(){
         {(char**)RequiredPlatformLayers,     RequiredPlatformLayersCount}
     );
 
-    if(m_ErrInstance != Error::Success){
+    if(m_ErrInstance != Result::Success){
         LogError("Vulkan: Failed to create Instance");
         return m_ErrInstance;
     }
 
-    Error dev = PickBestPhysicalDevice();
-    if(dev != Error::Success){
+    Result dev = PickBestPhysicalDevice();
+    if(dev != Result::Success){
         LogError("Vulkan: Can not find a compatible device");
         return dev;
     }
@@ -45,50 +45,50 @@ Error RendererAPI::InitializeHardware(){
         {(char**)DeviceLayers,      DeviceLayersCount}
     );
 
-    if(m_ErrDevice != Error::Success){
+    if(m_ErrDevice != Result::Success){
 	    LogError("Vulkan: Can't create LogicalDevice");
 	    return m_ErrDevice;
     }
-    return Error::Success;
+    return Result::Success;
 }
 
-Error RendererAPI::InitializeRender(const Window &window){
+Result RendererAPI::InitializeRender(const Window &window){
     m_ErrSurface = m_Surface.Create(m_Instance.Handle, window);
-    if(m_ErrSurface != Error::Success){
+    if(m_ErrSurface != Result::Success){
 	    LogError("Vulkan: Can't create Surface");
         return m_ErrSurface;
     }
 
     m_ErrSwapchain = m_Swapchain.Create(&m_Surface, &m_Device, m_Format);
-    if(m_ErrSwapchain != Error::Success){
+    if(m_ErrSwapchain != Result::Success){
 	    LogError("Vulkan: Can't create Swapchain");
 	    return m_ErrSwapchain;
     }
-    return Error::Success;
+    return Result::Success;
 }
 
-Error RendererAPI::FinalizeRender(){
-    if(m_ErrSurface == Error::Success)
+Result RendererAPI::FinalizeRender(){
+    if(m_ErrSurface == Result::Success)
         m_Surface.Destroy();
-    if(m_ErrSwapchain == Error::Success)
+    if(m_ErrSwapchain == Result::Success)
     	m_Swapchain.Destroy();
-    return Error::Success;
+    return Result::Success;
 }
 
-Error RendererAPI::FinalizeHardware(){
-    if(m_ErrDevice == Error::Success)
+Result RendererAPI::FinalizeHardware(){
+    if(m_ErrDevice == Result::Success)
         m_Device.Destroy();
 
-    if(m_ErrInstance == Error::Success)
+    if(m_ErrInstance == Result::Success)
 	m_Instance.Destroy();
-    return Error::Success;
+    return Result::Success;
 }
 
-Error RendererAPI::PickBestPhysicalDevice(){
+Result RendererAPI::PickBestPhysicalDevice(){
     ArrayPtr<VkPhysicalDevice, u32> available_devices;
     vkEnumeratePhysicalDevices(m_Instance.Handle, &available_devices.Size,nullptr);
     if(available_devices.Size == 0)
-        return Error::NotFound;
+        return Result::NotFound;
     available_devices.Pointer = (VkPhysicalDevice *)alloca(available_devices.Size * sizeof(VkPhysicalDevice));
     vkEnumeratePhysicalDevices(m_Instance.Handle, &available_devices.Size, available_devices.Pointer);
 
@@ -117,10 +117,10 @@ Error RendererAPI::PickBestPhysicalDevice(){
         }
     }
     if(best_index == -1)
-        return Error::Unsupported;
+        return Result::Unsupported;
 
     m_PhysicalDevice = devices.Pointer[best_index];
-    return Error::Success;
+    return Result::Success;
 }
 
 };//namespace Vk::

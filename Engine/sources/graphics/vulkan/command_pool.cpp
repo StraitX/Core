@@ -4,7 +4,7 @@ namespace StraitX{
 namespace Vk{
 
 
-Error CommandPool::Create(Vk::LogicalDevice *owner, Vk::Queue queue){
+Result CommandPool::Create(Vk::LogicalDevice *owner, Vk::Queue queue){
     Owner = owner;
     Queue = queue;
     VkCommandPoolCreateInfo info;
@@ -13,8 +13,8 @@ Error CommandPool::Create(Vk::LogicalDevice *owner, Vk::Queue queue){
     info.flags = 0;
     info.queueFamilyIndex = queue.FamilyIndex;
     if(vkCreateCommandPool(Owner->Handle, &info, nullptr, &Handle) != VK_SUCCESS)
-        return Error::Failure;
-    return Error::Success;
+        return Result::Failure;
+    return Result::Success;
 }
 
 void CommandPool::Destroy(){

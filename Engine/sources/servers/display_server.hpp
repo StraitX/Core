@@ -1,7 +1,7 @@
 #ifndef STRAITX_DISPLAY_SERVER_HPP
 #define STRAITX_DISPLAY_SERVER_HPP
 
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 #include "platform/display.hpp"
 #include "platform/window.hpp"
 
@@ -14,7 +14,7 @@ private:
     static DisplayServer *s_DisplayServer;
     Display m_Display;
     Window m_Window;
-    Error m_ErrDisplay, m_ErrWindow;
+    Result m_ErrDisplay, m_ErrWindow;
 
     friend class Engine;
 public:
@@ -23,9 +23,9 @@ public:
 
     ~DisplayServer();
 
-    Error Initialize(const PixelFormat &format);
+    Result Initialize(const PixelFormat &format);
 
-    Error Finalize();
+    Result Finalize();
 
     static DisplayServer &Instance();
 

@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_QUEUE_HPP
 
 #include "platform/vulkan.hpp"
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 #include "platform/types.hpp"
 
 namespace StraitX{

@@ -4,15 +4,15 @@
 
 namespace StraitX {
 
-Error Platform::Initialize() {
+Result Platform::Initialize() {
     Windows::HInstance::Instance().Initialize();
     Windows::WindowWin32::RegClass();
-    return Error::Success;
+    return Result::Success;
 }
 
 
-Error Platform::Finalize() {
-    return Error::Success;
+Result Platform::Finalize() {
+    return Result::Success;
 }
 
 }; // namespace StratiX::

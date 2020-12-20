@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_SWAPCHAIN_HPP
 
 #include "platform/vulkan.hpp"
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 #include "platform/vk_surface.hpp"
 #include "core/math/vector2.hpp"
 #include "graphics/vulkan/logical_device.hpp"
@@ -26,11 +26,11 @@ struct Swapchain{
     VkImageView ImageViews[MaxSwapchainImages];
     VkFramebuffer Framebuffers[MaxSwapchainImages];
 
-    Error Create(Vk::Surface *surface, Vk::LogicalDevice *owner, VkSurfaceFormatKHR format);
+    Result Create(Vk::Surface *surface, Vk::LogicalDevice *owner, VkSurfaceFormatKHR format);
 
-    Error CreateChain();
+    Result CreateChain();
 
-    Error CreateImageViews();
+    Result CreateImageViews();
 
     void DestroyImageViews();
 

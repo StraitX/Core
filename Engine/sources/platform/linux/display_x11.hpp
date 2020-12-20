@@ -1,7 +1,7 @@
 #ifndef STRAITX_LINUX_DISPLAY_HPP
 #define STRAITX_LINUX_DISPLAY_HPP
 
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 #include "platform/linux/screen_x11.hpp"
 
 struct _XDisplay;
@@ -24,9 +24,9 @@ public:
 
     DisplayX11(const DisplayX11 &other) = default;
 
-    Error Open();
+    Result Open();
 
-    Error Close();
+    Result Close();
 
     bool IsOpen();
 

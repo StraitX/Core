@@ -4,7 +4,7 @@
 namespace StraitX{
 
 
-enum class Error{
+enum class Result{
     None = 0,
     Success,
     Failure,
@@ -16,10 +16,10 @@ enum class Error{
     Overflow,
     Unavailable,
 
-    ErrorCodesCount
+    ResultCodesCount
 };
 
-extern const char *ErrorNames[(int)Error::ErrorCodesCount];
+extern const char *ResultNames[(int)Result::ResultCodesCount];
 
 
 }; // namespace StraitX::

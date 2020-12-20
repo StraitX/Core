@@ -2,7 +2,7 @@
 #define STRAITX_DISPLAY_WIN32_HPP
 
 #include <windows.h>
-#include "platform/error.hpp"
+#include "platform/result.hpp"
 #include "platform/compiler.hpp"
 #include "platform/windows/screen_win32.hpp"
 
@@ -23,12 +23,12 @@ public:
 
     DisplayWin32(const DisplayWin32 & other) = default;
 
-    sx_inline Error Open() {
-        return Error::Success;
+    sx_inline Result Open() {
+        return Result::Success;
     }
 
-    sx_inline Error Close() {
-        return Error::Success;
+    sx_inline Result Close() {
+        return Result::Success;
     }
 
     sx_inline bool IsOpened() {

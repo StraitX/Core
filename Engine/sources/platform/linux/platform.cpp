@@ -3,13 +3,13 @@
 
 namespace StraitX{
 
-Error Platform::Initialize(){
-    return Error::Success;
+Result Platform::Initialize(){
+    return Result::Success;
 }
 
 
-Error Platform::Finalize(){
-    return Error::Success;
+Result Platform::Finalize(){
+    return Result::Success;
 }
 
 }; // namespace StratiX::
