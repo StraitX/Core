@@ -6,6 +6,9 @@ namespace Vk{
 
 Error LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<char*>& extensions, const ArrayPtr<char*> &layers){
     Parent = parent;
+    GraphicsQueue.FamilyIndex = parent->GraphicsQueueFamily;
+    TransferQueue.FamilyIndex = parent->TransferQueueFamily;
+
 
     VkPhysicalDeviceFeatures features;
     vkGetPhysicalDeviceFeatures(parent->Handle, &features);
@@ -18,14 +21,14 @@ Error LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<char*>& exten
     qinfo[0].pNext = nullptr;
     qinfo[0].flags = 0;
     qinfo[0].queueCount = 1;
-    qinfo[0].queueFamilyIndex = parent->GraphicsQueueFamily;
+    qinfo[0].queueFamilyIndex = GraphicsQueue.FamilyIndex;
     qinfo[0].pQueuePriorities = &priors[0];
 
     qinfo[1].sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     qinfo[1].pNext = nullptr;
     qinfo[1].flags = 0;
     qinfo[1].queueCount = 1;
-    qinfo[1].queueFamilyIndex = parent->TransferQueueFamily;
+    qinfo[1].queueFamilyIndex = TransferQueue.FamilyIndex;
     qinfo[1].pQueuePriorities = &priors[1];
 
     VkDeviceCreateInfo info;
@@ -44,12 +47,12 @@ Error LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<char*>& exten
         return Error::Failure;
     
     //                                   we support only one queue of each type
-    vkGetDeviceQueue(Handle, Parent->GraphicsQueueFamily, 0, &GraphicsQueue);
-    vkGetDeviceQueue(Handle, Parent->TransferQueueFamily, 0, &TransferQueue);
+    vkGetDeviceQueue(Handle, GraphicsQueue.FamilyIndex, 0, &GraphicsQueue.Handle);
+    vkGetDeviceQueue(Handle, TransferQueue.FamilyIndex, 0, &TransferQueue.Handle);
     // here should be a ComputeQueue but it is unused for now
 
-    CoreAssert(GraphicsQueue != VK_NULL_HANDLE, "LogicalDevice: can't retrieve GraphicsQueue handle");
-    CoreAssert(TransferQueue != VK_NULL_HANDLE, "LogicalDevice: can't retrieve TransferQueue handle");
+    CoreAssert(GraphicsQueue.Handle != VK_NULL_HANDLE, "LogicalDevice: can't retrieve GraphicsQueue handle");
+    CoreAssert(TransferQueue.Handle != VK_NULL_HANDLE, "LogicalDevice: can't retrieve TransferQueue handle");
 
     return Error::Success;
 }

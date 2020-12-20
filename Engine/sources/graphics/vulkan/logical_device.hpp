@@ -5,6 +5,7 @@
 #include "platform/error.hpp"
 #include "core/array_ptr.hpp"
 #include "graphics/vulkan/physical_device.hpp"
+#include "graphics/vulkan/queue.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -13,8 +14,8 @@ struct LogicalDevice{
     VkDevice Handle = VK_NULL_HANDLE;
     Vk::PhysicalDevice *Parent = nullptr;
     
-    VkQueue GraphicsQueue;
-    VkQueue TransferQueue;
+    Vk::Queue GraphicsQueue;
+    Vk::Queue TransferQueue;
 
     Error Create(PhysicalDevice *parent, const ArrayPtr<char*> &extensions, const ArrayPtr<char*> &layers);
 
