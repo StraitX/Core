@@ -18,6 +18,18 @@ Result CommandBuffer::Create(Vk::CommandPool *pool){
     return Result::Success;
 }
 
+void CommandBuffer::Begin(){
+    VkCommandBufferBeginInfo info;
+    info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    info.pNext =nullptr;
+    info.flags = 0;
+    info.pInheritanceInfo = nullptr;
+    vkBeginCommandBuffer(Handle, &info);
+}
+
+void CommandBuffer::End(){
+    vkEndCommandBuffer(Handle);
+}
 
 void CommandBuffer::Reset(){
     vkResetCommandBuffer(Handle,0);
@@ -34,7 +46,7 @@ void CommandBuffer::Submit(const ArrayPtr<VkSemaphore> &wait_semaphores, const A
     info.signalSemaphoreCount = signal_semaphores.Size;
     info.pSignalSemaphores = signal_semaphores.Pointer;
     info.pWaitDstStageMask = nullptr;
-    
+
     vkQueueSubmit(Pool->Queue.Handle, 1, &info, VK_NULL_HANDLE);
 }
 

@@ -15,6 +15,10 @@ struct CommandBuffer{
 
     Result Create(Vk::CommandPool *pool);
 
+    void Begin();
+
+    void End();
+
     void Reset();
 
     void Submit(const ArrayPtr<VkSemaphore> &wait_semaphores, const ArrayPtr<VkSemaphore> &signal_semaphores);
