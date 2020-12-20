@@ -54,7 +54,7 @@ Result Swapchain::Create(Vk::Surface *surface, Vk::LogicalDevice *owner, VkSurfa
     if(support == false)
         return Result::Unsupported;
 
-    if(!CheckFormat(owner, *Surface, format))
+    if(!CheckFormat(Owner, *Surface, format))
         return Result::Unsupported;
 
     Colorspace = format.colorSpace;
@@ -67,6 +67,8 @@ Result Swapchain::Create(Vk::Surface *surface, Vk::LogicalDevice *owner, VkSurfa
     Result views = CreateImageViews();
     if(views != Result::Success)
         return views;
+
+    AcquireFence.Create(Owner);
 
     return Result::Success;
 }
@@ -147,6 +149,28 @@ Result Swapchain::CreateImageViews(){
     return Result::Success;
 }
 
+void Swapchain::AcquireNext(){
+    vkAcquireNextImageKHR(Owner->Handle, Handle, 0, VK_NULL_HANDLE, AcquireFence.Handle, &CurrentImage);
+    AcquireFence.WaitFor();
+    AcquireFence.Reset();
+}
+
+void Swapchain::PresentCurrent(const ArrayPtr<VkSemaphore> &wait_semaphores){
+    VkResult result;
+
+    VkPresentInfoKHR info;
+    info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+    info.pNext = nullptr;
+    info.swapchainCount = 1;
+    info.pSwapchains = &Handle;
+    info.pImageIndices = &CurrentImage;
+    info.pResults = &result;
+    info.waitSemaphoreCount = wait_semaphores.Size;
+    info.pWaitSemaphores = wait_semaphores.Pointer;
+
+    vkQueuePresentKHR(Owner->GraphicsQueue.Handle, &info);
+}
+
 void Swapchain::DestroyImageViews(){
     for(int i = 0; i<ImagesCount; i++){
         if(ImageViews[i] != VK_NULL_HANDLE)
@@ -161,7 +185,10 @@ void Swapchain::DestroyChain(){
 
 
 void Swapchain::Destroy(){
-    vkDestroySwapchainKHR(Owner->Handle, Handle, nullptr);
+    DestroyImageViews();
+    DestroyChain();
+
+    AcquireFence.Destroy();
 }
 
 };//namespace Vk::
