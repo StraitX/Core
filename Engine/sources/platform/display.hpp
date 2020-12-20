@@ -25,13 +25,9 @@ private:
     DisplayImpl m_Impl;
 public:
 
-    sx_inline Display():
-        m_Impl()
-    {}
+    Display();
 
-    sx_inline Display(const DisplayImpl &impl):
-        m_Impl(impl)
-    {}
+    Display(const DisplayImpl &impl);
 
     Display(const Display &other) = default;
 
@@ -43,35 +39,58 @@ public:
         OpenGLCore
     };
 
-    sx_inline Result Open(){
-        return m_Impl.Open();
-    }
+    Result Open();
 
-    sx_inline Result Close(){
-        return m_Impl.Close();
-    }
+    Result Close();
 
-    sx_inline bool IsOpen(){
-        return m_Impl.IsOpen();
-    }
+    bool IsOpen();
 
-    sx_inline bool CheckSupport(Ext extension){
-        return m_Impl.CheckSupport((DisplayImpl::Ext)extension);
-    }
+    bool CheckSupport(Ext extension);
 
-    sx_inline Screen MainScreen(){
-        return m_Impl.MainScreen();
-    }
+    Screen MainScreen();
 
-    sx_inline DisplayImpl &Impl(){
-        return m_Impl;
-    }
+    DisplayImpl &Impl();
     
-    sx_inline const DisplayImpl &Impl()const{
-        return m_Impl;
-    }
+    const DisplayImpl &Impl()const;
 
 };
+
+sx_inline Display::Display():
+    m_Impl()
+{}
+
+sx_inline Display::Display(const DisplayImpl &impl):
+    m_Impl(impl)
+{}
+
+
+sx_inline Result Display::Open(){
+    return m_Impl.Open();
+}
+
+sx_inline Result Display::Close(){
+    return m_Impl.Close();
+}
+
+sx_inline bool Display::IsOpen(){
+    return m_Impl.IsOpen();
+}
+
+sx_inline bool Display::CheckSupport(Ext extension){
+    return m_Impl.CheckSupport((DisplayImpl::Ext)extension);
+}
+
+sx_inline Screen Display::MainScreen(){
+    return m_Impl.MainScreen();
+}
+
+sx_inline DisplayImpl &Display::Impl(){
+    return m_Impl;
+}
+
+sx_inline const DisplayImpl &Display::Impl()const{
+    return m_Impl;
+}
 
 }; // namespace StraitX::
 

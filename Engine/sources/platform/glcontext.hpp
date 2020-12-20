@@ -19,26 +19,37 @@ private:
     GLContextImpl m_Impl;
 public:
 
-    sx_inline GLContext(Window &window):
-        m_Impl(window.Impl())
-    {}
+    GLContext(Window &window);
 
-    sx_inline Result Create(const Version &version){
-        return m_Impl.Create(version);
-    }
+    Result Create(const Version &version);
 
-    sx_inline void Destory(){
-        m_Impl.Destory();
-    }
+    void Destory();
 
-    sx_inline Result MakeCurrent(){
-        return m_Impl.MakeCurrent();
-    }
+    Result MakeCurrent();
 
-    sx_inline void SwapBuffers(){
-        m_Impl.SwapBuffers();
-    }
+    void SwapBuffers();
 };
+
+
+sx_inline GLContext::GLContext(Window &window):
+    m_Impl(window.Impl())
+{}
+
+sx_inline Result GLContext::Create(const Version &version){
+    return m_Impl.Create(version);
+}
+
+sx_inline void GLContext::Destory(){
+    m_Impl.Destory();
+}
+
+sx_inline Result GLContext::MakeCurrent(){
+    return m_Impl.MakeCurrent();
+}
+
+sx_inline void GLContext::SwapBuffers(){
+    m_Impl.SwapBuffers();
+}
 
 }; // namespace StraitX::
 

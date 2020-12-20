@@ -24,42 +24,60 @@ private:
     WindowImpl m_Impl;
 public:
 
-    sx_inline Window(Display &display):
-        m_Impl(display.Impl())
-    {}
+    Window(Display &display);
 
-    sx_inline Window(Window &&other):
-        m_Impl((WindowImpl&&)other.Impl())
-    {}
+    Window(Window &&other);
 
-    sx_inline Result Open(const Screen &screen, int width, int height){
-        return m_Impl.Open(screen.Impl(), width, height);
-    }
+    Result Open(const Screen &screen, int width, int height);
 
-    sx_inline Result Close(){
-        return m_Impl.Close();
-    }
+    Result Close();
 
-    sx_inline WindowImpl &Impl(){
-        return m_Impl;
-    }
+    WindowImpl &Impl();
 
-    sx_inline const WindowImpl &Impl()const{
-        return m_Impl;
-    }
+    const WindowImpl &Impl()const;
 
-    sx_inline bool IsOpen()const{
-        return m_Impl.IsOpen();
-    }
+    bool IsOpen()const;
 
-    sx_inline void SetTitle(const char *title){
-        m_Impl.SetTitle(title);
-    }
+    void SetTitle(const char *title);
 
-    sx_inline bool PollEvent(Event &event){
-        return m_Impl.PollEvent(event);
-    }
+    bool PollEvent(Event &event);
 };
+
+sx_inline Window::Window(Display &display):
+    m_Impl(display.Impl())
+{}
+
+sx_inline Window::Window(Window &&other):
+    m_Impl((WindowImpl&&)other.Impl())
+{}
+
+sx_inline Result Window::Open(const Screen &screen, int width, int height){
+    return m_Impl.Open(screen.Impl(), width, height);
+}
+
+sx_inline Result Window::Close(){
+    return m_Impl.Close();
+}
+
+sx_inline WindowImpl &Window::Impl(){
+    return m_Impl;
+}
+
+sx_inline const WindowImpl &Window::Impl()const{
+    return m_Impl;
+}
+
+sx_inline bool Window::IsOpen()const{
+    return m_Impl.IsOpen();
+}
+
+sx_inline void Window::SetTitle(const char *title){
+    m_Impl.SetTitle(title);
+}
+
+sx_inline bool Window::PollEvent(Event &event){
+    return m_Impl.PollEvent(event);
+}
 
 }; // namespace StraitX::
 

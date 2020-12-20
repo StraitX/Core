@@ -20,31 +20,41 @@ class Screen{
 private:
     ScreenImpl m_Impl;
 public:
-    sx_inline Screen(const ScreenImpl &impl):
-        m_Impl(impl)
-    {}
+    Screen(const ScreenImpl &impl);
 
     Screen(const Screen &other) = default;
 
     ~Screen() = default;
 
-    sx_inline const Size2i &Size()const{
-        return m_Impl.Size();
-    }
+    const Size2i &Size()const;
 
-    sx_inline const Size2f &DPI()const{
-        return m_Impl.DPI();
-    }
+    const Size2f &DPI()const;
 
-    sx_inline ScreenImpl &Impl(){
-        return m_Impl;
-    }
+    ScreenImpl &Impl();
 
-    sx_inline const ScreenImpl &Impl()const{
-        return m_Impl;
-    }
+    const ScreenImpl &Impl()const;
 
 };
+
+sx_inline Screen::Screen(const ScreenImpl &impl):
+    m_Impl(impl)
+{}
+
+sx_inline const Size2i &Screen::Size()const{
+    return m_Impl.Size();
+}
+
+sx_inline const Size2f &Screen::DPI()const{
+    return m_Impl.DPI();
+}
+
+sx_inline ScreenImpl &Screen::Impl(){
+    return m_Impl;
+}
+
+sx_inline const ScreenImpl &Screen::Impl()const{
+    return m_Impl;
+}
 
 }; // namespace StraitX::
 
