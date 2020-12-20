@@ -15,6 +15,10 @@ struct Instance{
     Result Create(const Version &version, const ArrayPtr<char *> &extensions, const ArrayPtr<char *> &layers);
 
     void Destroy();
+
+    bool CheckLayers(const ArrayPtr<char *> &layers);
+
+    bool CheckExtensions(const ArrayPtr<char *> &extensions);
 };
 
 };//namespace Vk::
