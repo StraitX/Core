@@ -11,7 +11,7 @@ const char *RequiredPlatformExtensions[] = {
 size_t RequiredPlatformExtensionsCount = sizeof(RequiredPlatformExtensions)/sizeof(char*);
 
 const char *RequiredPlatformLayers[]={
-    
+    "VK_LAYER_MESA_overlay"
 };
 size_t RequiredPlatformLayersCount = sizeof(RequiredPlatformLayers)/sizeof(char*);
 

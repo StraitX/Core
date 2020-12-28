@@ -68,7 +68,7 @@ set(INCLUDES
 if(STRAITX_PLATFORM_LINUX)
 
     set(SOURCES_PLATFORM_D
-        ${SOURCES_DIR}/platform/linux/platform.cpp
+        ${SOURCES_DIR}/platform/linux/platform_linux.cpp
         ${SOURCES_DIR}/platform/linux/display_x11.cpp
         ${SOURCES_DIR}/platform/linux/mouse_x11.cpp
         ${SOURCES_DIR}/platform/linux/keyboard_x11.cpp
@@ -78,7 +78,7 @@ if(STRAITX_PLATFORM_LINUX)
         ${SOURCES_DIR}/platform/linux/screen_x11.cpp
         ${SOURCES_DIR}/platform/linux/glloader_x11.cpp
         ${SOURCES_DIR}/platform/linux/glcontext_x11.cpp
-        ${SOURCES_DIR}/platform/linux/vulkan.cpp
+        ${SOURCES_DIR}/platform/linux/vulkan_linux.cpp
         ${SOURCES_DIR}/platform/linux/vk_surface_x11.cpp
         ${SOURCES_DIR}/platform/linux/file_linux.cpp
     )
