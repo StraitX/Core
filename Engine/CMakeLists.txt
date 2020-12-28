@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 01)
-set(VERSION_PATCH 11)
+set(VERSION_PATCH 12)
 
 project(
     StraitXEngine 
@@ -40,6 +40,8 @@ set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/command_pool.cpp
     ${SOURCES_DIR}/graphics/vulkan/command_buffer.cpp
     ${SOURCES_DIR}/graphics/vulkan/fence.cpp
+    ${SOURCES_DIR}/graphics/vulkan/render_pass.cpp
+    ${SOURCES_DIR}/graphics/vulkan/framebuffer.cpp
 )
 
 set(SOURCES_GRAPHICS 
