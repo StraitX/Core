@@ -5,7 +5,7 @@
 namespace StraitX{
 
 
-const char *ResultNames[(int)Result::ResultCodesCount] = {
+const char *ResultNames[(int)Result::ResultCodesCount + 1] = {
     S(None),
     S(Success),
     S(Failure),
@@ -15,7 +15,10 @@ const char *ResultNames[(int)Result::ResultCodesCount] = {
     S(AlreadyDone),
     S(Unsupported),
     S(Overflow),
-    S(Unavailable)
+    S(Unavailable),
+    S(PermissionDenied),
+    S(AlreadyExist)
+    S(IsDirectory)
 };
 
 }; // namespace StraitX::

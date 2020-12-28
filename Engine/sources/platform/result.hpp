@@ -3,10 +3,11 @@
 
 namespace StraitX{
 
+#include "platform/compiler.hpp"
 
 enum class Result{
-    None = 0,
-    Success,
+    None    = -1,
+    Success =  0,
     Failure,
     NotFound,
     InvalidArgs,
@@ -15,11 +16,18 @@ enum class Result{
     Unsupported,
     Overflow,
     Unavailable,
+    PermissionDenied,
+    AlreadyExist,
+    IsDirectory,
 
     ResultCodesCount
 };
 
-extern const char *ResultNames[(int)Result::ResultCodesCount];
+sx_inline Result ResultError(bool is_error){
+    return Result((int)is_error);
+}
+
+extern const char *ResultNames[(int)Result::ResultCodesCount + 1];
 
 
 }; // namespace StraitX::
