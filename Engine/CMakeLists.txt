@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 01)
-set(VERSION_PATCH 10)
+set(VERSION_PATCH 11)
 
 project(
     StraitXEngine 
@@ -39,6 +39,7 @@ set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/swapchain.cpp
     ${SOURCES_DIR}/graphics/vulkan/command_pool.cpp
     ${SOURCES_DIR}/graphics/vulkan/command_buffer.cpp
+    ${SOURCES_DIR}/graphics/vulkan/fence.cpp
 )
 
 set(SOURCES_GRAPHICS 
@@ -79,6 +80,7 @@ if(STRAITX_PLATFORM_LINUX)
         ${SOURCES_DIR}/platform/linux/glcontext_x11.cpp
         ${SOURCES_DIR}/platform/linux/vulkan.cpp
         ${SOURCES_DIR}/platform/linux/vk_surface_x11.cpp
+        ${SOURCES_DIR}/platform/linux/file_linux.cpp
     )
 
     set(LIBS_PLATFORM
