@@ -19,7 +19,7 @@ namespace Vk{
 constexpr size_t MaxExpectedDevices = 4;
 
 class RendererAPI{
-private:
+public:
     Vk::Instance m_Instance;
     Vk::PhysicalDevice m_PhysicalDevice;
     Vk::LogicalDevice m_Device;

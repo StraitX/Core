@@ -4,7 +4,6 @@
 #include "platform/vulkan.hpp"
 #include "platform/result.hpp"
 #include "core/array_ptr.hpp"
-#include "graphics/vulkan/command_buffer.hpp"
 #include "graphics/vulkan/render_pass.hpp"
 #include "graphics/vulkan/swapchain.hpp"
 #include "graphics/vulkan/shader.hpp"

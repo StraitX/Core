@@ -43,6 +43,7 @@ set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/render_pass.cpp
     ${SOURCES_DIR}/graphics/vulkan/framebuffer.cpp
     ${SOURCES_DIR}/graphics/vulkan/shader.cpp
+    ${SOURCES_DIR}/graphics/vulkan/graphics_pipeline.cpp
 )
 
 set(SOURCES_GRAPHICS 

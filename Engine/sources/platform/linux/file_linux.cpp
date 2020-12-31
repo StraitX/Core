@@ -16,7 +16,7 @@ Result File::Open(const char *filename, Mode mode){
 
     errno = 0;
 
-    m_FD = open(filename, O_CREAT | (int)mode, FileCreatePermission);
+    m_FD = open(filename, (int)mode, FileCreatePermission);
 
     if(m_FD == InvalidFD){
         switch (errno) {

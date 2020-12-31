@@ -27,6 +27,25 @@ void CommandBuffer::Begin(){
     vkBeginCommandBuffer(Handle, &info);
 }
 
+
+void CommandBuffer::BeginRenderTarget(Vk::GraphicsPipeline *pipeline, Vk::RenderPass *render_pass, Vk::Framebuffer *framebuffer, const ArrayPtr<VkClearValue> &clears){
+    vkCmdBindPipeline(Handle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->Handle);
+    VkRenderPassBeginInfo info;
+    info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    info.pNext = nullptr;
+    info.renderArea = {{0,0}, {framebuffer->Size.x, framebuffer->Size.y}};
+    info.renderPass = render_pass->Handle;
+    info.framebuffer = framebuffer->Handle;
+    info.clearValueCount = clears.Size;
+    info.pClearValues = clears.Pointer;
+    VkSubpassContents cont;
+    vkCmdBeginRenderPass(Handle, &info, VK_SUBPASS_CONTENTS_INLINE);
+}
+
+void CommandBuffer::EndRenderTarget(){
+    vkCmdEndRenderPass(Handle);
+}
+
 void CommandBuffer::End(){
     vkEndCommandBuffer(Handle);
 }
