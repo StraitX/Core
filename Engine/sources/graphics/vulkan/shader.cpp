@@ -6,8 +6,10 @@
 namespace StraitX{
 namespace Vk{
 
-Result Shader::Create(Vk::LogicalDevice *owner, const char *filename, VkShaderStageFlagBits stage, VkSpecializationInfo *specialization){
+Result Shader::Create(Vk::LogicalDevice *owner, const char *filename, VkShaderStageFlagBits stage){
     Owner = owner;
+    Stage = stage;
+    
     File shader_file;
     if(shader_file.Open(filename, File::Mode::Read) != Result::Success)
         return Result::NotFound;
@@ -28,16 +30,7 @@ Result Shader::Create(Vk::LogicalDevice *owner, const char *filename, VkShaderSt
     info.pCode = (u32*)shader_code;
 
     auto res = vkCreateShaderModule(Owner->Handle, &info, nullptr, &Handle);
-
     delete[] shader_code;
-
-    Info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    Info.pNext = nullptr;
-    Info.flags = 0;
-    Info.module = Handle;
-    Info.pName = "main"; // shader should have main as entry point no matter what
-    Info.stage = stage;
-    Info.pSpecializationInfo = specialization;
 
     return ResultError(res != VK_SUCCESS);
 }

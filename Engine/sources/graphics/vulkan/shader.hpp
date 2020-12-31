@@ -5,6 +5,7 @@
 #include "platform/vulkan.hpp"
 #include "platform/result.hpp"
 #include "graphics/vulkan/logical_device.hpp"
+#include <vulkan/vulkan_core.h>
 
 namespace StraitX{
 namespace Vk{
@@ -13,10 +14,10 @@ namespace Vk{
 
 struct Shader{
     VkShaderModule Handle = VK_NULL_HANDLE;
-    VkPipelineShaderStageCreateInfo Info;
     Vk::LogicalDevice *Owner = nullptr;
+    VkShaderStageFlagBits Stage = VK_SHADER_STAGE_ALL;
 
-    Result Create(Vk::LogicalDevice *owner, const char *filename, VkShaderStageFlagBits stage, VkSpecializationInfo *specialization);
+    Result Create(Vk::LogicalDevice *owner, const char *filename, VkShaderStageFlagBits stage);
 
     void Destroy();
 };
