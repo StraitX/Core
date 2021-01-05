@@ -33,9 +33,7 @@ Result Instance::Create(const Version &version, const ArrayPtr<char *> &extensio
     create_info.enabledLayerCount = layers.Size;
     create_info.ppEnabledLayerNames = layers.Pointer;
     
-    if(vkCreateInstance(&create_info, nullptr, &Handle) != VK_SUCCESS)
-        return Result::Failure;
-    return Result::Success;
+    return ResultError(vkCreateInstance(&create_info, nullptr, &Handle) != VK_SUCCESS);
 }
 
 void Instance::Destroy(){

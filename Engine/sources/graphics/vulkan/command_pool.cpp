@@ -12,9 +12,7 @@ Result CommandPool::Create(Vk::LogicalDevice *owner, Vk::Queue queue){
     info.pNext = nullptr;
     info.flags = 0;
     info.queueFamilyIndex = queue.FamilyIndex;
-    if(vkCreateCommandPool(Owner->Handle, &info, nullptr, &Handle) != VK_SUCCESS)
-        return Result::Failure;
-    return Result::Success;
+    return ResultError(vkCreateCommandPool(Owner->Handle, &info, nullptr, &Handle) != VK_SUCCESS);
 }
 
 void CommandPool::Destroy(){

@@ -13,9 +13,7 @@ Result CommandBuffer::Create(Vk::CommandPool *pool){
     info.commandPool = Pool->Handle;
     info.commandBufferCount = 1;
 
-    if(vkAllocateCommandBuffers(Pool->Owner->Handle, &info, &Handle) != VK_SUCCESS)
-        return Result::Failure;
-    return Result::Success;
+    return ResultError(vkAllocateCommandBuffers(Pool->Owner->Handle, &info, &Handle) != VK_SUCCESS);
 }
 
 void CommandBuffer::Begin(){
