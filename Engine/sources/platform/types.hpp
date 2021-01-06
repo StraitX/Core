@@ -54,14 +54,4 @@ struct Version{
     u32 Patch;
 };
 
-struct PixelFormat{
-    int Red = 0;
-    int Green = 0;
-    int Blue = 0;
-    int Alpha = 0;
-    int Depth = 0;
-    int Stencil = 0;
-    int Samples = 0;
-};
-
 #endif // STRAITX_TYPES_HPP

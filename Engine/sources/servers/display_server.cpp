@@ -29,7 +29,7 @@ DisplayServer::~DisplayServer(){
     }
 }
 
-Result DisplayServer::Initialize(const PixelFormat &format){
+Result DisplayServer::Initialize(){
     m_ErrDisplay = m_Display.Open();
     InitAssert("Display::Open", m_ErrDisplay);
 

@@ -23,7 +23,7 @@ public:
 
     ~DisplayServer();
 
-    Result Initialize(const PixelFormat &format);
+    Result Initialize();
 
     Result Finalize();
 

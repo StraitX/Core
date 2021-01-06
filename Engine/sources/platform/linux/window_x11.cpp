@@ -9,6 +9,18 @@
 namespace StraitX{
 namespace Linux{
 
+
+struct PixelFormat{
+    int Red = 0;
+    int Green = 0;
+    int Blue = 0;
+    int Alpha = 0;
+    int Depth = 0;
+    int Stencil = 0;
+    int Samples = 0;
+};
+
+
 WindowX11::WindowX11(DisplayX11 &display):
     Handle(0),
     Display(display)

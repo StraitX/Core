@@ -73,17 +73,8 @@ Result Engine::Initialize(){
 
     LogTrace("========= Second stage init =========");
 
-    PixelFormat pixel = {0};
-    pixel.Red = 8;
-    pixel.Green = 8;
-    pixel.Blue = 8;
-    pixel.Alpha = 8;
-    pixel.Depth = 24;
-    pixel.Stencil = 8;
-    pixel.Samples = 4;
-
     LogTrace("DisplayServer::Initialize: Begin");
-    m_ErrorDisplayServer = m_DisplayServer.Initialize(pixel);
+    m_ErrorDisplayServer = m_DisplayServer.Initialize();
     InitAssert("DisplayServer::Initialize", m_ErrorDisplayServer);
 
     SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::DoubleBuffer), "Display::DoubleBuffer");
