@@ -153,6 +153,8 @@ void Engine::MainLoop(){
         while(m_DisplayServer.m_Window.PollEvent(e)){
             if(e.Type == EventType::WindowClose)
                 Stop();
+            else
+                (void)m_Application->OnEvent(e);
         }
         m_Application->OnUpdate();
     }

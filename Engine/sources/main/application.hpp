@@ -16,6 +16,9 @@ public:
 
     virtual Result OnInitialize(){return Result::Success;};
 
+    // return true if event was handled
+    virtual bool OnEvent(const Event &event){return false;};
+
     virtual Result OnFinalize(){return Result::Success;};
 
     virtual void OnUpdate(){};
