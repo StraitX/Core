@@ -68,8 +68,6 @@ Result Swapchain::Create(Vk::Surface *surface, Vk::LogicalDevice *owner, VkSurfa
     if(views != Result::Success)
         return views;
 
-    AcquireFence.Create(Owner);
-
     return Result::Success;
 }
 Result Swapchain::CreateChain(){
@@ -81,9 +79,9 @@ Result Swapchain::CreateChain(){
         capabilities.currentExtent.height
     };
 
-    u32 desired_images = 2;
-    if(capabilities.maxImageCount >=3)
-        desired_images = 3;
+    u32 desired_images = DeisredImages;
+    if(capabilities.maxImageCount < DeisredImages)
+        return Result::Unsupported;
 
     if(capabilities.minImageCount > MaxSwapchainImages)
         return Result::Unsupported;
@@ -149,10 +147,8 @@ Result Swapchain::CreateImageViews(){
     return Result::Success;
 }
 
-void Swapchain::AcquireNext(){
-    vkAcquireNextImageKHR(Owner->Handle, Handle, 0, VK_NULL_HANDLE, AcquireFence.Handle, &CurrentImage);
-    AcquireFence.WaitFor();
-    AcquireFence.Reset();
+void Swapchain::AcquireNext(const Vk::Semaphore &signal_semaphore){
+    vkAcquireNextImageKHR(Owner->Handle, Handle, 0, signal_semaphore.Handle, VK_NULL_HANDLE, &CurrentImage);
 }
 
 void Swapchain::PresentCurrent(const ArrayPtr<VkSemaphore> &wait_semaphores){
@@ -187,8 +183,6 @@ void Swapchain::DestroyChain(){
 void Swapchain::Destroy(){
     DestroyImageViews();
     DestroyChain();
-
-    AcquireFence.Destroy();
 }
 
 };//namespace Vk::

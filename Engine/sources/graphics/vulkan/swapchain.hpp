@@ -8,11 +8,13 @@
 #include "graphics/vulkan/logical_device.hpp"
 #include "graphics/vulkan/fence.hpp"
 #include "graphics/vulkan/framebuffer.hpp"
+#include "graphics/vulkan/semaphore.hpp"
 
 namespace StraitX{
 namespace Vk{
 
 constexpr size_t MaxSwapchainImages = 5;
+constexpr u32 DeisredImages = 2;
 
 struct Swapchain{
     Vk::Surface *Surface = nullptr;
@@ -24,7 +26,6 @@ struct Swapchain{
 
     Vector2u SurfaceSize = {0,0}; 
 
-    Vk::Fence AcquireFence;
     u32 ImagesCount = 0;
     u32 CurrentImage = -1;
     VkImage Images[MaxSwapchainImages];
@@ -36,7 +37,7 @@ struct Swapchain{
 
     Result CreateImageViews();
 
-    void AcquireNext();
+    void AcquireNext(const Vk::Semaphore &wait_semaphore);
 
     void PresentCurrent(const ArrayPtr<VkSemaphore> &wait_semaphores);
 
