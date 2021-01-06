@@ -88,7 +88,7 @@ Result Swapchain::CreateChain(){
     if(capabilities.minImageCount > MaxSwapchainImages)
         return Result::Unsupported;
 
-    LogInfo("Vulkan: Swapchain: Requrest % Images",desired_images);
+    LogInfo("Vulkan: Swapchain: Requrest % Images %",desired_images, SurfaceSize);
     VkSwapchainCreateInfoKHR info;
     info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     info.pNext = nullptr;

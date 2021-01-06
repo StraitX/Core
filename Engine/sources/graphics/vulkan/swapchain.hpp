@@ -7,6 +7,7 @@
 #include "core/math/vector2.hpp"
 #include "graphics/vulkan/logical_device.hpp"
 #include "graphics/vulkan/fence.hpp"
+#include "graphics/vulkan/framebuffer.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -28,7 +29,6 @@ struct Swapchain{
     u32 CurrentImage = -1;
     VkImage Images[MaxSwapchainImages];
     VkImageView ImageViews[MaxSwapchainImages];
-    VkFramebuffer Framebuffers[MaxSwapchainImages];
 
     Result Create(Vk::Surface *surface, Vk::LogicalDevice *owner, VkSurfaceFormatKHR format);
 
