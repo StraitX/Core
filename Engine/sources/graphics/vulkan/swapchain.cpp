@@ -76,7 +76,7 @@ Result Swapchain::CreateChain(){
     VkSurfaceCapabilitiesKHR capabilities;
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(Owner->Parent->Handle, Surface->Handle, &capabilities);
 
-    Vector2u SurfaceSize = {
+    SurfaceSize = {
         capabilities.currentExtent.width,
         capabilities.currentExtent.height
     };

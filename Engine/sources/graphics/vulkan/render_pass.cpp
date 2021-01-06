@@ -1,4 +1,3 @@
-#include <alloca.h>
 #include "graphics/vulkan/render_pass.hpp"
 
 

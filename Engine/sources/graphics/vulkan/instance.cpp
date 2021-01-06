@@ -6,11 +6,11 @@
 namespace StraitX{
 namespace Vk{
 
-Result Instance::Create(const Version &version, const ArrayPtr<char *> &extensions, const ArrayPtr<char *> &layers){
+Result Instance::Create(const Version &version, const ArrayPtr<const char *> &extensions, const ArrayPtr<const char *> &layers){
 
-    if(CheckExtensions(extensions) == false)
+    if(!CheckExtensions(extensions))
         return Result::Unsupported;
-    if(CheckLayers(layers) == false)
+    if(!CheckLayers(layers))
         return Result::Unsupported;
     
     VkApplicationInfo app_info;
@@ -40,7 +40,7 @@ void Instance::Destroy(){
     vkDestroyInstance(Handle, nullptr);
 }
 
-bool Instance::CheckLayers(const ArrayPtr<char *> &layers){
+bool Instance::CheckLayers(const ArrayPtr<const char *> &layers){
     u32 count = 0;
     vkEnumerateInstanceLayerProperties(&count, nullptr);
     VkLayerProperties *props = (VkLayerProperties*)alloca(count * sizeof(VkLayerProperties));
@@ -61,7 +61,7 @@ bool Instance::CheckLayers(const ArrayPtr<char *> &layers){
     return true;
 }
 
-bool Instance::CheckExtensions(const ArrayPtr<char *> &extensions){
+bool Instance::CheckExtensions(const ArrayPtr<const char *> &extensions){
     u32 count = 0;
     vkEnumerateInstanceExtensionProperties(nullptr, &count, nullptr);
     VkExtensionProperties *props = (VkExtensionProperties *)alloca(count * sizeof(VkExtensionProperties));

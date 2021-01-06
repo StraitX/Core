@@ -4,7 +4,7 @@
 namespace StraitX{
 namespace Vk{
 
-Result LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<char*>& extensions, const ArrayPtr<char*> &layers){
+Result LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<const char*>& extensions, const ArrayPtr<const char*> &layers){
     Parent = parent;
     GraphicsQueue.FamilyIndex = parent->GraphicsQueueFamily;
     TransferQueue.FamilyIndex = parent->TransferQueueFamily;

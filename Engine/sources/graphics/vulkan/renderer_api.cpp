@@ -1,4 +1,3 @@
-#include <new>
 #include <alloca.h>
 #include "core/log.hpp"
 #include "graphics/vulkan/renderer_api.hpp"
@@ -19,12 +18,11 @@ static const char *DeviceLayers[]={};
 constexpr size_t DeviceLayersCount = sizeof(DeviceLayers)/sizeof(char*);
 
 Result RendererAPI::InitializeHardware(){
-    constexpr Version vk_version = {1,0,0};
 
     m_ErrInstance = m_Instance.Create(
         VulkanVersion,
-        {(char**)RequiredPlatformExtensions, RequiredPlatformExtensionsCount}, 
-        {(char**)RequiredPlatformLayers,     RequiredPlatformLayersCount}
+        {(const char**)RequiredPlatformExtensions, RequiredPlatformExtensionsCount}, 
+        {(const char**)RequiredPlatformLayers,     RequiredPlatformLayersCount}
     );
 
     if(m_ErrInstance != Result::Success){
@@ -41,8 +39,8 @@ Result RendererAPI::InitializeHardware(){
 
     m_ErrDevice = m_Device.Create(
         &m_PhysicalDevice, 
-        {(char**)DeviceExtensions,  DeviceExtensionsCount}, 
-        {(char**)DeviceLayers,      DeviceLayersCount}
+        {(const char**)DeviceExtensions,  DeviceExtensionsCount}, 
+        {(const char**)DeviceLayers,      DeviceLayersCount}
     );
 
     if(m_ErrDevice != Result::Success){

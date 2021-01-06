@@ -12,13 +12,13 @@ namespace Vk{
 struct Instance{
     VkInstance Handle = VK_NULL_HANDLE;
 
-    Result Create(const Version &version, const ArrayPtr<char *> &extensions, const ArrayPtr<char *> &layers);
+    Result Create(const Version &version, const ArrayPtr<const char *> &extensions, const ArrayPtr<const char *> &layers);
 
     void Destroy();
 
-    bool CheckLayers(const ArrayPtr<char *> &layers);
+    static bool CheckLayers(const ArrayPtr<const char *> &layers);
 
-    bool CheckExtensions(const ArrayPtr<char *> &extensions);
+    static bool CheckExtensions(const ArrayPtr<const char *> &extensions);
 };
 
 };//namespace Vk::

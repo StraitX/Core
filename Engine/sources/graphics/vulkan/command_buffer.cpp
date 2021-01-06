@@ -36,7 +36,6 @@ void CommandBuffer::BeginRenderTarget(Vk::GraphicsPipeline *pipeline, Vk::Render
     info.framebuffer = framebuffer->Handle;
     info.clearValueCount = clears.Size;
     info.pClearValues = clears.Pointer;
-    VkSubpassContents cont;
     vkCmdBeginRenderPass(Handle, &info, VK_SUBPASS_CONTENTS_INLINE);
 }
 

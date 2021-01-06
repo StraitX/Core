@@ -1,9 +1,8 @@
 #include <alloca.h>
-#include <vulkan/vulkan_core.h>
+#include "platform/result.hpp"
+#include "core/log.hpp"
 #include "graphics/vulkan/graphics_pipeline.hpp"
 #include "graphics/vulkan/shader.hpp"
-#include "platform/result.hpp"
-
 
 namespace StraitX{
 namespace Vk{
@@ -13,7 +12,7 @@ struct VertexAttributeEntry{
     u8 Size;
 };
 
-static VertexAttributeEntry AttriburesTable[]={
+static VertexAttributeEntry AttributesTable[]={
     {VK_FORMAT_R32_SINT,            1 * sizeof(i32)},
     {VK_FORMAT_R32_UINT,            1 * sizeof(u32)},
     {VK_FORMAT_R32_SFLOAT,          1 * sizeof(float)},
@@ -31,7 +30,7 @@ static VertexAttributeEntry AttriburesTable[]={
 u32 CalculateStride(const ArrayPtr<VertexAttribute> &vertex_attributes){
     u32 stride = 0;
     for(auto &attr: vertex_attributes){
-        stride += AttriburesTable[attr].Size;
+        stride += AttributesTable[attr].Size;
     }
     return stride;
 }
@@ -94,11 +93,11 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
     u32 offset = 0;
     for(int i = 0; i<vertex_attributes.Size; i++){
         attributes[i].binding = vertex_binding_index; // 
-        attributes[i].format = AttriburesTable[vertex_attributes[i]].Format;
+        attributes[i].format = AttributesTable[vertex_attributes[i]].Format;
         attributes[i].location = i;
         attributes[i].offset = offset;
 
-        offset += AttriburesTable[vertex_attributes[i]].Size;
+        offset += AttributesTable[vertex_attributes[i]].Size;
     }
 
     VkPipelineVertexInputStateCreateInfo vertex_input_state;
@@ -128,6 +127,8 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
     viewport.width = swapchain->SurfaceSize.x;
     viewport.height = swapchain->SurfaceSize.y;
 
+    LogInfo("Swapchain size %", swapchain->SurfaceSize);
+
     VkRect2D scissors;
     scissors.offset = {0, 0};
     scissors.extent.width = swapchain->SurfaceSize.x;
@@ -154,7 +155,7 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
     raster_state.cullMode = VK_CULL_MODE_BACK_BIT;
     raster_state.frontFace = VK_FRONT_FACE_CLOCKWISE;
     raster_state.depthClampEnable = VK_FALSE;
-    raster_state.depthBiasEnable = VK_FALSE; // we don't wan't to bias depth values
+    raster_state.depthBiasEnable = VK_FALSE; // we don't want to bias depth values
     raster_state.depthBiasClamp = 0;
     raster_state.depthBiasConstantFactor = 0;
     raster_state.depthBiasSlopeFactor = 0;
@@ -196,7 +197,7 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
     // === DynamicState ===
 
     VkDynamicState dynamics[]={
-        VK_DYNAMIC_STATE_SCISSOR
+        //VK_DYNAMIC_STATE_SCISSOR
     };
 
     VkPipelineDynamicStateCreateInfo dynamic_state;
@@ -224,7 +225,7 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
     info.pMultisampleState = &ms_state;
     info.pDepthStencilState = nullptr; // don't have depth testing for now
     info.pColorBlendState = &blend_state;
-    info.pDynamicState = &dynamic_state;
+    info.pDynamicState = nullptr;//&dynamic_state;
     info.layout = layout;
 
     return ResultError(vkCreateGraphicsPipelines(Pass->Owner->Handle, Cache, 1, &info, nullptr, &Handle) != VK_SUCCESS);

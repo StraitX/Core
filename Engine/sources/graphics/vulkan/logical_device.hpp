@@ -17,7 +17,7 @@ struct LogicalDevice{
     Vk::Queue GraphicsQueue;
     Vk::Queue TransferQueue;
 
-    Result Create(PhysicalDevice *parent, const ArrayPtr<char*> &extensions, const ArrayPtr<char*> &layers);
+    Result Create(PhysicalDevice *parent, const ArrayPtr<const char*> &extensions, const ArrayPtr<const char*> &layers);
 
 
     void Destroy();
