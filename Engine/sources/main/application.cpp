@@ -1,3 +1,4 @@
+#include "core/log.hpp"
 #include "main/application.hpp"
 
 namespace StraitX{
@@ -12,6 +13,7 @@ void Application::Stop(){
 
 
 void Application::SetEngine(Engine *engine){
+    LogInfo("Application: Engine was bound");
     m_Engine = engine;
 }
 

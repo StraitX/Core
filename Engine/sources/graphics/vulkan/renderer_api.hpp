@@ -16,8 +16,6 @@
 namespace StraitX{
 namespace Vk{
 
-constexpr size_t MaxExpectedDevices = 4;
-
 class RendererAPI{
 public:
     Vk::Instance m_Instance;

@@ -15,10 +15,12 @@ namespace Linux{
 
 Result DisplayX11::Open(){
     m_Handle = XOpenDisplay(nullptr);
-    return m_Handle != nullptr ? Result::Success : Result::Failure;
+    return ResultError(m_Handle == nullptr);
 }
 Result DisplayX11::Close(){
-    return XCloseDisplay(m_Handle)==0 ? Result::Success : Result::Failure;
+    auto res = XCloseDisplay(m_Handle);
+    m_Handle = 0;
+    return ResultError(res != 0);
 }
 
 bool DisplayX11::IsOpen(){

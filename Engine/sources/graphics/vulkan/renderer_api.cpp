@@ -76,17 +76,18 @@ Result RendererAPI::FinalizeRender(){
 Result RendererAPI::FinalizeHardware(){
     if(m_ErrDevice == Result::Success)
         m_Device.Destroy();
-
     if(m_ErrInstance == Result::Success)
-	m_Instance.Destroy();
+	    m_Instance.Destroy();
     return Result::Success;
 }
 
 Result RendererAPI::PickBestPhysicalDevice(){
     ArrayPtr<VkPhysicalDevice, u32> available_devices;
     vkEnumeratePhysicalDevices(m_Instance.Handle, &available_devices.Size,nullptr);
+
     if(available_devices.Size == 0)
         return Result::NotFound;
+    
     available_devices.Pointer = (VkPhysicalDevice *)alloca(available_devices.Size * sizeof(VkPhysicalDevice));
     vkEnumeratePhysicalDevices(m_Instance.Handle, &available_devices.Size, available_devices.Pointer);
 

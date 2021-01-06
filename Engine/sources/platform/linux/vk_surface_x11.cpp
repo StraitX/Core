@@ -21,9 +21,7 @@ Result Surface::Create(VkInstance owner, const Window &window){
     info.dpy = window.Impl().Display.Handle();
     info.window = window.Impl().Handle;
 
-    if(vkCreateXlibSurfaceKHR(Owner, &info, nullptr, &Handle) != VK_SUCCESS)
-        return Result::Failure;
-    return Result::Success;
+    return ResultError(vkCreateXlibSurfaceKHR(Owner, &info, nullptr, &Handle) != VK_SUCCESS);
 }
 
 void Surface::Destroy(){
