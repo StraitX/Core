@@ -98,6 +98,7 @@ Result Engine::Initialize(){
 
     LogTrace("Application::OnInitialize: Begin");
     m_ErrorApplication = m_Application->OnInitialize();
+    CoreAssert((int)m_ErrorApplication >= 0 && m_ErrorApplication < Result::ResultCodesCount, "Application::OnInitialize() returned unsupported result code");
     InitAssert("Application::OnInitialize",m_ErrorApplication);
 
     return Result::Success;
@@ -108,6 +109,7 @@ Result Engine::Finalize(){
     if(m_ErrorApplication==Result::Success){
         LogTrace("Application::OnFinalize: Begin");
         m_ErrorApplication = m_Application->OnFinalize();
+        CoreAssert((int)m_ErrorApplication >= 0 && m_ErrorApplication < Result::ResultCodesCount, "Application::OnFinalize() returned unsupported result code");
         Log("Application::OnFinalize",m_ErrorApplication);
     }
 
