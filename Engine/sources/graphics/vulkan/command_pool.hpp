@@ -4,10 +4,11 @@
 #include "platform/vulkan.hpp"
 #include "platform/result.hpp"
 #include "graphics/vulkan/queue.hpp"
-#include "graphics/vulkan/logical_device.hpp"
 
 namespace StraitX{
 namespace Vk{
+
+struct LogicalDevice;
 
 struct CommandPool{
     VkCommandPool Handle = VK_NULL_HANDLE;

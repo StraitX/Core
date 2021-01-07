@@ -1,5 +1,7 @@
 #include "graphics/vulkan/command_buffer.hpp"
-
+#include "graphics/vulkan/graphics_pipeline.hpp"
+#include "graphics/vulkan/framebuffer.hpp"
+#include "graphics/vulkan/render_pass.hpp"
 
 namespace StraitX{
 namespace Vk{

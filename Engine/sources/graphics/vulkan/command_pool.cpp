@@ -1,4 +1,5 @@
 #include "graphics/vulkan/command_pool.hpp"
+#include "graphics/vulkan/logical_device.hpp"
 
 namespace StraitX{
 namespace Vk{

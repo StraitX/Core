@@ -4,12 +4,12 @@
 
 #include "platform/vulkan.hpp"
 #include "platform/result.hpp"
-#include "graphics/vulkan/logical_device.hpp"
+#include "platform/types.hpp"
 
 namespace StraitX{
 namespace Vk{
 
-
+struct LogicalDevice;
 
 struct Buffer{
     Vk::LogicalDevice *Owner = nullptr;

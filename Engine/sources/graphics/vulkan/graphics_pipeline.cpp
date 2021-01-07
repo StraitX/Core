@@ -3,6 +3,7 @@
 #include "core/log.hpp"
 #include "graphics/vulkan/graphics_pipeline.hpp"
 #include "graphics/vulkan/shader.hpp"
+#include "graphics/vulkan/swapchain.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -213,7 +214,7 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
     info.flags = 0;
     info.renderPass = Pass->Handle;
     info.subpass = subpass_index;
-    info.basePipelineIndex = -1;
+    info.basePipelineIndex = InvalidIndex;
     info.basePipelineHandle = VK_NULL_HANDLE;
     info.stageCount = shaders.Size;
     info.pStages = shader_stages;

@@ -3,13 +3,15 @@
 
 #include "platform/vulkan.hpp"
 #include "platform/result.hpp"
+#include "core/array_ptr.hpp"
 #include "graphics/vulkan/command_pool.hpp"
-#include "graphics/vulkan/render_pass.hpp"
-#include "graphics/vulkan/framebuffer.hpp"
-#include "graphics/vulkan/graphics_pipeline.hpp"
 
 namespace StraitX{
 namespace Vk{
+
+struct RenderPass;
+struct Framebuffer;
+struct GraphicsPipeline;
 
 struct CommandBuffer{
     VkCommandBuffer Handle = VK_NULL_HANDLE;

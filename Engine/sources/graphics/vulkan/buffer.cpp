@@ -1,5 +1,5 @@
 #include "graphics/vulkan/buffer.hpp"
-
+#include "graphics/vulkan/logical_device.hpp"
 
 namespace StraitX{
 namespace Vk{

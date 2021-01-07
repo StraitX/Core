@@ -3,4 +3,6 @@
 
 #define S(n) #n
 
+#define InvalidIndex -1
+
 #endif

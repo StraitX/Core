@@ -133,28 +133,28 @@ void PhysicalDevice::QueryQueues(){
             TransferQueueFamily = i;
     }
 
-    DLogInfo("Vulkan: GraphicsQueue  %",GraphicsQueueFamily != -1);
-    DLogInfo("Vulkan: ComputeQueue   %",ComputeQueueFamily != -1);
-    DLogInfo("Vulkan: TransferQueue  %",TransferQueueFamily != -1);
+    DLogInfo("Vulkan: GraphicsQueue  %",GraphicsQueueFamily != InvalidIndex);
+    DLogInfo("Vulkan: ComputeQueue   %",ComputeQueueFamily != InvalidIndex);
+    DLogInfo("Vulkan: TransferQueue  %",TransferQueueFamily != InvalidIndex);
 
 
     //higher level queue fallback
     //we are going to have one queue instance of each family
-    if(GraphicsQueueFamily != -1){
-        if(ComputeQueueFamily == -1 && props[GraphicsQueueFamily].queueCount >= 2){
+    if(GraphicsQueueFamily != InvalidIndex){
+        if(ComputeQueueFamily == InvalidIndex && props[GraphicsQueueFamily].queueCount >= 2){
             ComputeQueueFamily = GraphicsQueueFamily;
             props[GraphicsQueueFamily].queueCount-=1;
 	    }
-        if(TransferQueueFamily == -1 && props[GraphicsQueueFamily].queueCount >= 2){
+        if(TransferQueueFamily == InvalidIndex && props[GraphicsQueueFamily].queueCount >= 2){
             TransferQueueFamily = GraphicsQueueFamily;
         }
-        if(TransferQueueFamily == -1 && ComputeQueueFamily != -1 && props[ComputeQueueFamily].queueCount >= 2){
+        if(TransferQueueFamily == InvalidIndex && ComputeQueueFamily != InvalidIndex && props[ComputeQueueFamily].queueCount >= 2){
             TransferQueueFamily = ComputeQueueFamily;
         }
     }
-    DLogInfo("Vulkan: Fallback GraphicsQueue  %",GraphicsQueueFamily != -1);
-    DLogInfo("Vulkan: Fallback ComputeQueue   %",ComputeQueueFamily != -1);
-    DLogInfo("Vulkan: Fallback TransferQueue  %",TransferQueueFamily != -1);
+    DLogInfo("Vulkan: Fallback GraphicsQueue  %",GraphicsQueueFamily != InvalidIndex);
+    DLogInfo("Vulkan: Fallback ComputeQueue   %",ComputeQueueFamily != InvalidIndex);
+    DLogInfo("Vulkan: Fallback TransferQueue  %",TransferQueueFamily != InvalidIndex);
 
 }
 
