@@ -3,6 +3,7 @@
 
 #include "platform/vulkan.hpp"
 #include "platform/types.hpp"
+#include "platform/defs.hpp"
 #include "platform/result.hpp"
 
 namespace StraitX{
@@ -19,17 +20,23 @@ struct PhysicalDevice{
 
     DeviceType Type = DeviceType::Unknown;
 
-    u32 VRAM        = -1;
+    u32 VRAM        = InvalidIndex;
     size_t VRAMSize =  0;
-    u32 RAM         = -1;
-    size_t RAMSize  =  0;
     //optional
-    u32 DynamicVRAM = -1;
+    u32 DynamicVRAM = InvalidIndex;
     size_t DynamicVRAMSize = 0;
 
-    u32 GraphicsQueueFamily  = -1;
-    u32 ComputeQueueFamily   = -1;
-    u32 TransferQueueFamily  = -1; 
+    u32 RAM         = InvalidIndex;
+    size_t RAMSize  =  0;
+    //optional
+    u32 UncachedRAM = InvalidIndex;
+    size_t UncachedRAMSize = 0;
+
+
+
+    u32 GraphicsQueueFamily  = InvalidIndex;
+    u32 ComputeQueueFamily   = InvalidIndex;
+    u32 TransferQueueFamily  = InvalidIndex; 
 
     void Create(VkPhysicalDevice device);
 
@@ -37,10 +44,15 @@ struct PhysicalDevice{
 
     void QueryQueues();
 
+    //minimal supported gpu should have all three queues available
+    // and at least VRAM and RAM memory types
     sx_inline bool IsSupported()const{
-        return GraphicsQueueFamily != -1
-        &&      ComputeQueueFamily != -1
-        &&     TransferQueueFamily != -1;
+        return GraphicsQueueFamily != InvalidIndex
+        &&      ComputeQueueFamily != InvalidIndex
+        &&     TransferQueueFamily != InvalidIndex
+        
+        &&      RAM != InvalidIndex
+        &&     VRAM != InvalidIndex;
     }
 
 };

@@ -43,6 +43,11 @@ sx_inline bool IsRAM(VkMemoryType type){
     &&      (type.propertyFlags & VK_MEMORY_PROPERTY_HOST_CACHED_BIT )
     &&     !(type.propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 }
+sx_inline bool IsUncachedRAM(VkMemoryType type){
+    return  (type.propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
+    &&     !(type.propertyFlags & VK_MEMORY_PROPERTY_HOST_CACHED_BIT )
+    &&     !(type.propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+}
 
 sx_inline bool IsVRAM(VkMemoryType type){
     return  (type.propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
@@ -64,6 +69,14 @@ void PhysicalDevice::QueryMemoryTypes(){
             RAMSize = mem_props.memoryHeaps[mem_props.memoryTypes[i].heapIndex].size;
             RAM = i++;
             DLogInfo("Vulkan: RAM memory type was found:            Size: % MB",RAMSize/float(1024*1024));
+            break;
+        }
+    }
+    for(i = 0; i < mem_props.memoryTypeCount; i++){
+        if(IsUncachedRAM(mem_props.memoryTypes[i])){
+            UncachedRAMSize = mem_props.memoryHeaps[mem_props.memoryTypes[i].heapIndex].size;
+            UncachedRAM = i++;
+            DLogInfo("Vulkan: UncachedRAM memory type was found:    Size: % MB",UncachedRAMSize/float(1024*1024));
             break;
         }
     }
