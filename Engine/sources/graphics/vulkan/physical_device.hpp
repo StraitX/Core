@@ -33,7 +33,7 @@ struct PhysicalDevice{
     size_t UncachedRAMSize = 0;
 
 
-
+    // TODO somehow count available queues amount after fallback
     u32 GraphicsQueueFamily  = InvalidIndex;
     u32 ComputeQueueFamily   = InvalidIndex;
     u32 TransferQueueFamily  = InvalidIndex; 
@@ -46,7 +46,7 @@ struct PhysicalDevice{
 
     //minimal supported gpu should have all three queues available
     // and at least VRAM and RAM memory types
-    sx_inline bool IsSupported()const{
+    sx_inline bool IsComplete()const{
         return GraphicsQueueFamily != InvalidIndex
         &&      ComputeQueueFamily != InvalidIndex
         &&     TransferQueueFamily != InvalidIndex

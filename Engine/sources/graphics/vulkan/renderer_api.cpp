@@ -95,15 +95,15 @@ Result RendererAPI::PickBestPhysicalDevice(){
     devices.Pointer = (Vk::PhysicalDevice*)alloca(devices.Size * sizeof(Vk::PhysicalDevice));
 
     for(int i = 0; i<devices.Size; i++){
-        devices.Pointer[i].Create(available_devices.Pointer[i]);
+        devices[i].Create(available_devices[i]);
     }
 
     int best_index = -1;
     u8 best_score = 0;
     for(int i = 0; i<devices.Size; i++){
-        const auto &dev = devices.Pointer[i];
+        const auto &dev = devices[i];
         // it's a game engine, we want to have graphics!
-        if(!dev.IsSupported())
+        if(!dev.IsComplete())
             continue;
     	
         u8 score =       (dev.Type == DeviceType::DiscreteGPU ? 3 : 0) 
@@ -118,7 +118,7 @@ Result RendererAPI::PickBestPhysicalDevice(){
     if(best_index == -1)
         return Result::Unsupported;
 
-    m_PhysicalDevice = devices.Pointer[best_index];
+    m_PhysicalDevice = devices[best_index];
     return Result::Success;
 }
 

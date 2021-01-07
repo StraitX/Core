@@ -10,18 +10,20 @@ Result GPUMemory::Allocate(LogicalDevice *owner, Type type, u32 size){
     Size = size;
 
     u32 memory_index = InvalidIndex;
-    if(type == Type::Unknown)
+    switch (type) {
+    case Type::Unknown: 
         return Result::Failure;
-        // should be supported no matter what
-    if(type == Type::VRAM)
-        memory_index = owner->Parent->VRAM;
-    if(type == Type::DynamicVRAM){
+    case Type::VRAM: 
+        memory_index = owner->Parent->VRAM; 
+        break;
+    case Type::DynamicVRAM:
         if(owner->Parent->DynamicVRAM != InvalidIndex){
             memory_index = owner->Parent->DynamicVRAM;
         }else{
             LogWarn("Vulkan: GPUMemory: DynamicVRAM: Fallback to VRAM");
             memory_index = owner->Parent->VRAM;
         }
+        break;
     }
     CoreAssert(memory_index != InvalidIndex, "Vulkan: GPUMemory: can't find appropriate memory type");
 
@@ -50,18 +52,20 @@ Result CPUMemory::Allocate(LogicalDevice *owner, Type type, u32 size){
 
     u32 memory_index = InvalidIndex;
 
-    if(type == Type::Unknown)
+    switch (type) {
+    case Type::Unknown: 
         return Result::Failure;
-        // should be supported no matter what
-    if(type == Type::RAM)
-        memory_index = Owner->Parent->RAM;
-    if(type == Type::UncachedRAM){
+    case Type::RAM: 
+        memory_index = Owner->Parent->RAM; 
+        break;
+    case Type::UncachedRAM:
         if(Owner->Parent->UncachedRAM != InvalidIndex){
             memory_index = Owner->Parent->UncachedRAM;
         }else{
             memory_index = Owner->Parent->RAM;
             LogWarn("Vulkan: CPUMemory: UncachedRAM: Fallback to RAM");
         }
+        break;
     }
 
     CoreAssert(memory_index != InvalidIndex, "Vulkan: CPUMemory: can't find appropriate memory type");
