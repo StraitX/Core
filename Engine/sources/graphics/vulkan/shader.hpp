@@ -5,7 +5,7 @@
 #include "platform/vulkan.hpp"
 #include "platform/result.hpp"
 #include "graphics/vulkan/logical_device.hpp"
-#include <vulkan/vulkan_core.h>
+
 
 namespace StraitX{
 namespace Vk{

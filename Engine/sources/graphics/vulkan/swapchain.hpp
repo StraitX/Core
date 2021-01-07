@@ -37,7 +37,7 @@ struct Swapchain{
 
     Result CreateImageViews();
 
-    void AcquireNext(const Vk::Semaphore &wait_semaphore);
+    void AcquireNext(const Vk::Semaphore &signal_semaphore);
 
     void PresentCurrent(const ArrayPtr<VkSemaphore> &wait_semaphores);
 
