@@ -7,7 +7,6 @@ namespace Vk{
 Result LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<const char*>& extensions, const ArrayPtr<const char*> &layers){
     Parent = parent;
     GraphicsQueue.FamilyIndex = parent->GraphicsQueueFamily;
-    TransferQueue.FamilyIndex = parent->TransferQueueFamily;
 
 
     VkPhysicalDeviceFeatures features;
@@ -15,21 +14,17 @@ Result LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<const char*>
 
     float priors[2] = {1.0, 0.8};
 
-    // for now lets keep it simple, one transfer, one graphics queues
-    VkDeviceQueueCreateInfo qinfo[2];
-    qinfo[0].sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    qinfo[0].pNext = nullptr;
-    qinfo[0].flags = 0;
-    qinfo[0].queueCount = 1;
-    qinfo[0].queueFamilyIndex = GraphicsQueue.FamilyIndex;
-    qinfo[0].pQueuePriorities = &priors[0];
-
-    qinfo[1].sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    qinfo[1].pNext = nullptr;
-    qinfo[1].flags = 0;
-    qinfo[1].queueCount = 1;
-    qinfo[1].queueFamilyIndex = TransferQueue.FamilyIndex;
-    qinfo[1].pQueuePriorities = &priors[1];
+    // for now lets keep it simple, we have just one graphics queues
+    VkDeviceQueueCreateInfo qinfo[]={
+        { // GraphicsQueue
+            .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+            .queueFamilyIndex = GraphicsQueue.FamilyIndex,
+            .queueCount = 1,
+            .pQueuePriorities = &priors[0]
+        }
+    };
 
     VkDeviceCreateInfo info;
     info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -48,11 +43,9 @@ Result LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<const char*>
     
     //                                   we support only one queue of each type
     vkGetDeviceQueue(Handle, GraphicsQueue.FamilyIndex, 0, &GraphicsQueue.Handle);
-    vkGetDeviceQueue(Handle, TransferQueue.FamilyIndex, 0, &TransferQueue.Handle);
     // here should be a ComputeQueue but it is unused for now
 
     CoreAssert(GraphicsQueue.Handle != VK_NULL_HANDLE, "LogicalDevice: can't retrieve GraphicsQueue handle");
-    CoreAssert(TransferQueue.Handle != VK_NULL_HANDLE, "LogicalDevice: can't retrieve TransferQueue handle");
 
     return Result::Success;
 }
