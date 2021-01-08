@@ -14,7 +14,6 @@ namespace StraitX{
 namespace Vk{
 
 constexpr size_t MaxSwapchainImages = 5;
-constexpr u32 DeisredImages = 2;
 
 struct Swapchain{
     Vk::Surface *Surface = nullptr;

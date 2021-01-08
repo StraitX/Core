@@ -79,14 +79,14 @@ Result Swapchain::CreateChain(){
         capabilities.currentExtent.height
     };
 
-    u32 desired_images = DeisredImages;
-    if(capabilities.maxImageCount < DeisredImages)
+    if(capabilities.maxImageCount == 1)
         return Result::Unsupported;
-
     if(capabilities.minImageCount > MaxSwapchainImages)
-        return Result::Unsupported;
+        return Result::Overflow;
 
-    LogInfo("Vulkan: Swapchain: Requrest % Images %",desired_images, SurfaceSize);
+    
+
+    LogInfo("Vulkan: Swapchain: Requrest % Images %",capabilities.minImageCount, SurfaceSize);
     VkSwapchainCreateInfoKHR info;
     info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     info.pNext = nullptr;
@@ -99,7 +99,7 @@ Result Swapchain::CreateChain(){
     info.pQueueFamilyIndices = nullptr;
     info.preTransform = VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR;
     info.presentMode = BestMode(Owner, *Surface);
-    info.minImageCount = desired_images;
+    info.minImageCount = capabilities.minImageCount;
     info.imageArrayLayers = 1;
     info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
     info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
