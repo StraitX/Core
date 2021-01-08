@@ -62,6 +62,20 @@ sx_inline bool IsDynamicVRAM(VkMemoryType type){
 void PhysicalDevice::QueryMemoryTypes(){
     VkPhysicalDeviceMemoryProperties mem_props;
     vkGetPhysicalDeviceMemoryProperties(Handle, &mem_props);
+
+    if(mem_props.memoryTypeCount == 1){
+        DLogInfo("Vulkan: Exceptional Device: Fallback to one memory type");
+        auto &flags = mem_props.memoryTypes[0].propertyFlags;
+        if(flags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT &&
+           flags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
+        {
+            RAM = UncachedRAM = VRAM = DynamicVRAM = 0;
+            RAMSize = UncachedRAMSize = VRAMSize = DynamicVRAMSize = mem_props.memoryHeaps[mem_props.memoryTypes[0].heapIndex].size;
+            return;
+        }
+        DLogWarn("Vulkan: Exceptional Device: Unsupported Memory");
+        return;
+    }
     
     int i = 0; 
     for(i = 0; i < mem_props.memoryTypeCount; i++){
@@ -144,17 +158,18 @@ void PhysicalDevice::QueryQueues(){
         if(ComputeQueueFamily == InvalidIndex && props[GraphicsQueueFamily].queueCount >= 2){
             ComputeQueueFamily = GraphicsQueueFamily;
             props[GraphicsQueueFamily].queueCount-=1;
+            
+            DLogInfo("Vulkan: Fallback ComputeQueue   %",ComputeQueueFamily != InvalidIndex);
 	    }
         if(TransferQueueFamily == InvalidIndex && props[GraphicsQueueFamily].queueCount >= 2){
             TransferQueueFamily = GraphicsQueueFamily;
+            DLogInfo("Vulkan: Fallback TransferQueue  %",TransferQueueFamily != InvalidIndex);
         }
         if(TransferQueueFamily == InvalidIndex && ComputeQueueFamily != InvalidIndex && props[ComputeQueueFamily].queueCount >= 2){
             TransferQueueFamily = ComputeQueueFamily;
+            DLogInfo("Vulkan: Fallback TransferQueue  %",TransferQueueFamily != InvalidIndex);
         }
     }
-    DLogInfo("Vulkan: Fallback GraphicsQueue  %",GraphicsQueueFamily != InvalidIndex);
-    DLogInfo("Vulkan: Fallback ComputeQueue   %",ComputeQueueFamily != InvalidIndex);
-    DLogInfo("Vulkan: Fallback TransferQueue  %",TransferQueueFamily != InvalidIndex);
 
 }
 
