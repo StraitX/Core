@@ -233,6 +233,7 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
 }
 
 void GraphicsPipeline::Destroy(){
+    vkDestroyPipelineCache(Pass->Owner->Handle, Cache, nullptr);
     vkDestroyPipeline(Pass->Owner->Handle, Handle, nullptr);
 }
 
