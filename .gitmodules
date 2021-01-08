@@ -1,0 +1,3 @@
+[submodule "Engine/thirdparty/glad"]
+	path = Engine/thirdparty/glad
+	url = https://github.com/E1Hephaestus/glad
