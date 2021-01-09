@@ -43,11 +43,11 @@ char *BufferPrint(char *buffer, const unsigned long long &num){
 }
 
 char *BufferPrint(char *buffer, const float &num){
-    return buffer + sprintf(buffer,"%f",num);
+    return buffer + sprintf(buffer,"%g",num);
 }
 
 char *BufferPrint(char *buffer, const double &num){
-    return buffer + sprintf(buffer,"%lf",num);
+    return buffer + sprintf(buffer,"%g",num);
 }
 char *BufferPrint(char *buffer, const void *ptr){
     return buffer + sprintf(buffer,"%p",ptr);
