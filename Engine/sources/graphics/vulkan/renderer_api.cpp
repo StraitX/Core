@@ -66,6 +66,8 @@ Result RendererAPI::InitializeRender(const Window &window){
 }
 
 Result RendererAPI::FinalizeRender(){
+    vkQueueWaitIdle(m_Device.GraphicsQueue.Handle);
+
     if(m_ErrSurface == Result::Success)
         m_Surface.Destroy();
     if(m_ErrSwapchain == Result::Success)
