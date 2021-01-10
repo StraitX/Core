@@ -32,6 +32,7 @@ enum VertexAttribute: u8{
 struct GraphicsPipeline{
     VkPipeline      Handle = VK_NULL_HANDLE;
     VkPipelineCache Cache  = VK_NULL_HANDLE;
+    VkPipelineLayout Layout= VK_NULL_HANDLE;
     Vk::RenderPass *Pass   = nullptr;
 
     Result Create(VkPrimitiveTopology topology, VkPolygonMode fill_mode, 

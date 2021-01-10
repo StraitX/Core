@@ -11,6 +11,7 @@ namespace Vk{
 
 struct Instance{
     VkInstance Handle = VK_NULL_HANDLE;
+    VkDebugUtilsMessengerEXT Messenger = VK_NULL_HANDLE;
 
     Result Create(const Version &version, const ArrayPtr<const char *> &extensions, const ArrayPtr<const char *> &layers);
 

@@ -29,14 +29,16 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 
 VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
     auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
-    if (func != nullptr) {
+    if (func)
         return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
-    } else {
+    else 
         return VK_ERROR_EXTENSION_NOT_PRESENT;
-    }
 }
-
-VkDebugUtilsMessengerEXT Messager = VK_NULL_HANDLE;
+void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT messenger, const VkAllocationCallbacks *pAllocator){
+    auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+    if(func)
+        func(instance,messenger, pAllocator);
+}
 
 Result Instance::Create(const Version &version, const ArrayPtr<const char *> &extensions, const ArrayPtr<const char *> &layers){
 
@@ -75,10 +77,11 @@ Result Instance::Create(const Version &version, const ArrayPtr<const char *> &ex
     debug_info.pfnUserCallback = DebugCallback;
     debug_info.pUserData = nullptr; // Optional
 
-    return ResultError(CreateDebugUtilsMessengerEXT(Handle, &debug_info, nullptr, &Messager) != VK_SUCCESS);
+    return ResultError(CreateDebugUtilsMessengerEXT(Handle, &debug_info, nullptr, &Messenger) != VK_SUCCESS);
 }
 
 void Instance::Destroy(){
+    DestroyDebugUtilsMessengerEXT(Handle, Messenger, nullptr);
     vkDestroyInstance(Handle, nullptr);
 }
 

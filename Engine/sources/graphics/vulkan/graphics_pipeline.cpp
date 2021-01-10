@@ -52,8 +52,7 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
     layout_info.pushConstantRangeCount = 0;
     layout_info.pPushConstantRanges = nullptr;
     
-    VkPipelineLayout layout; // dummy layout
-    if(vkCreatePipelineLayout(Pass->Owner->Handle, &layout_info, nullptr, &layout) != VK_SUCCESS)
+    if(vkCreatePipelineLayout(Pass->Owner->Handle, &layout_info, nullptr, &Layout) != VK_SUCCESS)
         return Result::Unavailable;
 
 
@@ -230,12 +229,13 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
     info.pDepthStencilState = nullptr; // don't have depth testing for now
     info.pColorBlendState = &blend_state;
     info.pDynamicState = nullptr;//&dynamic_state;
-    info.layout = layout;
+    info.layout = Layout;
 
     return ResultError(vkCreateGraphicsPipelines(Pass->Owner->Handle, Cache, 1, &info, nullptr, &Handle) != VK_SUCCESS);
 }
 
 void GraphicsPipeline::Destroy(){
+    vkDestroyPipelineLayout(Pass->Owner->Handle, Layout, nullptr);
     vkDestroyPipelineCache(Pass->Owner->Handle, Cache, nullptr);
     vkDestroyPipeline(Pass->Owner->Handle, Handle, nullptr);
 }
