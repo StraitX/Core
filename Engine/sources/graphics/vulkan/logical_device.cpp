@@ -17,7 +17,7 @@ Result LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<const char*>
     // for now lets keep it simple, we have just one graphics queues
     VkDeviceQueueCreateInfo qinfo[]={
         { // GraphicsQueue
-            .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+            .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
             .pNext = nullptr,
             .flags = 0,
             .queueFamilyIndex = GraphicsQueue.FamilyIndex,
