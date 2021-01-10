@@ -26,21 +26,21 @@ VkPresentModeKHR BestMode(Vk::LogicalDevice *presenter, const Vk::Surface &surfa
     VkPresentModeKHR *modes = (VkPresentModeKHR *)alloca(modes_count * sizeof(VkPresentModeKHR));
     vkGetPhysicalDeviceSurfacePresentModesKHR(presenter->Parent->Handle, surface.Handle, &modes_count, modes);
 
-    bool modesAvailable[VK_PRESENT_MODE_END_RANGE_KHR + 1]; // index is the same as VkPresentModeKHR enum element number
-    VkPresentModeKHR best_mode;
-    for(int i = 0; i<modes_count; i++){
-        modesAvailable[modes[i]]=true;
-    }
-    if(modesAvailable[VK_PRESENT_MODE_MAILBOX_KHR])
-        best_mode = VK_PRESENT_MODE_MAILBOX_KHR;
-    else if(modesAvailable[VK_PRESENT_MODE_FIFO_RELAXED_KHR])
-        best_mode = VK_PRESENT_MODE_FIFO_RELAXED_KHR;
-    else if(modesAvailable[VK_PRESENT_MODE_FIFO_KHR])
-        best_mode = VK_PRESENT_MODE_FIFO_KHR;
-    else // is guaranteed to be supported
-        best_mode = VK_PRESENT_MODE_IMMEDIATE_KHR;
+    bool modes_available[VK_PRESENT_MODE_END_RANGE_KHR + 1]; // index is the same as VkPresentModeKHR enum element number
+    Memory::Set(modes_available, 0, sizeof(modes_available));
 
-    return best_mode;
+    for(int i = 0; i<modes_count; i++){
+        modes_available[modes[i]]=true;
+    }
+    
+    if(modes_available[VK_PRESENT_MODE_MAILBOX_KHR])
+        return VK_PRESENT_MODE_MAILBOX_KHR;
+    else if(modes_available[VK_PRESENT_MODE_FIFO_RELAXED_KHR])
+        return VK_PRESENT_MODE_FIFO_RELAXED_KHR;
+    else if(modes_available[VK_PRESENT_MODE_FIFO_KHR])
+        return VK_PRESENT_MODE_FIFO_KHR;
+    else // is guaranteed to be supported
+        return VK_PRESENT_MODE_IMMEDIATE_KHR;
 }
 
 
@@ -97,7 +97,7 @@ Result Swapchain::CreateChain(){
     info.oldSwapchain = VK_NULL_HANDLE;
     info.queueFamilyIndexCount = 0;
     info.pQueueFamilyIndices = nullptr;
-    info.preTransform = VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR;
+    info.preTransform = capabilities.currentTransform;
     info.presentMode = BestMode(Owner, *Surface);
     info.minImageCount = capabilities.minImageCount;
     info.imageArrayLayers = 1;
