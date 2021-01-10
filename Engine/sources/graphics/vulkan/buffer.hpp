@@ -24,6 +24,8 @@ struct Buffer{
 
     void Bind(const CPUMemory &memory, u32 offset);
 
+    u64 MemoryRequirements();
+
     void Destroy();
 };
 

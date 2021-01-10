@@ -31,6 +31,12 @@ void Buffer::Bind(const CPUMemory &memory, u32 offset){
     vkBindBufferMemory(Owner->Handle, Handle, memory.Handle, offset);
 }
 
+u64 Buffer::MemoryRequirements(){
+    VkMemoryRequirements req;
+    vkGetBufferMemoryRequirements(Owner->Handle, Handle, &req);
+    return req.size;
+}
+
 void Buffer::Destroy(){
     vkDestroyBuffer(Owner->Handle, Handle, nullptr);
 }
