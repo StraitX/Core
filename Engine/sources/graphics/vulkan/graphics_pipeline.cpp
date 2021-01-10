@@ -165,6 +165,8 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
 
     VkPipelineMultisampleStateCreateInfo ms_state;
     ms_state.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+    ms_state.pNext = nullptr;
+    ms_state.flags = 0;
     ms_state.sampleShadingEnable = VK_FALSE;
     ms_state.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
     ms_state.minSampleShading = 1.0f; 
@@ -179,6 +181,7 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
     blend_attachment.colorBlendOp = VK_BLEND_OP_ADD;
     blend_attachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
     blend_attachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    blend_attachment.alphaBlendOp = VK_BLEND_OP_ADD;
     blend_attachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE; // !!
     blend_attachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;// !!
 
