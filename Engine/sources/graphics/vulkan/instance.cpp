@@ -1,10 +1,42 @@
 #include <alloca.h>
 #include <cstring>
+#include <cstdio>
 #include "core/log.hpp"
 #include "graphics/vulkan/instance.hpp"
 
 namespace StraitX{
 namespace Vk{
+
+static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
+    VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    VkDebugUtilsMessageTypeFlagsEXT messageType,
+    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+    void* pUserData) 
+{
+    const char *prefix;
+    switch(messageSeverity){
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: prefix = "Trace"; break;
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: prefix = "Warn "; break;
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:    prefix = "Info "; break;
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:   prefix = "Error"; break;
+    }
+
+    std::fprintf(stderr,"[%s]: VulkanValidator: \n",prefix);
+    std::fprintf(stderr,"%s\n",pCallbackData->pMessage);
+
+    return VK_FALSE;
+}
+
+VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
+    auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+    if (func != nullptr) {
+        return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
+    } else {
+        return VK_ERROR_EXTENSION_NOT_PRESENT;
+    }
+}
+
+VkDebugUtilsMessengerEXT Messager = VK_NULL_HANDLE;
 
 Result Instance::Create(const Version &version, const ArrayPtr<const char *> &extensions, const ArrayPtr<const char *> &layers){
 
@@ -33,7 +65,17 @@ Result Instance::Create(const Version &version, const ArrayPtr<const char *> &ex
     create_info.enabledLayerCount = layers.Size;
     create_info.ppEnabledLayerNames = layers.Pointer;
     
-    return ResultError(vkCreateInstance(&create_info, nullptr, &Handle) != VK_SUCCESS);
+    if(vkCreateInstance(&create_info, nullptr, &Handle) != VK_SUCCESS)
+        return Result::Failure;
+
+    VkDebugUtilsMessengerCreateInfoEXT debug_info{};
+    debug_info.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+    debug_info.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+    debug_info.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+    debug_info.pfnUserCallback = DebugCallback;
+    debug_info.pUserData = nullptr; // Optional
+
+    return ResultError(CreateDebugUtilsMessengerEXT(Handle, &debug_info, nullptr, &Messager) != VK_SUCCESS);
 }
 
 void Instance::Destroy(){
