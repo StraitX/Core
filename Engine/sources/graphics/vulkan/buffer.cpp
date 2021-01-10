@@ -1,5 +1,6 @@
 #include "graphics/vulkan/buffer.hpp"
 #include "graphics/vulkan/logical_device.hpp"
+#include "graphics/vulkan/memory.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -20,6 +21,14 @@ Result Buffer::Create(Vk::LogicalDevice *owner, u32 size, VkBufferUsageFlags usa
     info.usage = usage;
 
     return ResultError(vkCreateBuffer(Owner->Handle, &info, nullptr, &Handle) != VK_SUCCESS);
+}
+
+void Buffer::Bind(const GPUMemory &memory, u32 offset){
+    vkBindBufferMemory(Owner->Handle, Handle, memory.Handle, offset);
+}
+
+void Buffer::Bind(const CPUMemory &memory, u32 offset){
+    vkBindBufferMemory(Owner->Handle, Handle, memory.Handle, offset);
 }
 
 void Buffer::Destroy(){
