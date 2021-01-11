@@ -2,6 +2,15 @@
 #define STRAITX_MEMORY_HPP
 
 #include "platform/types.hpp"
+#include "platform/platform_detection.hpp"
+
+#ifdef SX_PLATFORM_LINUX
+    #include <alloca.h>
+#elif defined(SX_PLATFORM_WINDOWS)
+    #include <malloc.h>
+#else
+    #error "Alloca.h on your platform is not supported yet"
+#endif
 
 namespace StraitX{
 

@@ -1,4 +1,4 @@
-#include <alloca.h>
+#include "platform/memory.hpp"
 #include "platform/result.hpp"
 #include "core/log.hpp"
 #include "graphics/vulkan/graphics_pipeline.hpp"
@@ -198,7 +198,7 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
     blend_state.blendConstants[3] = 0;
 
     // === DynamicState ===
-
+/*
     VkDynamicState dynamics[]={
         //VK_DYNAMIC_STATE_SCISSOR
     };
@@ -209,7 +209,7 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
     dynamic_state.flags = 0;
     dynamic_state.dynamicStateCount = sizeof(dynamics)/sizeof(VkDynamicState);
     dynamic_state.pDynamicStates = dynamics;
-
+*/
     VkGraphicsPipelineCreateInfo info;
     info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     info.pNext = nullptr;

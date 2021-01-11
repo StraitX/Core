@@ -1,5 +1,4 @@
 #include "platform/mouse.hpp"
-#include "platform/windows/hinstance.hpp"
 #include "platform/windows/virtual_keys.hpp"
 namespace StraitX {
 

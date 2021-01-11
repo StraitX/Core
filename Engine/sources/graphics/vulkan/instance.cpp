@@ -1,4 +1,4 @@
-#include <alloca.h>
+#include "platform/memory.hpp"
 #include <cstring>
 #include <cstdio>
 #include "core/log.hpp"

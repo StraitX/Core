@@ -11,6 +11,7 @@ namespace Windows{
 
 class DisplayWin32 {
 private:
+    void *m_HInstance = nullptr;
 public:
     enum class Ext {
         DoubleBuffer = 0,
@@ -23,21 +24,25 @@ public:
 
     DisplayWin32(const DisplayWin32 & other) = default;
 
-    sx_inline Result Open() {
-        return Result::Success;
-    }
+    Result Open();
 
-    sx_inline Result Close() {
-        return Result::Success;
+    Result Close();
+
+    bool IsOpen() {
+        return m_HInstance;
     }
 
     sx_inline bool IsOpened() {
-        return true;
+        return m_HInstance != nullptr;
     }
 
     bool CheckSupport(Ext extension);
 
     ScreenWin32 MainScreen();
+
+    void* Handle() {
+        return m_HInstance;
+    }
 };
 
 };// namespace Windows::

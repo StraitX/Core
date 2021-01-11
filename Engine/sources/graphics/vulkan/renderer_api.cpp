@@ -1,4 +1,4 @@
-#include <alloca.h>
+#include "platform/memory.hpp"
 #include "core/log.hpp"
 #include "graphics/vulkan/renderer_api.hpp"
 
@@ -14,7 +14,9 @@ static const char *DeviceExtensions[]={
 };
 constexpr size_t DeviceExtensionsCount = sizeof(DeviceExtensions)/sizeof(char*);
 
-static const char *DeviceLayers[]={};
+static const char *DeviceLayers[]={
+    ""
+};
 constexpr size_t DeviceLayersCount = sizeof(DeviceLayers)/sizeof(char*);
 
 Result RendererAPI::InitializeHardware(){

@@ -1,4 +1,4 @@
-#include <alloca.h>
+#include "platform/memory.hpp"
 #include "core/log.hpp"
 #include "core/assert.hpp"
 #include "graphics/vulkan/physical_device.hpp"

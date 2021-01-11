@@ -66,7 +66,7 @@ set(LIBS_ENGINE
     glad
 )
 
-set(INCLUDES 
+set(INCLUDES_I
     ${SOURCES_DIR}
     ${THIRDPARTY_DIR}/glad/include
 )
@@ -95,10 +95,18 @@ if(STRAITX_PLATFORM_LINUX)
         GL
         vulkan
     )
+
+    set(LIBS_DIRS_PLATFORM
+
+    )
+
+    set(INCLUDES_D
+    
+    )
+
 elseif(STRAITX_PLATFORM_WINDOWS)
     set(SOURCES_PLATFORM_D
-       ${SOURCES_DIR}/platform/windows/platform.cpp
-	   ${SOURCES_DIR}/platform/windows/hinstance.cpp
+       ${SOURCES_DIR}/platform/windows/platform_windows.cpp
        ${SOURCES_DIR}/platform/windows/mouse.cpp
        ${SOURCES_DIR}/platform/windows/keyboard.cpp
        ${SOURCES_DIR}/platform/windows/virtual_keys.cpp
@@ -108,6 +116,14 @@ elseif(STRAITX_PLATFORM_WINDOWS)
     )
 
     set(LIBS_PLATFORM
+        
+    )
+
+    set(LIBS_DIRS_PLATFORM
+
+    )
+
+    set(INCLUDES_D
 
     )
 
@@ -126,9 +142,15 @@ add_library(StraitX STATIC
     ${SOURCES_SERVERS}
     ${SOURCES_MAIN}
 )
-target_include_directories(StraitX PUBLIC ${INCLUDES})
+target_include_directories(StraitX PUBLIC 
+    ${INCLUDES_I}
+    ${INCLUDES_D}
+)
 target_link_libraries(StraitX PUBLIC 
     ${LIBS_PLATFORM}
     ${LIBS_ENGINE}
     ${CMAKE_DL_LIBS}
+)
+target_link_directories(StraitX PUBLIC
+    ${LIBS_DIRS_PLATFORM}
 )

@@ -15,16 +15,13 @@ Result LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<const char*>
     float priors[2] = {1.0, 0.8};
 
     // for now lets keep it simple, we have just one graphics queues
-    VkDeviceQueueCreateInfo qinfo[]={
-        { // GraphicsQueue
-            .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
-            .pNext = nullptr,
-            .flags = 0,
-            .queueFamilyIndex = GraphicsQueue.FamilyIndex,
-            .queueCount = 1,
-            .pQueuePriorities = &priors[0]
-        }
-    };
+    VkDeviceQueueCreateInfo qinfo[1];
+    qinfo[0].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    qinfo[0].pNext = nullptr;
+    qinfo[0].flags = 0;
+    qinfo[0].queueFamilyIndex = GraphicsQueue.FamilyIndex;
+    qinfo[0].queueCount = 1;
+    qinfo[0].pQueuePriorities = &priors[0];
 
     VkDeviceCreateInfo info;
     info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;

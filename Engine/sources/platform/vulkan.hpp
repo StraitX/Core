@@ -5,9 +5,13 @@
 
 #ifdef SX_PLATFORM_LINUX
     #include <vulkan/vulkan.h>
+#elif defined(SX_PLATFORM_WINDOWS)
+    #include <vulkan/vulkan.h>
 #else
     #error "Your platform does not support vulkan yet."
 #endif
+
+#include "platform/memory.hpp"
 
 namespace StraitX{
 namespace Vk{

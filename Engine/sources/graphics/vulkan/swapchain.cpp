@@ -1,4 +1,4 @@
-#include <alloca.h>
+#include "platform/memory.hpp"
 #include "platform/memory.hpp"
 #include "core/log.hpp"
 #include "graphics/vulkan/swapchain.hpp"
@@ -26,13 +26,13 @@ VkPresentModeKHR BestMode(Vk::LogicalDevice *presenter, const Vk::Surface &surfa
     VkPresentModeKHR *modes = (VkPresentModeKHR *)alloca(modes_count * sizeof(VkPresentModeKHR));
     vkGetPhysicalDeviceSurfacePresentModesKHR(presenter->Parent->Handle, surface.Handle, &modes_count, modes);
 
-    bool modes_available[VK_PRESENT_MODE_END_RANGE_KHR + 1]; // index is the same as VkPresentModeKHR enum element number
-    Memory::Set(modes_available, 0, sizeof(modes_available));
+    // TODO: Fix potential stack corruption
+    bool modes_available[5] = {0}; // index is the same as VkPresentModeKHR enum element number
 
     for(int i = 0; i<modes_count; i++){
         modes_available[modes[i]]=true;
     }
-    
+
     if(modes_available[VK_PRESENT_MODE_MAILBOX_KHR])
         return VK_PRESENT_MODE_MAILBOX_KHR;
     else if(modes_available[VK_PRESENT_MODE_FIFO_RELAXED_KHR])

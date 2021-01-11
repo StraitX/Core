@@ -9,29 +9,41 @@ namespace Windows{
 const char *windowClassName = "StraitXWindow";
 const char *windowTitle = "";
 
-WindowWin32::WindowWin32(int width, int height):
-    mHandle(nullptr),
-    mWidth(width),
-    mHeight(height),
-    mUnhandledResize(false)
+WindowWin32::WindowWin32(DisplayWin32& display) :
+    m_Display(display),
+    m_Handle(nullptr),
+    m_Width(0),
+    m_Height(0),
+    m_UnhandledResize(false)
 {
-    mHandle = CreateWindow(windowClassName, windowTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, (HINSTANCE)GetModuleHandle(nullptr), this);
-    ShowWindow((HWND)mHandle, SW_SHOW);
+
 }
 
-WindowWin32::~WindowWin32() {
-    DestroyWindow((HWND)mHandle);
+Result WindowWin32::Open(const ScreenWin32& screen, int width, int height) {
+    m_Width = width;
+    m_Height = height;
+    m_Handle = CreateWindow(windowClassName, windowTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, m_Width, m_Height, 0, 0, (HINSTANCE)m_Display.Handle(), this);
+    ShowWindow((HWND)m_Handle, SW_SHOW);
+    return ResultError(m_Handle == nullptr);
+}
+
+Result WindowWin32::Close() {
+    return ResultError(DestroyWindow((HWND)m_Handle) == 0);
+}
+
+bool WindowWin32::IsOpen()const{
+    return m_Handle;
 }
 
 void WindowWin32::SetTitle(const char* title) {
-    SetWindowText((HWND)mHandle, title);
+    (void)SetWindowText((HWND)m_Handle, title);
 }
 
 void WindowWin32::SetSize(int width, int height) {
     RECT currentWindowDimens = { 0 };
-    GetWindowRect((HWND)mHandle, &currentWindowDimens);
+    GetWindowRect((HWND)m_Handle, &currentWindowDimens);
     
-    SetWindowPos((HWND)mHandle, HWND_TOP, currentWindowDimens.left, currentWindowDimens.top, width, height, SWP_ASYNCWINDOWPOS);
+    SetWindowPos((HWND)m_Handle, HWND_TOP, currentWindowDimens.left, currentWindowDimens.top, width, height, SWP_ASYNCWINDOWPOS);
 }
 bool WindowWin32::PollEvent(Event& event) {
     MSG message = { 0 };
@@ -39,7 +51,7 @@ bool WindowWin32::PollEvent(Event& event) {
         return true;
     }
     // fetch messages until we catch convertable to StraitX one or message queue become empty
-    while (::PeekMessage(&message, (HWND)mHandle, 0, 0, PM_REMOVE)) {
+    while (::PeekMessage(&message, (HWND)m_Handle, 0, 0, PM_REMOVE)) {
         // okay, WinAPI, lets pretend that we play by your rules
         TranslateMessage(&message);
         DispatchMessage(&message);
@@ -52,18 +64,18 @@ bool WindowWin32::PollEvent(Event& event) {
 }
 
 void WindowWin32::OnResize(int width, int height) {
-    mUnhandledResize = true;
-    mWidth = width;
-    mHeight = height;
+    m_UnhandledResize = true;
+    m_Width = width;
+    m_Height = height;
 }
 
 
 bool WindowWin32::FetchInternalEvents(Event &event) {
-    if (mUnhandledResize){
+    if (m_UnhandledResize){
         event.Type = EventType::WindowResized;
-        event.WindowResized.x = mWidth;
-        event.WindowResized.y = mHeight;
-        mUnhandledResize = false;
+        event.WindowResized.x = m_Width;
+        event.WindowResized.y = m_Height;
+        m_UnhandledResize = false;
         return true;
     }
     return false;
@@ -102,14 +114,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     return 0;
 }
 
-void WindowWin32::RegClass() {
-    WNDCLASS windowClass = { 0 };
-    windowClass.lpfnWndProc = WindowProc;
-    windowClass.lpszClassName = windowClassName;
-    windowClass.hInstance = (HINSTANCE)GetModuleHandle(nullptr);
-    if (RegisterClass(&windowClass) == 0)
-        puts("ERROR: Can't register window class");
-}
+
 
 }; //namespace Windows::
 }; //namespace StraitX::
