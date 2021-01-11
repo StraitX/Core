@@ -9,17 +9,17 @@ namespace StraitX{
 
 
 template <typename T>
-sx_inline T dot(const Vector2<T> &left, const Vector2<T> &right){
+constexpr T dot(const Vector2<T> &left, const Vector2<T> &right){
     return left.x * right.x + left.y * right.y;
 }
 
 template <typename T>
-sx_inline T dot(const Vector3<T> &left, const Vector3<T> &right){
+constexpr T dot(const Vector3<T> &left, const Vector3<T> &right){
     return left.x * right.x + left.y * right.y + left.z * right.z;
 }
 
 template <typename T>
-sx_inline T dot(const Vector4<T> &left, const Vector4<T> &right){
+constexpr sx_inline T dot(const Vector4<T> &left, const Vector4<T> &right){
     return left.x * right.x + left.y * right.y + left.z * right.z + left.w * right.w;
 }
 
