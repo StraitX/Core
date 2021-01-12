@@ -17,18 +17,6 @@ extern StraitX::Result StraitXExit(StraitX::Application *);
 namespace StraitX{
 
 
-Engine::Engine():
-    m_Running(true),
-    m_ErrorApplication(Result::None)
-{
-
-}
-
-Engine::~Engine(){
-
-}
-
-
 int Engine::Run(){
     LogTrace("Engine::Initialize: Begin");
 

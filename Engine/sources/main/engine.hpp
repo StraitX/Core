@@ -11,14 +11,14 @@ class Application;
 
 class Engine{
 private:
-    Application *m_Application;
-    bool m_Running;
+    Application *m_Application = nullptr;
+    bool m_Running = true;
     DisplayServer m_DisplayServer;
-    Result m_ErrorRendererHW, m_ErrorRendererAPI;
-    Result m_ErrorDisplayServer, m_ErrorApplication, m_ErrorMX;
+    Result m_ErrorRendererHW = Result::None, m_ErrorRendererAPI = Result::None;
+    Result m_ErrorDisplayServer = Result::None, m_ErrorApplication = Result::None, m_ErrorMX = Result::None;
 public:
-    Engine();
-    ~Engine();
+    Engine() = default;
+    ~Engine() = default;
 
     int Run();
 
