@@ -11,7 +11,7 @@ Result CommandPool::Create(Vk::LogicalDevice *owner, Vk::Queue queue){
     VkCommandPoolCreateInfo info;
     info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     info.pNext = nullptr;
-    info.flags = 0;
+    info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; // allow us to reset command buffers
     info.queueFamilyIndex = queue.FamilyIndex;
     return ResultError(vkCreateCommandPool(Owner->Handle, &info, nullptr, &Handle) != VK_SUCCESS);
 }
