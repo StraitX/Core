@@ -1,3 +1,6 @@
 [submodule "Engine/thirdparty/glad"]
 	path = Engine/thirdparty/glad
 	url = https://github.com/E1Hephaestus/glad
+[submodule "Engine/thirdparty/vulkan-sdk"]
+	path = Engine/thirdparty/vulkan-sdk
+	url = https://github.com/E1Hephaestus/vulkan-sdk

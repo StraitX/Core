@@ -66,9 +66,10 @@ set(LIBS_ENGINE
     glad
 )
 
-set(INCLUDES_I
+set(INCLUDES
     ${SOURCES_DIR}
     ${THIRDPARTY_DIR}/glad/include
+    ${THIRDPARTY_DIR}/vulkan-sdk/include
 )
 
 if(STRAITX_PLATFORM_LINUX)
@@ -97,11 +98,7 @@ if(STRAITX_PLATFORM_LINUX)
     )
 
     set(LIBS_DIRS_PLATFORM
-
-    )
-
-    set(INCLUDES_D
-    
+        ${THIRDPARTY_DIR}/vulkan-sdk/linux/lib
     )
 
 elseif(STRAITX_PLATFORM_WINDOWS)
@@ -120,11 +117,7 @@ elseif(STRAITX_PLATFORM_WINDOWS)
     )
 
     set(LIBS_DIRS_PLATFORM
-
-    )
-
-    set(INCLUDES_D
-
+        ${THIRDPARTY_DIR}/vulkan-sdk/windows/lib
     )
 
 else()
@@ -143,8 +136,7 @@ add_library(StraitX STATIC
     ${SOURCES_MAIN}
 )
 target_include_directories(StraitX PUBLIC 
-    ${INCLUDES_I}
-    ${INCLUDES_D}
+    ${INCLUDES}
 )
 target_link_libraries(StraitX PUBLIC 
     ${LIBS_PLATFORM}
