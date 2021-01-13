@@ -12,22 +12,22 @@ struct ArrayPtr{
     T *Pointer;
     SizeT Size;
 
-    sx_inline ArrayPtr():
+    constexpr ArrayPtr():
         Pointer(nullptr),
         Size(0)
     {}
 
-    sx_inline ArrayPtr(T *pointer, SizeT size):
+    constexpr ArrayPtr(T *pointer, SizeT size):
         Pointer(pointer),
         Size(size)
     {}
 
-    sx_inline ArrayPtr(const ArrayPtr &other):
+    constexpr ArrayPtr(const ArrayPtr &other):
         Pointer(other.Pointer),
         Size(other.Size)
     {}
 
-    sx_inline ArrayPtr(ArrayPtr &&other):
+    constexpr ArrayPtr(ArrayPtr &&other):
         Pointer(other.Pointer),
         Size(other.size)
     {
@@ -60,19 +60,19 @@ struct ArrayPtr{
     using iterator = T *;
     using const_iterator = const T *;
 
-    sx_inline iterator begin(){
+    constexpr iterator begin(){
         return Pointer;
     }
 
-    sx_inline iterator end(){
+    constexpr iterator end(){
         return Pointer+Size;
     }
 
-    sx_inline const_iterator begin()const{
+    constexpr const_iterator begin()const{
         return Pointer;
     }
 
-    sx_inline const_iterator end()const{
+    constexpr const_iterator end()const{
         return Pointer+Size;
     }
 
