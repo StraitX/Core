@@ -39,16 +39,20 @@ u32 CalculateStride(const ArrayPtr<VertexAttribute> &vertex_attributes){
 
 Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill_mode, 
                 Vk::Swapchain *swapchain, Vk::RenderPass *render_pass, 
-                size_t subpass_index, const ArrayPtr<VertexAttribute> &vertex_attributes,
-                const ArrayPtr<Shader> &shaders){
+                size_t subpass_index, 
+                const ArrayPtr<VkDescriptorSetLayout> &set_layouts,
+                const ArrayPtr<VertexAttribute> &vertex_attributes,
+                const ArrayPtr<Shader> &shaders)
+{
     Pass = render_pass;
 
+    CoreAssert(set_layouts.Size <= 4, "By Vulkan Spec, set_layout size can be at least 4, we support just that");
     VkPipelineLayoutCreateInfo layout_info;
     layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     layout_info.pNext = nullptr;
     layout_info.flags = 0;
-    layout_info.setLayoutCount = 0;
-    layout_info.pSetLayouts = nullptr;
+    layout_info.setLayoutCount = set_layouts.Size;
+    layout_info.pSetLayouts = set_layouts.Pointer;
     layout_info.pushConstantRangeCount = 0;
     layout_info.pPushConstantRanges = nullptr;
     

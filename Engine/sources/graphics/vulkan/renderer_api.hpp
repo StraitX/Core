@@ -7,7 +7,6 @@
 #include "platform/result.hpp"
 #include "platform/window.hpp"
 #include "core/array_ptr.hpp"
-#include "core/memory/stack_allocator.hpp"
 #include "graphics/vulkan/instance.hpp"
 #include "graphics/vulkan/physical_device.hpp"
 #include "graphics/vulkan/logical_device.hpp"

@@ -37,7 +37,9 @@ struct GraphicsPipeline{
 
     Result Create(VkPrimitiveTopology topology, VkPolygonMode fill_mode, 
                     Vk::Swapchain *swapchain, Vk::RenderPass *render_pass, 
-                    size_t subpass_index, const ArrayPtr<VertexAttribute> &vertex_attributes,
+                    size_t subpass_index,
+                    const ArrayPtr<VkDescriptorSetLayout> &set_layouts,
+                    const ArrayPtr<VertexAttribute> &vertex_attributes,
                     const ArrayPtr<Shader> &shaders);
 
     void Destroy();

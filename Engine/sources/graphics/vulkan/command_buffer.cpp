@@ -28,7 +28,7 @@ void CommandBuffer::Begin(){
 }
 
 
-void CommandBuffer::BeginRenderTarget(Vk::GraphicsPipeline *pipeline, Vk::RenderPass *render_pass, Vk::Framebuffer *framebuffer, const ArrayPtr<VkClearValue> &clears){
+void CommandBuffer::BeginRenderTarget(const Vk::GraphicsPipeline *pipeline, const Vk::RenderPass *render_pass, const Vk::Framebuffer *framebuffer, const ArrayPtr<VkClearValue> &clears){
     vkCmdBindPipeline(Handle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->Handle);
     VkRenderPassBeginInfo info;
     info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;

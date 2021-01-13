@@ -21,7 +21,7 @@ struct CommandBuffer{
 
     void Begin();
                     // here we should bind to graphics pipeline
-    void BeginRenderTarget(Vk::GraphicsPipeline *pipeline, Vk::RenderPass *render_pass, Vk::Framebuffer *framebuffer, const ArrayPtr<VkClearValue> &clears);
+    void BeginRenderTarget(const Vk::GraphicsPipeline *pipeline, const Vk::RenderPass *render_pass, const Vk::Framebuffer *framebuffer, const ArrayPtr<VkClearValue> &clears);
 
     void EndRenderTarget();
 

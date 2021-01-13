@@ -13,8 +13,7 @@ size_t RequiredPlatformExtensionsCount = sizeof(RequiredPlatformExtensions)/size
 
 const char *RequiredPlatformLayers[]={
     "VK_LAYER_MESA_overlay",
-    "VK_LAYER_KHRONOS_validation",
-    "VK_LAYER_LUNARG_standard_validation"
+    "VK_LAYER_KHRONOS_validation"
 };
 size_t RequiredPlatformLayersCount = sizeof(RequiredPlatformLayers)/sizeof(char*);
 
