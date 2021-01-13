@@ -7,6 +7,15 @@
 namespace StraitX{
 namespace Vk{
 
+Result Instance::Initialize(){
+    return Create(VulkanVersion, {RequiredPlatformExtensions, RequiredPlatformExtensionsCount}, {RequiredPlatformLayers, RequiredPlatformLayersCount});
+}
+
+Result Instance::Finalize(){
+    Destroy();
+    return Result::Success;
+}
+
 sx_inline Result Instance::Create(const Version &version, const ArrayPtr<const char *> &extensions, const ArrayPtr<const char *> &layers){
 
     if(!CheckExtensions(extensions))

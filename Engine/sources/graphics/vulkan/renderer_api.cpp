@@ -7,8 +7,6 @@ namespace Vk{
 
 RendererAPI RendererAPI::Instance;
 
-constexpr Version VulkanVersion = {1, 0, 0};
-
 static const char *DeviceExtensions[]={
     VK_KHR_SWAPCHAIN_EXTENSION_NAME
 };

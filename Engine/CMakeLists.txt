@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 01)
-set(VERSION_PATCH 16)
+set(VERSION_PATCH 17)
 
 project(
     StraitXEngine 
@@ -49,8 +49,13 @@ set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/memory.cpp
 )
 
+set(SOURCES_GRAPHICS_API
+    ${SOURCES_DIR}/graphics/api/graphics_api.cpp
+)
+
 set(SOURCES_GRAPHICS 
     ${SOURCES_GRAPHICS_VULKAN}
+    ${SOURCES_GRAPHICS_API}
 )
 
 set(SOURCES_SERVERS

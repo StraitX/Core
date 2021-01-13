@@ -1,9 +1,10 @@
-#include "main/engine.hpp"
-#include "main/application.hpp"
-#include "core/log.hpp"
 #include "platform/display.hpp"
 #include "platform/platform.hpp"
 #include "platform/io.hpp"
+#include "core/log.hpp"
+#include "graphics/api/graphics_api.hpp"
+#include "main/application.hpp"
+#include "main/engine.hpp"
 
 
 #define InitAssert(source,error) Log(source,error);if(error != Result::Success){return Result::Failure;}
@@ -55,9 +56,12 @@ void Engine::Stop(){
 Result Engine::Initialize(){
     LogTrace("========= First stage init =========");
 
-    LogTrace("RendererAPI::InitializeHardware: Begin");
-    m_ErrorRendererHW = Vk::RendererAPI::Instance.InitializeHardware();
-    InitAssert("RendererAPI::InitializeHardware",m_ErrorRendererHW);
+    auto res = GraphicsAPI::Create(GraphicsAPI::Vulkan);
+    InitAssert("GraphicsAPI::Create",res);
+
+    LogTrace("GraphicsAPI::Initialize: Begin");
+    m_ErrorGraphicsAPI = GraphicsAPI::Instance().Initialize();
+    InitAssert("GraphicsAPI::Initialize",m_ErrorGraphicsAPI);
 
     LogTrace("========= Second stage init =========");
 
@@ -67,10 +71,6 @@ Result Engine::Initialize(){
 
     SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::DoubleBuffer), "Display::DoubleBuffer");
     SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::OpenGLCore), "Display::OpenGL Core");
-
-    LogTrace("RendererAPI::InitializeRender: Begin");
-    m_ErrorRendererAPI = Vk::RendererAPI::Instance.InitializeRender(m_DisplayServer.m_Window);
-    InitAssert("RendererAPI::InitializeRender",m_ErrorRendererAPI);
 
     LogTrace("========= Third stage init =========");
 
@@ -107,22 +107,16 @@ Result Engine::Finalize(){
         Log("StraitXExit",m_ErrorMX);
     }
 
-    if(m_ErrorRendererAPI == Result::Success){
-        LogTrace("RendererAPI::FinalizeRender: Begin");
-        m_ErrorRendererAPI = Vk::RendererAPI::Instance.FinalizeRender();
-        Log("RendererAPI::FinalizeRender",m_ErrorRendererAPI);
-    }
-
     if(m_ErrorDisplayServer == Result::Success){
         LogTrace("DisplayServer::Finalize: Begin");
         m_ErrorDisplayServer = m_DisplayServer.Finalize();
         Log("DisplayServer::Finalize", m_ErrorDisplayServer);
     }
 
-    if(m_ErrorRendererHW == Result::Success){
-        LogTrace("RendererAPI::FinalizeHardware: Begin");
-        m_ErrorRendererHW = Vk::RendererAPI::Instance.FinalizeHardware();
-        Log("RendererAPI::FinalizeHardware",m_ErrorRendererHW);
+    if(m_ErrorGraphicsAPI == Result::Success){
+        LogTrace("GraphicsAPI::Finalize: Begin");
+        m_ErrorGraphicsAPI = GraphicsAPI::Instance().Finalize();
+        Log("GraphicsAPI::Finalize",m_ErrorGraphicsAPI);
     }
 
     return Result::Success;
