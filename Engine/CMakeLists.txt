@@ -28,7 +28,7 @@ set(SOURCES_PLATFORM_I
 set(SOURCES_CORE
     ${SOURCES_DIR}/core/assert.cpp
     ${SOURCES_DIR}/core/time_quant.cpp
-    ${SOURCES_DIR}/core/memory/stack_allocator.cpp
+    ${SOURCES_DIR}/core/memory/linear_allocator.cpp
 )
 
 set(SOURCES_GRAPHICS_VULKAN

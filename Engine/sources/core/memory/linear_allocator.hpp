@@ -1,27 +1,27 @@
-#ifndef STRAITX_STACK_ALLOCATOR_HPP
-#define STRAITX_STACK_ALLOCATOR_HPP
+#ifndef STRAITX_LINEAT_ALLOCATOR_HPP
+#define STRAITX_LINEAT_ALLOCATOR_HPP
 
 #include "platform/types.hpp"
 
 namespace StraitX{
 
-class StackAllocator{
+class LinearAllocator{
 private:
     u8 *m_Memory;
     size_t m_Capacity;
     size_t m_Size;
 public:
-    StackAllocator(size_t size);
+    LinearAllocator(size_t size);
 
-    ~StackAllocator();
+    ~LinearAllocator();
 
-    StackAllocator(const StackAllocator &other) = delete;
+    LinearAllocator(const LinearAllocator &other) = delete;
 
-    StackAllocator(StackAllocator &&other);
+    LinearAllocator(LinearAllocator &&other);
 
-    StackAllocator &operator=(const StackAllocator &other) = delete;
+    LinearAllocator &operator=(const LinearAllocator &other) = delete;
 
-    StackAllocator &operator=(StackAllocator &&other);
+    LinearAllocator &operator=(LinearAllocator &&other);
 
     void Finalize();
 
@@ -40,4 +40,4 @@ public:
 
 };//namespace StraitX::
 
-#endif //STRAITX_STACK_ALLOCATOR_HPP
+#endif //STRAITX_LINEAT_ALLOCATOR_HPP
