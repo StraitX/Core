@@ -14,9 +14,13 @@ struct Instance: GraphicsAPI{
     VkInstance Handle = VK_NULL_HANDLE;
     VkDebugUtilsMessengerEXT Messenger = VK_NULL_HANDLE;
 
-    Result Initialize()override;
+    virtual Result Initialize()override;
 
-    Result Finalize()override;
+    virtual Result Finalize()override;
+
+    virtual u32 GetPhysicalGPUCount()override;
+
+    virtual Result GetPhysicalGPUs(PhysicalGPU *array)override;
 
     Result Create(const Version &version, const ArrayPtr<const char *> &extensions, const ArrayPtr<const char *> &layers);
 

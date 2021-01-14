@@ -4,6 +4,7 @@
 #include "platform/types.hpp"
 #include "platform/result.hpp"
 #include "core/assert.hpp"
+#include "graphics/api/physical_gpu.hpp"
 
 namespace StraitX{
 
@@ -37,6 +38,10 @@ public:
     virtual Result Initialize() = 0;
 
     virtual Result Finalize() = 0;
+
+    virtual u32 GetPhysicalGPUCount() = 0;
+
+    virtual Result GetPhysicalGPUs(PhysicalGPU *array) = 0;
 
 };
 

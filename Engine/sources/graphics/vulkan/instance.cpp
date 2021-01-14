@@ -7,12 +7,49 @@
 namespace StraitX{
 namespace Vk{
 
+static_assert(sizeof(GPUHandle) == sizeof(VkPhysicalDevice), "GPUHandle is not the same size as VkPhysicalDevice");
+
+GPUType VkTypeToGPUType(u32 type){
+    switch (type) {
+    case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU:      return GPUType::Discrete;
+    case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU:    return GPUType::Integrated;
+    case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:       return GPUType::Virtual;
+    case VK_PHYSICAL_DEVICE_TYPE_OTHER:             return GPUType::Other;
+    default:
+        return GPUType::Unknown;
+    }
+}
+
 Result Instance::Initialize(){
     return Create(VulkanVersion, {RequiredPlatformExtensions, RequiredPlatformExtensionsCount}, {RequiredPlatformLayers, RequiredPlatformLayersCount});
 }
 
 Result Instance::Finalize(){
     Destroy();
+    return Result::Success;
+}
+
+u32 Instance::GetPhysicalGPUCount(){
+    u32 count = 0;
+    vkEnumeratePhysicalDevices(Handle, &count, nullptr);
+    return count;
+}
+
+Result Instance::GetPhysicalGPUs(PhysicalGPU *array){
+    u32 count = GetPhysicalGPUCount();
+    auto *devices = (VkPhysicalDevice*)alloca(count * sizeof(VkPhysicalDevice));
+    
+    if(vkEnumeratePhysicalDevices(Handle, &count, devices) != VK_SUCCESS)
+        return Result::Failure;
+
+    for(int i = 0; i<count; i++){
+        VkPhysicalDeviceProperties props;
+        vkGetPhysicalDeviceProperties(devices[i], &props);
+
+        array[i].Handle = (GPUHandle)devices[i];
+        array[i].Vendor = VendorIDToVendor(props.vendorID);
+        array[i].Type = VkTypeToGPUType(props.deviceType);
+    }
     return Result::Success;
 }
 
