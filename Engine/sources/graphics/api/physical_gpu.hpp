@@ -1,22 +1,20 @@
 #ifndef STRAITX_PHYSICAL_GPU_HPP
 #define STRAITX_PHYSICAL_GPU_HPP
 
+#include "platform/defs.hpp"
 #include "graphics/api/gpu_configuration.hpp"
 
 namespace StraitX{
 
 struct PhysicalGPU{
-    GPUHandle Handle = nullptr;
-    GPUVendor Vendor = GPUVendor::Unknown;
-    GPUType   Type   = GPUType::Unknown;
+    const GPUHandle Handle = nullptr;
+    const GPUVendor Vendor = GPUVendor::Unknown;
+    const GPUType   Type   = GPUType::Unknown;
+
+    const u32 QueueFamiliesCount = 0;
 
     constexpr PhysicalGPU() = default;
 
-    constexpr PhysicalGPU(GPUHandle handle,GPUVendor vendor, GPUType type):
-        Handle(handle),
-        Vendor(vendor),
-        Type(type)
-    {}
 };
 
 }//namespace StraitX::

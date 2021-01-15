@@ -26,6 +26,13 @@ enum class GPUType: u8{
     Other
 };
 
+enum class GPUQueueType: u8{
+    Unknown   = 0x00,
+    Transfer  = 0x01,
+    Compute   = 0x02,
+    Graphics  = 0x04
+};
+
 typedef void *GPUHandle;
 
 GPUVendor VendorIDToVendor(u32 vendor_id);
