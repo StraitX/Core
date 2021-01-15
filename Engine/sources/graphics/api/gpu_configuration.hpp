@@ -33,7 +33,10 @@ enum class GPUQueueType: u8{
     Graphics  = 0x04
 };
 
-typedef void *GPUHandle;
+union GPUHandle{
+    void *Pointer;
+    u64   U64;
+};
 
 GPUVendor VendorIDToVendor(u32 vendor_id);
 

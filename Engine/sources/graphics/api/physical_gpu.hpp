@@ -7,7 +7,7 @@
 namespace StraitX{
 
 struct PhysicalGPU{
-    const GPUHandle Handle = nullptr;
+    const GPUHandle Handle = {};
     const GPUVendor Vendor = GPUVendor::Unknown;
     const GPUType   Type   = GPUType::Unknown;
 

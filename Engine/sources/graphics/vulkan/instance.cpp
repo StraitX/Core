@@ -49,7 +49,7 @@ Result Instance::GetPhysicalGPUs(PhysicalGPU *array){
         u32 families_count = 0;
         vkGetPhysicalDeviceQueueFamilyProperties(devices[i], &families_count, nullptr);
 
-        const_cast<GPUHandle&>(array[i].Handle) = (GPUHandle)devices[i];
+        const_cast<GPUHandle&>(array[i].Handle).U64 = reinterpret_cast<u64>(devices[i]);
         const_cast<GPUVendor&>(array[i].Vendor) = VendorIDToVendor(props.vendorID);
         const_cast<GPUType&>(array[i].Type) = VkTypeToGPUType(props.deviceType);
         const_cast<u32&>(array[i].QueueFamiliesCount) = families_count;
