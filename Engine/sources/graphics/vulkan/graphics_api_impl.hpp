@@ -1,5 +1,5 @@
-#ifndef STRAITX_VULKAN_INSTANCE_HPP
-#define STRAITX_VULKAN_INSTANCE_HPP
+#ifndef STRAITX_VULKAN_GRAPHICS_API_IMPL_HPP
+#define STRAITX_VULKAN_GRAPHICS_API_IMPL_HPP
 
 #include "platform/vulkan.hpp"
 #include "platform/result.hpp"
@@ -33,4 +33,4 @@ struct GraphicsAPIImpl: GraphicsAPI{
 
 };//namespace Vk::
 };//namespace StraitX::
-#endif // STRAITX_VULKAN_INSTANCE_HPP
+#endif // STRAITX_VULKAN_GRAPHICS_API_IMPL_HPP
