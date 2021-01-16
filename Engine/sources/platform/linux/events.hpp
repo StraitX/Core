@@ -1,5 +1,5 @@
-#ifndef STRAITX_EVENTS_X11_HPP
-#define STRAITX_EVENTS_X11_HPP
+#ifndef STRAITX_LINUX_EVENTS_HPP
+#define STRAITX_LINUX_EVENTS_HPP
 
 #include "platform/events.hpp"
 #include <X11/Xlib.h>
@@ -13,7 +13,7 @@ Bool CheckEvent(::Display*, XEvent* event, XPointer userData);
 Event ToStraitXEvent(const XEvent &event);
 
 
-}; //namespace Linux::
-}; //namespace StraitX::
+} //namespace Linux::
+} //namespace StraitX::
 
-#endif // STRAITX_EVENTS_X11_HPP
+#endif // STRAITX_LINUX_EVENTS_HPP

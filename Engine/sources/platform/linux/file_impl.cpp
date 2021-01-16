@@ -88,4 +88,4 @@ bool File::Exist(const char *filename){
     return access(filename, F_OK) == 0;
 }
 
-}; // namespace StraitX::
+} // namespace StraitX::

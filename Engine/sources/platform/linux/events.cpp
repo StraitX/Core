@@ -1,5 +1,5 @@
-#include "platform/linux/events_x11.hpp"
-#include "platform/linux/keys_x11.hpp"
+#include "platform/linux/events.hpp"
+#include "platform/linux/keys.hpp"
 
 
 namespace StraitX{
@@ -77,5 +77,5 @@ Event ToStraitXEvent(const XEvent &event){
     }
 }
 
-}; //namespace Linux::
-}; //namespace StraitX::
+} //namespace Linux::
+} //namespace StraitX::

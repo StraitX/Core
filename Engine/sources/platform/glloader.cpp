@@ -4,9 +4,7 @@
 namespace StraitX{
 
 Result OpenGLLoader::Load(){
-    if(gladLoadGLLoader((GLADloadproc)GetOpenGLProc))
-        return Result::Success;
-    return Result::Failure;
+    return ResultError(gladLoadGLLoader((GLADloadproc)GetOpenGLProc)==0);
 }
 
 Version OpenGLLoader::OpenGLVersion(){

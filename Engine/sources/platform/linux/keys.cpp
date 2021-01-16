@@ -1,4 +1,4 @@
-#include "platform/linux/keys_x11.hpp"
+#include "platform/linux/keys.hpp"
 #include <X11/keysym.h>
 namespace StraitX{
 namespace Linux{
@@ -261,5 +261,5 @@ Mouse::Button XButtonToMouseButton(unsigned int button){
     }
 }
 
-};// namespace Linux::
-};// namespace StraitX::
+}// namespace Linux::
+}// namespace StraitX::

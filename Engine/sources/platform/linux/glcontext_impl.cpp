@@ -1,10 +1,12 @@
-#include "platform/linux/glcontext_x11.hpp"
+#include "platform/linux/glcontext_impl.hpp"
 #include <X11/Xlib.h>
 #include <GL/glx.h>
 #undef Success
 
 namespace StraitX{
 namespace Linux{
+
+extern ::Display *s_Display;    
 
 static bool ctxErrorOccurred = false;
 static int ctxErrorHandler( ::Display *dpy, XErrorEvent *ev )
@@ -15,11 +17,10 @@ static int ctxErrorHandler( ::Display *dpy, XErrorEvent *ev )
 
 typedef GLXContext (*glXCreateContextAttribsARBProc)(::Display*, GLXFBConfig, GLXContext, Bool, const int*);
 
-GLContextX11::GLContextX11(WindowX11 &window):
-    m_Window(window)
-{}
+Result GLContextImpl::Create(WindowImpl &window, const Version &version){
+    m_Window = &window;
 
-Result GLContextX11::Create(const Version &version){
+    
     glXCreateContextAttribsARBProc glXCreateContextAttribsARB = nullptr;
     glXCreateContextAttribsARB = (glXCreateContextAttribsARBProc)glXGetProcAddressARB((const GLubyte *)"glXCreateContextAttribsARB");
 
@@ -37,12 +38,12 @@ Result GLContextX11::Create(const Version &version){
     if(version.Major >= 3)
         XSetErrorHandler(&ctxErrorHandler);
     
-    m_Handle = glXCreateContextAttribsARB(m_Window.Display.Handle(),(GLXFBConfig)m_Window.FBConfig, 0, true, contextAttribs);
+    m_Handle = glXCreateContextAttribsARB(s_Display,(GLXFBConfig)m_Window->FBConfig, 0, true, contextAttribs);
 
     if(m_Handle == nullptr)
         return Result::Unsupported;
 
-	if (!glXIsDirect (m_Window.Display.Handle(), m_Handle)){
+	if (!glXIsDirect (s_Display, m_Handle)){
         Destory();
         return Result::Failure;
     }
@@ -50,19 +51,17 @@ Result GLContextX11::Create(const Version &version){
     return Result::Success;
 }
 
-void GLContextX11::Destory(){
-    glXDestroyContext(m_Window.Display.Handle(), m_Handle);
+void GLContextImpl::Destory(){
+    glXDestroyContext(s_Display, m_Handle);
 }
 
-Result GLContextX11::MakeCurrent(){
-    if(glXMakeCurrent(m_Window.Display.Handle(), m_Window.Handle, m_Handle))
-        return Result::Success;
-    return Result::Failure;
+Result GLContextImpl::MakeCurrent(){
+    return ResultError(glXMakeCurrent(s_Display, m_Window->Handle, m_Handle) == 0);
 }
 
-void GLContextX11::SwapBuffers(){
-    glXSwapBuffers(m_Window.Display.Handle(), m_Window.Handle);
+void GLContextImpl::SwapBuffers(){
+    glXSwapBuffers(s_Display, m_Window->Handle);
 }
 
-};
-}; // namespace StraitX::
+} // namespace Linux::
+} // namespace StraitX::

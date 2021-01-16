@@ -5,23 +5,17 @@
 #undef KeyRelease
 #include "platform/mouse.hpp"
 #include "platform/window.hpp"
-#include "platform/linux/display_x11.hpp"
 
 namespace StraitX{
-
-static Linux::DisplayX11 s_Display;
-
-void Mouse::Initialize(const Linux::DisplayX11 &display){
-    s_Display = display;
-}
+namespace Linux{
+extern ::Display *s_Display;
+}//namespace Linux::
 
 bool Mouse::IsButtonPressed(Mouse::Button button){
-    ::Display *display = s_Display.Handle();
-
     ::Window root,child;
     int x,y;
     unsigned int button_mask;
-    XQueryPointer(display,RootWindow(display,DefaultScreen(display)),&root,&child,&x,&y,&x,&y,&button_mask);
+    XQueryPointer(Linux::s_Display,RootWindow(Linux::s_Display,DefaultScreen(Linux::s_Display)),&root,&child,&x,&y,&x,&y,&button_mask);
 
     switch (button)
     {
@@ -35,26 +29,22 @@ bool Mouse::IsButtonPressed(Mouse::Button button){
 }
 
 Point Mouse::GlobalPosition(){
-    ::Display *display = s_Display.Handle();
-
     ::Window root,child;
     Point choosen,global;
     unsigned int mask;
     
-    XQueryPointer(display,RootWindow(display,DefaultScreen(display)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
+    XQueryPointer(Linux::s_Display,RootWindow(Linux::s_Display,DefaultScreen(Linux::s_Display)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
 
     return global;
 }
 
 Point Mouse::RelativePosition(const Window &window){
-    ::Display *display = s_Display.Handle();
-
     ::Window root,child;
     Point choosen,global;
     unsigned int mask;
     
-    XQueryPointer(display,window.Impl().Handle,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
+    XQueryPointer(Linux::s_Display,window.Impl().Handle,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
     return choosen;
 }
 
-};
+}//namespace StraitX::

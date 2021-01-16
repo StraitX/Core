@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 01)
-set(VERSION_PATCH 17)
+set(VERSION_PATCH 18)
 
 project(
     StraitXEngine 
@@ -85,19 +85,18 @@ set(INCLUDES
 if(STRAITX_PLATFORM_LINUX)
 
     set(SOURCES_PLATFORM_D
-        ${SOURCES_DIR}/platform/linux/platform_linux.cpp
-        ${SOURCES_DIR}/platform/linux/display_x11.cpp
-        ${SOURCES_DIR}/platform/linux/mouse_x11.cpp
-        ${SOURCES_DIR}/platform/linux/keyboard_x11.cpp
-        ${SOURCES_DIR}/platform/linux/keys_x11.cpp
-        ${SOURCES_DIR}/platform/linux/window_x11.cpp
-        ${SOURCES_DIR}/platform/linux/events_x11.cpp
-        ${SOURCES_DIR}/platform/linux/screen_x11.cpp
-        ${SOURCES_DIR}/platform/linux/glloader_x11.cpp
-        ${SOURCES_DIR}/platform/linux/glcontext_x11.cpp
+        ${SOURCES_DIR}/platform/linux/window_system_impl.cpp
+        ${SOURCES_DIR}/platform/linux/mouse_impl.cpp
+        ${SOURCES_DIR}/platform/linux/keyboard_impl.cpp
+        ${SOURCES_DIR}/platform/linux/keys.cpp
+        ${SOURCES_DIR}/platform/linux/window_impl.cpp
+        ${SOURCES_DIR}/platform/linux/events.cpp
+        ${SOURCES_DIR}/platform/linux/screen_impl.cpp
+        ${SOURCES_DIR}/platform/linux/glloader_impl.cpp
+        ${SOURCES_DIR}/platform/linux/glcontext_impl.cpp
         ${SOURCES_DIR}/platform/linux/vulkan_linux.cpp
-        ${SOURCES_DIR}/platform/linux/vk_surface_x11.cpp
-        ${SOURCES_DIR}/platform/linux/file_linux.cpp
+        ${SOURCES_DIR}/platform/linux/vk_surface_impl.cpp
+        ${SOURCES_DIR}/platform/linux/file_impl.cpp
     )
 
     set(LIBS_PLATFORM

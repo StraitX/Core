@@ -9,4 +9,4 @@ void *OpenGLLoader::GetOpenGLProc(const char *name){
     return (void*)glXGetProcAddress((const GLubyte *)name);
 }
 
-}; // namespace StraitX::
+} // namespace StraitX::

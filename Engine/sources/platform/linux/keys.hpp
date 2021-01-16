@@ -15,7 +15,7 @@ Keyboard::KeyCode XKeyCodeToKeyCode(unsigned int key);
 
 Mouse::Button XButtonToMouseButton(unsigned int button);
 
-};// namespace Linux::
-};// namespace StraitX::
+}// namespace Linux::
+}// namespace StraitX::
 
 #endif

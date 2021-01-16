@@ -1,5 +1,4 @@
-#include "platform/display.hpp"
-#include "platform/platform.hpp"
+#include "platform/window_system.hpp"
 #include "platform/io.hpp"
 #include "core/log.hpp"
 #include "graphics/api/graphics_api.hpp"
@@ -56,6 +55,13 @@ void Engine::Stop(){
 Result Engine::Initialize(){
     LogTrace("========= First stage init =========");
 
+    LogInfo("WindowSystem::Initialize: Begin");
+    m_ErrorWindowSystem = WindowSystem::Initialize();
+    InitAssert("WindowSystem::Initialize", m_ErrorWindowSystem);
+
+    SupportAssert(WindowSystem::CheckSupport(WindowSystem::Ext::DoubleBuffer), "Display::DoubleBuffer");
+    SupportAssert(WindowSystem::CheckSupport(WindowSystem::Ext::OpenGLCore), "Display::OpenGL Core");
+
     auto res = GraphicsAPI::Create(GraphicsAPI::Vulkan);
     InitAssert("GraphicsAPI::Create",res);
 
@@ -68,9 +74,6 @@ Result Engine::Initialize(){
     LogTrace("DisplayServer::Initialize: Begin");
     m_ErrorDisplayServer = m_DisplayServer.Initialize();
     InitAssert("DisplayServer::Initialize", m_ErrorDisplayServer);
-
-    SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::DoubleBuffer), "Display::DoubleBuffer");
-    SupportAssert(m_DisplayServer.m_Display.CheckSupport(Display::Ext::OpenGLCore), "Display::OpenGL Core");
 
     LogTrace("========= Third stage init =========");
 
@@ -118,6 +121,13 @@ Result Engine::Finalize(){
         m_ErrorGraphicsAPI = GraphicsAPI::Instance().Finalize();
         Log("GraphicsAPI::Finalize",m_ErrorGraphicsAPI);
     }
+
+    if(m_ErrorWindowSystem == Result::Success){
+        LogTrace("WindowSystem::Finalize: Begin");
+        m_ErrorWindowSystem = WindowSystem::Finalize();
+        Log("WindowSystem::Finalize",m_ErrorWindowSystem);
+    }
+
 
     return Result::Success;
 }

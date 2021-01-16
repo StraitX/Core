@@ -2,7 +2,6 @@
 #define STRAITX_DISPLAY_SERVER_HPP
 
 #include "platform/result.hpp"
-#include "platform/display.hpp"
 #include "platform/window.hpp"
 
 namespace StraitX{
@@ -12,9 +11,8 @@ class Engine;
 class DisplayServer{
 private:
     static DisplayServer *s_DisplayServer;
-    Display m_Display;
     Window m_Window;
-    Result m_ErrDisplay, m_ErrWindow;
+    Result m_ErrWindow;
 
     friend class Engine;
 public:

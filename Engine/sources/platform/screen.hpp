@@ -5,11 +5,11 @@
 #include "platform/types.hpp"
 
 #ifdef SX_PLATFORM_LINUX
-    #include "platform/linux/screen_x11.hpp"
-    typedef StraitX::Linux::ScreenX11 ScreenImpl;
+    #include "platform/linux/screen_impl.hpp"
+    typedef StraitX::Linux::ScreenImpl PlatformScreenImpl;
 #elif defined(SX_PLATFORM_WINDOWS)
     #include "platform/windows/screen_win32.hpp"
-    typedef StraitX::Windows::ScreenWin32 ScreenImpl;
+    typedef StraitX::Windows::ScreenWin32 PlatformScreenImpl;
 #else 
     #error "Your platform does not support Screen"
 #endif
@@ -18,9 +18,9 @@ namespace StraitX{
 
 class Screen{
 private:
-    ScreenImpl m_Impl;
+    PlatformScreenImpl m_Impl;
 public:
-    Screen(const ScreenImpl &impl);
+    Screen(const PlatformScreenImpl &impl);
 
     Screen(const Screen &other) = default;
 
@@ -30,13 +30,13 @@ public:
 
     const Size2f &DPI()const;
 
-    ScreenImpl &Impl();
+    PlatformScreenImpl &Impl();
 
-    const ScreenImpl &Impl()const;
+    const PlatformScreenImpl &Impl()const;
 
 };
 
-sx_inline Screen::Screen(const ScreenImpl &impl):
+sx_inline Screen::Screen(const PlatformScreenImpl &impl):
     m_Impl(impl)
 {}
 
@@ -48,11 +48,11 @@ sx_inline const Size2f &Screen::DPI()const{
     return m_Impl.DPI();
 }
 
-sx_inline ScreenImpl &Screen::Impl(){
+sx_inline PlatformScreenImpl &Screen::Impl(){
     return m_Impl;
 }
 
-sx_inline const ScreenImpl &Screen::Impl()const{
+sx_inline const PlatformScreenImpl &Screen::Impl()const{
     return m_Impl;
 }
 

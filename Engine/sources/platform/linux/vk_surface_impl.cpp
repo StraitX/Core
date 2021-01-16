@@ -9,6 +9,10 @@
 
 
 namespace StraitX{
+namespace Linux{
+extern ::Display *s_Display;
+}//namespace Linux::
+
 namespace Vk{
 
 
@@ -18,7 +22,7 @@ Result Surface::Create(VkInstance owner, const Window &window){
     info.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
     info.pNext = nullptr;
     info.flags = 0;
-    info.dpy = window.Impl().Display.Handle();
+    info.dpy = Linux::s_Display;
     info.window = window.Impl().Handle;
 
     return ResultError(vkCreateXlibSurfaceKHR(Owner, &info, nullptr, &Handle) != VK_SUCCESS);
@@ -28,8 +32,8 @@ void Surface::Destroy(){
     vkDestroySurfaceKHR(Owner, Handle, nullptr);
 }
 
-};//namespace Vk::
-};//namespace StraitX::
+}//namespace Vk::
+}//namespace StraitX::
 
 
 

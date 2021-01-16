@@ -1,3 +1,4 @@
+#include "platform/window_system.hpp"
 #include "servers/display_server.hpp"
 #include "core/log.hpp"
 
@@ -9,9 +10,7 @@ DisplayServer *DisplayServer::s_DisplayServer = nullptr;
 
 
 DisplayServer::DisplayServer():
-    m_Display(),
-    m_Window(m_Display),
-    m_ErrDisplay(Result::None),
+    m_Window(),
     m_ErrWindow(Result::None)
 {
     if(s_DisplayServer==nullptr){
@@ -30,19 +29,12 @@ DisplayServer::~DisplayServer(){
 }
 
 Result DisplayServer::Initialize(){
-    m_ErrDisplay = m_Display.Open();
-    InitAssert("Display::Open", m_ErrDisplay);
 
-    Screen defaultScreen = m_Display.MainScreen();
+    Screen defaultScreen = WindowSystem::MainScreen();
 
     m_ErrWindow = m_Window.Open(defaultScreen, 1280, 720);
     InitAssert("Window::Open", m_ErrWindow);
 
-    LogTrace("Keyboard::Initialze");
-    Keyboard::Initialize(m_Display.Impl());
-
-    LogTrace("Mouse::Initialize");
-    Mouse::Initialize(m_Display.Impl());
 
     return Result::Success;
 }
@@ -51,10 +43,6 @@ Result DisplayServer::Finalize(){
     if(m_ErrWindow == Result::Success){
         m_ErrWindow = m_Window.Close();
         Log("Window::Close", m_ErrWindow);
-    }
-    if(m_ErrDisplay == Result::Success){
-        m_ErrDisplay = m_Display.Close();
-        Log("Display::Close", m_ErrDisplay); 
     }
     return Result::Success;
 }

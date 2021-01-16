@@ -6,8 +6,8 @@
 #include "platform/noncopyable.hpp"
 
 #ifdef SX_PLATFORM_LINUX
-    #include "platform/linux/glcontext_x11.hpp"
-    typedef StraitX::Linux::GLContextX11 GLContextImpl;
+    #include "platform/linux/glcontext_impl.hpp"
+    typedef StraitX::Linux::GLContextImpl PlatformGLContextImpl;
 #else
     #error "Your platform does not support OpenGL context"
 #endif
@@ -16,12 +16,12 @@ namespace StraitX{
 
 class GLContext: public NonCopyable{
 private:
-    GLContextImpl m_Impl;
+    PlatformGLContextImpl m_Impl;
 public:
 
-    GLContext(Window &window);
+    GLContext() = default;
 
-    Result Create(const Version &version);
+    Result Create(Window &window, const Version &version);
 
     void Destory();
 
@@ -30,13 +30,8 @@ public:
     void SwapBuffers();
 };
 
-
-sx_inline GLContext::GLContext(Window &window):
-    m_Impl(window.Impl())
-{}
-
-sx_inline Result GLContext::Create(const Version &version){
-    return m_Impl.Create(version);
+sx_inline Result GLContext::Create(Window &window, const Version &version){
+    return m_Impl.Create(window.Impl(), version);
 }
 
 sx_inline void GLContext::Destory(){
