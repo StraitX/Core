@@ -7,7 +7,7 @@
 #include "platform/result.hpp"
 #include "platform/window.hpp"
 #include "core/array_ptr.hpp"
-#include "graphics/vulkan/instance.hpp"
+#include "graphics/vulkan/graphics_api_impl.hpp"
 #include "graphics/vulkan/physical_device.hpp"
 #include "graphics/vulkan/logical_device.hpp"
 #include "graphics/vulkan/swapchain.hpp"
@@ -17,7 +17,7 @@ namespace Vk{
 
 class RendererAPI{
 public:
-    Vk::Instance m_Instance;
+    Vk::GraphicsAPIImpl m_Instance;
     Vk::PhysicalDevice m_PhysicalDevice;
     Vk::LogicalDevice m_Device;
     Vk::Surface m_Surface;

@@ -1,7 +1,7 @@
 #include <cstring>
 #include "platform/memory.hpp"
 #include "core/log.hpp"
-#include "graphics/vulkan/instance.hpp"
+#include "graphics/vulkan/graphics_api_impl.hpp"
 #include "graphics/vulkan/debug.hpp"
 
 namespace StraitX{
@@ -20,22 +20,22 @@ GPUType VkTypeToGPUType(u32 type){
     }
 }
 
-Result Instance::Initialize(){
+Result GraphicsAPIImpl::Initialize(){
     return Create(VulkanVersion, {RequiredPlatformExtensions, RequiredPlatformExtensionsCount}, {RequiredPlatformLayers, RequiredPlatformLayersCount});
 }
 
-Result Instance::Finalize(){
+Result GraphicsAPIImpl::Finalize(){
     Destroy();
     return Result::Success;
 }
 
-u32 Instance::GetPhysicalGPUCount(){
+u32 GraphicsAPIImpl::GetPhysicalGPUCount(){
     u32 count = 0;
     vkEnumeratePhysicalDevices(Handle, &count, nullptr);
     return count;
 }
 
-Result Instance::GetPhysicalGPUs(PhysicalGPU *array){
+Result GraphicsAPIImpl::GetPhysicalGPUs(PhysicalGPU *array){
     u32 count = GetPhysicalGPUCount();
     auto *devices = (VkPhysicalDevice*)alloca(count * sizeof(VkPhysicalDevice));
     
@@ -57,7 +57,7 @@ Result Instance::GetPhysicalGPUs(PhysicalGPU *array){
     return Result::Success;
 }
 
-sx_inline Result Instance::Create(const Version &version, const ArrayPtr<const char *> &extensions, const ArrayPtr<const char *> &layers){
+sx_inline Result GraphicsAPIImpl::Create(const Version &version, const ArrayPtr<const char *> &extensions, const ArrayPtr<const char *> &layers){
 
     if(!CheckExtensions(extensions))
         return Result::Unsupported;
@@ -97,12 +97,12 @@ sx_inline Result Instance::Create(const Version &version, const ArrayPtr<const c
     return ResultError(CreateDebugUtilsMessengerEXT(Handle, &debug_info, nullptr, &Messenger) != VK_SUCCESS);
 }
 
-sx_inline void Instance::Destroy(){
+sx_inline void GraphicsAPIImpl::Destroy(){
     DestroyDebugUtilsMessengerEXT(Handle, Messenger, nullptr);
     vkDestroyInstance(Handle, nullptr);
 }
 
-bool Instance::CheckLayers(const ArrayPtr<const char *> &layers){
+bool GraphicsAPIImpl::CheckLayers(const ArrayPtr<const char *> &layers){
     u32 count = 0;
     vkEnumerateInstanceLayerProperties(&count, nullptr);
     VkLayerProperties *props = (VkLayerProperties*)alloca(count * sizeof(VkLayerProperties));
@@ -123,7 +123,7 @@ bool Instance::CheckLayers(const ArrayPtr<const char *> &layers){
     return true;
 }
 
-bool Instance::CheckExtensions(const ArrayPtr<const char *> &extensions){
+bool GraphicsAPIImpl::CheckExtensions(const ArrayPtr<const char *> &extensions){
     u32 count = 0;
     vkEnumerateInstanceExtensionProperties(nullptr, &count, nullptr);
     VkExtensionProperties *props = (VkExtensionProperties *)alloca(count * sizeof(VkExtensionProperties));

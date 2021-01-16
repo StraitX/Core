@@ -10,7 +10,7 @@
 namespace StraitX{
 namespace Vk{
 
-struct Instance: GraphicsAPI{
+struct GraphicsAPIImpl: GraphicsAPI{
     VkInstance Handle = VK_NULL_HANDLE;
     VkDebugUtilsMessengerEXT Messenger = VK_NULL_HANDLE;
 
