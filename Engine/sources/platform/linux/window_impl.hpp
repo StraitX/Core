@@ -14,7 +14,7 @@ struct WindowImpl{
 
     WindowImpl() = default;
 
-    WindowImpl(const WindowImpl &other) = delete;
+    WindowImpl(const WindowImpl &other) = default;
 
     WindowImpl(WindowImpl &&other);
 
@@ -30,7 +30,7 @@ struct WindowImpl{
 
     bool PollEvent(Event &event);
 
-    static void *PickBestFBConfig(const ScreenImpl &screen);
+    static void *PickBestFBConfig(int screen_index);
 };
 
 } //namespace Linux::

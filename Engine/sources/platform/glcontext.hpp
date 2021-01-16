@@ -23,7 +23,11 @@ public:
 
     Result Create(Window &window, const Version &version);
 
-    void Destory();
+    Result CreateDummy(const Version &version);
+
+    void Destroy();
+
+    void DestroyDummy();
 
     Result MakeCurrent();
 
@@ -34,8 +38,16 @@ sx_inline Result GLContext::Create(Window &window, const Version &version){
     return m_Impl.Create(window.Impl(), version);
 }
 
-sx_inline void GLContext::Destory(){
-    m_Impl.Destory();
+sx_inline Result GLContext::CreateDummy(const Version &version){
+    return m_Impl.CreateDummy(version);
+}
+
+sx_inline void GLContext::DestroyDummy(){
+    m_Impl.DestroyDummy();
+}
+
+sx_inline void GLContext::Destroy(){
+    m_Impl.Destroy();
 }
 
 sx_inline Result GLContext::MakeCurrent(){

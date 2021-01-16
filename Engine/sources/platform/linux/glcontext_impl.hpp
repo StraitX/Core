@@ -12,13 +12,17 @@ namespace Linux{
 class GLContextImpl{
 private:
     __GLXcontextRec *m_Handle = nullptr;
-    WindowImpl *m_Window = nullptr;
+    unsigned long m_WindowHandle = 0;
 public:
     GLContextImpl() = default;
 
     Result Create(WindowImpl &window, const Version &version);
 
-    void Destory();
+    Result CreateDummy(const Version &version);
+
+    void Destroy();
+
+    void DestroyDummy();
 
     Result MakeCurrent();
 

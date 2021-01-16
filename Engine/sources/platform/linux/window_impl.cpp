@@ -32,7 +32,7 @@ WindowImpl::WindowImpl(WindowImpl &&other)
 
 Result WindowImpl::Open(const ScreenImpl &screen, int width, int height){
 
-    FBConfig = PickBestFBConfig(screen);
+    FBConfig = PickBestFBConfig(screen.m_Index);
     if(FBConfig == nullptr)
         return Result::Unsupported;
 
@@ -102,7 +102,7 @@ bool WindowImpl::PollEvent(Event &event){
 }
 
 
-void *WindowImpl::PickBestFBConfig(const ScreenImpl &screen){
+void *WindowImpl::PickBestFBConfig(int screen_index){
     void *result = nullptr;
 
     // if client system doesn't have such a FBConfig, we are going to drop it
@@ -116,7 +116,7 @@ void *WindowImpl::PickBestFBConfig(const ScreenImpl &screen){
     };
 
     int configsCount = 0;
-    GLXFBConfig *configs = glXChooseFBConfig(s_Display,screen.m_Index,glxAttributes,&configsCount);
+    GLXFBConfig *configs = glXChooseFBConfig(s_Display,screen_index,glxAttributes,&configsCount);
 
     // in case if we have not find any suitable FBConfig
     if(configsCount == 0)

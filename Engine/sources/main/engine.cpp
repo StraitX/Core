@@ -59,10 +59,10 @@ Result Engine::Initialize(){
     m_ErrorWindowSystem = WindowSystem::Initialize();
     InitAssert("WindowSystem::Initialize", m_ErrorWindowSystem);
 
-    SupportAssert(WindowSystem::CheckSupport(WindowSystem::Ext::DoubleBuffer), "Display::DoubleBuffer");
-    SupportAssert(WindowSystem::CheckSupport(WindowSystem::Ext::OpenGLCore), "Display::OpenGL Core");
+    SupportAssert(WindowSystem::CheckSupport(WindowSystem::Ext::DoubleBuffer), "WindowSystem::DoubleBuffer");
+    SupportAssert(WindowSystem::CheckSupport(WindowSystem::Ext::OpenGLCore), "WindowSystem::OpenGL Core");
 
-    auto res = GraphicsAPI::Create(GraphicsAPI::Vulkan);
+    auto res = GraphicsAPI::Create(GraphicsAPI::OpenGL);
     InitAssert("GraphicsAPI::Create",res);
 
     LogTrace("GraphicsAPI::Initialize: Begin");
