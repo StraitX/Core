@@ -62,7 +62,7 @@ Result Engine::Initialize(){
     SupportAssert(WindowSystem::CheckSupport(WindowSystem::Ext::DoubleBuffer), "WindowSystem::DoubleBuffer");
     SupportAssert(WindowSystem::CheckSupport(WindowSystem::Ext::OpenGLCore), "WindowSystem::OpenGL Core");
 
-    auto res = GraphicsAPI::Create(GraphicsAPI::OpenGL);
+    auto res = GraphicsAPI::Create(GraphicsAPI::Vulkan);
     InitAssert("GraphicsAPI::Create",res);
 
     LogTrace("GraphicsAPI::Initialize: Begin");

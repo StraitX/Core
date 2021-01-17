@@ -33,6 +33,11 @@ enum class GPUQueueType: u8{
     Graphics  = 0x04
 };
 
+enum class GPUMemoryType: u8{
+    VRAM,
+    DynamicVRAM
+};
+
 union GPUHandle{
     void *Pointer;
     u64   U64;

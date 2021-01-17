@@ -4,7 +4,7 @@
 namespace StraitX{
 namespace GL{
 
-Result GPUBufferImpl::Create(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUBuffer::AccessType access, GPUBuffer::UsageType usage){
+Result GPUBufferImpl::Create(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
     buffer.m_Owner = &owner;
     buffer.m_Size = size;
     buffer.m_BackingMemory.U64 = 0;
@@ -14,7 +14,7 @@ Result GPUBufferImpl::Create(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPU
     glGenBuffers(1, &buffer.m_Handle.U32);
     glBindBuffer(GL_COPY_WRITE_BUFFER, buffer.m_Handle.U32);
 
-    glBufferData(GL_COPY_WRITE_BUFFER, buffer.m_Size, nullptr, access == GPUBuffer::AccessType::Static ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+    glBufferData(GL_COPY_WRITE_BUFFER, buffer.m_Size, nullptr, mem_type == GPUMemoryType::VRAM ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
     return Result::Success;
 }
 

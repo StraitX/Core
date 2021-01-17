@@ -11,8 +11,9 @@ Result LogicalGPUImpl::Create(const PhysicalGPU &gpu){
     Vendor = gpu.Vendor;
     Type = gpu.Type;
 
-    QueryMemoryTypes();
     QueryQueues();
+
+    Allocator.Initialize(this);
 
     // for now lets keep it simple, we have just one graphics queues
     float prior = 1.0;
@@ -57,82 +58,9 @@ Result LogicalGPUImpl::Create(const PhysicalGPU &gpu){
 }
 
 void LogicalGPUImpl::Destroy(){
-    vkDestroyDevice(Handle,nullptr);
-}
-
-
-sx_inline bool IsRAM(VkMemoryType type){
-    return  (type.propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
-    &&      (type.propertyFlags & VK_MEMORY_PROPERTY_HOST_CACHED_BIT )
-    &&     !(type.propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-}
-sx_inline bool IsUncachedRAM(VkMemoryType type){
-    return  (type.propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
-    &&     !(type.propertyFlags & VK_MEMORY_PROPERTY_HOST_CACHED_BIT )
-    &&     !(type.propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-}
-
-sx_inline bool IsVRAM(VkMemoryType type){
-    return  (type.propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
-    &&     !(type.propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-}
-
-sx_inline bool IsDynamicVRAM(VkMemoryType type){
-    return  (type.propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
-    &&      (type.propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-}
-
-void LogicalGPUImpl::QueryMemoryTypes(){
-    VkPhysicalDeviceMemoryProperties mem_props;
-    vkGetPhysicalDeviceMemoryProperties(PhysicalHandle, &mem_props);
-
-    if(mem_props.memoryTypeCount == 1){
-        DLogInfo("Vulkan: Exceptional Device: Fallback to one memory type");
-        auto &flags = mem_props.memoryTypes[0].propertyFlags;
-        if(flags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT &&
-           flags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
-        {
-            RAM = UncachedRAM = VRAM = DynamicVRAM = 0;
-            RAMSize = UncachedRAMSize = VRAMSize = DynamicVRAMSize = mem_props.memoryHeaps[mem_props.memoryTypes[0].heapIndex].size;
-            return;
-        }
-        DLogWarn("Vulkan: Exceptional Device: Unsupported Memory");
-        return;
-    }
+    Allocator.Finalize();
     
-    int i = 0; 
-    for(i = 0; i < mem_props.memoryTypeCount; i++){
-        if(IsRAM(mem_props.memoryTypes[i])){
-            RAMSize = mem_props.memoryHeaps[mem_props.memoryTypes[i].heapIndex].size;
-            RAM = i++;
-            DLogInfo("Vulkan: RAM memory type was found:            Size: % MB",RAMSize/float(1024*1024));
-            break;
-        }
-    }
-    for(i = 0; i < mem_props.memoryTypeCount; i++){
-        if(IsUncachedRAM(mem_props.memoryTypes[i])){
-            UncachedRAMSize = mem_props.memoryHeaps[mem_props.memoryTypes[i].heapIndex].size;
-            UncachedRAM = i++;
-            DLogInfo("Vulkan: UncachedRAM memory type was found:    Size: % MB",UncachedRAMSize/float(1024*1024));
-            break;
-        }
-    }
-    for(i = 0; i < mem_props.memoryTypeCount; i++){
-        if(IsVRAM(mem_props.memoryTypes[i])){
-            VRAMSize = mem_props.memoryHeaps[mem_props.memoryTypes[i].heapIndex].size;
-            VRAM = i++;
-            DLogInfo("Vulkan: VRAM memory type was found:           Size: % MB",VRAMSize/float(1024*1024)); 
-            break;
-        }
-    }
-    for(i = 0; i < mem_props.memoryTypeCount; i++){
-        if(IsDynamicVRAM(mem_props.memoryTypes[i])){
-            DynamicVRAMSize = mem_props.memoryHeaps[mem_props.memoryTypes[i].heapIndex].size;
-            DynamicVRAM = i++;
-            DLogInfo("Vulkan: DynamicVRAM memory type was found:    Size: % MB",DynamicVRAMSize/float(1024*1024));
-            break;
-        }
-    }   
+    vkDestroyDevice(Handle,nullptr);
 }
 
 sx_inline bool IsGraphics(VkQueueFlags flags){

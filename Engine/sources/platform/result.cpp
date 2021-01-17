@@ -18,7 +18,8 @@ const char *ResultNames[(int)Result::ResultCodesCount] = {
     S(PermissionDenied),
     S(AlreadyExist),
     S(IsDirectory),
-    S(None)
+    S(None),
+    S(MemoryFailure)
 };
 
 }; // namespace StraitX::

@@ -19,6 +19,7 @@ enum class Result{
     AlreadyExist,
     IsDirectory,
     None,
+    MemoryFailure,
 
     ResultCodesCount
 };
