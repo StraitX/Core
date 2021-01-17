@@ -18,7 +18,7 @@ void Memory::Set(void *memory, char byte, size_t size){
     memset(memory,byte,size);
 }
 
-void Memory::Copy(void *source, void *destination, size_t size){
+void Memory::Copy(const void *source, void *destination, size_t size){
     memcpy(destination,source,size);
 }
 
