@@ -38,6 +38,12 @@ union GPUHandle{
     u64   U64;
 };
 
+union GPUResourceHandle{
+    void *Pointer;
+    u64 U64;
+    u32 U32;
+};
+
 GPUVendor VendorIDToVendor(u32 vendor_id);
 
 const char *GetName(GPUVendor vendor);
