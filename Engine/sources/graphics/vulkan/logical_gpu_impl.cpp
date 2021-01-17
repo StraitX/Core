@@ -6,7 +6,7 @@
 namespace StraitX{
 namespace Vk{
 
-Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
+Result LogicalGPUImpl::Create(const PhysicalGPU &gpu){
     PhysicalHandle = reinterpret_cast<VkPhysicalDevice>(gpu.Handle.U64);
     Vendor = gpu.Vendor;
     Type = gpu.Type;
@@ -56,7 +56,7 @@ Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
     return Result::Success;
 }
 
-void LogicalGPUImpl::Finalize(){
+void LogicalGPUImpl::Destroy(){
     vkDestroyDevice(Handle,nullptr);
 }
 

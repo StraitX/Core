@@ -34,9 +34,9 @@ struct LogicalGPUImpl: public LogicalGPU{
 
     Vk::Queue GraphicsQueue;
 
-    virtual Result Initialize(const PhysicalGPU &gpu)override;
+    virtual Result Create(const PhysicalGPU &gpu)override;
 
-    virtual void Finalize()override;
+    virtual void Destroy()override;
 
     void QueryMemoryTypes();
 

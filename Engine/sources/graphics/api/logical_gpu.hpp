@@ -10,9 +10,9 @@ namespace StraitX{
 class LogicalGPU: public NonCopyable{
 public:
 
-    virtual Result Initialize(const PhysicalGPU &gpu) = 0;
+    virtual Result Create(const PhysicalGPU &gpu) = 0;
 
-    virtual void Finalize() = 0;
+    virtual void Destroy() = 0;
 
     static LogicalGPU *New();
 
