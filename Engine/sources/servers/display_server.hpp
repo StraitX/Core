@@ -27,6 +27,10 @@ public:
 
     static DisplayServer &Instance();
 
+    sx_inline Window &GetWindow(){
+        return m_Window;
+    }
+
 };
 
 }; // namespace StraitX::

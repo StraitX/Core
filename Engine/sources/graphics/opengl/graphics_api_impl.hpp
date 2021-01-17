@@ -10,6 +10,7 @@ namespace GL{
 
 struct GraphicsAPIImpl: public GraphicsAPI{
     GLContext Context;
+    Version LoadedOpenGLVersion = {};
 
     virtual Result Initialize()override;
 

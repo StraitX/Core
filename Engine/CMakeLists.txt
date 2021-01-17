@@ -54,6 +54,7 @@ set(SOURCES_GRAPHICS_VULKAN
 
 set(SOURCES_GRAPHICS_OPENGL
     ${SOURCES_DIR}/graphics/opengl/graphics_api_impl.cpp
+    ${SOURCES_DIR}/graphics/opengl/logical_gpu_impl.cpp
 )
 
 set(SOURCES_GRAPHICS_API

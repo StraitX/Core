@@ -22,8 +22,8 @@ Result GraphicsAPIImpl::Initialize(){
         LogError("OpenGLLoader: Can't load OpenGL Procedures");
         return Result::Unsupported;
     }
-    auto ver = OpenGLLoader::OpenGLVersion();
-    LogInfo("OpenGL: Loaded Version %",ver);
+    LoadedOpenGLVersion = OpenGLLoader::OpenGLVersion();
+    LogInfo("OpenGL: Loaded Version %",LoadedOpenGLVersion);
     LogInfo("OpenGL: Renderer: %", (const char*)glGetString(GL_RENDERER));
     LogInfo("OpenGL: Vendor: %", (const char*)glGetString(GL_VENDOR));
     LogInfo("OpenGL: Version: %", (const char*)glGetString(GL_VERSION));
@@ -63,8 +63,11 @@ GPUVendor ExtractGPUVendor(const char *string){
     return GPUVendor::Unknown;
 }
 
+static_assert(sizeof(Version) == sizeof(u64), "sizeof(Version) should match sizeof(u64) to be inserted as Handle to OpenGL Physical GPU");
+
 Result GraphicsAPIImpl::GetPhysicalGPUs(PhysicalGPU *array){
-    const_cast<u64&>(array->Handle.U64) = 0;
+
+    const_cast<u64&>(array->Handle.U64) = *(u64*)&LoadedOpenGLVersion;
     const_cast<GPUType&>(array->Type) = GPUType::Unknown;
     const_cast<GPUVendor&>(array->Vendor) = ExtractGPUVendor((const char *)glGetString(GL_VENDOR));
     const_cast<u32&>(array->QueueFamiliesCount) = 1;
