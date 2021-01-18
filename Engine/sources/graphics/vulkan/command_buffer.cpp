@@ -54,7 +54,7 @@ void CommandBuffer::Reset(){
     vkResetCommandBuffer(Handle,0);
 }
 
-void CommandBuffer::Submit(const ArrayPtr<VkSemaphore> &wait_semaphores, const ArrayPtr<VkSemaphore> &signal_semaphores){
+void CommandBuffer::Submit(const ArrayPtr<VkSemaphore> &wait_semaphores, const ArrayPtr<VkSemaphore> &signal_semaphores, const Fence &fence){
     VkSubmitInfo info;
     info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     info.pNext = nullptr;
@@ -66,7 +66,7 @@ void CommandBuffer::Submit(const ArrayPtr<VkSemaphore> &wait_semaphores, const A
     info.pSignalSemaphores = signal_semaphores.Pointer;
     info.pWaitDstStageMask = nullptr;
 
-    vkQueueSubmit(Pool->Queue.Handle, 1, &info, VK_NULL_HANDLE);
+    vkQueueSubmit(Pool->Queue.Handle, 1, &info, fence.Handle);
 }
 
 void CommandBuffer::Destroy(){

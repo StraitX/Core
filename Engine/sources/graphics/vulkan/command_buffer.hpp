@@ -5,6 +5,7 @@
 #include "platform/result.hpp"
 #include "core/array_ptr.hpp"
 #include "graphics/vulkan/command_pool.hpp"
+#include "graphics/vulkan/fence.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -29,7 +30,7 @@ struct CommandBuffer{
 
     void Reset();
 
-    void Submit(const ArrayPtr<VkSemaphore> &wait_semaphores, const ArrayPtr<VkSemaphore> &signal_semaphores);
+    void Submit(const ArrayPtr<VkSemaphore> &wait_semaphores, const ArrayPtr<VkSemaphore> &signal_semaphores, const Fence &fence);
 
     void Destroy();
 
