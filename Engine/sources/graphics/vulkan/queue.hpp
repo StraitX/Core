@@ -18,6 +18,15 @@ struct Queue{
         Handle(queue),
         FamilyIndex(family_index)
     {}
+
+    sx_inline void Obtain(VkDevice owner, u32 family_index, u32 index){
+        FamilyIndex = family_index;
+        vkGetDeviceQueue(owner, FamilyIndex, index, &Handle);
+    }
+
+    sx_inline bool IsInitialized(){
+        return Handle != VK_NULL_HANDLE;
+    }
 };
 
 

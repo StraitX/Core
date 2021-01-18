@@ -8,14 +8,14 @@
 namespace StraitX{
 namespace Vk{
 
-struct LogicalDevice;
+struct LogicalGPUImpl;
 
 struct CommandPool{
     VkCommandPool Handle = VK_NULL_HANDLE;
-    Vk::LogicalDevice *Owner = nullptr;
+    Vk::LogicalGPUImpl *Owner = nullptr;
     Vk::Queue Queue;
 
-    Result Create(Vk::LogicalDevice *owner, Vk::Queue queue);
+    Result Create(Vk::LogicalGPUImpl *owner, Vk::Queue queue);
 
     void Destroy();
 

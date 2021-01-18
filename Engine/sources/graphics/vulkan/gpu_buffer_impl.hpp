@@ -8,15 +8,15 @@ namespace StraitX{
 namespace Vk{
 
 struct GPUBufferImpl{
-    static Result Create(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
-
-    static void Destroy(GPUBuffer &buffer);
-
     sx_inline static u32 GetBufferMemoryRequirements(const GPUBuffer &buffer);
 
     sx_inline static Result AcquireMemory(GPUBuffer &buffer, GPUMemoryType type);
 
     sx_inline static void ReleaseMemory(GPUBuffer &buffer);
+
+    static Result Create(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
+
+    static void Destroy(GPUBuffer &buffer);
 };
 
 }//namespace Vk::

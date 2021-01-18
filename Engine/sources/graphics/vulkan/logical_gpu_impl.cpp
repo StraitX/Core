@@ -7,57 +7,80 @@ namespace StraitX{
 namespace Vk{
 
 Result LogicalGPUImpl::Create(const PhysicalGPU &gpu){
-    PhysicalHandle = reinterpret_cast<VkPhysicalDevice>(gpu.Handle.U64);
-    Vendor = gpu.Vendor;
-    Type = gpu.Type;
+    { //First Stage Init
+        PhysicalHandle = reinterpret_cast<VkPhysicalDevice>(gpu.Handle.U64);
+        Vendor         = gpu.Vendor;
+        Type           = gpu.Type;
 
-    QueryQueues();
+        QueryQueues();
+        Allocator.Initialize(this);
 
-    Allocator.Initialize(this);
-
-    // for now lets keep it simple, we have just one graphics queues
-    float prior = 1.0;
-    VkDeviceQueueCreateInfo qinfo;
-    qinfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-    qinfo.pNext = nullptr;
-    qinfo.flags = 0;
-    qinfo.queueFamilyIndex = GraphicsQueueFamily;
-    qinfo.queueCount = 1;
-    qinfo.pQueuePriorities = &prior;
-
-    VkPhysicalDeviceFeatures features;
-    vkGetPhysicalDeviceFeatures(PhysicalHandle, &features);
-
-
-
-    VkDeviceCreateInfo info;
-    info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    info.pNext = nullptr;
-    info.flags = 0;
-    info.enabledExtensionCount = 0;
-    info.ppEnabledExtensionNames = nullptr;
-    info.enabledLayerCount = 0;
-    info.ppEnabledLayerNames = nullptr;
-    info.pEnabledFeatures = &features;
-    info.queueCreateInfoCount = 1;
-    info.pQueueCreateInfos = &qinfo;
-
-    if(vkCreateDevice(PhysicalHandle,&info,nullptr,&Handle) != VK_SUCCESS)
-        return Result::Failure;
+    }
     
+    { // Device creation
+        VkDeviceQueueCreateInfo qinfo[2];
+        //GraphicsQueue
+        float gprior = 1.0;
+        qinfo[0].sType              = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        qinfo[0].pNext              = nullptr;
+        qinfo[0].flags              = 0;
+        qinfo[0].queueFamilyIndex   = GraphicsQueueFamily;
+        qinfo[0].queueCount         = 1;
+        qinfo[0].pQueuePriorities   = &gprior;
 
-    
-    //                                   we support only one queue of each type
-    vkGetDeviceQueue(Handle, GraphicsQueueFamily, 0, &GraphicsQueue.Handle);
-    GraphicsQueue.FamilyIndex = GraphicsQueueFamily;
-    // here should be a ComputeQueue but it is unused for now
+        //Optional Transfer Queue
+        float tprior = 0.8;
+        qinfo[1].sType              = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        qinfo[1].pNext              = nullptr;
+        qinfo[1].flags              = 0;
+        qinfo[1].queueFamilyIndex   = TransferQueueFamily;
+        qinfo[1].queueCount         = 1;
+        qinfo[1].pQueuePriorities   = &tprior;
 
-    CoreAssert(GraphicsQueue.Handle != VK_NULL_HANDLE, "LogicalDevice: can't retrieve GraphicsQueue handle");
 
+        VkPhysicalDeviceFeatures features;
+        vkGetPhysicalDeviceFeatures(PhysicalHandle, &features);
+
+        VkDeviceCreateInfo info;
+        info.sType                  = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+        info.pNext                  = nullptr;
+        info.flags                  = 0;
+        info.enabledExtensionCount  = 0;
+        info.ppEnabledExtensionNames= nullptr;
+        info.enabledLayerCount      = 0;
+        info.ppEnabledLayerNames    = nullptr;
+        info.pEnabledFeatures       = &features;
+        info.queueCreateInfoCount   = TransferQueueFamily != InvalidIndex ? 2 : 1;
+        info.pQueueCreateInfos      = qinfo;
+
+        LogInfo("Vulkan: Creating device with % queues", info.queueCreateInfoCount);
+
+        if(vkCreateDevice(PhysicalHandle,&info,nullptr,&Handle) != VK_SUCCESS)
+            return Result::Failure;
+    }
+
+    {//Obtain Queues
+        GraphicsQueue.Obtain(Handle, GraphicsQueueFamily, 0);
+        CoreAssert(GraphicsQueue.IsInitialized(), "LogicalDevice: can't retrieve GraphicsQueue handle");
+        
+        if(TransferQueueFamily != InvalidIndex){
+            TransferQueue.Obtain(Handle, TransferQueueFamily, 0);
+            CoreAssert(TransferQueue.IsInitialized(), "LogicalDevice: can't retrieve TransferQueue handle");       
+        }
+
+        // we need a separate CmdBuffer for transfer operations
+        CmdPool.Create(this, TransferQueue.IsInitialized() ? TransferQueue : GraphicsQueue);
+
+        CmdBuffer.Create(&CmdPool);
+    }
     return Result::Success;
 }
 
 void LogicalGPUImpl::Destroy(){
+
+    CmdBuffer.Destroy();
+    CmdPool.Destroy();
+
     Allocator.Finalize();
     
     vkDestroyDevice(Handle,nullptr);

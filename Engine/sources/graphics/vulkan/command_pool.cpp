@@ -1,11 +1,11 @@
 #include "graphics/vulkan/command_pool.hpp"
-#include "graphics/vulkan/logical_device.hpp"
+#include "graphics/vulkan/logical_gpu_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
 
 
-Result CommandPool::Create(Vk::LogicalDevice *owner, Vk::Queue queue){
+Result CommandPool::Create(Vk::LogicalGPUImpl *owner, Vk::Queue queue){
     Owner = owner;
     Queue = queue;
     VkCommandPoolCreateInfo info;

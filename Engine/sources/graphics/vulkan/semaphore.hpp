@@ -3,31 +3,33 @@
 
 #include "platform/vulkan.hpp"
 #include "platform/result.hpp"
-#include "graphics/vulkan/logical_device.hpp"
+#include "core/assert.hpp"
+#include "core/pair.hpp"
 
 namespace StraitX{
 namespace Vk{
 
 struct Semaphore{
     VkSemaphore Handle = VK_NULL_HANDLE;
-    Vk::LogicalDevice *Owner = nullptr;
+    VkDevice    Owner  = VK_NULL_HANDLE;
 
-    void Create(Vk::LogicalDevice *owner);
+    void Create(VkDevice owner);
 
     void Destroy();
 };
 
-sx_inline void Semaphore::Create(Vk::LogicalDevice *owner){
+
+sx_inline void Semaphore::Create(VkDevice owner){
     Owner = owner;
     VkSemaphoreCreateInfo info;
     info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
     info.pNext = nullptr;
     info.flags = 0;
-    CoreAssert(vkCreateSemaphore(Owner->Handle, &info, nullptr, &Handle) == VK_SUCCESS, "Vulkan: Can't create semaphore");
+    CoreAssert(vkCreateSemaphore(Owner, &info, nullptr, &Handle) == VK_SUCCESS, "Vulkan: Can't create semaphore");
 }
 
 sx_inline void Semaphore::Destroy(){
-    vkDestroySemaphore(Owner->Handle, Handle, nullptr);
+    vkDestroySemaphore(Owner, Handle, nullptr);
 }
 
 
