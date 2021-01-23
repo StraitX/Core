@@ -45,9 +45,9 @@ u32 GraphicsAPIImpl::GetPhysicalGPUCount(){
 
 
 GPUVendor ExtractGPUVendor(const char *string){
-    auto lenght = String::Lenght(string);
-    char *str = (char*)alloca(sizeof(char)*lenght);
-    Memory::Copy(string, str, lenght);
+    auto length = String::Length(string);
+    char *str = (char*)alloca(sizeof(char)*length);
+    Memory::Copy(string, str, length);
 
     String::ToLowerCase(str);
 
