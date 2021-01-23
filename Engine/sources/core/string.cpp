@@ -30,12 +30,12 @@ void String::ToLowerCase(char *string){
     }
 }
 
-size_t String::Lenght(const char *string){
-    size_t lenght = 1;
+size_t String::Length(const char *string){
+    size_t length = 1;
     while(*string++){
-        ++lenght;
+        ++length;
     }
-    return lenght;
+    return length;
 }
 
 }//namespace StraitX::

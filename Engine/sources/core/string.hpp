@@ -13,7 +13,7 @@ public:
 
     static void ToLowerCase(char *string);
     // nul character is also a character
-    static size_t Lenght(const char *string);
+    static size_t Length(const char *string);
 };
 
 }//namespace StraitX
