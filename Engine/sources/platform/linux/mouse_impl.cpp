@@ -51,4 +51,32 @@ void Mouse::SetGlobalPosition(const Point &position){
     XWarpPointer(Linux::s_Display, 0, RootWindow(Linux::s_Display, DefaultScreen(Linux::s_Display)),0,0,0,0,position.x, position.y);
 }
 
+static Cursor BlankCursor(){
+    static bool is_created;
+    static Cursor cursor;
+
+    if(!is_created){
+        is_created = true;
+
+        char data[1] = {0};
+        Pixmap blank;
+        XColor dummy;
+
+        blank = XCreateBitmapFromData(Linux::s_Display, RootWindow(Linux::s_Display, DefaultScreen(Linux::s_Display)), data, 1, 1);
+        if(blank == 0)
+            is_created = false;
+        cursor = XCreatePixmapCursor(Linux::s_Display, blank, blank, &dummy, &dummy, 0, 0);
+        XFreePixmap(Linux::s_Display, blank);
+    }
+    return cursor;
+}
+
+void Mouse::SetVisible(bool is_visible, const Window &window){
+    if(is_visible){
+        XUndefineCursor(Linux::s_Display, window.Impl().Handle);
+    }else{
+        XDefineCursor(Linux::s_Display, window.Impl().Handle, BlankCursor());
+    }
+}
+
 }//namespace StraitX::
