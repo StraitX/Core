@@ -47,4 +47,8 @@ Point Mouse::RelativePosition(const Window &window){
     return choosen;
 }
 
+void Mouse::SetGlobalPosition(const Point &position){
+    XWarpPointer(Linux::s_Display, 0, RootWindow(Linux::s_Display, DefaultScreen(Linux::s_Display)),0,0,0,0,position.x, position.y);
+}
+
 }//namespace StraitX::

@@ -27,6 +27,8 @@ namespace Mouse{
 
     Point RelativePosition(const Window &window);
 
+    void SetGlobalPosition(const Point &position);
+
 }; // namespace Mouse::
 
 
