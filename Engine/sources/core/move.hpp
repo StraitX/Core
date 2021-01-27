@@ -19,7 +19,7 @@ struct RemoveReference<T&&>{
 };
 
 template <typename T>
-constexpr typename RemoveReference<T>::Type&& Move(const T& t){
+constexpr typename RemoveReference<T>::Type&& Move(T&& t){
     return static_cast<typename RemoveReference<T>::Type&&>(t);
 }
 
