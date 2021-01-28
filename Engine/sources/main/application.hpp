@@ -1,21 +1,29 @@
 #ifndef STRAITX_APPLICATION_HPP
 #define STRAITX_APPLICATION_HPP
 
-#include "main/engine.hpp"
+#include "platform/events.hpp"
+#include "core/math/vector2.hpp"
+#include "graphics/api/graphics_api.hpp"
 
 namespace StraitX{
+
+class Engine;
+
+struct ApplicationConfig{
+    const char *ApplicationName = "StraitX Game";
+    GraphicsAPI::API DesiredAPI = GraphicsAPI::API::OpenGL;
+};
 
 class Application{
 private:
     Engine *m_Engine;
-    const char *m_Name;
     friend class Engine;
 public:
-    Application(const char *name);
+    Application() = default;
+
     virtual ~Application() = default;
 
     virtual Result OnInitialize(){return Result::Success;};
-
     // return true if event was handled
     virtual bool OnEvent(const Event &event){return false;};
 
@@ -25,8 +33,6 @@ public:
 
     void Stop();
 
-    const char *Name();
-
 private:
     void SetEngine(Engine *engine);
 
@@ -34,5 +40,6 @@ private:
 
 }; // namespace StraitX::
 
+extern StraitX::ApplicationConfig GetApplicationConfig();
 
 #endif // STRAITX_APPLICATION_HPP

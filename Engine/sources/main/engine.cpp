@@ -53,6 +53,9 @@ void Engine::Stop(){
 }
 
 Result Engine::Initialize(){
+    m_ApplicationConfig = GetApplicationConfig();
+    CoreAssert(m_ApplicationConfig.ApplicationName, "ApplicationConfig::ApplicationName should be valid string pointer");
+
     LogTrace("========= First stage init =========");
 
     LogInfo("WindowSystem::Initialize: Begin");
@@ -62,7 +65,7 @@ Result Engine::Initialize(){
     SupportAssert(WindowSystem::CheckSupport(WindowSystem::Ext::DoubleBuffer), "WindowSystem::DoubleBuffer");
     SupportAssert(WindowSystem::CheckSupport(WindowSystem::Ext::OpenGLCore), "WindowSystem::OpenGL Core");
 
-    auto res = GraphicsAPI::Create(GraphicsAPI::Vulkan);
+    auto res = GraphicsAPI::Create(m_ApplicationConfig.DesiredAPI);
     InitAssert("GraphicsAPI::Create",res);
 
     LogTrace("GraphicsAPI::Initialize: Begin");
@@ -73,6 +76,7 @@ Result Engine::Initialize(){
 
     LogTrace("DisplayServer::Initialize: Begin");
     m_ErrorDisplayServer = m_DisplayServer.Initialize();
+    m_DisplayServer.m_Window.SetTitle(m_ApplicationConfig.ApplicationName);
     InitAssert("DisplayServer::Initialize", m_ErrorDisplayServer);
 
     LogTrace("========= Third stage init =========");
@@ -82,8 +86,6 @@ Result Engine::Initialize(){
     m_Application = StraitXMain();
     m_ErrorMX = (m_Application == nullptr ? Result::NullObject : Result::Success);
     InitAssert("StraitXMain",m_ErrorMX);
-
-    m_DisplayServer.m_Window.SetTitle(m_Application->Name());
     
     m_Application->SetEngine(this);
 

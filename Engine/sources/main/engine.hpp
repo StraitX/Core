@@ -3,6 +3,7 @@
 
 #include "platform/result.hpp"
 #include "servers/display_server.hpp"
+#include "main/application.hpp"
 
 namespace StraitX{
 
@@ -11,6 +12,7 @@ class Application;
 class Engine{
 private:
     Application *m_Application = nullptr;
+    ApplicationConfig m_ApplicationConfig = {};
     bool m_Running = true;
     DisplayServer m_DisplayServer;
     Result m_ErrorGraphicsAPI = Result::None;
