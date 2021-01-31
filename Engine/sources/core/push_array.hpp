@@ -92,7 +92,7 @@ constexpr void PushArray<T_Type, T_Capacity>::Emplace(T_Args&&...args){
 
 template<typename T_Type, size_t T_Capacity>
 constexpr T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index){
-    CoreAssert(index < m_Size, "PushArray: Array size is exceeded");
+    CoreAssert(index < m_Size, "PushArray: Can't index more than PushArray::Size() elements");
     return m_Array[index];
 }
 
