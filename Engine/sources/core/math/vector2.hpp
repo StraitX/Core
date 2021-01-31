@@ -9,8 +9,13 @@ namespace StraitX{
 
 template<typename T>
 struct Vector2{
-    T x;
-    T y;
+    union{
+        struct{
+            T x;
+            T y;
+        };
+        T Data[2];
+    };
 
     // Creates a Vector2(0, 0).
     constexpr Vector2();
@@ -71,7 +76,7 @@ constexpr Vector2<T> &Vector2<T>::operator=(Vector2<T> &&other){
 template <typename T>
 constexpr T &Vector2<T>::operator[](size_t index){
     CoreAssert(index < 2,"Vector2 can not index more than 2 elements");
-    return *(&x+index);
+    return Data[index];
 }
 
 template <typename T>

@@ -8,10 +8,15 @@ namespace StraitX{
 
 template<typename T>
 struct Vector4{
-    T x;
-    T y;
-    T z;
-    T w;
+    union{
+        struct{
+            T x;
+            T y;
+            T z;
+            T w;
+        };
+        T Data[4];
+    };
 
     // Creates a Vector4(0, 0, 0, 0).
     constexpr Vector4();
@@ -82,7 +87,7 @@ constexpr Vector4<T> &Vector4<T>::operator=(Vector4<T> &&other){
 template <typename T>
 constexpr T &Vector4<T>::operator[](size_t index){
     CoreAssert(index < 4,"Vector4 can not index more than 4 elements");
-    return *(&x+index);
+    return Data[index];
 }
 
 template <typename T>
