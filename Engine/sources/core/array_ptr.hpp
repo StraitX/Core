@@ -1,6 +1,7 @@
 #ifndef STRAITX_ARRAY_PTR_HPP
 #define STRAITX_ARRAY_PTR_HPP 
 
+#include <initializer_list>
 #include "platform/types.hpp"
 #include "core/assert.hpp"
 #include "core/push_array.hpp"
@@ -21,6 +22,8 @@ struct ArrayPtr{
     constexpr ArrayPtr(T_Type *pointer, T_Size size);
 
     constexpr ArrayPtr(const ArrayPtr &other);
+
+    constexpr ArrayPtr(std::initializer_list<T_Type> initializer_list);
 
     template <size_t T_Capacity>
     constexpr ArrayPtr(PushArray<T_Type,T_Capacity> &push_array);
@@ -57,6 +60,12 @@ template <typename T_Type, typename T_Size>
 constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(const ArrayPtr &other):
     Pointer(other.Pointer),
     Size(other.Size)
+{}
+
+template <typename T_Type, typename T_Size>
+constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(std::initializer_list<T_Type> initializer_list):
+    Pointer(initializer_list.begin()),
+    Size(initializer_list.size())
 {}
 
 template <typename T_Type, typename T_Size>
