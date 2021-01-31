@@ -8,82 +8,100 @@
 namespace StraitX{
 
 // it has no idea about allocations
-template <typename T, typename SizeT = size_t>
+template <typename T_Type, typename T_Size = size_t>
 struct ArrayPtr{
-    T *Pointer;
-    SizeT Size;
+    T_Type *const Pointer;
+    const T_Size Size;
 
-    constexpr ArrayPtr():
-        Pointer(nullptr),
-        Size(0)
-    {}
+    typedef T_Type * iterator;
+    typedef const T_Type * const_iterator;
 
-    constexpr ArrayPtr(T *pointer, SizeT size):
-        Pointer(pointer),
-        Size(size)
-    {}
+    constexpr ArrayPtr();
 
-    constexpr ArrayPtr(const ArrayPtr &other):
-        Pointer(other.Pointer),
-        Size(other.Size)
-    {}
+    constexpr ArrayPtr(T_Type *pointer, T_Size size);
 
-    constexpr ArrayPtr(ArrayPtr &&other):
-        Pointer(other.Pointer),
-        Size(other.Size)
-    {
-        other.Pointer = nullptr;
-        other.Size = 0;
-    }
+    constexpr ArrayPtr(const ArrayPtr &other);
 
     template <size_t T_Capacity>
-    constexpr ArrayPtr(PushArray<T,T_Capacity> &push_array):
-        Pointer(push_array.begin()),
-        Size(push_array.Size())
-    {}
+    constexpr ArrayPtr(PushArray<T_Type,T_Capacity> &push_array);
 
-    sx_inline T &operator[](SizeT index){
-        CoreAssert(index < Size && index >= 0, "ArrayPtr: can't index more that ArrayPtr::Size elements");
-        return Pointer[index]; 
-    }
+    constexpr T_Type &operator[](T_Size index);
 
-    sx_inline const T &operator[](SizeT index)const{
-        CoreAssert(index < Size && index >= 0, "ArrayPtr: can't index more that ArrayPtr::Size elements");
-        return Pointer[index]; 
-    }
+    constexpr const T_Type &operator[](T_Size index)const;
 
-    sx_inline ArrayPtr &operator=(const ArrayPtr &other){
-        Pointer = other.Pointer;
-        Size = other.Size;
-    }
-
-    sx_inline ArrayPtr &operator=(ArrayPtr &&other){
-        Pointer = other.Pointer;
-        Size = other.Size;
-        other.Pointer = nullptr;
-        other.Size = 0;
-    }
+    constexpr ArrayPtr &operator=(const ArrayPtr &other);
     
-    using iterator = T *;
-    using const_iterator = const T *;
+    constexpr iterator begin();
 
-    constexpr iterator begin(){
-        return Pointer;
-    }
+    constexpr iterator end();
 
-    constexpr iterator end(){
-        return Pointer+Size;
-    }
+    constexpr const_iterator begin()const;
 
-    constexpr const_iterator begin()const{
-        return Pointer;
-    }
-
-    constexpr const_iterator end()const{
-        return Pointer+Size;
-    }
+    constexpr const_iterator end()const;
 
 };
+
+template <typename T_Type, typename T_Size>
+constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr():
+    Pointer(nullptr),
+    Size(0)
+{}
+
+template <typename T_Type, typename T_Size>
+constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(T_Type *pointer, T_Size size):
+    Pointer(pointer),
+    Size(size)
+{}
+
+template <typename T_Type, typename T_Size>
+constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(const ArrayPtr &other):
+    Pointer(other.Pointer),
+    Size(other.Size)
+{}
+
+template <typename T_Type, typename T_Size>
+template <size_t T_Capacity>
+constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(PushArray<T_Type,T_Capacity> &push_array):
+    Pointer(push_array.begin()),
+    Size(push_array.Size())
+{}
+
+template <typename T_Type, typename T_Size>
+constexpr T_Type &ArrayPtr<T_Type, T_Size>::operator[](T_Size index){
+    CoreAssert(index < Size, "ArrayPtr: can't index more that ArrayPtr::Size elements");
+    return Pointer[index]; 
+}
+
+template <typename T_Type, typename T_Size>
+constexpr const T_Type &ArrayPtr<T_Type, T_Size>::operator[](T_Size index)const{
+    return operator[](index);
+}
+
+template <typename T_Type, typename T_Size>
+constexpr ArrayPtr<T_Type,T_Size> &ArrayPtr<T_Type, T_Size>::operator=(const ArrayPtr &other){
+    Pointer = other.Pointer;
+    Size = other.Size;
+}
+
+template <typename T_Type, typename T_Size>
+constexpr typename ArrayPtr<T_Type, T_Size>::iterator ArrayPtr<T_Type, T_Size>::begin(){
+    return Pointer;
+}
+
+template <typename T_Type, typename T_Size>
+constexpr typename ArrayPtr<T_Type, T_Size>::iterator ArrayPtr<T_Type, T_Size>::end(){
+    return Pointer+Size;
+}
+
+template <typename T_Type, typename T_Size>
+constexpr typename ArrayPtr<T_Type, T_Size>::const_iterator ArrayPtr<T_Type, T_Size>::begin()const{
+    return begin();
+}
+
+template <typename T_Type, typename T_Size>
+constexpr typename ArrayPtr<T_Type, T_Size>::const_iterator ArrayPtr<T_Type, T_Size>::end()const{
+    return end();
+}
 
 }; // namespace StraitX::
 
