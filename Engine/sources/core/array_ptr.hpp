@@ -3,6 +3,7 @@
 
 #include "platform/types.hpp"
 #include "core/assert.hpp"
+#include "core/push_array.hpp"
 
 namespace StraitX{
 
@@ -29,11 +30,17 @@ struct ArrayPtr{
 
     constexpr ArrayPtr(ArrayPtr &&other):
         Pointer(other.Pointer),
-        Size(other.size)
+        Size(other.Size)
     {
         other.Pointer = nullptr;
         other.Size = 0;
     }
+
+    template <size_t T_Capacity>
+    constexpr ArrayPtr(PushArray<T,T_Capacity> &push_array):
+        Pointer(push_array.begin()),
+        Size(push_array.Size())
+    {}
 
     sx_inline T &operator[](SizeT index){
         CoreAssert(index < Size && index >= 0, "ArrayPtr: can't index more that ArrayPtr::Size elements");

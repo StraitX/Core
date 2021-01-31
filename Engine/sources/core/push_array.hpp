@@ -35,9 +35,9 @@ public:
     template<typename ...T_Args>
     constexpr void Emplace(T_Args&&...args);
 
-    constexpr size_t Size();
+    constexpr size_t Size()const;
 
-    constexpr size_t Capacity();
+    constexpr size_t Capacity()const;
 
     constexpr iterator begin();
 
@@ -87,12 +87,12 @@ constexpr void PushArray<T_Type, T_Capacity>::Emplace(T_Args&&...args){
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr size_t PushArray<T_Type, T_Capacity>::Size(){
+constexpr size_t PushArray<T_Type, T_Capacity>::Size()const{
     return m_Size;
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr size_t PushArray<T_Type, T_Capacity>::Capacity(){
+constexpr size_t PushArray<T_Type, T_Capacity>::Capacity()const{
     return T_Capacity;
 }
 
