@@ -35,6 +35,10 @@ public:
     template<typename ...T_Args>
     constexpr void Emplace(T_Args&&...args);
 
+    constexpr T_Type &operator[](size_t index);
+
+    constexpr const T_Type &operator[](size_t index)const;
+
     constexpr size_t Size()const;
 
     constexpr size_t Capacity()const;
@@ -84,6 +88,17 @@ template<typename ...T_Args>
 constexpr void PushArray<T_Type, T_Capacity>::Emplace(T_Args&&...args){
     CoreAssert(m_Size < T_Capacity, "PushArray: Can't emplace an element, array is full");
     new(&m_Array[m_Size++])T_Type(args...);
+}
+
+template<typename T_Type, size_t T_Capacity>
+constexpr T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index){
+    CoreAssert(index < m_Size, "PushArray: Array size is exceeded");
+    return m_Array[index];
+}
+
+template<typename T_Type, size_t T_Capacity>
+constexpr const T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index)const{
+    return operator[](index);
 }
 
 template<typename T_Type, size_t T_Capacity>
