@@ -37,8 +37,8 @@ void CommandBuffer::BeginRenderTarget(const Vk::GraphicsPipeline *pipeline, cons
     info.renderArea = {{0,0}, {framebuffer->Size.x, framebuffer->Size.y}};
     info.renderPass = render_pass->Handle;
     info.framebuffer = framebuffer->Handle;
-    info.clearValueCount = clears.Size;
-    info.pClearValues = clears.Pointer;
+    info.clearValueCount = clears.Size();
+    info.pClearValues = clears.Data();
     vkCmdBeginRenderPass(Handle, &info, VK_SUBPASS_CONTENTS_INLINE);
 }
 
@@ -60,10 +60,10 @@ void CommandBuffer::Submit(const ArrayPtr<VkSemaphore> &wait_semaphores, const A
     info.pNext = nullptr;
     info.commandBufferCount = 1;
     info.pCommandBuffers = &Handle;
-    info.waitSemaphoreCount = wait_semaphores.Size;
-    info.pWaitSemaphores = wait_semaphores.Pointer;
-    info.signalSemaphoreCount = signal_semaphores.Size;
-    info.pSignalSemaphores = signal_semaphores.Pointer;
+    info.waitSemaphoreCount = wait_semaphores.Size();
+    info.pWaitSemaphores = wait_semaphores.Data();
+    info.signalSemaphoreCount = signal_semaphores.Size();
+    info.pSignalSemaphores = signal_semaphores.Data();
     info.pWaitDstStageMask = nullptr;
 
     vkQueueSubmit(Pool->Queue.Handle, 1, &info, fence.Handle);

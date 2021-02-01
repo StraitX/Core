@@ -161,8 +161,8 @@ void Swapchain::PresentCurrent(const ArrayPtr<VkSemaphore> &wait_semaphores){
     info.pSwapchains = &Handle;
     info.pImageIndices = &CurrentImage;
     info.pResults = &result;
-    info.waitSemaphoreCount = wait_semaphores.Size;
-    info.pWaitSemaphores = wait_semaphores.Pointer;
+    info.waitSemaphoreCount = wait_semaphores.Size();
+    info.pWaitSemaphores = wait_semaphores.Data();
 
     vkQueuePresentKHR(Owner->GraphicsQueue.Handle, &info);
 }

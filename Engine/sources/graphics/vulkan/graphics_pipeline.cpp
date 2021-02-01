@@ -46,13 +46,13 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
 {
     Pass = render_pass;
 
-    CoreAssert(set_layouts.Size <= 4, "By Vulkan Spec, set_layout size can be at least 4, we support just that");
+    CoreAssert(set_layouts.Size() <= 4, "By Vulkan Spec, set_layout size can be at least 4, we support just that");
     VkPipelineLayoutCreateInfo layout_info;
     layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     layout_info.pNext = nullptr;
     layout_info.flags = 0;
-    layout_info.setLayoutCount = set_layouts.Size;
-    layout_info.pSetLayouts = set_layouts.Pointer;
+    layout_info.setLayoutCount = set_layouts.Size();
+    layout_info.pSetLayouts = set_layouts.Data();
     layout_info.pushConstantRangeCount = 0;
     layout_info.pPushConstantRanges = nullptr;
     
@@ -71,9 +71,9 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
         return Result::Unavailable;
     
     // === ShaderStages===
-    VkPipelineShaderStageCreateInfo *shader_stages = (VkPipelineShaderStageCreateInfo*)alloca(shaders.Size * sizeof(VkPipelineShaderStageCreateInfo));
+    VkPipelineShaderStageCreateInfo *shader_stages = (VkPipelineShaderStageCreateInfo*)alloca(shaders.Size() * sizeof(VkPipelineShaderStageCreateInfo));
 
-    for(size_t i = 0; i<shaders.Size; i++){
+    for(size_t i = 0; i<shaders.Size(); i++){
         shader_stages[i].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
         shader_stages[i].pNext = nullptr;
         shader_stages[i].flags = 0;
@@ -92,10 +92,10 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
     vertex_binding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
     vertex_binding.stride = CalculateStride(vertex_attributes);
 
-    VkVertexInputAttributeDescription *attributes = (VkVertexInputAttributeDescription*)alloca(vertex_attributes.Size * sizeof(VkVertexInputAttributeDescription));
+    VkVertexInputAttributeDescription *attributes = (VkVertexInputAttributeDescription*)alloca(vertex_attributes.Size() * sizeof(VkVertexInputAttributeDescription));
 
     u32 offset = 0;
-    for(int i = 0; i<vertex_attributes.Size; i++){
+    for(int i = 0; i<vertex_attributes.Size(); i++){
         attributes[i].binding = vertex_binding_index; // 
         attributes[i].format = AttributesTable[vertex_attributes[i]].Format;
         attributes[i].location = i;
@@ -110,7 +110,7 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
     vertex_input_state.flags = 0;
     vertex_input_state.vertexBindingDescriptionCount = vertex_bindings_count;
     vertex_input_state.pVertexBindingDescriptions = &vertex_binding;
-    vertex_input_state.vertexAttributeDescriptionCount = vertex_attributes.Size;
+    vertex_input_state.vertexAttributeDescriptionCount = vertex_attributes.Size();
     vertex_input_state.pVertexAttributeDescriptions = attributes;
 
     // === InputAssemblyState ===
@@ -222,7 +222,7 @@ Result GraphicsPipeline::Create(VkPrimitiveTopology topology, VkPolygonMode fill
     info.subpass = subpass_index;
     info.basePipelineIndex = InvalidIndex;
     info.basePipelineHandle = VK_NULL_HANDLE;
-    info.stageCount = shaders.Size;
+    info.stageCount = shaders.Size();
     info.pStages = shader_stages;
     info.pVertexInputState = &vertex_input_state;
     info.pInputAssemblyState = &input_assembly_state;

@@ -85,24 +85,25 @@ Result RendererAPI::FinalizeHardware(){
 
 Result RendererAPI::PickBestPhysicalDevice(){
     ArrayPtr<VkPhysicalDevice, u32> available_devices;
-    vkEnumeratePhysicalDevices(m_Instance.Handle, &available_devices.Size,nullptr);
+    // XXX Broke it for now
+    //vkEnumeratePhysicalDevices(m_Instance.Handle, &available_devices.Size,nullptr);
 
-    if(available_devices.Size == 0)
+    if(available_devices.Size() == 0)
         return Result::NotFound;
     
-    available_devices.Pointer = (VkPhysicalDevice *)alloca(available_devices.Size * sizeof(VkPhysicalDevice));
-    vkEnumeratePhysicalDevices(m_Instance.Handle, &available_devices.Size, available_devices.Pointer);
+    //available_devices.Pointer = (VkPhysicalDevice *)alloca(available_devices.Size * sizeof(VkPhysicalDevice));
+    //vkEnumeratePhysicalDevices(m_Instance.Handle, &available_devices.Size, available_devices.Pointer);
 
-    ArrayPtr<Vk::PhysicalDevice> devices(nullptr, available_devices.Size);
-    devices.Pointer = (Vk::PhysicalDevice*)alloca(devices.Size * sizeof(Vk::PhysicalDevice));
+    ArrayPtr<Vk::PhysicalDevice> devices(nullptr, available_devices.Size());
+    //devices.Pointer = (Vk::PhysicalDevice*)alloca(devices.Size * sizeof(Vk::PhysicalDevice));
 
-    for(int i = 0; i<devices.Size; i++){
+    for(int i = 0; i<devices.Size(); i++){
         devices[i].Create(available_devices[i]);
     }
 
     int best_index = -1;
     u8 best_score = 0;
-    for(int i = 0; i<devices.Size; i++){
+    for(int i = 0; i<devices.Size(); i++){
         const auto &dev = devices[i];
         // it's a game engine, we want to have graphics!
         if(!dev.IsComplete())

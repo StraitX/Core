@@ -27,10 +27,10 @@ Result LogicalDevice::Create(PhysicalDevice *parent, const ArrayPtr<const char*>
     info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     info.pNext = nullptr;
     info.flags = 0;
-    info.enabledExtensionCount = extensions.Size;
-    info.ppEnabledExtensionNames = extensions.Pointer;
-    info.enabledLayerCount = layers.Size;
-    info.ppEnabledLayerNames = layers.Pointer;
+    info.enabledExtensionCount = extensions.Size();
+    info.ppEnabledExtensionNames = extensions.Data();
+    info.enabledLayerCount = layers.Size();
+    info.ppEnabledLayerNames = layers.Data();
     info.pEnabledFeatures = &features;
     info.queueCreateInfoCount = sizeof(qinfo)/sizeof(VkDeviceQueueCreateInfo);
     info.pQueueCreateInfos = qinfo;

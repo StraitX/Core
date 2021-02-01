@@ -11,10 +11,10 @@ Result RenderPass::Create(Vk::LogicalDevice *owner, const ArrayPtr<VkAttachmentD
     info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     info.pNext = nullptr;
     info.flags = 0;
-    info.subpassCount = subpass.Size;
-    info.pSubpasses = subpass.Pointer;
-    info.attachmentCount = attachments.Size;
-    info.pAttachments = attachments.Pointer;
+    info.subpassCount = subpass.Size();
+    info.pSubpasses = subpass.Data();
+    info.attachmentCount = attachments.Size();
+    info.pAttachments = attachments.Data();
     info.dependencyCount = 0;
     info.pDependencies = nullptr;
     

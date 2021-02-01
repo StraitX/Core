@@ -15,8 +15,8 @@ Result Framebuffer::Create(Vk::RenderPass *render_pass, const Vector2u &size, co
     info.height = Size.y;
     info.layers = 1;
     info.renderPass = render_pass->Handle;
-    info.attachmentCount = attachments.Size;
-    info.pAttachments = attachments.Pointer;
+    info.attachmentCount = attachments.Size();
+    info.pAttachments = attachments.Data();
 
     return ResultError(vkCreateFramebuffer(render_pass->Owner->Handle, &info, nullptr, &Handle) != VK_SUCCESS);
 }
