@@ -68,7 +68,9 @@ template <typename T_Type, typename T_Size>
 constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(std::initializer_list<T_Type> initializer_list):
     m_Pointer(initializer_list.begin()),
     m_Size(initializer_list.size())
-{}
+{
+    static_assert(IsConst<T_Type>::Value, "ArrayPtr with non-const type can't be constructed via initializer list");
+}
 
 template <typename T_Type, typename T_Size>
 template <size_t T_Capacity>
