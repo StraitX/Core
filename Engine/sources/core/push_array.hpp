@@ -20,9 +20,7 @@ private:
 public:
     constexpr PushArray() = default;
 
-    PushArray(const PushArray &other) = delete;
-
-    PushArray(PushArray &&other) = delete;
+    PushArray(const PushArray &other) = default;
 
     constexpr PushArray(std::initializer_list<T_Type> initializer_list);
 

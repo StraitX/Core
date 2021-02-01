@@ -8,16 +8,15 @@
 
 namespace StraitX{
 
-// it has no idea about allocations
+// it has no idea about allocations, object lifetime and stuff
 template <typename T_Type, typename T_Size = size_t>
-struct ArrayPtr{
-    T_Type *const Pointer;
-    const T_Size Size;
+class ArrayPtr{
+private:
+    T_Type *m_Pointer = nullptr;
+    T_Size m_Size = 0;
+public:
 
-    typedef T_Type * iterator;
-    typedef const T_Type * const_iterator;
-
-    constexpr ArrayPtr();
+    constexpr ArrayPtr() = default;
 
     constexpr ArrayPtr(T_Type *pointer, T_Size size);
 
@@ -33,7 +32,16 @@ struct ArrayPtr{
     constexpr const T_Type &operator[](T_Size index)const;
 
     constexpr ArrayPtr &operator=(const ArrayPtr &other);
+
+    constexpr T_Size Size()const;
+
+    constexpr T_Type *Data();
+
+    constexpr const T_Type *Data()const;
     
+    typedef T_Type* iterator;
+    typedef const T_Type* const_iterator;
+
     constexpr iterator begin();
 
     constexpr iterator end();
@@ -45,40 +53,34 @@ struct ArrayPtr{
 };
 
 template <typename T_Type, typename T_Size>
-constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr():
-    Pointer(nullptr),
-    Size(0)
-{}
-
-template <typename T_Type, typename T_Size>
 constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(T_Type *pointer, T_Size size):
-    Pointer(pointer),
-    Size(size)
+    m_Pointer(pointer),
+    m_Size(size)
 {}
 
 template <typename T_Type, typename T_Size>
 constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(const ArrayPtr &other):
-    Pointer(other.Pointer),
-    Size(other.Size)
+    m_Pointer(other.m_Pointer),
+    m_Size(other.Size)
 {}
 
 template <typename T_Type, typename T_Size>
 constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(std::initializer_list<T_Type> initializer_list):
-    Pointer(initializer_list.begin()),
-    Size(initializer_list.size())
+    m_Pointer(initializer_list.begin()),
+    m_Size(initializer_list.size())
 {}
 
 template <typename T_Type, typename T_Size>
 template <size_t T_Capacity>
 constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(PushArray<T_Type,T_Capacity> &push_array):
-    Pointer(push_array.begin()),
-    Size(push_array.Size())
+    m_Pointer(push_array.begin()),
+    m_Size(push_array.Size())
 {}
 
 template <typename T_Type, typename T_Size>
 constexpr T_Type &ArrayPtr<T_Type, T_Size>::operator[](T_Size index){
-    CoreAssert(index < Size, "ArrayPtr: can't index more that ArrayPtr::Size elements");
-    return Pointer[index]; 
+    CoreAssert(index < m_Size, "ArrayPtr: can't index more that ArrayPtr::Size elements");
+    return m_Pointer[index]; 
 }
 
 template <typename T_Type, typename T_Size>
@@ -88,18 +90,34 @@ constexpr const T_Type &ArrayPtr<T_Type, T_Size>::operator[](T_Size index)const{
 
 template <typename T_Type, typename T_Size>
 constexpr ArrayPtr<T_Type,T_Size> &ArrayPtr<T_Type, T_Size>::operator=(const ArrayPtr &other){
-    Pointer = other.Pointer;
-    Size = other.Size;
+    m_Pointer = other.m_Pointer;
+    m_Size = other.m_Size;
+    return *this;
+}
+
+template <typename T_Type, typename T_Size>
+constexpr T_Size ArrayPtr<T_Type, T_Size>::Size()const{
+    return m_Size;
+}
+
+template <typename T_Type, typename T_Size>
+constexpr T_Type *ArrayPtr<T_Type, T_Size>::Data(){
+    return m_Pointer;
+}
+
+template <typename T_Type, typename T_Size>
+constexpr const T_Type *ArrayPtr<T_Type, T_Size>::Data()const{
+    return Data();
 }
 
 template <typename T_Type, typename T_Size>
 constexpr typename ArrayPtr<T_Type, T_Size>::iterator ArrayPtr<T_Type, T_Size>::begin(){
-    return Pointer;
+    return Data();
 }
 
 template <typename T_Type, typename T_Size>
 constexpr typename ArrayPtr<T_Type, T_Size>::iterator ArrayPtr<T_Type, T_Size>::end(){
-    return Pointer+Size;
+    return Data()+Size();
 }
 
 template <typename T_Type, typename T_Size>
