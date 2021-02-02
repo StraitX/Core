@@ -37,6 +37,8 @@ public:
 
     constexpr const T_Type &operator[](size_t index)const;
 
+    constexpr PushArray &operator=(const PushArray &other);
+
     constexpr size_t Size()const;
 
     constexpr size_t Capacity()const;
@@ -97,6 +99,14 @@ constexpr T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index){
 template<typename T_Type, size_t T_Capacity>
 constexpr const T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index)const{
     return operator[](index);
+}
+
+template<typename T_Type, size_t T_Capacity>
+constexpr PushArray<T_Type, T_Capacity> &PushArray<T_Type, T_Capacity>::operator=(const PushArray &other){
+    for(size_t i = 0; i<other.m_Size; ++i)
+        m_Array[i] = other.m_Array[i];
+    m_Size = other.m_Size;
+    return *this;
 }
 
 template<typename T_Type, size_t T_Capacity>
