@@ -24,9 +24,8 @@ Result GraphicsAPIImpl::Initialize(){
     return Create(VulkanVersion, {RequiredPlatformExtensions, RequiredPlatformExtensionsCount}, {RequiredPlatformLayers, RequiredPlatformLayersCount});
 }
 
-Result GraphicsAPIImpl::Finalize(){
+void GraphicsAPIImpl::Finalize(){
     Destroy();
-    return Result::Success;
 }
 
 u32 GraphicsAPIImpl::GetPhysicalGPUCount(){

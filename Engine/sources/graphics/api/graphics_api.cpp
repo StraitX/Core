@@ -17,11 +17,11 @@ Result GraphicsAPI::Create(GraphicsAPI::API api){
         return Result::Failure;
     case API::OpenGL: 
         s_Instance = &OpenGLImpl;
-        s_CurrentAPI = API::OpenGL;
+        s_CurrentAPI = api;
         return Result::Success;
     case API::Vulkan: 
         s_Instance = &VulkanImpl;
-        s_CurrentAPI = API::Vulkan;
+        s_CurrentAPI = api;
         return Result::Success;
     }
     return Result::Unsupported;

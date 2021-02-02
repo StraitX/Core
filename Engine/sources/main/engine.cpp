@@ -120,8 +120,8 @@ Result Engine::Finalize(){
 
     if(m_ErrorGraphicsAPI == Result::Success){
         LogTrace("GraphicsAPI::Finalize: Begin");
-        m_ErrorGraphicsAPI = GraphicsAPI::Instance().Finalize();
-        Log("GraphicsAPI::Finalize",m_ErrorGraphicsAPI);
+        GraphicsAPI::Instance().Finalize();
+        LogTrace("GraphicsAPI::Finalize: End");
     }
 
     if(m_ErrorWindowSystem == Result::Success){

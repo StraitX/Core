@@ -16,7 +16,7 @@ struct GraphicsAPIImpl: GraphicsAPI{
 
     virtual Result Initialize()override;
 
-    virtual Result Finalize()override;
+    virtual void Finalize()override;
 
     virtual u32 GetPhysicalGPUCount()override;
 

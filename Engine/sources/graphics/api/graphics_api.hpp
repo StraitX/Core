@@ -4,13 +4,14 @@
 #include "platform/types.hpp"
 #include "platform/result.hpp"
 #include "core/assert.hpp"
+#include "core/noncopyable.hpp"
 #include "graphics/api/physical_gpu.hpp"
 
 namespace StraitX{
 
 class Engine;
 
-class GraphicsAPI{
+class GraphicsAPI: NonCopyable{
 public:
     enum API{
         None = 0,
@@ -18,13 +19,13 @@ public:
         OpenGL
     };
 private:
-    friend class Engine;
-
     static GraphicsAPI *s_Instance;
 
     static API s_CurrentAPI;
 private:
     static Result Create(API api);
+
+    friend class Engine;
 public:
     static sx_inline GraphicsAPI &Instance(){
         CoreAssert(s_Instance, "GraphicsAPI: has not been initialized for some reason");
@@ -37,7 +38,7 @@ public:
 
     virtual Result Initialize() = 0;
 
-    virtual Result Finalize() = 0;
+    virtual void Finalize() = 0;
 
     virtual u32 GetPhysicalGPUCount() = 0;
 

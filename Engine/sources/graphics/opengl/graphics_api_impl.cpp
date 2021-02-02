@@ -32,10 +32,8 @@ Result GraphicsAPIImpl::Initialize(){
     return Result::Success;
 }
 
-Result GraphicsAPIImpl::Finalize(){
+void GraphicsAPIImpl::Finalize(){
     Context.DestroyDummy();
-
-    return Result::Success;
 }
 
 u32 GraphicsAPIImpl::GetPhysicalGPUCount(){
