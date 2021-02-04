@@ -7,17 +7,11 @@
 
 namespace StraitX{
 
-class LogicalGPU: public NonCopyable{
-public:
+struct LogicalGPU: NonCopyable{
 
-    virtual Result Create(const PhysicalGPU &gpu) = 0;
-
-    virtual void Destroy() = 0;
-
-    static LogicalGPU *New();
+    static LogicalGPU *New(const PhysicalGPU &gpu);
 
     static void Delete(LogicalGPU *gpu);
-
 };
 
 }// namespace StraitX::

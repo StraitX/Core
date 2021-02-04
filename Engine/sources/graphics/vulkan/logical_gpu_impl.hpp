@@ -30,9 +30,9 @@ struct LogicalGPUImpl: public LogicalGPU{
     Vk::CommandPool   CmdPool;
     Vk::CommandBuffer CmdBuffer;
 
-    virtual Result Create(const PhysicalGPU &gpu)override;
+    LogicalGPUImpl(const PhysicalGPU &gp);
 
-    virtual void Destroy()override;
+    ~LogicalGPUImpl();
 
     void QueryQueues();
 

@@ -6,12 +6,12 @@
 
 namespace StraitX{
 
-LogicalGPU *LogicalGPU::New(){
+LogicalGPU *LogicalGPU::New(const PhysicalGPU &gpu){
     switch (GraphicsAPI::Instance().CurrentAPI()) {
     case GraphicsAPI::Vulkan:
-        return new Vk::LogicalGPUImpl();
+        return new Vk::LogicalGPUImpl(gpu);
     case GraphicsAPI::OpenGL:
-        return new GL::LogicalGPUImpl();
+        return new GL::LogicalGPUImpl(gpu);
     default:
         LogWarn("LogicalGPU::New: Unsupported API");
         return nullptr;
@@ -21,10 +21,10 @@ LogicalGPU *LogicalGPU::New(){
 void LogicalGPU::Delete(LogicalGPU *gpu){
     switch (GraphicsAPI::Instance().CurrentAPI()) {
     case GraphicsAPI::Vulkan:
-        delete ((Vk::LogicalGPUImpl*)gpu);
+        delete static_cast<Vk::LogicalGPUImpl*>(gpu);
         return;
     case GraphicsAPI::OpenGL:
-        delete ((GL::LogicalGPUImpl*)gpu);
+        delete static_cast<GL::LogicalGPUImpl*>(gpu);
         return;
     default:
         LogWarn("LogicalGPU::Delete: Unsupported API");

@@ -11,9 +11,9 @@ class LogicalGPUImpl: public LogicalGPU{
 private:
     GLContext m_Context;
 public:
-    virtual Result Create(const PhysicalGPU &gpu)override;
+    LogicalGPUImpl(const PhysicalGPU &gp);
 
-    virtual void Destroy()override;
+    ~LogicalGPUImpl();
 };
 
 }//namespace GL::
