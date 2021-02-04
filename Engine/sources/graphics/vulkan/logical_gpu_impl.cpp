@@ -6,6 +6,8 @@
 namespace StraitX{
 namespace Vk{
 
+LogicalGPUImpl LogicalGPUImpl::Instance;
+
 Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
     { //First Stage Init
         PhysicalHandle = reinterpret_cast<VkPhysicalDevice>(gpu.Handle.U64);

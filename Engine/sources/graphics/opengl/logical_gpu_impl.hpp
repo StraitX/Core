@@ -11,6 +11,8 @@ class LogicalGPUImpl: public LogicalGPU{
 private:
     GLContext m_Context;
 public:
+    static LogicalGPUImpl Instance;
+
     Result Initialize(const PhysicalGPU &gp);
 
     void Finalize();

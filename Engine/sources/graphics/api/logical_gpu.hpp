@@ -8,15 +8,9 @@
 namespace StraitX{
 
 class LogicalGPU: NonCopyable{
-private:
-    static LogicalGPU *s_Instance;
-public:
     static Result Initialize(const PhysicalGPU &gpu);
 
     static void Finalize();
-
-    static sx_inline LogicalGPU &Instance(){ return *s_Instance; }
-
 };
 
 }// namespace StraitX::

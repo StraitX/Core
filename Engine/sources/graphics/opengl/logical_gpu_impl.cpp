@@ -5,6 +5,8 @@
 namespace StraitX{
 namespace GL{
 
+LogicalGPUImpl LogicalGPUImpl::Instance;
+
 Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
     if(m_Context.Create(DisplayServer::Instance().GetWindow(), *(Version*)&gpu.Handle.U64) != Result::Success)
         return Result::Unsupported;
