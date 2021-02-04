@@ -11,9 +11,9 @@ class LogicalGPUImpl: public LogicalGPU{
 private:
     GLContext m_Context;
 public:
-    LogicalGPUImpl(const PhysicalGPU &gp);
+    Result Initialize(const PhysicalGPU &gp);
 
-    ~LogicalGPUImpl();
+    void Finalize();
 };
 
 }//namespace GL::

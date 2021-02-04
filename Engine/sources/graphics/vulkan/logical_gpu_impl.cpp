@@ -6,7 +6,7 @@
 namespace StraitX{
 namespace Vk{
 
-LogicalGPUImpl::LogicalGPUImpl(const PhysicalGPU &gpu){
+Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
     { //First Stage Init
         PhysicalHandle = reinterpret_cast<VkPhysicalDevice>(gpu.Handle.U64);
         Vendor         = gpu.Vendor;
@@ -55,7 +55,8 @@ LogicalGPUImpl::LogicalGPUImpl(const PhysicalGPU &gpu){
 
         LogInfo("Vulkan: Creating device with % queues", info.queueCreateInfoCount);
 
-        CoreAssert(vkCreateDevice(PhysicalHandle,&info,nullptr,&Handle) == VK_SUCCESS, "Vk::LogicalDeviceImpl: Creation Failed");
+        if(vkCreateDevice(PhysicalHandle,&info,nullptr,&Handle) != VK_SUCCESS)
+            return Result::NullObject;
     }
 
     {//Obtain Queues
@@ -72,9 +73,10 @@ LogicalGPUImpl::LogicalGPUImpl(const PhysicalGPU &gpu){
 
         CmdBuffer.Create(&CmdPool);
     }
+    return Result::Success;
 }
 
-LogicalGPUImpl::~LogicalGPUImpl(){
+void LogicalGPUImpl::Finalize(){
 
     CmdBuffer.Destroy();
     CmdPool.Destroy();

@@ -5,12 +5,15 @@
 namespace StraitX{
 namespace GL{
 
-LogicalGPUImpl::LogicalGPUImpl(const PhysicalGPU &gpu){
-    CoreAssert(m_Context.Create(DisplayServer::Instance().GetWindow(), *(Version*)&gpu.Handle.U64) == Result::Success, "GL::LogicalGPUImpl: Can't createa OpenGL Context");
-    CoreAssert(m_Context.MakeCurrent() == Result::Success, "GL::LogicalGPUImpl: Can't make OpenGL context current");
+Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
+    if(m_Context.Create(DisplayServer::Instance().GetWindow(), *(Version*)&gpu.Handle.U64) != Result::Success)
+        return Result::Unsupported;
+    if(m_Context.MakeCurrent() != Result::Success)
+        return Result::Unavailable;
+    return Result::Success;
 }
 
-LogicalGPUImpl::~LogicalGPUImpl(){
+void LogicalGPUImpl::Finalize(){
     m_Context.Destroy();
 }
 

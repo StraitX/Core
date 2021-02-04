@@ -6,28 +6,33 @@
 
 namespace StraitX{
 
-LogicalGPU *LogicalGPU::New(const PhysicalGPU &gpu){
-    switch (GraphicsAPI::Instance().CurrentAPI()) {
+static GL::LogicalGPUImpl GL_LogicalGPU;
+static Vk::LogicalGPUImpl Vk_LogicalGPU;
+
+LogicalGPU *LogicalGPU::s_Instance = nullptr;
+
+Result LogicalGPU::Initialize(const PhysicalGPU &gpu){
+    switch (GraphicsAPI::CurrentAPI()) {
     case GraphicsAPI::Vulkan:
-        return new Vk::LogicalGPUImpl(gpu);
+        s_Instance = &Vk_LogicalGPU;
+        return Vk_LogicalGPU.Initialize(gpu);
     case GraphicsAPI::OpenGL:
-        return new GL::LogicalGPUImpl(gpu);
+        s_Instance = &GL_LogicalGPU;
+        return GL_LogicalGPU.Initialize(gpu);
     default:
-        LogWarn("LogicalGPU::New: Unsupported API");
-        return nullptr;
+        LogWarn("LogicalGPU::Initialize: Is not supported by current API");
+        return Result::NotFound;
     }
 }
 
-void LogicalGPU::Delete(LogicalGPU *gpu){
-    switch (GraphicsAPI::Instance().CurrentAPI()) {
+void LogicalGPU::Finalize(){
+    switch (GraphicsAPI::CurrentAPI()) {
     case GraphicsAPI::Vulkan:
-        delete static_cast<Vk::LogicalGPUImpl*>(gpu);
-        return;
+        static_cast<Vk::LogicalGPUImpl*>(s_Instance)->Finalize();
     case GraphicsAPI::OpenGL:
-        delete static_cast<GL::LogicalGPUImpl*>(gpu);
-        return;
+        static_cast<GL::LogicalGPUImpl*>(s_Instance)->Finalize();
     default:
-        LogWarn("LogicalGPU::Delete: Unsupported API");
+        LogWarn("LogicalGPU::Finalize: Is not supported by current API");
     }
 }
 
