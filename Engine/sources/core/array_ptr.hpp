@@ -61,7 +61,7 @@ constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(T_Type *pointer, T_Size size):
 template <typename T_Type, typename T_Size>
 constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(const ArrayPtr &other):
     m_Pointer(other.m_Pointer),
-    m_Size(other.Size)
+    m_Size(other.m_Size)
 {}
 
 template <typename T_Type, typename T_Size>
@@ -109,7 +109,7 @@ constexpr T_Type *ArrayPtr<T_Type, T_Size>::Data(){
 
 template <typename T_Type, typename T_Size>
 constexpr const T_Type *ArrayPtr<T_Type, T_Size>::Data()const{
-    return Data();
+    return m_Pointer;
 }
 
 template <typename T_Type, typename T_Size>
@@ -124,12 +124,12 @@ constexpr typename ArrayPtr<T_Type, T_Size>::iterator ArrayPtr<T_Type, T_Size>::
 
 template <typename T_Type, typename T_Size>
 constexpr typename ArrayPtr<T_Type, T_Size>::const_iterator ArrayPtr<T_Type, T_Size>::begin()const{
-    return begin();
+    return Data();
 }
 
 template <typename T_Type, typename T_Size>
 constexpr typename ArrayPtr<T_Type, T_Size>::const_iterator ArrayPtr<T_Type, T_Size>::end()const{
-    return end();
+    return Data()+Size();
 }
 
 }; // namespace StraitX::
