@@ -10,30 +10,26 @@
 namespace StraitX{
 
 class Engine;
+class GraphicsAPILoader;
 
 class GraphicsAPI: NonCopyable{
 public:
     enum API{
         None = 0,
         Vulkan,
-        OpenGL
+        OpenGL,
+
+        ElementsCount
     };
 private:
     static GraphicsAPI *s_Instance;
 
-    static API s_CurrentAPI;
-private:
-    static Result Create(API api);
-
     friend class Engine;
+    friend class GraphicsAPILoader;
 public:
     static sx_inline GraphicsAPI &Instance(){
         CoreAssert(s_Instance, "GraphicsAPI: has not been initialized for some reason");
         return *s_Instance;
-    }
-
-    static sx_inline API CurrentAPI(){
-        return s_CurrentAPI;
     }
 
     virtual Result Initialize() = 0;

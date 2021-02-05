@@ -8,6 +8,8 @@
 namespace StraitX{
 namespace GL{
 
+GraphicsAPIImpl GraphicsAPIImpl::Instance;
+
 constexpr Version OpenGLVersion = {4, 6, 0};
 
 Result GraphicsAPIImpl::Initialize(){

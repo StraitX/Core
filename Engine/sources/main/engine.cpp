@@ -2,6 +2,7 @@
 #include "platform/io.hpp"
 #include "core/log.hpp"
 #include "graphics/api/graphics_api.hpp"
+#include "graphics/api/graphics_api_loader.hpp"
 #include "main/application.hpp"
 #include "main/engine.hpp"
 
@@ -65,8 +66,7 @@ Result Engine::Initialize(){
     SupportAssert(WindowSystem::CheckSupport(WindowSystem::Ext::DoubleBuffer), "WindowSystem::DoubleBuffer");
     SupportAssert(WindowSystem::CheckSupport(WindowSystem::Ext::OpenGLCore), "WindowSystem::OpenGL Core");
 
-    auto res = GraphicsAPI::Create(m_ApplicationConfig.DesiredAPI);
-    InitAssert("GraphicsAPI::Create",res);
+    auto res = GraphicsAPILoader::Load(m_ApplicationConfig.DesiredAPI);
 
     LogTrace("GraphicsAPI::Initialize: Begin");
     m_ErrorGraphicsAPI = GraphicsAPI::Instance().Initialize();

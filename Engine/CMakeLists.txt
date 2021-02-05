@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 01)
-set(VERSION_PATCH 20)
+set(VERSION_PATCH 21)
 
 project(
     StraitXEngine 
@@ -61,6 +61,7 @@ set(SOURCES_GRAPHICS_OPENGL
 )
 
 set(SOURCES_GRAPHICS_API
+    ${SOURCES_DIR}/graphics/api/graphics_api_loader.cpp
     ${SOURCES_DIR}/graphics/api/graphics_api.cpp
     ${SOURCES_DIR}/graphics/api/gpu_configuration.cpp
     ${SOURCES_DIR}/graphics/api/logical_gpu.cpp

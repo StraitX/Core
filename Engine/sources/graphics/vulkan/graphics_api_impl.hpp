@@ -14,6 +14,8 @@ struct GraphicsAPIImpl: GraphicsAPI{
     VkInstance Handle = VK_NULL_HANDLE;
     VkDebugUtilsMessengerEXT Messenger = VK_NULL_HANDLE;
 
+    static GraphicsAPIImpl Instance;
+
     virtual Result Initialize()override;
 
     virtual void Finalize()override;

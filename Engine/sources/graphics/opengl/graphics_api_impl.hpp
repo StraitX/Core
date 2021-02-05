@@ -12,6 +12,8 @@ struct GraphicsAPIImpl: public GraphicsAPI{
     GLContext Context;
     Version LoadedOpenGLVersion = {};
 
+    static GraphicsAPIImpl Instance;
+
     virtual Result Initialize()override;
 
     virtual void Finalize()override;

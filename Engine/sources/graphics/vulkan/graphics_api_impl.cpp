@@ -7,6 +7,8 @@
 namespace StraitX{
 namespace Vk{
 
+GraphicsAPIImpl GraphicsAPIImpl::Instance;
+
 static_assert(sizeof(GPUHandle) == sizeof(VkPhysicalDevice), "GPUHandle is not the same size as VkPhysicalDevice");
 
 GPUType VkTypeToGPUType(u32 type){
