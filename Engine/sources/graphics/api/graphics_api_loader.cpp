@@ -4,6 +4,10 @@
 #include "graphics/opengl/graphics_api_impl.hpp"
 #include "graphics/vulkan/graphics_api_impl.hpp"
 
+#include "graphics/api/logical_gpu.hpp"
+#include "graphics/opengl/logical_gpu_impl.hpp"
+#include "graphics/vulkan/logical_gpu_impl.hpp"
+
 namespace StraitX{
 
 static GraphicsAPI *GraphicsAPITable[GraphicsAPI::ElementsCount] = {
@@ -12,6 +16,11 @@ static GraphicsAPI *GraphicsAPITable[GraphicsAPI::ElementsCount] = {
     &GL::GraphicsAPIImpl::Instance
 };
 
+static LogicalGPU *LogicalGPUTable[GraphicsAPI::ElementsCount] = {
+    nullptr,
+    &Vk::LogicalGPUImpl::Instance,
+    &GL::LogicalGPUImpl::Instance
+};
 
 Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     if(api != GraphicsAPI::OpenGL && api != GraphicsAPI::Vulkan){
@@ -20,6 +29,8 @@ Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     }
 
     GraphicsAPI::s_Instance = GraphicsAPITable[api];
+
+    LogicalGPU::s_Instance = LogicalGPUTable[api];
 
     return Result::Success;
 }

@@ -13,9 +13,9 @@ private:
 public:
     static LogicalGPUImpl Instance;
 
-    Result Initialize(const PhysicalGPU &gp);
+    Result Initialize(const PhysicalGPU &gp)override;
 
-    void Finalize();
+    void Finalize()override;
 };
 
 }//namespace GL::

@@ -6,27 +6,6 @@
 
 namespace StraitX{
 
-Result LogicalGPU::Initialize(const PhysicalGPU &gpu){
-    switch (GraphicsAPI::CurrentAPI()) {
-    case GraphicsAPI::Vulkan:
-        return Vk::LogicalGPUImpl::Instance.Initialize(gpu);
-    case GraphicsAPI::OpenGL:
-        return GL::LogicalGPUImpl::Instance.Initialize(gpu);
-    default:
-        LogWarn("LogicalGPU::Initialize: Is not supported by current API");
-        return Result::NotFound;
-    }
-}
-
-void LogicalGPU::Finalize(){
-    switch (GraphicsAPI::CurrentAPI()) {
-    case GraphicsAPI::Vulkan:
-        Vk::LogicalGPUImpl::Instance.Finalize();
-    case GraphicsAPI::OpenGL:
-        GL::LogicalGPUImpl::Instance.Finalize();
-    default:
-        LogWarn("LogicalGPU::Finalize: Is not supported by current API");
-    }
-}
+LogicalGPU *LogicalGPU::s_Instance = nullptr;
 
 }//namespace StraitX::
