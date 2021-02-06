@@ -79,6 +79,7 @@ Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
 }
 
 void LogicalGPUImpl::Finalize(){
+    vkDeviceWaitIdle(Handle);
 
     CmdBuffer.Destroy();
     CmdPool.Destroy();
