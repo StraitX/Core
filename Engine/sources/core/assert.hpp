@@ -19,4 +19,16 @@ extern void CoreAssertFail(const char *assertion,const char *message, const char
     #define CoreAssert(expression,message) ((void)0)
 #endif
 
+#ifdef SX_DEBUG
+    #define FunctionAssert(function, ret_val) Assert(function == ret_val)
+#else
+    #define FunctionAssert(function, ret_val) (void)function
+#endif
+
+#ifdef SX_DEBUG
+    #define CoreFunctionAssert(function, ret_val, message) CoreAssert(function == ret_val, message)
+#else
+    #define CoreFunctionAssert(function, ret_val, message) (void)function
+#endif
+
 #endif // STRAITX_ASSERT_HPP
