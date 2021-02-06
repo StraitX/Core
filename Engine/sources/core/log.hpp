@@ -18,10 +18,10 @@
 #else
 
 #define DLog(source,error)  ((void)0)
-#define DLogTrace(msg)      ((void)0)
-#define DLogInfo(msg)       ((void)0)
-#define DLogWarn(msg)       ((void)0)
-#define DLogError(msg)      ((void)0)
+#define DLogTrace(...)      ((void)0)
+#define DLogInfo(...)       ((void)0)
+#define DLogWarn(...)       ((void)0)
+#define DLogError(...)      ((void)0)
 #define DLogSeparator()     ((void)0)
 
 #endif
