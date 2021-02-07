@@ -1,6 +1,6 @@
-#include <cstring>
 #include "platform/memory.hpp"
 #include "core/log.hpp"
+#include "core/string.hpp"
 #include "graphics/vulkan/graphics_api_impl.hpp"
 #include "graphics/vulkan/debug.hpp"
 
@@ -112,7 +112,7 @@ bool GraphicsAPIImpl::CheckLayers(const ArrayPtr<const char *> &layers){
     for(auto &lay: layers){
         bool supported = false;
         for(int i = 0; i<count; i++){
-            if(strcmp(lay,props[i].layerName) == 0)
+            if(String::Equals(lay,props[i].layerName))
                 supported = true;
         }
         if(!supported){
@@ -133,7 +133,7 @@ bool GraphicsAPIImpl::CheckExtensions(const ArrayPtr<const char *> &extensions){
     for(auto &ext: extensions){
         bool supported = false;
         for(int i = 0; i<count; i++){
-            if(strcmp(ext,props[i].extensionName) == 0)
+            if(String::Equals(ext,props[i].extensionName))
                 supported = true;
         }
         if(!supported){

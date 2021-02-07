@@ -1,5 +1,8 @@
+#include "platform/memory.hpp"
 #include "core/log.hpp"
 #include "core/assert.hpp"
+#include "core/array_ptr.hpp"
+#include "core/string.hpp"
 #include "graphics/vulkan/logical_gpu_impl.hpp"
 
 
@@ -20,6 +23,8 @@ Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
     }
     
     { // Device creation
+        const char *ext[] = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
         VkDeviceQueueCreateInfo qinfo[2];
         //GraphicsQueue
         float gprior = 1.0;
@@ -47,8 +52,8 @@ Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
         info.sType                  = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
         info.pNext                  = nullptr;
         info.flags                  = 0;
-        info.enabledExtensionCount  = 0;
-        info.ppEnabledExtensionNames= nullptr;
+        info.enabledExtensionCount  = sizeof(ext)/sizeof(const char *);
+        info.ppEnabledExtensionNames= ext;
         info.enabledLayerCount      = 0;
         info.ppEnabledLayerNames    = nullptr;
         info.pEnabledFeatures       = &features;
