@@ -38,4 +38,17 @@ size_t String::Length(const char *string){
     return length;
 }
 
+
+i32 String::Compare(const char *first, const char *second){
+    while(*first && (*first == *second)){
+        ++first;
+        ++second;
+    }
+    return *first - *second;
+}
+
+bool String::Equals(const char *first, const char *second){
+    return Compare(first, second) == 0;
+}
+
 }//namespace StraitX::
