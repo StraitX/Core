@@ -19,6 +19,10 @@ void LogicalGPUImpl::Finalize(){
     m_Context.Destroy();
 }
 
+void LogicalGPUImpl::SwapBuffers(){
+    m_Context.SwapBuffers();
+}
+
 
 }//namespace GL::
 }//namespace StraitX::

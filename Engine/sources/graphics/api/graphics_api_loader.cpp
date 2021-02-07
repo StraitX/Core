@@ -13,6 +13,10 @@
 #include "graphics/vulkan/gpu_context_impl.hpp"
 #include "graphics/opengl/gpu_context_impl.hpp"
 
+#include "graphics/api/swapchain.hpp"
+#include "graphics/vulkan/swapchain_impl.hpp"
+#include "graphics/opengl/swapchain_impl.hpp"
+
 namespace StraitX{
 
 static GraphicsAPI *const GraphicsAPITable[GraphicsAPI::ElementsCount] = {
@@ -33,6 +37,12 @@ static GPUContext::VTable GPUContextTable[GraphicsAPI::ElementsCount] = {
     {&GL::GPUContextImpl::NewImpl, &GL::GPUContextImpl::DeleteImpl}
 };
 
+static Swapchain::VTable SwapchainTable[GraphicsAPI::ElementsCount] = {
+    {nullptr, nullptr},
+    {&Vk::SwapchainImpl::NewImpl, &Vk::SwapchainImpl::DeleteImpl},
+    {&GL::SwapchainImpl::NewImpl, &GL::SwapchainImpl::DeleteImpl}
+};
+
 Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     if(api != GraphicsAPI::OpenGL && api != GraphicsAPI::Vulkan){
         LogError("GraphicsAPILoader::Load: Unknown API: %",(int)api);
@@ -44,6 +54,8 @@ Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     LogicalGPU::s_Instance = LogicalGPUTable[api];
 
     GPUContext::s_VTable = GPUContextTable[api];
+
+    Swapchain::s_VTable = SwapchainTable[api];
 
     return Result::Success;
 }

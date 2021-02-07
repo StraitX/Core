@@ -53,6 +53,7 @@ set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/gpu_memory_allocator.cpp
     ${SOURCES_DIR}/graphics/vulkan/gpu_buffer_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/gpu_context_impl.cpp
+    ${SOURCES_DIR}/graphics/vulkan/swapchain_impl.cpp
 )
 
 set(SOURCES_GRAPHICS_OPENGL
@@ -60,6 +61,7 @@ set(SOURCES_GRAPHICS_OPENGL
     ${SOURCES_DIR}/graphics/opengl/logical_gpu_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/gpu_buffer_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/gpu_context_impl.cpp
+    ${SOURCES_DIR}/graphics/opengl/swapchain_impl.cpp
 )
 
 set(SOURCES_GRAPHICS_API
@@ -69,6 +71,7 @@ set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/logical_gpu.cpp
     ${SOURCES_DIR}/graphics/api/gpu_buffer.cpp
     ${SOURCES_DIR}/graphics/api/gpu_context.cpp
+    ${SOURCES_DIR}/graphics/api/swapchain.cpp
 )
 
 set(SOURCES_GRAPHICS 

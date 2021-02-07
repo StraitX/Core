@@ -16,6 +16,8 @@ public:
     Result Initialize(const PhysicalGPU &gp)override;
 
     void Finalize()override;
+
+    void SwapBuffers();
 };
 
 }//namespace GL::
