@@ -101,6 +101,16 @@ bool WindowImpl::PollEvent(Event &event){
     return false;
 }
 
+Size2u WindowImpl::Size()const{
+    ::Window root_return;
+    int x, y;
+    unsigned int width, height;
+    unsigned int border, depth;
+
+    XGetGeometry(s_Display, Handle, &root_return, &x, &y, &width, &height, &border, &depth);
+    
+    return {width, height};
+}
 
 void *WindowImpl::PickBestFBConfig(int screen_index){
     void *result = nullptr;

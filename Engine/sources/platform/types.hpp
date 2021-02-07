@@ -45,7 +45,8 @@ struct Size2{
     T width;
     T height;
 };
-typedef Size2<int> Size2i;
+typedef Size2<i32> Size2i;
+typedef Size2<u32> Size2u;
 typedef Size2<float> Size2f;
 
 struct Version{

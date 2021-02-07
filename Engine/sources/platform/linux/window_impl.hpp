@@ -30,6 +30,8 @@ struct WindowImpl{
 
     bool PollEvent(Event &event);
 
+    Size2u Size()const;
+
     static void *PickBestFBConfig(int screen_index);
 };
 

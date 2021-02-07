@@ -39,6 +39,8 @@ public:
     void SetTitle(const char *title);
 
     bool PollEvent(Event &event);
+
+    Size2u Size()const;
 };
 
 sx_inline Window::Window(Window &&other):
@@ -71,6 +73,10 @@ sx_inline void Window::SetTitle(const char *title){
 
 sx_inline bool Window::PollEvent(Event &event){
     return m_Impl.PollEvent(event);
+}
+
+sx_inline Size2u Window::Size()const{
+    return m_Impl.Size();
 }
 
 }; // namespace StraitX::
