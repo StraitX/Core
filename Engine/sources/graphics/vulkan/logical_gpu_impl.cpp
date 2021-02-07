@@ -70,19 +70,12 @@ Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
             CoreAssert(TransferQueue.IsInitialized(), "LogicalDevice: can't retrieve TransferQueue handle");       
         }
 
-        // we need a separate CmdBuffer for transfer operations
-        CmdPool.Create(this, TransferQueue.IsInitialized() ? TransferQueue : GraphicsQueue);
-
-        CmdBuffer.Create(&CmdPool);
     }
     return Result::Success;
 }
 
 void LogicalGPUImpl::Finalize(){
     vkDeviceWaitIdle(Handle);
-
-    CmdBuffer.Destroy();
-    CmdPool.Destroy();
 
     Allocator.Finalize();
     

@@ -34,19 +34,6 @@ set(SOURCES_CORE
 
 set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/debug.cpp
-    ${SOURCES_DIR}/graphics/vulkan/physical_device.cpp
-    ${SOURCES_DIR}/graphics/vulkan/renderer_api.cpp
-    ${SOURCES_DIR}/graphics/vulkan/logical_device.cpp
-    ${SOURCES_DIR}/graphics/vulkan/swapchain.cpp
-    ${SOURCES_DIR}/graphics/vulkan/command_pool.cpp
-    ${SOURCES_DIR}/graphics/vulkan/command_buffer.cpp
-    ${SOURCES_DIR}/graphics/vulkan/fence.cpp
-    ${SOURCES_DIR}/graphics/vulkan/render_pass.cpp
-    ${SOURCES_DIR}/graphics/vulkan/framebuffer.cpp
-    ${SOURCES_DIR}/graphics/vulkan/shader.cpp
-    ${SOURCES_DIR}/graphics/vulkan/graphics_pipeline.cpp
-    ${SOURCES_DIR}/graphics/vulkan/buffer.cpp
-    ${SOURCES_DIR}/graphics/vulkan/memory.cpp
 
     ${SOURCES_DIR}/graphics/vulkan/graphics_api_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/logical_gpu_impl.cpp

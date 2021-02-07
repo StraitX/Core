@@ -9,7 +9,7 @@ namespace StraitX{
 
 namespace GL{
 class GPUBufferImpl;
-}//namesapce GL::
+}//namespace GL::
 
 namespace Vk{
 class GPUBufferImpl;
@@ -21,7 +21,7 @@ public:
         TransferSource      = 0x01,      
         TransferDestination = 0x02,
         //UniformTexelBuffer  = 0x04,
-        //StorageTextlBuffer  = 0x08,
+        //StorageTexelBuffer  = 0x08,
         UniformBuffer       = 0x10,
         //StorageBuffer       = 0x20,
         IndexBuffer         = 0x40,

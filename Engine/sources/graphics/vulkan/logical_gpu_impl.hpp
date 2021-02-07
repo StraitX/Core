@@ -5,8 +5,6 @@
 #include "graphics/api/logical_gpu.hpp"
 #include "graphics/vulkan/queue.hpp"
 #include "graphics/vulkan/gpu_memory_allocator.hpp"
-#include "graphics/vulkan/command_buffer.hpp"
-#include "graphics/vulkan/semaphore.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -26,9 +24,6 @@ struct LogicalGPUImpl: public LogicalGPU{
 
     Vk::Queue GraphicsQueue;
     Vk::Queue TransferQueue;
-
-    Vk::CommandPool   CmdPool;
-    Vk::CommandBuffer CmdBuffer;
 
     static LogicalGPUImpl Instance;
 
