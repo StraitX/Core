@@ -45,6 +45,8 @@ struct LogicalGPUImpl: public LogicalGPU{
     sx_inline void Free(VkDeviceMemory mem){
         Allocator.Free(mem);
     }
+
+    void SubmitCmdBuffer(Vk::Queue queue, VkCommandBuffer cmd_buffer);
 };
 
 }//namespace Vk::

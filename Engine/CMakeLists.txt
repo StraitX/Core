@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 01)
-set(VERSION_PATCH 21)
+set(VERSION_PATCH 22)
 
 project(
     StraitXEngine 
@@ -52,12 +52,14 @@ set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/logical_gpu_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/gpu_memory_allocator.cpp
     ${SOURCES_DIR}/graphics/vulkan/gpu_buffer_impl.cpp
+    ${SOURCES_DIR}/graphics/vulkan/gpu_context_impl.cpp
 )
 
 set(SOURCES_GRAPHICS_OPENGL
     ${SOURCES_DIR}/graphics/opengl/graphics_api_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/logical_gpu_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/gpu_buffer_impl.cpp
+    ${SOURCES_DIR}/graphics/opengl/gpu_context_impl.cpp
 )
 
 set(SOURCES_GRAPHICS_API
@@ -66,6 +68,7 @@ set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/gpu_configuration.cpp
     ${SOURCES_DIR}/graphics/api/logical_gpu.cpp
     ${SOURCES_DIR}/graphics/api/gpu_buffer.cpp
+    ${SOURCES_DIR}/graphics/api/gpu_context.cpp
 )
 
 set(SOURCES_GRAPHICS 

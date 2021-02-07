@@ -1,25 +1,36 @@
 #include "core/log.hpp"
 #include "graphics/api/graphics_api_loader.hpp"
+
 #include "graphics/api/graphics_api.hpp"
-#include "graphics/opengl/graphics_api_impl.hpp"
 #include "graphics/vulkan/graphics_api_impl.hpp"
+#include "graphics/opengl/graphics_api_impl.hpp"
 
 #include "graphics/api/logical_gpu.hpp"
-#include "graphics/opengl/logical_gpu_impl.hpp"
 #include "graphics/vulkan/logical_gpu_impl.hpp"
+#include "graphics/opengl/logical_gpu_impl.hpp"
+
+#include "graphics/api/gpu_context.hpp"
+#include "graphics/vulkan/gpu_context_impl.hpp"
+#include "graphics/opengl/gpu_context_impl.hpp"
 
 namespace StraitX{
 
-static GraphicsAPI *GraphicsAPITable[GraphicsAPI::ElementsCount] = {
+static GraphicsAPI *const GraphicsAPITable[GraphicsAPI::ElementsCount] = {
     nullptr,
     &Vk::GraphicsAPIImpl::Instance,
     &GL::GraphicsAPIImpl::Instance
 };
 
-static LogicalGPU *LogicalGPUTable[GraphicsAPI::ElementsCount] = {
+static LogicalGPU *const LogicalGPUTable[GraphicsAPI::ElementsCount] = {
     nullptr,
     &Vk::LogicalGPUImpl::Instance,
     &GL::LogicalGPUImpl::Instance
+};
+
+static GPUContext::VTable GPUContextTable[GraphicsAPI::ElementsCount] = {
+    {nullptr, nullptr},
+    {&Vk::GPUContextImpl::NewImpl, &Vk::GPUContextImpl::DeleteImpl},
+    {&GL::GPUContextImpl::NewImpl, &GL::GPUContextImpl::DeleteImpl}
 };
 
 Result GraphicsAPILoader::Load(GraphicsAPI::API api){
@@ -31,6 +42,8 @@ Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     GraphicsAPI::s_Instance = GraphicsAPITable[api];
 
     LogicalGPU::s_Instance = LogicalGPUTable[api];
+
+    GPUContext::s_VTable = GPUContextTable[api];
 
     return Result::Success;
 }

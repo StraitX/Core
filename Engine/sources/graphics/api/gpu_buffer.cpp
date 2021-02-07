@@ -8,18 +8,11 @@
 namespace StraitX{
 
 GPUBuffer::GPUBuffer(){
-    switch (GraphicsAPI::Instance().CurrentAPI()) {
-    case GraphicsAPI::Vulkan:
-        const_cast<VTable::CreateProc&>(VirtualTable.Create) = &Vk::GPUBufferImpl::Create;
-        const_cast<VTable::DestroyProc&>(VirtualTable.Destroy) = &Vk::GPUBufferImpl::Destroy;
-        return;
-    case GraphicsAPI::OpenGL:
-        const_cast<VTable::CreateProc&>(VirtualTable.Create) = &GL::GPUBufferImpl::Create;
-        const_cast<VTable::DestroyProc&>(VirtualTable.Destroy) = &GL::GPUBufferImpl::Destroy;
-        return;
-    default:
-        LogWarn("GPUBuffer: is not supported");
-    }
+        //const_cast<VTable::CreateProc&>(VirtualTable.Create) = &Vk::GPUBufferImpl::Create;
+        //const_cast<VTable::DestroyProc&>(VirtualTable.Destroy) = &Vk::GPUBufferImpl::Destroy;
+        //const_cast<VTable::CreateProc&>(VirtualTable.Create) = &GL::GPUBufferImpl::Create;
+        //const_cast<VTable::DestroyProc&>(VirtualTable.Destroy) = &GL::GPUBufferImpl::Destroy;
+
 }
 
 }//namespace StraitX::

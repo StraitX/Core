@@ -42,6 +42,6 @@ public:
 
 };
 
-}// namepsace StraitX::
+}// namespace StraitX::
 
 #endif //STRAITX_GRAPHICS_API_HPP 

@@ -150,6 +150,23 @@ void LogicalGPUImpl::QueryQueues(){
 
 }
 
+void LogicalGPUImpl::SubmitCmdBuffer(Vk::Queue queue, VkCommandBuffer cmd_buffer){
+    CoreAssert(queue.FamilyIndex == GraphicsQueue.FamilyIndex, "Vk: LogicalGPU: SubmitCmdBuffer: unsupported queue family");
+
+    VkSubmitInfo info;
+    info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    info.pNext = nullptr;
+    info.commandBufferCount = 1;
+    info.pCommandBuffers = &cmd_buffer;
+    info.waitSemaphoreCount = 0;
+    info.pWaitSemaphores = nullptr;
+    info.signalSemaphoreCount = 0;
+    info.pSignalSemaphores = nullptr;
+    info.pWaitDstStageMask = nullptr;
+
+    CoreFunctionAssert(vkQueueSubmit(queue.Handle, 1, &info, VK_NULL_HANDLE), VK_SUCCESS, "Vk: LogicalGPU: Failed to submit CmdBuffer");
+    vkQueueWaitIdle(queue.Handle); // TODO Get rid of this // Context is Immediate mode for now :'-(
+}
 
 }//namespace Vk::
 }//namespace StraitX::
