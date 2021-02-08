@@ -32,6 +32,8 @@ GPUContextImpl::GPUContextImpl(Vk::LogicalGPUImpl *owner):
 
 
 GPUContextImpl::~GPUContextImpl(){
+    vkQueueWaitIdle(m_Owner->GraphicsQueue.Handle);
+
     vkFreeCommandBuffers(m_Owner->Handle, m_CmdPool, 1, &m_CmdBuffer);
 
     vkDestroyCommandPool(m_Owner->Handle, m_CmdPool, nullptr);
