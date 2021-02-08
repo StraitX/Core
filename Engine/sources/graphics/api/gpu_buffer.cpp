@@ -7,12 +7,6 @@
 
 namespace StraitX{
 
-GPUBuffer::GPUBuffer(){
-        //const_cast<VTable::CreateProc&>(VirtualTable.Create) = &Vk::GPUBufferImpl::Create;
-        //const_cast<VTable::DestroyProc&>(VirtualTable.Destroy) = &Vk::GPUBufferImpl::Destroy;
-        //const_cast<VTable::CreateProc&>(VirtualTable.Create) = &GL::GPUBufferImpl::Create;
-        //const_cast<VTable::DestroyProc&>(VirtualTable.Destroy) = &GL::GPUBufferImpl::Destroy;
-
-}
+GPUBuffer::VTable GPUBuffer::s_VTable;
 
 }//namespace StraitX::

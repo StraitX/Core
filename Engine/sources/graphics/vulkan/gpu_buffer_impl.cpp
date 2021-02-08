@@ -5,38 +5,19 @@
 namespace StraitX{
 namespace Vk{
 
-sx_inline u32 GPUBufferImpl::GetBufferMemoryRequirements(const GPUBuffer &buffer){
-    LogicalGPUImpl &buffer_owner_ref  = *static_cast<LogicalGPUImpl*>(buffer.m_Owner);
-    const VkBuffer &buffer_handle_ref = reinterpret_cast<const VkBuffer&>(buffer.m_Handle.U64);
+constexpr GPUBufferImpl::GPUBufferImpl(GPUBuffer &buffer):
+    GPUBufferImpl(static_cast<LogicalGPUImpl*>(buffer.m_Owner), reinterpret_cast<VkBuffer&>(buffer.m_Handle.U64), reinterpret_cast<VkDeviceMemory&>(buffer.m_BackingMemory.U64), buffer.m_Size)
+{}
 
-    VkMemoryRequirements req;
-    vkGetBufferMemoryRequirements(buffer_owner_ref.Handle, buffer_handle_ref, &req);
+constexpr GPUBufferImpl::GPUBufferImpl(Vk::LogicalGPUImpl *const owner, VkBuffer &handle, VkDeviceMemory &memory, u32 &size):
+    Owner(owner),
+    Handle(handle),
+    Memory(memory),
+    Size(size)
+{}
 
-    return req.size;
-}
-
-sx_inline Result GPUBufferImpl::AcquireMemory(GPUBuffer &buffer, GPUMemoryType mem_type){
-    LogicalGPUImpl &buffer_owner_ref  = *static_cast<LogicalGPUImpl*>(buffer.m_Owner);
-    VkBuffer       &buffer_handle_ref = reinterpret_cast<VkBuffer&>(buffer.m_Handle.U64);
-    VkDeviceMemory &buffer_memory_ref = reinterpret_cast<VkDeviceMemory&>(buffer.m_BackingMemory.U64);
-
-    buffer_memory_ref = buffer_owner_ref.Alloc(GetBufferMemoryRequirements(buffer), mem_type);
-    if(buffer_memory_ref == VK_NULL_HANDLE)
-        return Result::MemoryFailure;
-
-    return ResultError(vkBindBufferMemory(buffer_owner_ref.Handle, buffer_handle_ref, buffer_memory_ref, 0) != VK_SUCCESS);
-}
-
-sx_inline void GPUBufferImpl::ReleaseMemory(GPUBuffer &buffer){
-    LogicalGPUImpl &buffer_owner_ref  = *static_cast<LogicalGPUImpl*>(buffer.m_Owner);
-    VkDeviceMemory &buffer_memory_ref = reinterpret_cast<VkDeviceMemory&>(buffer.m_BackingMemory.U64);
-    
-    buffer_owner_ref.Free(buffer_memory_ref);
-}
-
-Result GPUBufferImpl::Create(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
-    buffer.m_Owner = &owner;
-    buffer.m_Size  = size;
+void GPUBufferImpl::Create(u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
+    Size = size;
 
     VkBufferCreateInfo info;
     info.sType                  = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -45,30 +26,42 @@ Result GPUBufferImpl::Create(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPU
     info.sharingMode            = VK_SHARING_MODE_EXCLUSIVE;
     info.queueFamilyIndexCount  = 0;
     info.pQueueFamilyIndices    = nullptr;
-    info.size                   = buffer.m_Size;
+    info.size                   = Size;
     info.usage                  = usage;
 
-    LogicalGPUImpl &buffer_owner_ref  = *static_cast<LogicalGPUImpl*>(buffer.m_Owner);
-    VkBuffer       &buffer_handle_ref = reinterpret_cast<VkBuffer&>(buffer.m_Handle.U64);
+    CoreFunctionAssert(vkCreateBuffer(Owner->Handle, &info, nullptr, &Handle), VK_SUCCESS, "Vk: GPUBufferImpl: Can't create buffer");
 
-    if(vkCreateBuffer(buffer_owner_ref.Handle, &info, nullptr, &buffer_handle_ref) != VK_SUCCESS)
-        return Result::Failure;
+    Memory = Owner->Alloc(GetBufferMemoryRequirements(Owner->Handle, Handle), mem_type);
 
-    return AcquireMemory(buffer, mem_type);
+    CoreAssert(Memory, "Vk: GPUBuffer: Can't allocate memory");
+
+    CoreFunctionAssert(vkBindBufferMemory(Owner->Handle, Handle, Memory, 0),VK_SUCCESS, "GPUBuffer: can't bind buffer's memory");
+
 }
 
-void GPUBufferImpl::Destroy(GPUBuffer &buffer){
-    ReleaseMemory(buffer);
+void GPUBufferImpl::Destroy(){
+    vkDestroyBuffer(Owner->Handle, Handle, nullptr);
 
-    LogicalGPUImpl &buffer_owner_ref  = *static_cast<LogicalGPUImpl*>(buffer.m_Owner);
-    VkBuffer       &buffer_handle_ref = reinterpret_cast<VkBuffer&>(buffer.m_Handle.U64);
+    Owner->Free(Memory);
+}
 
-    vkDestroyBuffer(buffer_owner_ref.Handle, buffer_handle_ref, nullptr);
+u32 GPUBufferImpl::GetBufferMemoryRequirements(VkDevice owner, VkBuffer buffer){
+    VkMemoryRequirements req;
+    vkGetBufferMemoryRequirements(owner, buffer, &req);
+    return req.size;
+}
 
-    buffer.m_Owner = nullptr;
-    buffer.m_Handle.U64 = 0;
-    buffer.m_Size = 0;
-    buffer.m_BackingMemory.U64 = 0;
+void GPUBufferImpl::NewImpl(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
+    // The only one thing we can't cast is owner, so we have to take care
+    buffer.m_Owner = &owner;
+
+    GPUBufferImpl impl(buffer);
+    impl.Create(size, mem_type, usage);
+}
+
+void GPUBufferImpl::DeleteImpl(GPUBuffer &buffer){
+    GPUBufferImpl impl(buffer);
+    impl.Destroy();
 }
 
 }//namespace Vk::

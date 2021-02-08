@@ -17,6 +17,10 @@
 #include "graphics/vulkan/swapchain_impl.hpp"
 #include "graphics/opengl/swapchain_impl.hpp"
 
+#include "graphics/api/gpu_buffer.hpp"
+#include "graphics/vulkan/gpu_buffer_impl.hpp"
+#include "graphics/opengl/gpu_buffer_impl.hpp"
+
 namespace StraitX{
 
 static GraphicsAPI *const GraphicsAPITable[GraphicsAPI::ElementsCount] = {
@@ -43,6 +47,12 @@ static Swapchain::VTable SwapchainTable[GraphicsAPI::ElementsCount] = {
     {&GL::SwapchainImpl::NewImpl, &GL::SwapchainImpl::DeleteImpl}
 };
 
+static GPUBuffer::VTable GPUBufferTable[GraphicsAPI::ElementsCount] = {
+    {nullptr, nullptr},
+    {&Vk::GPUBufferImpl::NewImpl, &Vk::GPUBufferImpl::DeleteImpl},
+    {&GL::GPUBufferImpl::NewImpl, &GL::GPUBufferImpl::DeleteImpl}
+};
+
 Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     if(api != GraphicsAPI::OpenGL && api != GraphicsAPI::Vulkan){
         LogError("GraphicsAPILoader::Load: Unknown API: %",(int)api);
@@ -56,6 +66,8 @@ Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     GPUContext::s_VTable = GPUContextTable[api];
 
     Swapchain::s_VTable = SwapchainTable[api];
+
+    GPUBuffer::s_VTable = GPUBufferTable[api];
 
     return Result::Success;
 }

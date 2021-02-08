@@ -3,20 +3,30 @@
 
 #include "platform/vulkan.hpp"
 #include "graphics/api/gpu_buffer.hpp"
+#include "graphics/vulkan/logical_gpu_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
 
 struct GPUBufferImpl{
-    sx_inline static u32 GetBufferMemoryRequirements(const GPUBuffer &buffer);
+    Vk::LogicalGPUImpl *const Owner;
+    VkBuffer &Handle;
+    VkDeviceMemory &Memory;
+    u32 &Size;
 
-    sx_inline static Result AcquireMemory(GPUBuffer &buffer, GPUMemoryType type);
+    constexpr GPUBufferImpl(GPUBuffer &buffer);
 
-    sx_inline static void ReleaseMemory(GPUBuffer &buffer);
+    constexpr GPUBufferImpl(Vk::LogicalGPUImpl *const owner, VkBuffer &Handle, VkDeviceMemory &Memory, u32 &size);
 
-    static Result Create(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
+    sx_inline void Create(u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
 
-    static void Destroy(GPUBuffer &buffer);
+    sx_inline void Destroy();
+
+    sx_inline static u32 GetBufferMemoryRequirements(VkDevice owner, VkBuffer buffer);
+
+    static void NewImpl(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
+
+    static void DeleteImpl(GPUBuffer &buffer);
 };
 
 }//namespace Vk::

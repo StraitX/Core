@@ -7,9 +7,9 @@ namespace StraitX{
 namespace GL{
 
 struct GPUBufferImpl{
-    static Result Create(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
+    static void NewImpl(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
 
-    static void Destroy(GPUBuffer &buffer);
+    static void DeleteImpl(GPUBuffer &buffer);
 };
 
 }//namespace GL::
