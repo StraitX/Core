@@ -81,6 +81,7 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
 }
 
 SwapchainImpl::~SwapchainImpl(){
+    vkQueueWaitIdle(m_Owner->GraphicsQueue.Handle);
     
     vkDestroySwapchainKHR(m_Owner->Handle, m_Handle, nullptr);
 
