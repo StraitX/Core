@@ -3,6 +3,7 @@
 
 #include "platform/result.hpp"
 #include "platform/types.hpp"
+#include "platform/compiler.hpp"
 #include "core/assert.hpp"
 #include "core/noncopyable.hpp"
 #include "graphics/api/gpu_configuration.hpp"
@@ -19,8 +20,6 @@ class CPUBufferImpl;
 }//namespace Vk::
 
 
-class GraphicsAPILoader;
-
 class CPUBuffer: NonCopyable{
 private:
     LogicalGPU *const m_Owner = nullptr;
@@ -31,18 +30,28 @@ private:
 
     friend class GL::CPUBufferImpl;
     friend class Vk::CPUBufferImpl;
-    friend class GraphicsAPILoader;
 public:
     sx_inline CPUBuffer():
         m_Owner(&LogicalGPU::Instance())
     {}
 
+// Use destructor to avoid Buffer leaks
+#ifdef SX_DEBUG
+    ~CPUBuffer(){
+        CoreAssert(m_Pointer == nullptr, "CPUBuffer: Delete should be called before destruction");
+    }
+#endif
+
     sx_inline void New(size_t size){
+        CoreAssert(m_Pointer == nullptr, "CPUBuffer: New() should be called on empty object");
         m_Owner->NewCPUBuffer(*this, size);
     }
 
     sx_inline void Delete(){
         m_Owner->DeleteCPUBuffer(*this);
+#ifdef SX_DEBUG
+        m_Pointer = nullptr;
+#endif
     }
 
     sx_inline void *Pointer(){

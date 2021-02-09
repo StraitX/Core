@@ -55,7 +55,15 @@ public:
         m_Owner(&LogicalGPU::Instance())
     {}
 
+// Use destructor to avoid Buffer leaks
+#ifdef SX_DEBUG
+    ~GPUBuffer(){
+        CoreAssert(m_Handle.U64 == 0, "GPUBuffer: Delete() should be called before destruction");
+    }
+#endif
+
     sx_inline void New(u32 size, GPUMemoryType mem_type, UsageType usage){
+        CoreAssert(m_Handle.U64 == 0, "GPUBuffer: New() should be called on empty object");
         s_VTable.New(*this, size, mem_type, usage);
     }
 
@@ -65,13 +73,6 @@ public:
         m_Handle.U64 = 0;
 #endif
     }
-
-// Use destructor to avoid Buffer leaks
-#ifdef SX_DEBUG
-    ~GPUBuffer(){
-        CoreAssert(m_Handle.U64 == 0, "GPUBuffer: Delete should be called before destruction");
-    }
-#endif
 
 };
 
