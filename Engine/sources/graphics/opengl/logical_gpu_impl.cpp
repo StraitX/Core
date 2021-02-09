@@ -1,5 +1,6 @@
 #include "core/assert.hpp"
 #include "graphics/opengl/logical_gpu_impl.hpp"
+#include "graphics/opengl/cpu_buffer_impl.hpp"
 #include "servers/display_server.hpp"
 
 namespace StraitX{
@@ -12,6 +13,10 @@ Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
         return Result::Unsupported;
     if(m_Context.MakeCurrent() != Result::Success)
         return Result::Unavailable;
+
+    m_VTable.NewCPUBuffer    = &GL::CPUBufferImpl::NewImpl;
+    m_VTable.DeleteCPUBuffer = &GL::CPUBufferImpl::DeleteImpl;
+    
     return Result::Success;
 }
 

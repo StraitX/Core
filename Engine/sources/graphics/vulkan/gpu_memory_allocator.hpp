@@ -4,6 +4,7 @@
 #include "platform/vulkan.hpp"
 #include "platform/defs.hpp"
 #include "graphics/api/gpu_configuration.hpp"
+#include "graphics/vulkan/memory.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -11,27 +12,14 @@ namespace Vk{
 struct LogicalGPUImpl;
 
 struct GPUMemoryAllocator{
-    LogicalGPUImpl *Owner = nullptr;
-
-    u32 VRAM            = InvalidIndex;
-    u64 VRAMSize        = 0;
-
-    u32 DynamicVRAM     = InvalidIndex;
-    u64 DynamicVRAMSize = 0;
-
-    u32 RAM             = InvalidIndex;
-    u64 RAMSize         = 0;
-
-    u32 UncachedRAM     = InvalidIndex;
-    u64 UncachedRAMSize = 0;
+    VkDevice     Owner  = VK_NULL_HANDLE;
+    MemoryTypes *Memory = nullptr;
 
     void Initialize(LogicalGPUImpl *owner);
 
     void Finalize();
 
-    sx_inline u32 GetMemoryIndex(GPUMemoryType type);
-
-    VkDeviceMemory Alloc(u32 size, GPUMemoryType type);
+    VkDeviceMemory Alloc(u32 size, MemoryTypes::Type type);
 
     void Free(VkDeviceMemory memory);
 };

@@ -4,7 +4,7 @@
 #include "core/array_ptr.hpp"
 #include "core/string.hpp"
 #include "graphics/vulkan/logical_gpu_impl.hpp"
-
+#include "graphics/vulkan/cpu_buffer_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -18,8 +18,17 @@ Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
         Type           = gpu.Type;
 
         QueryQueues();
-        Allocator.Initialize(this);
+        Memory.Query(PhysicalHandle);
 
+        if(Memory.Layout == MemoryLayout::Unknown)
+            return Result::Unsupported;
+        if(Memory.Layout == MemoryLayout::Uniform){
+            m_VTable.NewCPUBuffer    = &CPUBufferImpl::NewUniformImpl;
+            m_VTable.DeleteCPUBuffer = &CPUBufferImpl::DeleteUniformImpl;
+        }else{//MemoryLayout::Dedicated || MemoryLayout::DedicatedWithDynamic
+            m_VTable.NewCPUBuffer    = &CPUBufferImpl::NewDedicatedImpl;
+            m_VTable.DeleteCPUBuffer = &CPUBufferImpl::DeleteDedicatedImpl;
+        }        
     }
     
     { // Device creation
@@ -76,6 +85,8 @@ Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
         }
 
     }
+    Allocator.Initialize(this);
+
     return Result::Success;
 }
 

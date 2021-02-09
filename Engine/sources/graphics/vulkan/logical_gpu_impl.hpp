@@ -4,6 +4,7 @@
 #include "platform/vulkan.hpp"
 #include "graphics/api/logical_gpu.hpp"
 #include "graphics/vulkan/queue.hpp"
+#include "graphics/vulkan/memory.hpp"
 #include "graphics/vulkan/gpu_memory_allocator.hpp"
 
 namespace StraitX{
@@ -20,6 +21,8 @@ struct LogicalGPUImpl: public LogicalGPU{
     u32 ComputeQueueFamily   = InvalidIndex;
     u32 TransferQueueFamily  = InvalidIndex; 
 
+    MemoryTypes Memory;
+
     GPUMemoryAllocator Allocator;
 
     Vk::Queue GraphicsQueue;
@@ -33,7 +36,7 @@ struct LogicalGPUImpl: public LogicalGPU{
 
     void QueryQueues();
 
-    sx_inline VkDeviceMemory Alloc(u32 size, GPUMemoryType type){
+    sx_inline VkDeviceMemory Alloc(u32 size, MemoryTypes::Type type){
         return Allocator.Alloc(size,type);
     }
 
