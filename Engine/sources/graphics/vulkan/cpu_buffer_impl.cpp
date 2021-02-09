@@ -3,7 +3,7 @@
 namespace StraitX{
 namespace Vk{
 
-void CPUBufferImpl::CreateDedicated(size_t size){
+void CPUBufferImpl::Create(u32 size){
     Size = size;
 
     VkBufferCreateInfo info;
@@ -29,39 +29,20 @@ void CPUBufferImpl::CreateDedicated(size_t size){
     CoreFunctionAssert(vkBindBufferMemory(Owner->Handle, Handle, Memory, 0),VK_SUCCESS, "GPUBuffer: can't bind buffer's memory");
 }
 
-void CPUBufferImpl::DestroyDedicated(){
+void CPUBufferImpl::Destroy(){
     vkDestroyBuffer(Owner->Handle, Handle, nullptr);
     
     Owner->Free(Memory);
 }
 
-void CPUBufferImpl::CreateUniform(size_t size){
-    Size = size;
-    Pointer = Memory::Alloc(size);
-}
-
-void CPUBufferImpl::DestroyUniform(){
-    Memory::Free(Pointer); 
-}
-
-void CPUBufferImpl::NewDedicatedImpl(CPUBuffer &buffer, size_t size){
+void CPUBufferImpl::NewImpl(CPUBuffer &buffer, u32 size){
     CPUBufferImpl impl(buffer);
-    impl.CreateDedicated(size);
+    impl.Create(size);
 }
 
-void CPUBufferImpl::DeleteDedicatedImpl(CPUBuffer &buffer){
+void CPUBufferImpl::DeleteImpl(CPUBuffer &buffer){
     CPUBufferImpl impl(buffer);
-    impl.DestroyDedicated();
-}
-
-void CPUBufferImpl::NewUniformImpl(CPUBuffer &buffer, size_t size){
-    CPUBufferImpl impl(buffer);
-    impl.CreateUniform(size);
-}
-
-void CPUBufferImpl::DeleteUniformImpl(CPUBuffer &buffer){
-    CPUBufferImpl impl(buffer);
-    impl.DestroyUniform();
+    impl.Destroy();
 }
 
 }//namespace Vk::

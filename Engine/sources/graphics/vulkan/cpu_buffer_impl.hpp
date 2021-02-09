@@ -12,8 +12,8 @@ struct CPUBufferImpl{
     LogicalGPUImpl * const Owner;
     VkBuffer &Handle;
     VkDeviceMemory &Memory;
-    size_t   &Size;
-    void*    &Pointer;
+    u32 &Size;
+    void *&Pointer;
 
     // NOTE: CPUBuffer should already have an owner because we can't cast type of pointer in a reference to pointer variable
     constexpr CPUBufferImpl(CPUBuffer &buffer):
@@ -25,7 +25,7 @@ struct CPUBufferImpl{
             buffer.m_Pointer)
     {}
 
-    constexpr CPUBufferImpl(LogicalGPUImpl *owner, VkBuffer &handle, VkDeviceMemory &memory, size_t &size, void *&pointer):
+    constexpr CPUBufferImpl(LogicalGPUImpl *owner, VkBuffer &handle, VkDeviceMemory &memory, u32 &size, void *&pointer):
         Owner(owner),
         Handle(handle),
         Memory(memory),
@@ -33,21 +33,13 @@ struct CPUBufferImpl{
         Pointer(pointer)
     {}
 
-    sx_inline void CreateDedicated(size_t size);
+    sx_inline void Create(u32 size);
 
-    sx_inline void DestroyDedicated();
+    sx_inline void Destroy();
 
-    sx_inline void CreateUniform(size_t size);
+    static void NewImpl(CPUBuffer &buffer, u32 size);
 
-    sx_inline void DestroyUniform();
-
-    static void NewDedicatedImpl(CPUBuffer &buffer, size_t size);
-
-    static void DeleteDedicatedImpl(CPUBuffer &buffer);
-
-    static void NewUniformImpl(CPUBuffer &buffer, size_t size);
-
-    static void DeleteUniformImpl(CPUBuffer &buffer);
+    static void DeleteImpl(CPUBuffer &buffer);
 };
 
 }//namespace Vk::

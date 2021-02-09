@@ -19,17 +19,29 @@ namespace Vk{
 class CPUBufferImpl;
 }//namespace Vk::
 
+class GraphicsAPILoader;
 
 class CPUBuffer: NonCopyable{
+public:
+    struct VTable{
+        using NewProc    = void (*)(CPUBuffer &buffer, u32 size);
+        using DeleteProc = void (*)(CPUBuffer &buffer);
+
+        NewProc    New    = nullptr;
+        DeleteProc Delete = nullptr;
+    };
 private:
+    static VTable s_VTable;
+
     LogicalGPU *const m_Owner = nullptr;
     GPUResourceHandle m_Handle = {};
     GPUResourceHandle m_BackingMemory = {};
     void *m_Pointer = nullptr;
-    size_t m_Size = 0;
+    u32 m_Size = 0;
 
     friend class GL::CPUBufferImpl;
     friend class Vk::CPUBufferImpl;
+    friend class GraphicsAPILoader;
 public:
     sx_inline CPUBuffer():
         m_Owner(&LogicalGPU::Instance())
@@ -42,13 +54,13 @@ public:
     }
 #endif
 
-    sx_inline void New(size_t size){
+    sx_inline void New(u32 size){
         CoreAssert(m_Pointer == nullptr, "CPUBuffer: New() should be called on empty object");
-        m_Owner->NewCPUBuffer(*this, size);
+        s_VTable.New(*this, size);
     }
 
     sx_inline void Delete(){
-        m_Owner->DeleteCPUBuffer(*this);
+        s_VTable.Delete(*this);
 #ifdef SX_DEBUG
         m_Pointer = nullptr;
 #endif

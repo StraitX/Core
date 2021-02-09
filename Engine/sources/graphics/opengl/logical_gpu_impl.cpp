@@ -13,10 +13,6 @@ Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
         return Result::Unsupported;
     if(m_Context.MakeCurrent() != Result::Success)
         return Result::Unavailable;
-
-    m_VTable.NewCPUBuffer    = &GL::CPUBufferImpl::NewImpl;
-    m_VTable.DeleteCPUBuffer = &GL::CPUBufferImpl::DeleteImpl;
-    
     return Result::Success;
 }
 

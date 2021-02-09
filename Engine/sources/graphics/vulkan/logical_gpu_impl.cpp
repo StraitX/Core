@@ -18,17 +18,7 @@ Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
         Type           = gpu.Type;
 
         QueryQueues();
-        Memory.Query(PhysicalHandle);
-
-        if(Memory.Layout == MemoryLayout::Unknown)
-            return Result::Unsupported;
-        if(Memory.Layout == MemoryLayout::Uniform){
-            m_VTable.NewCPUBuffer    = &CPUBufferImpl::NewUniformImpl;
-            m_VTable.DeleteCPUBuffer = &CPUBufferImpl::DeleteUniformImpl;
-        }else{//MemoryLayout::Dedicated || MemoryLayout::DedicatedWithDynamic
-            m_VTable.NewCPUBuffer    = &CPUBufferImpl::NewDedicatedImpl;
-            m_VTable.DeleteCPUBuffer = &CPUBufferImpl::DeleteDedicatedImpl;
-        }        
+        Memory.Query(PhysicalHandle);    
     }
     
     { // Device creation
