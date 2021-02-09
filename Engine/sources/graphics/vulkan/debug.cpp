@@ -16,6 +16,8 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
     case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: prefix = "Warn "; break;
     case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:    prefix = "Info "; break;
     case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:   prefix = "Error"; break;
+    default:
+        break;
     }
 
     std::fprintf(stderr,"[%s]: VulkanValidator: \n",prefix);
