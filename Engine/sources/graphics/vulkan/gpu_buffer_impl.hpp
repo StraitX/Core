@@ -24,7 +24,7 @@ struct GPUBufferImpl{
 
     sx_inline static u32 GetBufferMemoryRequirements(VkDevice owner, VkBuffer buffer);
 
-    static void NewImpl(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
+    static void NewImpl(GPUBuffer &buffer, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
 
     static void DeleteImpl(GPUBuffer &buffer);
 };

@@ -33,7 +33,7 @@ public:
     using UsageType = u8;
 
     struct VTable{
-        using NewProc    = void (*)(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, UsageType usage);
+        using NewProc    = void (*)(GPUBuffer &buffer, u32 size, GPUMemoryType mem_type, UsageType usage);
         using DeleteProc = void (*)(GPUBuffer &buffer);
 
         NewProc    New    = nullptr;
@@ -51,9 +51,12 @@ private:
     friend class GL::GPUBufferImpl;
     friend class Vk::GPUBufferImpl;
 public:
+    sx_inline GPUBuffer():
+        m_Owner(&LogicalGPU::Instance())
+    {}
 
     sx_inline void New(u32 size, GPUMemoryType mem_type, UsageType usage){
-        s_VTable.New(*this, LogicalGPU::Instance(), size, mem_type, usage);
+        s_VTable.New(*this, size, mem_type, usage);
     }
 
     sx_inline void Delete(){

@@ -50,10 +50,8 @@ u32 GPUBufferImpl::GetBufferMemoryRequirements(VkDevice owner, VkBuffer buffer){
     return req.size;
 }
 
-void GPUBufferImpl::NewImpl(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
-    // The only one thing we can't cast is owner, so we have to take care
-    buffer.m_Owner = &owner;
-
+// buffer got his owner in constructor
+void GPUBufferImpl::NewImpl(GPUBuffer &buffer, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
     GPUBufferImpl impl(buffer);
     impl.Create(size, mem_type, usage);
 }
