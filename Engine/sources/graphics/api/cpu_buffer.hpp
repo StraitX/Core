@@ -66,12 +66,20 @@ public:
 #endif
     }
 
-    sx_inline void *Pointer(){
+    constexpr void *Pointer()const{
         CoreAssert(m_Pointer, "CPUBuffer: For some reason Pointer is null");
         return m_Pointer;
     }
 
     void CopyData(const void *source, size_t size);
+
+    constexpr GPUResourceHandle Handle()const{
+        return m_Handle;
+    }
+
+    constexpr u32 Size()const{
+        return m_Size;
+    }
     
 };
 

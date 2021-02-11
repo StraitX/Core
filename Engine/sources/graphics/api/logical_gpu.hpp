@@ -10,8 +10,6 @@ namespace StraitX{
 
 class GraphicsAPILoader;
 
-class CPUBuffer;
-
 class LogicalGPU: NonCopyable{
 private:
     static LogicalGPU *s_Instance;

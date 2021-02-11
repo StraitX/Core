@@ -3,7 +3,9 @@
 #include "platform/vulkan.hpp"
 #include "core/assert.hpp"
 #include "graphics/vulkan/gpu_context_impl.hpp"
-
+#include "graphics/vulkan/cpu_buffer_impl.hpp"
+#include "graphics/vulkan/gpu_buffer_impl.hpp"
+#include "graphics/vulkan/gpu_texture_impl.hpp"
 
 
 namespace StraitX{
@@ -65,6 +67,17 @@ void GPUContextImpl::SumbitAsync(){
     m_Owner->SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer);
 }
 
+
+void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){  
+    CoreAssert(dst.Size() <= size + dst_offset, "Vk: GPUContext: Copy: Dst Buffer overflow");
+
+    VkBufferCopy copy;
+    copy.dstOffset = dst_offset;
+    copy.srcOffset = 0;
+    copy.size = size;
+
+    vkCmdCopyBuffer(m_CmdBuffer, (VkBuffer)src.Handle().U64, (VkBuffer)dst.Handle().U64, 1, &copy);
+}
 
 GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){
     return new(Memory::Alloc(sizeof(GPUContextImpl))) GPUContextImpl(static_cast<Vk::LogicalGPUImpl*>(&owner));

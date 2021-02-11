@@ -1,7 +1,11 @@
 #include <new>
 #include "platform/memory.hpp"
 #include "platform/opengl.hpp"
+#include "graphics/opengl/debug.hpp"
 #include "graphics/opengl/gpu_context_impl.hpp"
+#include "graphics/opengl/cpu_buffer_impl.hpp"
+#include "graphics/opengl/gpu_buffer_impl.hpp"
+#include "graphics/opengl/gpu_texture_impl.hpp"
 
 namespace StraitX{
 namespace GL{
@@ -23,6 +27,12 @@ void GPUContextImpl::SumbitAsync(){
     Submit();
 }
 
+void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){
+    CoreAssert(dst.Size() <= size + dst_offset, "GL: GPUContext: Copy: Dst Buffer overflow");
+
+    glBindBuffer(GL_COPY_WRITE_BUFFER, dst.Handle().U32);
+    GL(glBufferSubData(GL_COPY_WRITE_BUFFER, dst_offset, size, src.Pointer()));
+}
 
 GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){
     // In OpenGL we don't have GPU distinctions so owner doesn't matter

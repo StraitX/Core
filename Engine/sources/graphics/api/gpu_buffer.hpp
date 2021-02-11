@@ -74,6 +74,14 @@ public:
 #endif
     }
 
+    constexpr GPUResourceHandle Handle()const{
+        return m_Handle;
+    }
+
+    constexpr u32 Size()const{
+        return m_Size;
+    }
+
 };
 
 }//namespace StraitX::
