@@ -42,7 +42,7 @@ public:
 private:
     static VTable s_VTable;
 
-    LogicalGPU *m_Owner = nullptr;
+    LogicalGPU *const m_Owner = nullptr;
     u32 m_Size          = 0;
     GPUResourceHandle m_Handle          = {};
     GPUResourceHandle m_BackingMemory   = {};
