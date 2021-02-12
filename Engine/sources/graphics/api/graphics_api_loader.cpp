@@ -29,6 +29,10 @@
 #include "graphics/vulkan/gpu_texture_impl.hpp"
 #include "graphics/opengl/gpu_texture_impl.hpp"
 
+#include "graphics/api/shader.hpp"
+#include "graphics/vulkan/shader_impl.hpp"
+#include "graphics/opengl/shader_impl.hpp"
+
 namespace StraitX{
 
 static GraphicsAPI *const GraphicsAPITable[GraphicsAPI::ElementsCount] = {
@@ -73,11 +77,18 @@ static GPUTexture::VTable GPUTextureTable[GraphicsAPI::ElementsCount] = {
     {&GL::GPUTextureImpl::NewImpl, &GL::GPUTextureImpl::DeleteImpl}
 };
 
+static Shader::VTable ShaderTable[GraphicsAPI::ElementsCount] = {
+    {nullptr, nullptr},
+    {&Vk::ShaderImpl::NewImpl, &Vk::ShaderImpl::DeleteImpl},
+    {&GL::ShaderImpl::NewImpl, &GL::ShaderImpl::DeleteImpl}
+};
+
 Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     if(api != GraphicsAPI::OpenGL && api != GraphicsAPI::Vulkan){
         LogError("GraphicsAPILoader::Load: Unknown API: %",(int)api);
         return Result::Unsupported;
     }
+    GraphicsAPI::s_CurrentAPI = api;
 
     GraphicsAPI::s_Instance = GraphicsAPITable[api];
 
@@ -92,6 +103,8 @@ Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     CPUBuffer::s_VTable = CPUBufferTable[api];
 
     GPUTexture::s_VTable = GPUTextureTable[api];
+
+    Shader::s_VTable = ShaderTable[api];
 
     return Result::Success;
 }
