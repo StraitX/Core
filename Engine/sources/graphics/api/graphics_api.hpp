@@ -23,13 +23,17 @@ public:
     };
 private:
     static GraphicsAPI *s_Instance;
-
+    static API s_CurrentAPI;
     friend class Engine;
     friend class GraphicsAPILoader;
 public:
     static sx_inline GraphicsAPI &Instance(){
         CoreAssert(s_Instance, "GraphicsAPI: has not been initialized for some reason");
         return *s_Instance;
+    }
+
+    static sx_inline API CurrentAPI(){
+        return s_CurrentAPI;
     }
 
     virtual Result Initialize() = 0;
