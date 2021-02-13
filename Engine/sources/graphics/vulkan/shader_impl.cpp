@@ -21,7 +21,8 @@ sx_inline ShaderImpl::ShaderImpl(LogicalGPU &owner, Type type, Lang lang, const 
 }
 
 sx_inline ShaderImpl::~ShaderImpl(){
-    vkDestroyShaderModule(Owner.Handle, Handle, nullptr);
+    if(IsValid())
+        vkDestroyShaderModule(Owner.Handle, Handle, nullptr);
 }
 
 bool ShaderImpl::IsValid(){

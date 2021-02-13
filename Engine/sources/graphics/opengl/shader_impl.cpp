@@ -29,7 +29,8 @@ ShaderImpl::ShaderImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *source
 }
 
 ShaderImpl::~ShaderImpl(){
-    glDeleteShader(Handle);
+    if(Handle)
+        glDeleteShader(Handle);
 }
 
 bool ShaderImpl::IsValid(){
