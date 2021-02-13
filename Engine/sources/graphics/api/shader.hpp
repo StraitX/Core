@@ -5,6 +5,7 @@
 #include "platform/result.hpp"
 #include "platform/file.hpp"
 #include "core/noncopyable.hpp"
+#include "core/validable.hpp"
 #include "core/array_ptr.hpp"
 #include "graphics/api/logical_gpu.hpp"
 
@@ -12,7 +13,7 @@ namespace StraitX{
 
 class GraphicsAPILoader;
 
-class Shader: NonCopyable{
+class Shader: NonCopyable, public Validable{
 public:
     enum Type: u8{
         Vertex,
@@ -44,8 +45,6 @@ public:
     Shader() = default;
 
     virtual ~Shader() = default;
-
-    virtual bool IsValid() = 0;
 
     sx_inline static Shader *New(Type type, Lang lang, const u8 *sources, u32 length){
         return s_VTable.New(LogicalGPU::Instance(), type, lang, sources, length);
