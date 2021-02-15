@@ -14,6 +14,7 @@ VkShaderStageFlagBits ShaderImpl::StageTable[] = {
 };
     
 ShaderImpl::ShaderImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *sources, u32 length):
+    Shader(type, lang),
     Owner(static_cast<Vk::LogicalGPUImpl&>(owner))
 {
     if(lang != Shader::Lang::SPIRV)return;

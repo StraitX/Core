@@ -16,7 +16,9 @@ GLenum ShaderTypesTable[]={
     GL_COMPUTE_SHADER
 };
 
-ShaderImpl::ShaderImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *sources, u32 length){
+ShaderImpl::ShaderImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *sources, u32 length):
+    Shader(type,lang)
+{
     //OpenGL, GPUless, we know...
     (void)owner;
 
