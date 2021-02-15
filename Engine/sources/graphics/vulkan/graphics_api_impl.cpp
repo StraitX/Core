@@ -81,9 +81,9 @@ sx_inline Result GraphicsAPIImpl::Create(const Version &version, const ArrayPtr<
     create_info.flags = 0;
     create_info.pApplicationInfo = &app_info;
     create_info.enabledExtensionCount = extensions.Size();
-    create_info.ppEnabledExtensionNames = extensions.Data();
+    create_info.ppEnabledExtensionNames = extensions.Pointer();
     create_info.enabledLayerCount = layers.Size();
-    create_info.ppEnabledLayerNames = layers.Data();
+    create_info.ppEnabledLayerNames = layers.Pointer();
     
     if(vkCreateInstance(&create_info, nullptr, &Handle) != VK_SUCCESS)
         return Result::Failure;

@@ -35,9 +35,9 @@ public:
 
     constexpr T_Size Size()const;
 
-    constexpr T_Type *Data();
+    constexpr T_Type *Pointer();
 
-    constexpr const T_Type *Data()const;
+    constexpr const T_Type *Pointer()const;
     
     typedef T_Type* iterator;
     typedef const T_Type* const_iterator;
@@ -103,33 +103,33 @@ constexpr T_Size ArrayPtr<T_Type, T_Size>::Size()const{
 }
 
 template <typename T_Type, typename T_Size>
-constexpr T_Type *ArrayPtr<T_Type, T_Size>::Data(){
+constexpr T_Type *ArrayPtr<T_Type, T_Size>::Pointer(){
     return m_Pointer;
 }
 
 template <typename T_Type, typename T_Size>
-constexpr const T_Type *ArrayPtr<T_Type, T_Size>::Data()const{
+constexpr const T_Type *ArrayPtr<T_Type, T_Size>::Pointer()const{
     return m_Pointer;
 }
 
 template <typename T_Type, typename T_Size>
 constexpr typename ArrayPtr<T_Type, T_Size>::iterator ArrayPtr<T_Type, T_Size>::begin(){
-    return Data();
+    return Pointer();
 }
 
 template <typename T_Type, typename T_Size>
 constexpr typename ArrayPtr<T_Type, T_Size>::iterator ArrayPtr<T_Type, T_Size>::end(){
-    return Data()+Size();
+    return Pointer()+Size();
 }
 
 template <typename T_Type, typename T_Size>
 constexpr typename ArrayPtr<T_Type, T_Size>::const_iterator ArrayPtr<T_Type, T_Size>::begin()const{
-    return Data();
+    return Pointer();
 }
 
 template <typename T_Type, typename T_Size>
 constexpr typename ArrayPtr<T_Type, T_Size>::const_iterator ArrayPtr<T_Type, T_Size>::end()const{
-    return Data()+Size();
+    return Pointer()+Size();
 }
 
 }; // namespace StraitX::
