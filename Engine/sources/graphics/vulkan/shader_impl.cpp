@@ -4,8 +4,16 @@
 namespace StraitX{
 namespace Vk{
 
+VkShaderStageFlagBits ShaderImpl::StageTable[] = {
+    VK_SHADER_STAGE_VERTEX_BIT,
+    VK_SHADER_STAGE_GEOMETRY_BIT,
+    VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT,
+    VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT,
+    VK_SHADER_STAGE_FRAGMENT_BIT,
+    VK_SHADER_STAGE_COMPUTE_BIT
+};
     
-sx_inline ShaderImpl::ShaderImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *sources, u32 length):
+ShaderImpl::ShaderImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *sources, u32 length):
     Owner(static_cast<Vk::LogicalGPUImpl&>(owner))
 {
     if(lang != Shader::Lang::SPIRV)return;
@@ -20,7 +28,7 @@ sx_inline ShaderImpl::ShaderImpl(LogicalGPU &owner, Type type, Lang lang, const 
     Status = vkCreateShaderModule(Owner.Handle, &info, nullptr, &Handle);
 }
 
-sx_inline ShaderImpl::~ShaderImpl(){
+ShaderImpl::~ShaderImpl(){
     if(IsValid())
         vkDestroyShaderModule(Owner.Handle, Handle, nullptr);
 }

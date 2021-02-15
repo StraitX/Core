@@ -9,6 +9,8 @@ namespace StraitX{
 namespace Vk{
 
 struct ShaderImpl: public Shader{
+    static VkShaderStageFlagBits StageTable[];
+
     Vk::LogicalGPUImpl &Owner;
     VkShaderModule Handle = VK_NULL_HANDLE;
     VkResult Status = VK_ERROR_INITIALIZATION_FAILED;
