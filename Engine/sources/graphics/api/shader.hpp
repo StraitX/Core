@@ -13,7 +13,7 @@ namespace StraitX{
 
 class GraphicsAPILoader;
 
-class Shader: NonCopyable, public Validable{
+class Shader: public NonCopyable, public Validable{
 public:
     enum Type: u8{
         Vertex,
@@ -30,7 +30,7 @@ public:
     };
 
     struct VTable{
-        using NewProc    = Shader *(*)(LogicalGPU &owner, Type type, Lang lang, const u8 *sources, u32 length);
+        using NewProc    = Shader *(*)(LogicalGPU &owner, Shader::Type type, Shader::Lang lang, const u8 *sources, u32 length);
         using DeleteProc = void (*)(Shader *shader);
 
         NewProc    New    = nullptr;
@@ -39,14 +39,28 @@ public:
 private:
     static VTable s_VTable;
 
+    Type m_Type;
+    Lang m_Lang;
+
     friend class GraphicsAPILoader;
 public:
 
-    Shader() = default;
+    constexpr Shader(Shader::Type type, Shader::Lang lang):
+        m_Type(type),
+        m_Lang(lang)
+    {}
 
     virtual ~Shader() = default;
 
-    sx_inline static Shader *New(Type type, Lang lang, const u8 *sources, u32 length){
+    constexpr Shader::Type GetType(){
+        return m_Type;
+    }
+
+    constexpr Shader::Lang GetLang(){
+        return m_Lang;
+    }
+
+    sx_inline static Shader *New(Shader::Type type, Shader::Lang lang, const u8 *sources, u32 length){
         return s_VTable.New(LogicalGPU::Instance(), type, lang, sources, length);
     }
 
