@@ -87,6 +87,8 @@ public:
     sx_inline void Delete(){
         s_VTable.Delete(*this);
     }
+
+    static bool IsDepthFormat(GPUTexture::Format format);
 };
 
 }//namespace StraitX::
