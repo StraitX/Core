@@ -23,6 +23,7 @@ void CPUBufferImpl::Create(u32 size){
 
 
     Memory = Owner->Alloc(req.size, MemoryTypes::RAM);
+    vkMapMemory(Owner->Handle, Memory, 0, req.size, 0, &Pointer);
 
     CoreAssert(Memory, "Vk: GPUBuffer: Can't allocate memory");
 
@@ -31,7 +32,8 @@ void CPUBufferImpl::Create(u32 size){
 
 void CPUBufferImpl::Destroy(){
     vkDestroyBuffer(Owner->Handle, Handle, nullptr);
-    
+
+    vkUnmapMemory(Owner->Handle, Memory);
     Owner->Free(Memory);
 }
 
