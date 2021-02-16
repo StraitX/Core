@@ -52,11 +52,11 @@ public:
 
     virtual ~Shader() = default;
 
-    constexpr Shader::Type GetType(){
+    constexpr Shader::Type GetType()const{
         return m_Type;
     }
 
-    constexpr Shader::Lang GetLang(){
+    constexpr Shader::Lang GetLang()const{
         return m_Lang;
     }
 
