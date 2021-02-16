@@ -2,6 +2,7 @@
 #define STRAITX_RENDER_PASS_HPP
 
 #include "core/array_ptr.hpp"
+#include "core/push_array.hpp"
 #include "core/math/vector4.hpp"
 #include "core/noncopyable.hpp"
 #include "graphics/api/logical_gpu.hpp"
@@ -23,6 +24,9 @@ struct RenderPassProperties{
 
 class GraphicsAPILoader;
 
+// Due to OpenGL Limitations
+constexpr size_t MaxAttachmentsCount = 8;
+
 class RenderPass: NonCopyable{
 public:
     struct VTable{
@@ -34,13 +38,16 @@ public:
     };
 private:
     static VTable s_VTable;
+    PushArray<AttachmentDescription, MaxAttachmentsCount> m_Attachments;
 
     friend class GraphicsAPILoader;
 public:
 
-    RenderPass() = default;
+    RenderPass(const ArrayPtr<const AttachmentDescription> &attachments);
 
     virtual ~RenderPass() = default;
+
+    const PushArray<AttachmentDescription, MaxAttachmentsCount> &Attachments()const{ return m_Attachments; }
 
     static sx_inline RenderPass *New(const RenderPassProperties &properties){
         return s_VTable.New(LogicalGPU::Instance(), properties);

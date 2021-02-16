@@ -6,20 +6,10 @@
 namespace StraitX{
 namespace GL{
 
-RenderPassImpl::RenderPassImpl(const LogicalGPU &owner, const RenderPassProperties &props){
+RenderPassImpl::RenderPassImpl(const LogicalGPU &owner, const RenderPassProperties &props):
+    RenderPass(props.Attachments)
+{
     (void)owner;
-
-    bool has_depth = false;
-
-    for(const auto &a: props.Attachments){
-        if(a.Format == GPUTexture::Format::Depth24Stencil8){
-            CoreAssert(!has_depth, "GL: RenderPassImpl: more than one depth attachment is not supported");
-            DepthAttachment = a;
-            has_depth = true;
-        }else{
-            ColorAttachments.Push(a);
-        }
-    }
 }
 
 RenderPassImpl::~RenderPassImpl(){

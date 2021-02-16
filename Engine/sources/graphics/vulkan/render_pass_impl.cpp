@@ -9,6 +9,7 @@ namespace StraitX{
 namespace Vk{
 
 RenderPassImpl::RenderPassImpl(const LogicalGPU &owner, const RenderPassProperties &props):
+    RenderPass(props.Attachments),
     Owner(static_cast<const Vk::LogicalGPUImpl *>(&owner))
 {
     ArrayPtr<VkAttachmentDescription> attachments((VkAttachmentDescription*)alloca(props.Attachments.Size() * sizeof(VkAttachmentDescription)),props.Attachments.Size());
