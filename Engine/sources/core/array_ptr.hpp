@@ -87,7 +87,8 @@ constexpr T_Type &ArrayPtr<T_Type, T_Size>::operator[](T_Size index){
 
 template <typename T_Type, typename T_Size>
 constexpr const T_Type &ArrayPtr<T_Type, T_Size>::operator[](T_Size index)const{
-    return operator[](index);
+    CoreAssert(index < m_Size, "ArrayPtr: can't index more that ArrayPtr::Size elements");
+    return m_Pointer[index]; 
 }
 
 template <typename T_Type, typename T_Size>
