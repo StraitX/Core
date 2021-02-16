@@ -8,6 +8,9 @@ namespace StraitX{
 namespace Vk{
 
 struct GPUTextureImpl{
+    static VkImageLayout s_LayoutTable[];
+    static VkFormat s_FormatTable[];
+
     Vk::LogicalGPUImpl *const Owner;
     VkImage &Handle;
     VkDeviceMemory &Memory;
@@ -32,6 +35,8 @@ struct GPUTextureImpl{
     sx_inline void Create(GPUTexture::Format format, GPUTexture::Usage usage, u32 width, u32 height);
 
     sx_inline void Destroy();
+
+    static VkSampleCountFlagBits ToVkSampleCount(SamplePoints samples);
 
     static void NewImpl(GPUTexture &texture, GPUTexture::Format format, GPUTexture::Usage usage, u32 width, u32 height);
 

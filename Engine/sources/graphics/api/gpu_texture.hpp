@@ -16,6 +16,13 @@ namespace Vk{
 class GPUTextureImpl;
 }//namespace Vk::
 
+enum class SamplePoints{
+    Samples_1 = 0,
+    Samples_2 = 1,
+    Samples_4 = 2,
+    Samples_8 = 3,
+    Samples_16= 4 
+};
 
 class GraphicsAPILoader;
 
