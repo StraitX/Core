@@ -98,7 +98,8 @@ constexpr T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index){
 
 template<typename T_Type, size_t T_Capacity>
 constexpr const T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index)const{
-    return operator[](index);
+    CoreAssert(index < m_Size, "PushArray: Can't index more than PushArray::Size() elements");
+    return m_Array[index];
 }
 
 template<typename T_Type, size_t T_Capacity>
@@ -131,12 +132,12 @@ constexpr typename PushArray<T_Type, T_Capacity>::iterator PushArray<T_Type, T_C
 
 template<typename T_Type, size_t T_Capacity>
 constexpr typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capacity>::begin()const{
-    return begin();
+    return m_Array;
 }
 
 template<typename T_Type, size_t T_Capacity>
 constexpr typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capacity>::end()const{
-    return end();
+    return begin()+Size();
 }
 
 }//namespace StraitX::
