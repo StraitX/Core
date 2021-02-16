@@ -37,6 +37,10 @@
 #include "graphics/vulkan/render_pass_impl.hpp"
 #include "graphics/opengl/render_pass_impl.hpp"
 
+#include "graphics/api/graphics_pipeline.hpp"
+#include "graphics/vulkan/graphics_pipeline_impl.hpp"
+#include "graphics/opengl/graphics_pipeline_impl.hpp"
+
 namespace StraitX{
 
 static GraphicsAPI *const GraphicsAPITable[GraphicsAPI::ElementsCount] = {
@@ -93,6 +97,12 @@ static RenderPass::VTable RenderPassTable[GraphicsAPI::ElementsCount] = {
     {&GL::RenderPassImpl::NewImpl, &GL::RenderPassImpl::DeleteImpl}
 };
 
+static GraphicsPipeline::VTable GraphicsPipelineTable[GraphicsAPI::ElementsCount] = {
+    {nullptr, nullptr},
+    {&Vk::GraphicsPipelineImpl::NewImpl, &Vk::GraphicsPipelineImpl::DeleteImpl},
+    {&GL::GraphicsPipelineImpl::NewImpl, &GL::GraphicsPipelineImpl::DeleteImpl}
+};
+
 Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     if(api != GraphicsAPI::OpenGL && api != GraphicsAPI::Vulkan){
         LogError("GraphicsAPILoader::Load: Unknown API: %",(int)api);
@@ -117,6 +127,8 @@ Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     Shader::s_VTable = ShaderTable[api];
 
     RenderPass::s_VTable = RenderPassTable[api];
+
+    GraphicsPipeline::s_VTable = GraphicsPipelineTable[api];
 
     return Result::Success;
 }

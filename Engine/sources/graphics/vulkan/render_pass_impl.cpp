@@ -17,11 +17,8 @@ RenderPassImpl::RenderPassImpl(const LogicalGPU &owner, const RenderPassProperti
 
     size_t depth_index = InvalidIndex;
     for(size_t i = 0; i<attachments.Size(); i++){
-        LogTrace("Att % Beg",i);
-        if(props.Attachments[i].Format == GPUTexture::Format::Depth24Stencil8){
-            CoreAssert(depth_index == InvalidIndex, "Vk: RenderPassImpl: more than one depth attachment is not supported");
+        if(GPUTexture::IsDepthFormat(props.Attachments[i].Format))
             depth_index = i;
-        }
 
         attachments[i].flags = 0;
         attachments[i].format = Vk::GPUTextureImpl::s_FormatTable[(size_t)props.Attachments[i].Format];
@@ -35,8 +32,6 @@ RenderPassImpl::RenderPassImpl(const LogicalGPU &owner, const RenderPassProperti
 
         references[i].layout = Vk::GPUTextureImpl::s_LayoutTable[(size_t)props.Attachments[i].InPassLayout];
         references[i].attachment = i;
-        LogTrace("Att %",i);
-
     }
 
     if(depth_index != InvalidIndex){

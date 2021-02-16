@@ -52,6 +52,7 @@ union GPUResourceHandle{
 GPUVendor VendorIDToVendor(u32 vendor_id);
 
 const char *GetName(GPUVendor vendor);
+//TODO fix naming issue
 const char *GetName(GPUType type);
 
 }//namespace StraitX::
