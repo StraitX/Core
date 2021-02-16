@@ -50,7 +50,7 @@ public:
     enum class Format : u8{
         Unknown = 0,
         RGBA8,
-        Depth8
+        Depth24Stencil8
     };
     struct VTable{
         using NewProc    = void (*)(GPUTexture &texture, Format format, Usage usage, u32 width, u32 height);

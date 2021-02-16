@@ -33,6 +33,10 @@
 #include "graphics/vulkan/shader_impl.hpp"
 #include "graphics/opengl/shader_impl.hpp"
 
+#include "graphics/api/render_pass.hpp"
+#include "graphics/vulkan/render_pass_impl.hpp"
+#include "graphics/opengl/render_pass_impl.hpp"
+
 namespace StraitX{
 
 static GraphicsAPI *const GraphicsAPITable[GraphicsAPI::ElementsCount] = {
@@ -83,6 +87,12 @@ static Shader::VTable ShaderTable[GraphicsAPI::ElementsCount] = {
     {&GL::ShaderImpl::NewImpl, &GL::ShaderImpl::DeleteImpl}
 };
 
+static RenderPass::VTable RenderPassTable[GraphicsAPI::ElementsCount] = {
+    {nullptr, nullptr},
+    {&Vk::RenderPassImpl::NewImpl, &Vk::RenderPassImpl::DeleteImpl},
+    {&GL::RenderPassImpl::NewImpl, &GL::RenderPassImpl::DeleteImpl}
+};
+
 Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     if(api != GraphicsAPI::OpenGL && api != GraphicsAPI::Vulkan){
         LogError("GraphicsAPILoader::Load: Unknown API: %",(int)api);
@@ -105,6 +115,8 @@ Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     GPUTexture::s_VTable = GPUTextureTable[api];
 
     Shader::s_VTable = ShaderTable[api];
+
+    RenderPass::s_VTable = RenderPassTable[api];
 
     return Result::Success;
 }
