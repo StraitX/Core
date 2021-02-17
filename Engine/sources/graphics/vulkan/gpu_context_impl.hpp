@@ -27,6 +27,10 @@ public:
 
     virtual void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0)override;
 
+    void CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst);
+
+    void CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_acces, VkAccessFlags dst_access);
+
     static GPUContext *NewImpl(LogicalGPU &owner);
 
     static void DeleteImpl(GPUContext *context);

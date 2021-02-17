@@ -77,6 +77,22 @@ void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, 
     copy.size = size;
 
     vkCmdCopyBuffer(m_CmdBuffer, (VkBuffer)src.Handle().U64, (VkBuffer)dst.Handle().U64, 1, &copy);
+
+    CmdMemoryBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT);
+}
+
+void GPUContextImpl::CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst){
+    vkCmdPipelineBarrier(m_CmdBuffer, src, dst, 0, 0, nullptr, 0, nullptr, 0, nullptr);
+}
+
+void GPUContextImpl::CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_access, VkAccessFlags dst_access){
+    VkMemoryBarrier barrier;
+    barrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+    barrier.pNext = nullptr;
+    barrier.srcAccessMask = src_access;
+    barrier.dstAccessMask = dst_access;
+
+    vkCmdPipelineBarrier(m_CmdBuffer, src, dst, 0, 1, &barrier, 0, nullptr, 0, nullptr);
 }
 
 GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){
