@@ -53,7 +53,7 @@ void GPUTextureImpl::Create(GPUTexture::Format format, GPUTexture::Usage usage, 
     info.pQueueFamilyIndices = nullptr;
     info.initialLayout = s_LayoutTable[(u32)Layout];
 
-    CoreFunctionAssert(vkCreateImage(Owner->Handle, &info, nullptr, &Handle), VK_SUCCESS, "Vk: GPUTextureImpl: Can't create Image");
+    CoreFunctionAssert(vkCreateImage(Owner->Handle, &info, nullptr, &Handle), VK_SUCCESS, "Vk: GPUTextureImpl: Can't create VkImage");
 
     VkMemoryRequirements req;
     vkGetImageMemoryRequirements(Owner->Handle, Handle, &req);
@@ -61,6 +61,25 @@ void GPUTextureImpl::Create(GPUTexture::Format format, GPUTexture::Usage usage, 
     Memory = Owner->Alloc(req.size, MemoryTypes::VRAM);
 
     CoreFunctionAssert(vkBindImageMemory(Owner->Handle, Handle, Memory, 0), VK_SUCCESS, "Vk: GPUTextureImpl: can't bind image memory");
+
+    VkImageViewCreateInfo view_info;
+    view_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    view_info.pNext = nullptr;
+    view_info.flags = 0;
+    view_info.image = Handle;
+    view_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    view_info.format = info.format;
+    view_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    view_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    view_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    view_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+    view_info.subresourceRange.aspectMask = GPUTexture::IsDepthFormat(Format) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+    view_info.subresourceRange.baseArrayLayer = 0;
+    view_info.subresourceRange.baseMipLevel = 0;
+    view_info.subresourceRange.layerCount = 1;
+    view_info.subresourceRange.levelCount = 1;
+
+    CoreFunctionAssert(vkCreateImageView(Owner->Handle, &view_info, nullptr, &ViewHandle), VK_SUCCESS, "Vk: GPUTextureImpl: Can't create VkImageView");
 }
 
 void GPUTextureImpl::Destroy(){

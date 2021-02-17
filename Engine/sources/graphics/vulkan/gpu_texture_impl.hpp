@@ -13,6 +13,7 @@ struct GPUTextureImpl{
 
     Vk::LogicalGPUImpl *const Owner;
     VkImage &Handle;
+    VkImageView &ViewHandle;
     VkDeviceMemory &Memory;
     u32 &Width;
     u32 &Height;
@@ -24,6 +25,7 @@ struct GPUTextureImpl{
     sx_inline GPUTextureImpl(GPUTexture &texture):
         Owner(static_cast<Vk::LogicalGPUImpl *>(texture.m_Owner)),
         Handle(reinterpret_cast<VkImage&>(texture.m_Handle.U64)),
+        ViewHandle(reinterpret_cast<VkImageView&>(texture.m_ViewHandle.U64)),
         Memory(reinterpret_cast<VkDeviceMemory&>(texture.m_BackingMemory)),
         Width(texture.m_Width),
         Height(texture.m_Height),

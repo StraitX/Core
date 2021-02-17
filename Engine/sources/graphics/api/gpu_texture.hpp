@@ -64,6 +64,7 @@ private:
 
     LogicalGPU *const m_Owner = nullptr;
     GPUResourceHandle m_Handle = {};
+    GPUResourceHandle m_ViewHandle = {};
     GPUResourceHandle m_BackingMemory = {};
     u32 m_Width  = 0;
     u32 m_Height = 0;
