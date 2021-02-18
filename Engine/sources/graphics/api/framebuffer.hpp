@@ -34,7 +34,6 @@ private:
 
     friend class GraphicsAPILoader;
 public:
-    Framebuffer(const RenderPass *const pass, const FramebufferProperties &props);
 
     virtual ~Framebuffer() = default;
 

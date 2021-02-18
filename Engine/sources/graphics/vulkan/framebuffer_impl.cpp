@@ -8,7 +8,6 @@ namespace StraitX{
 namespace Vk{
 
 FramebufferImpl::FramebufferImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props):
-    Framebuffer(pass, props),
     Owner(static_cast<Vk::LogicalGPUImpl*>(&owner))
 {
     auto *attachments = (VkImageView *)alloca(props.Attachments.Size() * sizeof(VkImageView));
@@ -32,7 +31,8 @@ FramebufferImpl::FramebufferImpl(LogicalGPU &owner, const RenderPass *const pass
 }
 
 FramebufferImpl::~FramebufferImpl(){
-    vkDestroyFramebuffer(Owner->Handle, Handle, nullptr);
+    if(Handle)
+        vkDestroyFramebuffer(Owner->Handle, Handle, nullptr);
 }
 
 Framebuffer *FramebufferImpl::NewImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props){

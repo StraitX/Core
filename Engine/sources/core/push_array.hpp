@@ -15,7 +15,7 @@ public:
     typedef T_Type * iterator;
     typedef const T_Type * const_iterator;
 private:
-    T_Type m_Array[T_Capacity] = {};
+    T_Type m_Array[T_Capacity];
     size_t m_Size = 0;
 public:
     constexpr PushArray() = default;

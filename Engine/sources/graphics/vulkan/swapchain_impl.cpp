@@ -4,11 +4,11 @@
 #include "core/log.hpp"
 #include "graphics/vulkan/graphics_api_impl.hpp"
 #include "graphics/vulkan/swapchain_impl.hpp"
+#include "graphics/vulkan/gpu_texture_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
 
-constexpr VkFormat DesiredFormat = VK_FORMAT_B8G8R8A8_UNORM;
 constexpr VkColorSpaceKHR DesiredColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
 
 
@@ -34,15 +34,16 @@ static bool IsSupported(VkPhysicalDevice dev, VkSurfaceKHR surface, VkFormat for
 SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props):
     m_Owner(static_cast<Vk::LogicalGPUImpl *>(&gpu)),
     m_Colorspace(DesiredColorSpace),
-    m_Format(DesiredFormat),
-    m_AcquireFence(m_Owner->Handle)
+    m_Format(GPUTextureImpl::s_FormatTable[(size_t)props.ColorAttachmentDescription.Format]),
+    m_AcquireFence(m_Owner->Handle),
+    m_FramebufferPass(gpu, {{&props.ColorAttachmentDescription, 1}})
 {
     CoreFunctionAssert(m_Surface.Create(Vk::GraphicsAPIImpl::Instance.Handle, window),Result::Success, "Vk: SwapchainImpl: Can't obtain surface");
     
     VkBool32 supported;
     vkGetPhysicalDeviceSurfaceSupportKHR(m_Owner->PhysicalHandle, m_Owner->GraphicsQueue.FamilyIndex, m_Surface.Handle, &supported);
     if(!supported){
-        LogWarn("Vk: SwapchainImpl: Current Physical Device does not support swapchain");
+        LogError("Vk: SwapchainImpl: Current Physical Device does not support swapchain");
         return;
     }
     VkSurfaceCapabilitiesKHR capabilities;
@@ -51,7 +52,7 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
     CoreAssert(props.FramebuffersCount >= capabilities.minImageCount && capabilities.maxImageCount && props.FramebuffersCount <= capabilities.maxImageCount, "Vk: SwapchainImpl: current system does not support this amount of framebuffers");
     
     if(!IsSupported(m_Owner->PhysicalHandle, m_Surface.Handle, m_Format, m_Colorspace)){
-        LogWarn("Vk: SwapchainImpl: ColorSpace and Format are not supported");
+        LogError("Vk: SwapchainImpl: ColorSpace and Format are not supported");
         return;
     }
     
@@ -77,11 +78,15 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
 
     CoreFunctionAssert(vkCreateSwapchainKHR(m_Owner->Handle, &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: SwapchainImpl: Can't create a swapchain");
 
+    InitializeFramebuffers(props.ColorAttachmentDescription.Format);
+
     AcquireNext();
 }
 
 SwapchainImpl::~SwapchainImpl(){
     vkQueueWaitIdle(m_Owner->GraphicsQueue.Handle);
+
+    FinalizeFramebuffers();
     
     vkDestroySwapchainKHR(m_Owner->Handle, m_Handle, nullptr);
 
@@ -93,6 +98,14 @@ void SwapchainImpl::SwapFramebuffers(GPUContext &context){
     AcquireNext();
 }
 
+const RenderPass *SwapchainImpl::FramebufferPass(){
+    return &m_FramebufferPass;
+}
+
+const Framebuffer *SwapchainImpl::CurrentFramebuffer(){
+    return &m_Framebuffers[m_CurrentImage];
+}
+
 Swapchain *SwapchainImpl::NewImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props){
     return new (Memory::Alloc(sizeof(Vk::SwapchainImpl))) SwapchainImpl(gpu, window, props);
 }
@@ -102,6 +115,31 @@ void SwapchainImpl::DeleteImpl(Swapchain *swapchain){
     Memory::Free(swapchain);
 }
 
+void SwapchainImpl::InitializeFramebuffers(GPUTexture::Format images_format){
+    u32 images_count = 0;
+    vkGetSwapchainImagesKHR(m_Owner->Handle, m_Handle, &images_count, nullptr);
+    CoreAssert(images_count <= MaxFramebuffers, "Vk: Swapchain: unsupported amount of Images");
+
+    auto *images = (VkImage*)alloca(images_count * sizeof(VkImage));
+
+    vkGetSwapchainImagesKHR(m_Owner->Handle, m_Handle, &images_count, images);
+
+    for(u32 i = 0; i<images_count; ++i){
+        GPUTexture texture;
+
+        GPUTextureImpl impl(texture);
+        impl.CreateFromChainImage(images[i], images_format);
+
+        m_Images.Push(Move(texture));
+    }
+}
+
+void SwapchainImpl::FinalizeFramebuffers(){
+    for(auto &image: m_Images){
+        GPUTextureImpl impl(image);
+        impl.DestroyFromChainImage();
+    }
+}
 
 void SwapchainImpl::PresentCurrent(){
     VkResult result;

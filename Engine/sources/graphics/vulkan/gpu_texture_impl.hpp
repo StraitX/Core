@@ -38,6 +38,14 @@ struct GPUTextureImpl{
 
     sx_inline void Destroy();
 
+    void CreateImageView();
+
+    void DestroyImageView();
+
+    void CreateFromChainImage(VkImage image, GPUTexture::Format format);
+
+    void DestroyFromChainImage();
+
     static VkSampleCountFlagBits ToVkSampleCount(SamplePoints samples);
 
     static void NewImpl(GPUTexture &texture, GPUTexture::Format format, GPUTexture::Usage usage, u32 width, u32 height);

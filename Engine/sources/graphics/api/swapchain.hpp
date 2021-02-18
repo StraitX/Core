@@ -14,6 +14,7 @@ constexpr size_t MaxFramebuffers = 3;
 
 struct SwapchainProperties{
     u32 FramebuffersCount = 2;
+    AttachmentDescription ColorAttachmentDescription;
 };
 
 class GraphicsAPILoader;
@@ -36,6 +37,10 @@ public:
     virtual ~Swapchain() = default;
 
     virtual void SwapFramebuffers(GPUContext &context) = 0;
+
+    virtual const RenderPass *FramebufferPass() = 0;
+
+    virtual const Framebuffer *CurrentFramebuffer() = 0;
 
     static Swapchain *New(const Window &window, const SwapchainProperties &props){ return s_VTable.New(LogicalGPU::Instance(), window, props); }
 

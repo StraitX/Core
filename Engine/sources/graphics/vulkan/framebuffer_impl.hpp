@@ -8,8 +8,10 @@ namespace StraitX{
 namespace Vk{
 
 struct FramebufferImpl: Framebuffer{
-    Vk::LogicalGPUImpl *const Owner;
+    Vk::LogicalGPUImpl *const Owner = nullptr;
     VkFramebuffer Handle = VK_NULL_HANDLE;
+
+    FramebufferImpl() = default;
 
     FramebufferImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props);
 

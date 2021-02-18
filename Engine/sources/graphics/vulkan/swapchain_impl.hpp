@@ -4,9 +4,12 @@
 #include "platform/vulkan.hpp"
 #include "platform/vk_surface.hpp"
 #include "core/math/vector2.hpp"
+#include "core/push_array.hpp"
 #include "graphics/api/swapchain.hpp"
 #include "graphics/vulkan/logical_gpu_impl.hpp"
 #include "graphics/vulkan/fence.hpp"
+#include "graphics/vulkan/framebuffer_impl.hpp"
+#include "graphics/vulkan/render_pass_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -25,6 +28,9 @@ private:
     Vk::Fence m_AcquireFence;
     u32 m_CurrentImage = 0;
 
+    Vk::RenderPassImpl m_FramebufferPass;
+    PushArray<GPUTexture, MaxFramebuffers> m_Images;
+    PushArray<Vk::FramebufferImpl, MaxFramebuffers> m_Framebuffers;
 public:
     SwapchainImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props);
 
@@ -32,10 +38,17 @@ public:
 
     virtual void SwapFramebuffers(GPUContext &context)override;
 
+    virtual const RenderPass *FramebufferPass()override;
+
+    virtual const Framebuffer *CurrentFramebuffer()override;
+
     static Swapchain *NewImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props);
 
     static void DeleteImpl(Swapchain *swapchain);
 private:
+    void InitializeFramebuffers(GPUTexture::Format images_format);
+
+    void FinalizeFramebuffers();
 
     void PresentCurrent();
 

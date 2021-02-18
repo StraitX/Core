@@ -61,14 +61,22 @@ void GPUTextureImpl::Create(GPUTexture::Format format, GPUTexture::Usage usage, 
     Memory = Owner->Alloc(req.size, MemoryTypes::VRAM);
 
     CoreFunctionAssert(vkBindImageMemory(Owner->Handle, Handle, Memory, 0), VK_SUCCESS, "Vk: GPUTextureImpl: can't bind image memory");
+}
 
+void GPUTextureImpl::Destroy(){
+    vkDestroyImage(Owner->Handle, Handle, nullptr);
+
+    Owner->Free(Memory);
+}
+
+void GPUTextureImpl::CreateImageView(){
     VkImageViewCreateInfo view_info;
     view_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     view_info.pNext = nullptr;
     view_info.flags = 0;
     view_info.image = Handle;
     view_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    view_info.format = info.format;
+    view_info.format = GPUTextureImpl::s_FormatTable[(size_t)Format];
     view_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
     view_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
     view_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -82,11 +90,21 @@ void GPUTextureImpl::Create(GPUTexture::Format format, GPUTexture::Usage usage, 
     CoreFunctionAssert(vkCreateImageView(Owner->Handle, &view_info, nullptr, &ViewHandle), VK_SUCCESS, "Vk: GPUTextureImpl: Can't create VkImageView");
 }
 
-void GPUTextureImpl::Destroy(){
-    vkDestroyImage(Owner->Handle, Handle, nullptr);
-
-    Owner->Free(Memory);
+void GPUTextureImpl::DestroyImageView(){
+    vkDestroyImageView(Owner->Handle, ViewHandle, nullptr);
 }
+
+void GPUTextureImpl::CreateFromChainImage(VkImage image, GPUTexture::Format format){
+    Handle = image;
+    Format = format;
+    
+    CreateImageView();
+}
+
+void GPUTextureImpl::DestroyFromChainImage(){
+    DestroyImageView();
+}
+
 VkSampleCountFlagBits GPUTextureImpl::ToVkSampleCount(SamplePoints samples){
     return static_cast<VkSampleCountFlagBits>((u32)std::pow(2, (u32)samples));
 }
