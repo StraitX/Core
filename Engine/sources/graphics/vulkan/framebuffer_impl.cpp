@@ -1,11 +1,17 @@
 #include <new>
 #include "platform/memory.hpp"
 #include "platform/vulkan.hpp"
+#include "core/algorithm.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
 #include "graphics/vulkan/framebuffer_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
+
+FramebufferImpl::FramebufferImpl(FramebufferImpl &&other)
+{
+    Swap(*this, other);
+}
 
 FramebufferImpl::FramebufferImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props):
     Owner(static_cast<Vk::LogicalGPUImpl*>(&owner))
@@ -34,7 +40,14 @@ FramebufferImpl::~FramebufferImpl(){
     if(Handle)
         vkDestroyFramebuffer(Owner->Handle, Handle, nullptr);
 }
+FramebufferImpl &FramebufferImpl::operator=(FramebufferImpl &&other){
+    const_cast<Vk::LogicalGPUImpl *&>(Owner) = other.Owner;
+    Handle = other.Handle;
 
+    const_cast<Vk::LogicalGPUImpl *&>(other.Owner) = nullptr;
+    other.Handle = VK_NULL_HANDLE;
+    return *this;
+}
 Framebuffer *FramebufferImpl::NewImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props){
     return new(Memory::Alloc(sizeof(Vk::FramebufferImpl))) Vk::FramebufferImpl(owner, pass, props);
 }

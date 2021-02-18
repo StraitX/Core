@@ -55,6 +55,9 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
         LogError("Vk: SwapchainImpl: ColorSpace and Format are not supported");
         return;
     }
+
+    m_Size.x = capabilities.currentExtent.width;
+    m_Size.y = capabilities.currentExtent.height;
     
     VkSwapchainCreateInfoKHR info;
     info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
@@ -115,11 +118,11 @@ void SwapchainImpl::DeleteImpl(Swapchain *swapchain){
     Memory::Free(swapchain);
 }
 
-void SwapchainImpl::InitializeFramebuffers(GPUTexture::Format images_format){
+void SwapchainImpl::InitializeFramebuffers(GPUTexture::Format format){
     u32 images_count = 0;
     vkGetSwapchainImagesKHR(m_Owner->Handle, m_Handle, &images_count, nullptr);
     CoreAssert(images_count <= MaxFramebuffers, "Vk: Swapchain: unsupported amount of Images");
-
+    LogInfo("Vk: Swapchain: Got % images",images_count);
     auto *images = (VkImage*)alloca(images_count * sizeof(VkImage));
 
     vkGetSwapchainImagesKHR(m_Owner->Handle, m_Handle, &images_count, images);
@@ -128,9 +131,15 @@ void SwapchainImpl::InitializeFramebuffers(GPUTexture::Format images_format){
         GPUTexture texture;
 
         GPUTextureImpl impl(texture);
-        impl.CreateFromChainImage(images[i], images_format);
+        impl.CreateFromChainImage(images[i], format);
 
         m_Images.Push(Move(texture));
+
+        const GPUTexture *tp = &m_Images[0];
+        FramebufferProperties props;
+        props.Size = m_Size;
+        props.Attachments = {&tp, 1};
+        m_Framebuffers.Push(Vk::FramebufferImpl(*m_Owner,&m_FramebufferPass, props));
     }
 }
 
