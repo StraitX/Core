@@ -26,6 +26,8 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
 
     virtual bool IsValid()override;
 
+    void Bind()const;
+
     static GraphicsPipeline * NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props);
 
     static void DeleteImpl(GraphicsPipeline *pipeline);

@@ -6,6 +6,7 @@
 #include "graphics/vulkan/cpu_buffer_impl.hpp"
 #include "graphics/vulkan/gpu_buffer_impl.hpp"
 #include "graphics/vulkan/gpu_texture_impl.hpp"
+#include "graphics/vulkan/graphics_pipeline_impl.hpp"
 
 
 namespace StraitX{
@@ -79,6 +80,10 @@ void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, 
     vkCmdCopyBuffer(m_CmdBuffer, (VkBuffer)src.Handle().U64, (VkBuffer)dst.Handle().U64, 1, &copy);
 
     CmdMemoryBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT);
+}
+
+void GPUContextImpl::Bind(const GraphicsPipeline *pipeline){
+    vkCmdBindPipeline(m_CmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, static_cast<const Vk::GraphicsPipelineImpl *>(pipeline)->Handle);
 }
 
 void GPUContextImpl::CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst){

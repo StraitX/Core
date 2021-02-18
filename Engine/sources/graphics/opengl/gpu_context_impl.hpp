@@ -21,6 +21,8 @@ public:
 
     virtual void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0)override;
 
+    virtual void Bind(const GraphicsPipeline *pipeline)override;
+
     static GPUContext *NewImpl(LogicalGPU &owner);
 
     static void DeleteImpl(GPUContext *context);

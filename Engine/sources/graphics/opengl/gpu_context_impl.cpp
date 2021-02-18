@@ -6,6 +6,7 @@
 #include "graphics/opengl/cpu_buffer_impl.hpp"
 #include "graphics/opengl/gpu_buffer_impl.hpp"
 #include "graphics/opengl/gpu_texture_impl.hpp"
+#include "graphics/opengl/graphics_pipeline_impl.hpp"
 
 namespace StraitX{
 namespace GL{
@@ -32,6 +33,10 @@ void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, 
 
     glBindBuffer(GL_COPY_WRITE_BUFFER, dst.Handle().U32);
     GL(glBufferSubData(GL_COPY_WRITE_BUFFER, dst_offset, size, src.Pointer()));
+}
+
+void GPUContextImpl::Bind(const GraphicsPipeline *pipeline){
+    static_cast<const GL::GraphicsPipelineImpl*>(pipeline)->Bind();
 }
 
 GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){

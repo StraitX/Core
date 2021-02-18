@@ -5,6 +5,8 @@
 #include "core/noncopyable.hpp"
 #include "graphics/api/gpu_context.hpp"
 #include "graphics/api/logical_gpu.hpp"
+#include "graphics/api/render_pass.hpp"
+#include "graphics/api/framebuffer.hpp"
 
 namespace StraitX{
 

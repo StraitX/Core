@@ -114,6 +114,11 @@ bool GraphicsPipelineImpl::IsValid(){
     return Valid;
 }
 
+void GraphicsPipelineImpl::Bind()const{
+    glBindVertexArray(VertexArray);
+    glUseProgram(Program);
+}
+
 GraphicsPipeline * GraphicsPipelineImpl::NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props){
     return new(Memory::Alloc(sizeof(GL::GraphicsPipelineImpl))) GL::GraphicsPipelineImpl(owner, props);
 }

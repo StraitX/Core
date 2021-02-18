@@ -6,6 +6,7 @@
 #include "graphics/api/cpu_buffer.hpp"
 #include "graphics/api/gpu_buffer.hpp"
 #include "graphics/api/gpu_texture.hpp"
+#include "graphics/api/graphics_pipeline.hpp"
 
 namespace StraitX{
 
@@ -39,6 +40,8 @@ public:
     virtual void SumbitAsync() = 0;
 
     virtual void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0) = 0;
+
+    virtual void Bind(const GraphicsPipeline *pipeline);
 
     sx_inline static GPUContext *New(){ return s_VTable.New(LogicalGPU::Instance()); }
 
