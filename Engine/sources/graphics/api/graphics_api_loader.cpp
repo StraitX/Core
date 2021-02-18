@@ -41,6 +41,10 @@
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
 #include "graphics/opengl/graphics_pipeline_impl.hpp"
 
+#include "graphics/api/framebuffer.hpp"
+#include "graphics/vulkan/framebuffer_impl.hpp"
+#include "graphics/opengl/framebuffer_impl.hpp"
+
 namespace StraitX{
 
 static GraphicsAPI *const GraphicsAPITable[GraphicsAPI::ElementsCount] = {
@@ -103,6 +107,12 @@ static GraphicsPipeline::VTable GraphicsPipelineTable[GraphicsAPI::ElementsCount
     {&GL::GraphicsPipelineImpl::NewImpl, &GL::GraphicsPipelineImpl::DeleteImpl}
 };
 
+static Framebuffer::VTable FramebufferTable[GraphicsAPI::ElementsCount] = {
+    {nullptr, nullptr},
+    {&Vk::FramebufferImpl::NewImpl, &Vk::FramebufferImpl::DeleteImpl},
+    {&GL::FramebufferImpl::NewImpl, &GL::FramebufferImpl::DeleteImpl}
+};
+
 Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     if(api != GraphicsAPI::OpenGL && api != GraphicsAPI::Vulkan){
         LogError("GraphicsAPILoader::Load: Unknown API: %",(int)api);
@@ -129,6 +139,8 @@ Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     RenderPass::s_VTable = RenderPassTable[api];
 
     GraphicsPipeline::s_VTable = GraphicsPipelineTable[api];
+    
+    Framebuffer::s_VTable = FramebufferTable[api];
 
     return Result::Success;
 }

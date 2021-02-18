@@ -33,14 +33,18 @@ void GPUTextureImpl::NewImpl(GPUTexture &texture, GPUTexture::Format format, GPU
     texture.m_Format = format;
     texture.m_Usage = usage;
 
-    glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &texture.m_Handle.U32);
-    glBindTexture(GL_TEXTURE_2D, texture.m_Handle.U32);
+    BindZero(texture);
     GL(glTexImage2D(GL_TEXTURE_2D, 0, InternalFormatTable[(u32)format], texture.m_Width, texture.m_Height, 0, FormatTable[(u32)format], TypeTable[(u32)format], nullptr));
 }
 
 void GPUTextureImpl::DeleteImpl(GPUTexture &texture){
     glDeleteTextures(1, &texture.m_Handle.U32);
+}
+
+void GPUTextureImpl::BindZero(const GPUTexture &texture){
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture.m_Handle.U32);
 }
 
 }//namespace GL::

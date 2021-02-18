@@ -12,6 +12,7 @@ struct GPUTextureImpl{
 
     static void DeleteImpl(GPUTexture &texture);
 
+    static void BindZero(const GPUTexture &texture);
 };
 
 }//namespace GL::

@@ -2,6 +2,7 @@
 #define STRAITX_GPU_TEXTURE_HPP
 
 #include "core/noncopyable.hpp"
+#include "core/math/vector2.hpp"
 #include "graphics/api/gpu_configuration.hpp"
 #include "graphics/api/cpu_buffer.hpp"
 #include "graphics/api/logical_gpu.hpp"
@@ -88,6 +89,13 @@ public:
     sx_inline void Delete(){
         s_VTable.Delete(*this);
     }
+    sx_inline GPUResourceHandle Handle()const{ return m_Handle; }
+
+    sx_inline GPUResourceHandle ViewHandle()const{ return m_ViewHandle; }
+
+    sx_inline Vector2u Size()const{ return {m_Width, m_Height}; }
+
+    sx_inline Format GetFormat()const{ return m_Format; }
 
     static bool IsDepthFormat(GPUTexture::Format format);
 };
