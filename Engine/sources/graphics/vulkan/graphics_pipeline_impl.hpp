@@ -18,6 +18,7 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     Vk::LogicalGPUImpl *Owner = nullptr;
     VkPipeline Handle = VK_NULL_HANDLE;
     VkResult Status = VK_INCOMPLETE;
+    VkRect2D Scissors = {};
 
     GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props);
 

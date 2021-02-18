@@ -84,7 +84,19 @@ void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, 
 }
 
 void GPUContextImpl::Bind(const GraphicsPipeline *pipeline){
-    vkCmdBindPipeline(m_CmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, static_cast<const Vk::GraphicsPipelineImpl *>(pipeline)->Handle);
+    auto *pipeline_impl = static_cast<const Vk::GraphicsPipelineImpl *>(pipeline);
+    vkCmdBindPipeline(m_CmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_impl->Handle);
+    
+    vkCmdSetScissor(m_CmdBuffer, 0, 1, &pipeline_impl->Scissors);
+
+    VkViewport viewport;
+    viewport.minDepth = 0;
+    viewport.maxDepth = 1.0;
+    viewport.x = pipeline_impl->Scissors.offset.x;
+    viewport.y = pipeline_impl->Scissors.offset.y;
+    viewport.width  = pipeline_impl->Scissors.extent.width;
+    viewport.height = pipeline_impl->Scissors.extent.height;
+    vkCmdSetViewport(m_CmdBuffer, 0, 1, &viewport);
 }
 
 void GPUContextImpl::BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer){

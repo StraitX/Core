@@ -71,10 +71,18 @@ enum class BlendFactor{
     DstAlpha 
 };
 
+struct Viewport{
+    i32 x;
+    i32 y;
+    u32 Width;
+    u32 Height;
+};
+
 struct GraphicsPipelineProperties{
     ArrayPtr<const Shader* const> Shaders;
     ArrayPtr<const VertexAttribute> VertexAttributes;
     PrimitivesTopology Topology;
+    Viewport FramebufferViewport;
     RasterizationMode Rasterization;
     BlendFunction BlendFunc;
     BlendFactor SrcBlendFactor;

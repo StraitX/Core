@@ -16,6 +16,7 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     PrimitivesTopology Topology;
     RasterizationMode Rasterization;
 // TODO apply this while binding
+    Viewport FramebufferViewport;
     BlendFunction BlendFunc;
     BlendFactor SrcBlendFactor;
     BlendFactor DstBlendFactor;

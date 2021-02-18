@@ -67,6 +67,7 @@ static GLenum ElementType(VertexAttribute attribute){
 GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props):
     Topology(props.Topology),
     Rasterization(props.Rasterization),
+    FramebufferViewport(props.FramebufferViewport),
     BlendFunc(props.BlendFunc),
     SrcBlendFactor(props.SrcBlendFactor),
     DstBlendFactor(props.DstBlendFactor)
@@ -117,6 +118,7 @@ bool GraphicsPipelineImpl::IsValid(){
 void GraphicsPipelineImpl::Bind()const{
     glBindVertexArray(VertexArray);
     glUseProgram(Program);
+    glViewport(FramebufferViewport.x, FramebufferViewport.y, FramebufferViewport.Width, FramebufferViewport.Height);
 }
 
 GraphicsPipeline * GraphicsPipelineImpl::NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props){

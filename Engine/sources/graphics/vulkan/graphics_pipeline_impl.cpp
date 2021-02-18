@@ -52,7 +52,8 @@ VkBlendOp GraphicsPipelineImpl::s_BlendFunctionTable[] = {
 };
 
 GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props):
-    Owner(static_cast<Vk::LogicalGPUImpl*>(&owner))
+    Owner(static_cast<Vk::LogicalGPUImpl*>(&owner)),
+    Scissors({{props.FramebufferViewport.x, props.FramebufferViewport.y}, {props.FramebufferViewport.Width, props.FramebufferViewport.Height}})
 {
     //===Shader Stages===
     ArrayPtr<VkPipelineShaderStageCreateInfo> stages((VkPipelineShaderStageCreateInfo *)alloca(props.Shaders.Size() * sizeof(VkPipelineShaderStageCreateInfo)), props.Shaders.Size());
