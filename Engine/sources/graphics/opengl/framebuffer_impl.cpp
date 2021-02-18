@@ -27,6 +27,10 @@ FramebufferImpl::~FramebufferImpl(){
     glDeleteFramebuffers(1, &Handle);
 }
 
+void FramebufferImpl::Bind()const{
+    glBindFramebuffer(GL_FRAMEBUFFER, Handle);
+}
+
 Framebuffer *FramebufferImpl::NewImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props){
     return new(Memory::Alloc(sizeof(GL::FramebufferImpl))) GL::FramebufferImpl(owner, pass, props);
 }

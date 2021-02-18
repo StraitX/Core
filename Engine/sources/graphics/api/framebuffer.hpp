@@ -30,11 +30,15 @@ public:
 private:
     static VTable s_VTable;
 
+    Vector2u m_Size;
+
     friend class GraphicsAPILoader;
 public:
     Framebuffer(const RenderPass *const pass, const FramebufferProperties &props);
 
     virtual ~Framebuffer() = default;
+
+    sx_inline Vector2u Size()const{ return m_Size; }
 
     sx_inline static Framebuffer *New(const RenderPass *const pass,const FramebufferProperties &props){
         return s_VTable.New(LogicalGPU::Instance(), pass, props);

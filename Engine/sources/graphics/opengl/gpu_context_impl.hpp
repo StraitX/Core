@@ -23,6 +23,10 @@ public:
 
     virtual void Bind(const GraphicsPipeline *pipeline)override;
 
+    virtual void BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer)override;
+
+    virtual void EndRenderPass()override;
+
     static GPUContext *NewImpl(LogicalGPU &owner);
 
     static void DeleteImpl(GPUContext *context);

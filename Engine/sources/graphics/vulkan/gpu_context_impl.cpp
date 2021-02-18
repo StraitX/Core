@@ -7,7 +7,8 @@
 #include "graphics/vulkan/gpu_buffer_impl.hpp"
 #include "graphics/vulkan/gpu_texture_impl.hpp"
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
-
+#include "graphics/vulkan/render_pass_impl.hpp"
+#include "graphics/vulkan/framebuffer_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -84,6 +85,28 @@ void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, 
 
 void GPUContextImpl::Bind(const GraphicsPipeline *pipeline){
     vkCmdBindPipeline(m_CmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, static_cast<const Vk::GraphicsPipelineImpl *>(pipeline)->Handle);
+}
+
+void GPUContextImpl::BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer){
+    const Vk::RenderPassImpl *pass_impl = static_cast<const Vk::RenderPassImpl*>(pass);
+    const Vk::FramebufferImpl *fb_impl = static_cast<const Vk::FramebufferImpl*>(framebuffer);
+
+    VkRenderPassBeginInfo info;
+    info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    info.pNext = nullptr;
+    info.clearValueCount = 0;
+    info.pClearValues = nullptr;
+    info.framebuffer = fb_impl->Handle;
+    info.renderPass = pass_impl->Handle;
+    info.renderArea.offset = {0, 0};
+    info.renderArea.extent.width = framebuffer->Size().x;
+    info.renderArea.extent.height = framebuffer->Size().y;
+    
+    vkCmdBeginRenderPass(m_CmdBuffer, &info, VK_SUBPASS_CONTENTS_INLINE);
+}
+
+void GPUContextImpl::EndRenderPass(){
+    vkCmdEndRenderPass(m_CmdBuffer);
 }
 
 void GPUContextImpl::CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst){

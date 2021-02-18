@@ -7,6 +7,7 @@
 #include "graphics/opengl/gpu_buffer_impl.hpp"
 #include "graphics/opengl/gpu_texture_impl.hpp"
 #include "graphics/opengl/graphics_pipeline_impl.hpp"
+#include "graphics/opengl/framebuffer_impl.hpp"
 
 namespace StraitX{
 namespace GL{
@@ -37,6 +38,14 @@ void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, 
 
 void GPUContextImpl::Bind(const GraphicsPipeline *pipeline){
     static_cast<const GL::GraphicsPipelineImpl*>(pipeline)->Bind();
+}
+void GPUContextImpl::BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer){
+    (void)pass;
+    static_cast<const GL::FramebufferImpl *>(framebuffer)->Bind();
+}
+
+void GPUContextImpl::EndRenderPass(){
+    (void)0;
 }
 
 GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){

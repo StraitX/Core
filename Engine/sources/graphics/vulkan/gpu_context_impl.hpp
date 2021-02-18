@@ -29,6 +29,10 @@ public:
 
     virtual void Bind(const GraphicsPipeline *pipeline)override;
 
+    virtual void BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer)override;
+
+    virtual void EndRenderPass()override;
+
     void CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst);
 
     void CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_acces, VkAccessFlags dst_access);

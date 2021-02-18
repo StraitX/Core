@@ -5,7 +5,9 @@ namespace StraitX{
 
 Framebuffer::VTable Framebuffer::s_VTable;
 
-Framebuffer::Framebuffer(const RenderPass *const pass, const FramebufferProperties &props){
+Framebuffer::Framebuffer(const RenderPass *const pass, const FramebufferProperties &props):
+    m_Size(props.Size)
+{
 #ifdef SX_DEBUG
     CoreAssert(pass->Attachments().Size() == props.Attachments.Size(),"Framebuffer: attachments are not compatible with RenderPass");
 

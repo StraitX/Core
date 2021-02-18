@@ -13,6 +13,8 @@ struct FramebufferImpl: Framebuffer{
 
     ~FramebufferImpl();
 
+    void Bind()const;
+
     static Framebuffer *NewImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props);
 
     static void DeleteImpl(Framebuffer *framebuffer);

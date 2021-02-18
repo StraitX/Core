@@ -7,6 +7,8 @@
 #include "graphics/api/gpu_buffer.hpp"
 #include "graphics/api/gpu_texture.hpp"
 #include "graphics/api/graphics_pipeline.hpp"
+#include "graphics/api/render_pass.hpp"
+#include "graphics/api/framebuffer.hpp"
 
 namespace StraitX{
 
@@ -41,7 +43,11 @@ public:
 
     virtual void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0) = 0;
 
-    virtual void Bind(const GraphicsPipeline *pipeline);
+    virtual void Bind(const GraphicsPipeline *pipeline) = 0;
+
+    virtual void BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer) = 0;
+
+    virtual void EndRenderPass() = 0;
 
     sx_inline static GPUContext *New(){ return s_VTable.New(LogicalGPU::Instance()); }
 
