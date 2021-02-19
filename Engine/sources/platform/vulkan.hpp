@@ -19,7 +19,7 @@ extern size_t RequiredPlatformExtensionsCount;
 extern const char *RequiredPlatformLayers[];
 extern size_t RequiredPlatformLayersCount;
 
-constexpr Version VulkanVersion = {1, 0, 0};
+constexpr Version VulkanVersion = {1, 1, 0};
 
 };//namespace Vk::
 };//namespace StraitX::

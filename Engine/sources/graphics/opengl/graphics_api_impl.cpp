@@ -30,12 +30,13 @@ Result GraphicsAPIImpl::Initialize(){
     LogInfo("OpenGL: Vendor: %", (const char*)glGetString(GL_VENDOR));
     LogInfo("OpenGL: Version: %", (const char*)glGetString(GL_VERSION));
 
+    // TODO
+    Context.DestroyDummy();
 
     return Result::Success;
 }
 
 void GraphicsAPIImpl::Finalize(){
-    Context.DestroyDummy();
 }
 
 u32 GraphicsAPIImpl::GetPhysicalGPUCount(){

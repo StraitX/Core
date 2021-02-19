@@ -52,6 +52,7 @@ VkBlendOp GraphicsPipelineImpl::s_BlendFunctionTable[] = {
 };
 
 GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props):
+    GraphicsPipeline(props),
     Owner(static_cast<Vk::LogicalGPUImpl*>(&owner)),
     Scissors({{props.FramebufferViewport.x, props.FramebufferViewport.y}, {props.FramebufferViewport.Width, props.FramebufferViewport.Height}})
 {
@@ -128,7 +129,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     rasterization_info.depthClampEnable = VK_FALSE;
     rasterization_info.rasterizerDiscardEnable = VK_FALSE;
     rasterization_info.polygonMode = s_RasterizationModeTable[(size_t)props.Rasterization];
-    rasterization_info.cullMode = VK_CULL_MODE_BACK_BIT;
+    rasterization_info.cullMode = VK_CULL_MODE_NONE;// following one is disabled
     rasterization_info.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     rasterization_info.lineWidth = 1.0f;
     rasterization_info.depthBiasEnable = VK_FALSE; // following is disabled

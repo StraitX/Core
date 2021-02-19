@@ -17,11 +17,12 @@ void GPUContextImpl::BeginFrame(){
 }
 
 void GPUContextImpl::EndFrame(){
-    (void)0;
+    m_Pipeline = nullptr;
 }
 
 void GPUContextImpl::Submit(){
     glFlush();
+    glGetErrors(SX_THIS_LINE);
 }
 
 
@@ -33,19 +34,36 @@ void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, 
     CoreAssert(dst.Size() <= size + dst_offset, "GL: GPUContext: Copy: Dst Buffer overflow");
 
     glBindBuffer(GL_COPY_WRITE_BUFFER, dst.Handle().U32);
-    GL(glBufferSubData(GL_COPY_WRITE_BUFFER, dst_offset, size, src.Pointer()));
+    glBufferSubData(GL_COPY_WRITE_BUFFER, dst_offset, size, src.Pointer());
 }
 
 void GPUContextImpl::Bind(const GraphicsPipeline *pipeline){
-    static_cast<const GL::GraphicsPipelineImpl*>(pipeline)->Bind();
+    m_Pipeline = static_cast<const GL::GraphicsPipelineImpl*>(pipeline);
+    m_Pipeline->Bind();
 }
 void GPUContextImpl::BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer){
     (void)pass;
-    static_cast<const GL::FramebufferImpl *>(framebuffer)->Bind();
+    m_Framebuffer = static_cast<const GL::FramebufferImpl *>(framebuffer);
+    //TODO
+    //m_Framebuffer->Bind();
 }
 
 void GPUContextImpl::EndRenderPass(){
-    (void)0;
+    m_Framebuffer = nullptr;
+}
+
+void GPUContextImpl::BindVertexBuffer(const GPUBuffer &buffer){
+    m_Pipeline->BindVertexBuffer(buffer.Handle().U32);
+}
+
+void GPUContextImpl::BindIndexBuffer(const GPUBuffer &buffer, IndicesType indices_type){
+    // TODO
+    m_Pipeline->BindIndexBuffer(buffer.Handle().U32);
+}
+
+void GPUContextImpl::DrawIndexed(u32 indices_count){
+    //TODO
+    glDrawElements(GL_TRIANGLES, indices_count, GL_UNSIGNED_INT, nullptr);
 }
 
 GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){

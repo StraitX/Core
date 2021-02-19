@@ -33,6 +33,12 @@ public:
 
     virtual void EndRenderPass()override;
 
+    virtual void BindVertexBuffer(const GPUBuffer &buffer)override;
+
+    virtual void BindIndexBuffer(const GPUBuffer &buffer, IndicesType indices_type)override;
+
+    virtual void DrawIndexed(u32 indices_count)override;
+
     void CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst);
 
     void CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_acces, VkAccessFlags dst_access);

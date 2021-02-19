@@ -15,7 +15,7 @@ Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
     if(m_Context.MakeCurrent() != Result::Success)
         return Result::Unavailable;
     //XXX we enable blending in the desired context, not a dummy one
-    glEnable(GL_BLEND);
+    //glEnable(GL_BLEND);
     return Result::Success;
 }
 

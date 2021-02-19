@@ -90,12 +90,12 @@ void GPUContextImpl::Bind(const GraphicsPipeline *pipeline){
     vkCmdSetScissor(m_CmdBuffer, 0, 1, &pipeline_impl->Scissors);
 
     VkViewport viewport;
-    viewport.minDepth = 0;
+    viewport.minDepth = 0.0;
     viewport.maxDepth = 1.0;
     viewport.x = pipeline_impl->Scissors.offset.x;
-    viewport.y = pipeline_impl->Scissors.offset.y;
+    viewport.y = pipeline_impl->Scissors.extent.height - pipeline_impl->Scissors.offset.y;
     viewport.width  = pipeline_impl->Scissors.extent.width;
-    viewport.height = pipeline_impl->Scissors.extent.height;
+    viewport.height = -(float)pipeline_impl->Scissors.extent.height;
     vkCmdSetViewport(m_CmdBuffer, 0, 1, &viewport);
 }
 
@@ -119,6 +119,21 @@ void GPUContextImpl::BeginRenderPass(const RenderPass *pass, const Framebuffer *
 
 void GPUContextImpl::EndRenderPass(){
     vkCmdEndRenderPass(m_CmdBuffer);
+}
+
+void GPUContextImpl::BindVertexBuffer(const GPUBuffer &buffer){
+    VkBuffer handle = reinterpret_cast<VkBuffer>(buffer.Handle().U64);
+    VkDeviceSize offset = 0;
+    vkCmdBindVertexBuffers(m_CmdBuffer, 0, 1, &handle, &offset);
+}
+
+void GPUContextImpl::BindIndexBuffer(const GPUBuffer &buffer, IndicesType indices_type){
+    VkBuffer handle = reinterpret_cast<VkBuffer>(buffer.Handle().U64);
+    vkCmdBindIndexBuffer(m_CmdBuffer, handle, 0, VK_INDEX_TYPE_UINT32);
+}
+
+void GPUContextImpl::DrawIndexed(u32 indices_count){
+    vkCmdDrawIndexed(m_CmdBuffer, indices_count, 1, 0, 0, 0);
 }
 
 void GPUContextImpl::CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst){

@@ -48,7 +48,7 @@ public:
     sx_inline static void Delete(Swapchain *swapchain);
 };
 
-Swapchain *Swapchain::New(const Window &window, const SwapchainProperties &props){
+sx_inline Swapchain *Swapchain::New(const Window &window, const SwapchainProperties &props){
     return s_VTable.New(LogicalGPU::Instance(), window, props);
 }
 

@@ -90,6 +90,8 @@ struct GraphicsPipelineProperties{
     const RenderPass *Pass;
     //ArrayPtr<const ShaderBinding> ShaderBindings;
 };
+//OpenGL said that
+constexpr size_t MaxVertexAttributes = 8;
 
 class GraphicsAPILoader;
 
@@ -109,11 +111,15 @@ private:
 protected:
     static u32 s_VertexAttributeSizeTable[];
 public:
+    GraphicsPipeline(const GraphicsPipelineProperties &props);
+
     virtual ~GraphicsPipeline() = default;
 
     sx_inline static GraphicsPipeline *New(const GraphicsPipelineProperties &props);
 
     sx_inline static void Delete(GraphicsPipeline *pipeline);
+
+    static size_t CalculateStride(const ArrayPtr<const VertexAttribute> &attributes);
 
 };
 

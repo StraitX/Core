@@ -65,6 +65,8 @@ static GLenum ElementType(VertexAttribute attribute){
 }
 
 GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props):
+    GraphicsPipeline(props),
+    AttributesStride(GraphicsPipeline::CalculateStride(props.VertexAttributes)),
     Topology(props.Topology),
     Rasterization(props.Rasterization),
     FramebufferViewport(props.FramebufferViewport),
@@ -77,15 +79,23 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     glGenVertexArrays(1, &VertexArray);
     glBindVertexArray(VertexArray);
 
+    LogInfo("GL: VertexAttributes: Count: %", props.VertexAttributes.Size());
+
+
     for(size_t i = 0; i<props.VertexAttributes.Size(); ++i){
+        Attributes.Push(props.VertexAttributes[i]);
+
+        glEnableVertexAttribArray(i);
         glVertexAttribFormat(i, ElementsCount(props.VertexAttributes[i]),ElementType(props.VertexAttributes[i]),false, 0 /*offset from the begining of the buffer*/);
         glVertexAttribBinding(i,i);
     }
 
     Program = glCreateProgram();
-    for(const auto &shader: props.Shaders)
+    for(const auto *shader: props.Shaders)
         glAttachShader(Program, static_cast<const GL::ShaderImpl*>(shader)->Handle);
     glLinkProgram(Program);
+
+    LogInfo("GL: Shaders: Count: %", props.Shaders.Size());
 
     i32 link_status;
     glGetProgramiv(Program, GL_LINK_STATUS, &link_status);
@@ -101,9 +111,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
         LogError("GL: GraphicsPipeline: Shader Linkage failed: %", log);
 
         Valid = false;
-        return;
     }
-
 }
 
 GraphicsPipelineImpl::~GraphicsPipelineImpl(){
@@ -116,9 +124,22 @@ bool GraphicsPipelineImpl::IsValid(){
 }
 
 void GraphicsPipelineImpl::Bind()const{
+    glViewport(FramebufferViewport.x, FramebufferViewport.y, FramebufferViewport.Width, FramebufferViewport.Height);
     glBindVertexArray(VertexArray);
     glUseProgram(Program);
-    glViewport(FramebufferViewport.x, FramebufferViewport.y, FramebufferViewport.Width, FramebufferViewport.Height);
+}
+
+
+void GraphicsPipelineImpl::BindVertexBuffer(u32 id)const{
+    size_t offset = 0;
+    for(size_t i = 0; i<Attributes.Size(); ++i){
+        glBindVertexBuffer(i, id, offset, AttributesStride);
+        offset+=GraphicsPipeline::s_VertexAttributeSizeTable[(size_t)Attributes[i]];
+    }
+}
+
+void GraphicsPipelineImpl::BindIndexBuffer(u32 id)const{
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 }
 
 GraphicsPipeline * GraphicsPipelineImpl::NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props){

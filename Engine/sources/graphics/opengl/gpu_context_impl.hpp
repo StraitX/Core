@@ -2,14 +2,17 @@
 #define STRAITX_OPENGL_GPU_CONTEXT_IMPL_HPP
 
 #include "graphics/api/gpu_context.hpp"
-#include "graphics/vulkan/logical_gpu_impl.hpp"
+#include "graphics/opengl/logical_gpu_impl.hpp"
+#include "graphics/opengl/graphics_pipeline_impl.hpp"
+#include "graphics/opengl/framebuffer_impl.hpp"
 
 namespace StraitX{
 namespace GL{
 
 class GPUContextImpl: public GPUContext{
 private:
-    
+    const GL::GraphicsPipelineImpl *m_Pipeline = nullptr;
+    const GL::FramebufferImpl *m_Framebuffer = nullptr;
 public:
     virtual void BeginFrame()override;
 
@@ -26,6 +29,12 @@ public:
     virtual void BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer)override;
 
     virtual void EndRenderPass()override;
+
+    virtual void BindVertexBuffer(const GPUBuffer &buffer)override;
+
+    virtual void BindIndexBuffer(const GPUBuffer &buffer, IndicesType indices_type)override;
+
+    virtual void DrawIndexed(u32 indices_count)override;
 
     static GPUContext *NewImpl(LogicalGPU &owner);
 

@@ -12,6 +12,11 @@
 
 namespace StraitX{
 
+enum class IndicesType{
+    Uint16,
+    Uint32
+};
+
 class GraphicsAPILoader;
 
 class GPUContext: public NonCopyable{
@@ -48,6 +53,12 @@ public:
     virtual void BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer) = 0;
 
     virtual void EndRenderPass() = 0;
+
+    virtual void BindVertexBuffer(const GPUBuffer &buffer) = 0;
+
+    virtual void BindIndexBuffer(const GPUBuffer &buffer, IndicesType indices_type) = 0;
+
+    virtual void DrawIndexed(u32 indices_count) = 0;
 
     sx_inline static GPUContext *New(){ return s_VTable.New(LogicalGPU::Instance()); }
 

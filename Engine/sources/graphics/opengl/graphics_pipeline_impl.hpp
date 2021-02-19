@@ -13,6 +13,9 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     u32 VertexArray;
     u32 Program;
     bool Valid = true;
+    PushArray<VertexAttribute, MaxVertexAttributes> Attributes;
+    size_t AttributesStride = 0;
+
     PrimitivesTopology Topology;
     RasterizationMode Rasterization;
 // TODO apply this while binding
@@ -28,6 +31,10 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     virtual bool IsValid()override;
 
     void Bind()const;
+
+    void BindVertexBuffer(u32 id)const;
+
+    void BindIndexBuffer(u32 id)const;
 
     static GraphicsPipeline * NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props);
 
