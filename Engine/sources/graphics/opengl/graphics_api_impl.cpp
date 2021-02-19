@@ -13,10 +13,10 @@ GraphicsAPIImpl GraphicsAPIImpl::Instance;
 constexpr Version OpenGLVersion = {4, 6, 0};
 
 Result GraphicsAPIImpl::Initialize(){
-
-    if(Context.CreateDummy(OpenGLVersion) != Result::Success)
+    GLContext context;
+    if(context.CreateDummy(OpenGLVersion) != Result::Success)
         return Result::Failure;
-    if(Context.MakeCurrent() != Result::Success)
+    if(context.MakeCurrent() != Result::Success)
         return Result::Unavailable;
 
 
@@ -30,8 +30,7 @@ Result GraphicsAPIImpl::Initialize(){
     LogInfo("OpenGL: Vendor: %", (const char*)glGetString(GL_VENDOR));
     LogInfo("OpenGL: Version: %", (const char*)glGetString(GL_VERSION));
 
-    // TODO
-    Context.DestroyDummy();
+    context.DestroyDummy();
 
     return Result::Success;
 }

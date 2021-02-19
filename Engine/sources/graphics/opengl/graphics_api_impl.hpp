@@ -9,7 +9,6 @@ namespace StraitX{
 namespace GL{
 
 struct GraphicsAPIImpl: public GraphicsAPI{
-    GLContext Context;
     Version LoadedOpenGLVersion = {};
 
     static GraphicsAPIImpl Instance;
