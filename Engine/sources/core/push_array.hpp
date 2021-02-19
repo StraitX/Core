@@ -89,7 +89,7 @@ constexpr void PushArray<T_Type, T_Capacity>::Push(T_Type &&element){
 
 template<typename T_Type, size_t T_Capacity>
 constexpr void PushArray<T_Type, T_Capacity>::Pop(){
-    operator[](--m_Size).~T_Type();
+    begin()[--m_Size].~T_Type();
 }
 
 template<typename T_Type, size_t T_Capacity>
