@@ -26,6 +26,11 @@ GLenum GraphicsPipelineImpl::s_TopologyTable[] = {
     GL_TRIANGLES,
     GL_TRIANGLE_STRIP
 };
+GLenum GraphicsPipelineImpl::s_RasterizationModeTable[] = {
+    GL_POINT,
+    GL_LINE,
+    GL_FILL
+};
 
 static u32 ElementsCount(VertexAttribute attribute){
     switch (attribute){
@@ -76,7 +81,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     GraphicsPipeline(props),
     AttributesStride(GraphicsPipeline::CalculateStride(props.VertexAttributes)),
     Topology(s_TopologyTable[(size_t)props.Topology]),
-    Rasterization(props.Rasterization),
+    Rasterization(s_RasterizationModeTable[(size_t)props.Rasterization]),
     FramebufferViewport(props.FramebufferViewport),
     BlendFunc(s_BlendFunctionTable[(size_t)props.BlendFunc]),
     SrcBlendFactor(s_BlendFactorTable[(size_t)props.SrcBlendFactor]),
@@ -132,6 +137,7 @@ bool GraphicsPipelineImpl::IsValid(){
 }
 
 void GraphicsPipelineImpl::Bind()const{
+    glPolygonMode(GL_FRONT_AND_BACK, Rasterization);
     glViewport(FramebufferViewport.x, FramebufferViewport.y, FramebufferViewport.Width, FramebufferViewport.Height);
     glBlendFunc(SrcBlendFactor, DstBlendFactor);
     glBlendEquation(BlendFunc);

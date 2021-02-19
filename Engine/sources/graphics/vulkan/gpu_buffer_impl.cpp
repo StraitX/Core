@@ -1,5 +1,4 @@
 #include "platform/vulkan.hpp"
-#include "core/log.hpp"
 #include "graphics/vulkan/gpu_buffer_impl.hpp"
 #include "graphics/vulkan/logical_gpu_impl.hpp"
 
@@ -33,10 +32,8 @@ void GPUBufferImpl::Create(u32 size, GPUMemoryType mem_type, GPUBuffer::UsageTyp
     CoreFunctionAssert(vkCreateBuffer(Owner->Handle, &info, nullptr, &Handle), VK_SUCCESS, "Vk: GPUBufferImpl: Can't create buffer");
 
     Memory = Owner->Alloc(GetBufferMemoryRequirements(Owner->Handle, Handle), (mem_type == GPUMemoryType::VRAM) ? MemoryTypes::VRAM : MemoryTypes::DynamicVRAM);
-    //XXX
-    LogInfo("Vk: Allocated buffer size: %: Expected: %", GetBufferMemoryRequirements(Owner->Handle, Handle), size);
-    CoreFunctionAssert(vkBindBufferMemory(Owner->Handle, Handle, Memory, 0),VK_SUCCESS, "GPUBuffer: can't bind buffer's memory");
 
+    CoreFunctionAssert(vkBindBufferMemory(Owner->Handle, Handle, Memory, 0),VK_SUCCESS, "GPUBuffer: can't bind buffer's memory");
 }
 
 void GPUBufferImpl::Destroy(){
