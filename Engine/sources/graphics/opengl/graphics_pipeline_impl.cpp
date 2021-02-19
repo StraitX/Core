@@ -78,9 +78,9 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     Topology(s_TopologyTable[(size_t)props.Topology]),
     Rasterization(props.Rasterization),
     FramebufferViewport(props.FramebufferViewport),
-    BlendFunc(props.BlendFunc),
-    SrcBlendFactor(props.SrcBlendFactor),
-    DstBlendFactor(props.DstBlendFactor)
+    BlendFunc(s_BlendFunctionTable[(size_t)props.BlendFunc]),
+    SrcBlendFactor(s_BlendFactorTable[(size_t)props.SrcBlendFactor]),
+    DstBlendFactor(s_BlendFactorTable[(size_t)props.DstBlendFactor])
 {
     //OpenGL...
     (void)owner;
@@ -133,6 +133,8 @@ bool GraphicsPipelineImpl::IsValid(){
 
 void GraphicsPipelineImpl::Bind()const{
     glViewport(FramebufferViewport.x, FramebufferViewport.y, FramebufferViewport.Width, FramebufferViewport.Height);
+    glBlendFunc(SrcBlendFactor, DstBlendFactor);
+    glBlendEquation(BlendFunc);
     glBindVertexArray(VertexArray);
     glUseProgram(Program);
 }

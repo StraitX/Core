@@ -18,12 +18,12 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     size_t AttributesStride = 0;
 
     GLenum Topology;
+    //TODO last thing to match vulkan
     RasterizationMode Rasterization;
-// TODO apply this while binding
     Viewport FramebufferViewport;
-    BlendFunction BlendFunc;
-    BlendFactor SrcBlendFactor;
-    BlendFactor DstBlendFactor;
+    GLenum BlendFunc;
+    GLenum SrcBlendFactor;
+    GLenum DstBlendFactor;
 
     GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props);
 
