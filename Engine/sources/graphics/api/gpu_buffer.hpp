@@ -43,46 +43,59 @@ private:
     static VTable s_VTable;
 
     LogicalGPU *const m_Owner = nullptr;
-    u32 m_Size          = 0;
-    GPUResourceHandle m_Handle          = {};
-    GPUResourceHandle m_BackingMemory   = {};
+    u32 m_Size = 0;
+    GPUResourceHandle m_Handle = {};
+    GPUResourceHandle m_BackingMemory = {};
 
     friend class GraphicsAPILoader;
     friend class GL::GPUBufferImpl;
     friend class Vk::GPUBufferImpl;
 public:
-    sx_inline GPUBuffer():
-        m_Owner(&LogicalGPU::Instance())
-    {}
+    GPUBuffer();
+
+#ifdef SX_DEBUG
+    ~GPUBuffer();
+#endif
+    void New(u32 size, GPUMemoryType mem_type, UsageType usage);
+
+    void Delete();
+
+    constexpr GPUResourceHandle Handle()const;
+
+    constexpr u32 Size()const;
+
+};
+
+sx_inline GPUBuffer::GPUBuffer():
+    m_Owner(&LogicalGPU::Instance())
+{}
 
 // Use destructor to avoid Buffer leaks
 #ifdef SX_DEBUG
-    ~GPUBuffer(){
-        CoreAssert(m_Handle.U64 == 0, "GPUBuffer: Delete() should be called before destruction");
-    }
+GPUBuffer::~GPUBuffer(){
+    CoreAssert(m_Handle.U64 == 0, "GPUBuffer: Delete() should be called before destruction");
+}
 #endif
 
-    sx_inline void New(u32 size, GPUMemoryType mem_type, UsageType usage){
-        CoreAssert(m_Handle.U64 == 0, "GPUBuffer: New() should be called on empty object");
-        s_VTable.New(*this, size, mem_type, usage);
-    }
+sx_inline void GPUBuffer::New(u32 size, GPUMemoryType mem_type, UsageType usage){
+    CoreAssert(m_Handle.U64 == 0, "GPUBuffer: New() should be called on empty object");
+    s_VTable.New(*this, size, mem_type, usage);
+}
 
-    sx_inline void Delete(){
-        s_VTable.Delete(*this);
+sx_inline void GPUBuffer::Delete(){
+    s_VTable.Delete(*this);
 #ifdef SX_DEBUG
-        m_Handle.U64 = 0;
+    m_Handle.U64 = 0;
 #endif
-    }
+}
 
-    constexpr GPUResourceHandle Handle()const{
-        return m_Handle;
-    }
+constexpr GPUResourceHandle GPUBuffer::Handle()const{
+    return m_Handle;
+}
 
-    constexpr u32 Size()const{
-        return m_Size;
-    }
-
-};
+constexpr u32 GPUBuffer::Size()const{
+    return m_Size;
+}
 
 }//namespace StraitX::
 

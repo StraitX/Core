@@ -78,31 +78,54 @@ private:
     friend class GL::GPUTextureImpl;
 public:
 
-    sx_inline GPUTexture():
-        m_Owner(&LogicalGPU::Instance())
-    {}
+    GPUTexture();
 
     GPUTexture(GPUTexture &&other);
 
     GPUTexture &operator=(GPUTexture &&other);
 
-    sx_inline void New(Format format, Usage usage, u32 width, u32 height){
-        s_VTable.New(*this, format, usage, width, height);
-    }
+    void New(Format format, Usage usage, u32 width, u32 height);
 
-    sx_inline void Delete(){
-        s_VTable.Delete(*this);
-    }
-    sx_inline GPUResourceHandle Handle()const{ return m_Handle; }
+    void Delete();
 
-    sx_inline GPUResourceHandle ViewHandle()const{ return m_ViewHandle; }
+    constexpr GPUResourceHandle Handle()const;
 
-    sx_inline Vector2u Size()const{ return {m_Width, m_Height}; }
+    constexpr GPUResourceHandle ViewHandle()const;
 
-    sx_inline Format GetFormat()const{ return m_Format; }
+    constexpr Vector2u Size()const;
+
+    constexpr Format GetFormat()const;
 
     static bool IsDepthFormat(GPUTexture::Format format);
 };
+
+sx_inline GPUTexture::GPUTexture():
+    m_Owner(&LogicalGPU::Instance())
+{}
+
+sx_inline void GPUTexture::New(Format format, Usage usage, u32 width, u32 height){
+    s_VTable.New(*this, format, usage, width, height);
+}
+
+sx_inline void GPUTexture::Delete(){
+    s_VTable.Delete(*this);
+}
+
+constexpr GPUResourceHandle GPUTexture::Handle()const{ 
+    return m_Handle; 
+}
+
+constexpr GPUResourceHandle GPUTexture::ViewHandle()const{ 
+    return m_ViewHandle; 
+}
+
+constexpr Vector2u GPUTexture::Size()const{ 
+    return {m_Width, m_Height}; 
+}
+
+constexpr GPUTexture::Format GPUTexture::GetFormat()const{ 
+    return m_Format;
+}
 
 }//namespace StraitX::
 

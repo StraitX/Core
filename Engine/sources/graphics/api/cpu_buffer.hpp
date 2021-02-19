@@ -43,45 +43,60 @@ private:
     friend class Vk::CPUBufferImpl;
     friend class GraphicsAPILoader;
 public:
-    sx_inline CPUBuffer():
-        m_Owner(&LogicalGPU::Instance())
-    {}
+    CPUBuffer();
 
-// Use destructor to avoid Buffer leaks
 #ifdef SX_DEBUG
-    ~CPUBuffer(){
-        CoreAssert(m_Pointer == nullptr, "CPUBuffer: Delete should be called before destruction");
-    }
+    ~CPUBuffer();
 #endif
+    void New(u32 size);
 
-    sx_inline void New(u32 size){
-        CoreAssert(m_Pointer == nullptr, "CPUBuffer: New() should be called on empty object");
-        s_VTable.New(*this, size);
-    }
+    void Delete();
 
-    sx_inline void Delete(){
-        s_VTable.Delete(*this);
-#ifdef SX_DEBUG
-        m_Pointer = nullptr;
-#endif
-    }
-
-    constexpr void *Pointer()const{
-        CoreAssert(m_Pointer, "CPUBuffer: For some reason Pointer is null");
-        return m_Pointer;
-    }
+    constexpr void *Pointer()const;
 
     void CopyData(const void *source, size_t size);
 
-    constexpr GPUResourceHandle Handle()const{
-        return m_Handle;
-    }
+    constexpr GPUResourceHandle Handle()const;
 
-    constexpr u32 Size()const{
-        return m_Size;
-    }
+    constexpr u32 Size()const;
     
 };
+
+sx_inline CPUBuffer::CPUBuffer():
+    m_Owner(&LogicalGPU::Instance())
+{}
+
+// Use destructor to avoid Buffer leaks
+#ifdef SX_DEBUG
+CPUBuffer::~CPUBuffer(){
+    CoreAssert(m_Pointer == nullptr, "CPUBuffer: Delete should be called before destruction");
+}
+#endif
+
+sx_inline void CPUBuffer::New(u32 size){
+    CoreAssert(m_Pointer == nullptr, "CPUBuffer: New() should be called on empty object");
+    s_VTable.New(*this, size);
+}
+
+sx_inline void CPUBuffer::Delete(){
+    s_VTable.Delete(*this);
+#ifdef SX_DEBUG
+    m_Pointer = nullptr;
+#endif
+}
+
+constexpr void *CPUBuffer::Pointer()const{
+    CoreAssert(m_Pointer, "CPUBuffer: For some reason Pointer is null");
+    return m_Pointer;
+}
+
+constexpr GPUResourceHandle CPUBuffer::Handle()const{
+    return m_Handle;
+}
+
+constexpr u32 CPUBuffer::Size()const{
+    return m_Size;
+}
 
 }//namespace StraitX::
 
