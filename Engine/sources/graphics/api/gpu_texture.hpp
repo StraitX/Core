@@ -80,10 +80,6 @@ public:
 
     sx_inline GPUTexture();
 
-    sx_inline GPUTexture(GPUTexture &&other);
-
-    GPUTexture &operator=(GPUTexture &&other);
-
     sx_inline void New(Format format, Usage usage, u32 width, u32 height);
 
     sx_inline void Delete();

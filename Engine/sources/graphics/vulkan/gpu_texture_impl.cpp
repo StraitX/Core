@@ -61,48 +61,57 @@ void GPUTextureImpl::Create(GPUTexture::Format format, GPUTexture::Usage usage, 
     Memory = Owner->Alloc(req.size, MemoryTypes::VRAM);
 
     CoreFunctionAssert(vkBindImageMemory(Owner->Handle, Handle, Memory, 0), VK_SUCCESS, "Vk: GPUTextureImpl: can't bind image memory");
+
+    ViewHandle = CreateImageView(Owner, Handle, Format, Width, Height);
+}
+
+void GPUTextureImpl::CreateFromImage(VkImage image, GPUTexture::Format format, u32 width, u32 height){
+    Handle = image;
+    ViewHandle = CreateImageView(Owner, image, format, width, height);
+    Memory = VK_NULL_HANDLE;
+    Width = width;
+    Height = height;
+    Layout = GPUTexture::Layout::Undefined;
+    Usage = GPUTexture::UsageBits::Sampled;
+    Format = format;
 }
 
 void GPUTextureImpl::Destroy(){
-    vkDestroyImage(Owner->Handle, Handle, nullptr);
+    DestroyImageView(Owner, ViewHandle);
 
-    Owner->Free(Memory);
+    if(Memory){
+        vkDestroyImage(Owner->Handle, Handle, nullptr);
+
+        Owner->Free(Memory);
+    }
 }
 
-void GPUTextureImpl::CreateImageView(){
+VkImageView GPUTextureImpl::CreateImageView(const Vk::LogicalGPUImpl *owner, VkImage image, GPUTexture::Format format, u32 width, u32 height){
     VkImageViewCreateInfo view_info;
     view_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     view_info.pNext = nullptr;
     view_info.flags = 0;
-    view_info.image = Handle;
+    view_info.image = image;
     view_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    view_info.format = GPUTextureImpl::s_FormatTable[(size_t)Format];
+    view_info.format = GPUTextureImpl::s_FormatTable[(size_t)format];
     view_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
     view_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
     view_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
     view_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-    view_info.subresourceRange.aspectMask = GPUTexture::IsDepthFormat(Format) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+    view_info.subresourceRange.aspectMask = GPUTexture::IsDepthFormat(format) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
     view_info.subresourceRange.baseArrayLayer = 0;
     view_info.subresourceRange.baseMipLevel = 0;
     view_info.subresourceRange.layerCount = 1;
     view_info.subresourceRange.levelCount = 1;
 
-    CoreFunctionAssert(vkCreateImageView(Owner->Handle, &view_info, nullptr, &ViewHandle), VK_SUCCESS, "Vk: GPUTextureImpl: Can't create VkImageView");
-}
-
-void GPUTextureImpl::DestroyImageView(){
-    vkDestroyImageView(Owner->Handle, ViewHandle, nullptr);
-}
-
-void GPUTextureImpl::CreateFromChainImage(VkImage image, GPUTexture::Format format){
-    Handle = image;
-    Format = format;
+    VkImageView handle;
+    CoreFunctionAssert(vkCreateImageView(owner->Handle, &view_info, nullptr, &handle), VK_SUCCESS, "Vk: GPUTextureImpl: Can't create VkImageView");
     
-    CreateImageView();
+    return handle;
 }
 
-void GPUTextureImpl::DestroyFromChainImage(){
-    DestroyImageView();
+void GPUTextureImpl::DestroyImageView(const Vk::LogicalGPUImpl *owner, VkImageView handle){
+    vkDestroyImageView(owner->Handle, handle, nullptr);
 }
 
 VkSampleCountFlagBits GPUTextureImpl::ToVkSampleCount(SamplePoints samples){

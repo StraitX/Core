@@ -14,7 +14,7 @@ constexpr size_t MaxFramebuffers = 3;
 
 struct SwapchainProperties{
     u32 FramebuffersCount = 2;
-    AttachmentDescription ColorAttachmentDescription;
+    AttachmentDescription FramebufferDescription;
 };
 
 class GraphicsAPILoader;

@@ -34,9 +34,9 @@ static bool IsSupported(VkPhysicalDevice dev, VkSurfaceKHR surface, VkFormat for
 SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props):
     m_Owner(static_cast<Vk::LogicalGPUImpl *>(&gpu)),
     m_Colorspace(DesiredColorSpace),
-    m_Format(GPUTextureImpl::s_FormatTable[(size_t)props.ColorAttachmentDescription.Format]),
+    m_Format(GPUTextureImpl::s_FormatTable[(size_t)props.FramebufferDescription.Format]),
     m_AcquireFence(m_Owner->Handle),
-    m_FramebufferPass(gpu, {{&props.ColorAttachmentDescription, 1}})
+    m_FramebufferPass(gpu, {{&props.FramebufferDescription, 1}})
 {
     CoreFunctionAssert(m_Surface.Create(Vk::GraphicsAPIImpl::Instance.Handle, window),Result::Success, "Vk: SwapchainImpl: Can't obtain surface");
     
@@ -81,7 +81,7 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
 
     CoreFunctionAssert(vkCreateSwapchainKHR(m_Owner->Handle, &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: SwapchainImpl: Can't create a swapchain");
 
-    InitializeFramebuffers(props.ColorAttachmentDescription.Format);
+    InitializeFramebuffers(props.FramebufferDescription.Format);
 
     AcquireNext();
 }
@@ -128,14 +128,11 @@ void SwapchainImpl::InitializeFramebuffers(GPUTexture::Format format){
     vkGetSwapchainImagesKHR(m_Owner->Handle, m_Handle, &images_count, images);
 
     for(u32 i = 0; i<images_count; ++i){
-        GPUTexture texture;
+        m_Images.Emplace();
+        GPUTextureImpl impl(m_Images[i]);
+        impl.CreateFromImage(images[i], format, m_Size.x, m_Size.y);
 
-        GPUTextureImpl impl(texture);
-        impl.CreateFromChainImage(images[i], format);
-
-        m_Images.Push(Move(texture));
-
-        const GPUTexture *tp = &m_Images[0];
+        const GPUTexture *tp = &m_Images[i];
         FramebufferProperties props;
         props.Size = m_Size;
         props.Attachments = {&tp, 1};
@@ -146,7 +143,8 @@ void SwapchainImpl::InitializeFramebuffers(GPUTexture::Format format){
 void SwapchainImpl::FinalizeFramebuffers(){
     for(auto &image: m_Images){
         GPUTextureImpl impl(image);
-        impl.DestroyFromChainImage();
+        impl.Destroy();
+        m_Framebuffers.Pop();
     }
 }
 
