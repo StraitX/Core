@@ -27,9 +27,9 @@ GLenum GraphicsPipelineImpl::s_TopologyTable[] = {
     GL_TRIANGLE_STRIP
 };
 GLenum GraphicsPipelineImpl::s_RasterizationModeTable[] = {
+    GL_FILL,
     GL_POINT,
-    GL_LINE,
-    GL_FILL
+    GL_LINE
 };
 
 static u32 ElementsCount(VertexAttribute attribute){
