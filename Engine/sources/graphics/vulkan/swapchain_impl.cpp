@@ -51,6 +51,7 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
     m_Colorspace(DesiredColorSpace),
     m_Format(GPUTextureImpl::s_FormatTable[(size_t)props.FramebufferFormat]),
     m_AcquireFence(m_Owner->Handle),
+    m_ImagesCount(props.FramebuffersCount),
     m_FramebufferPass(gpu, ToFramebufferProperties(props))
 {
     CoreFunctionAssert(m_Surface.Create(Vk::GraphicsAPIImpl::Instance.Handle, window),Result::Success, "Vk: SwapchainImpl: Can't obtain surface");
@@ -64,7 +65,12 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
     VkSurfaceCapabilitiesKHR capabilities;
     CoreFunctionAssert(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_Owner->PhysicalHandle, m_Surface.Handle, &capabilities), VK_SUCCESS, "Vk: SwapchainImpl: can't obtain surface sapabilites");
 
-    CoreAssert(props.FramebuffersCount >= capabilities.minImageCount && capabilities.maxImageCount && props.FramebuffersCount <= capabilities.maxImageCount, "Vk: SwapchainImpl: current system does not support this amount of framebuffers");
+    if(capabilities.minImageCount > m_ImagesCount){
+        LogWarn("Vk: Swapchain: System requires % framebuffers", capabilities.minImageCount);
+        m_ImagesCount = capabilities.minImageCount;
+    }
+
+    CoreAssert((!capabilities.maxImageCount || m_ImagesCount <= capabilities.maxImageCount), "Vk: SwapchainImpl: current system does not support this amount of framebuffers");
     
     if(!IsSupported(m_Owner->PhysicalHandle, m_Surface.Handle, m_Format, m_Colorspace)){
         LogError("Vk: SwapchainImpl: ColorSpace and Format are not supported");
@@ -83,7 +89,7 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
     info.pQueueFamilyIndices = nullptr;
     info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
     info.clipped = true;
-    info.minImageCount = props.FramebuffersCount;
+    info.minImageCount = m_ImagesCount;
     info.preTransform = capabilities.currentTransform;
     info.surface = m_Surface.Handle;
     info.presentMode = VK_PRESENT_MODE_IMMEDIATE_KHR; // should be supported everywhere // TODO replace with VSync mode

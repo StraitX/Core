@@ -27,6 +27,7 @@ private:
 
     Vk::Fence m_AcquireFence;
     u32 m_CurrentImage = 0;
+    u32 m_ImagesCount = 0;
 
     Vk::RenderPassImpl m_FramebufferPass;
     PushArray<GPUTexture, MaxFramebuffers> m_Images;
