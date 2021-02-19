@@ -33,6 +33,8 @@ public:
 
     constexpr void Pop();
 
+    constexpr void Clear();
+
     template<typename ...T_Args>
     constexpr void Emplace(T_Args&&...args);
 
@@ -71,8 +73,7 @@ constexpr PushArray<T_Type, T_Capacity>::PushArray(std::initializer_list<T_Type>
 
 template<typename T_Type, size_t T_Capacity>
 PushArray<T_Type, T_Capacity>::~PushArray(){
-    while(Size())
-        Pop();
+    Clear();
 }
 
 template<typename T_Type, size_t T_Capacity>
@@ -90,6 +91,12 @@ constexpr void PushArray<T_Type, T_Capacity>::Push(T_Type &&element){
 template<typename T_Type, size_t T_Capacity>
 constexpr void PushArray<T_Type, T_Capacity>::Pop(){
     begin()[--m_Size].~T_Type();
+}
+
+template<typename T_Type, size_t T_Capacity>
+constexpr void PushArray<T_Type, T_Capacity>::Clear(){
+    while(Size())
+        Pop();
 }
 
 template<typename T_Type, size_t T_Capacity>
