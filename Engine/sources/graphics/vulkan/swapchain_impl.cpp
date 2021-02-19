@@ -139,7 +139,7 @@ void SwapchainImpl::InitializeFramebuffers(GPUTexture::Format format){
         FramebufferProperties props;
         props.Size = m_Size;
         props.Attachments = {&tp, 1};
-        m_Framebuffers.Push(Vk::FramebufferImpl(*m_Owner,&m_FramebufferPass, props));
+        m_Framebuffers.Emplace(*m_Owner,&m_FramebufferPass, props);
     }
 }
 

@@ -31,23 +31,40 @@ private:
     static VTable s_VTable;
 
     Vector2u m_Size;
+    PushArray<const GPUTexture *, MaxAttachmentsCount> m_Attachments;
 
     friend class GraphicsAPILoader;
 public:
+    Framebuffer(const RenderPass *const pass, const FramebufferProperties &props);
 
     virtual ~Framebuffer() = default;
 
-    sx_inline Vector2u Size()const{ return m_Size; }
+    constexpr Vector2u Size()const;
 
-    sx_inline static Framebuffer *New(const RenderPass *const pass,const FramebufferProperties &props){
-        return s_VTable.New(LogicalGPU::Instance(), pass, props);
-    }
+    constexpr const PushArray<const GPUTexture *, MaxAttachmentsCount>& Attachments()const;
 
-    sx_inline static void Delete(Framebuffer *framebuffer){
-        s_VTable.Delete(framebuffer);
-    }
+    static Framebuffer *New(const RenderPass *const pass, const FramebufferProperties &props);
+
+    static void Delete(Framebuffer *framebuffer);
 
 };
+
+
+constexpr Vector2u Framebuffer::Size()const{ 
+    return m_Size; 
+}
+
+constexpr const PushArray<const GPUTexture *, MaxAttachmentsCount>& Framebuffer::Attachments()const{
+    return m_Attachments;
+}
+
+sx_inline Framebuffer *Framebuffer::New(const RenderPass *const pass,const FramebufferProperties &props){
+    return s_VTable.New(LogicalGPU::Instance(), pass, props);
+}
+
+sx_inline void Framebuffer::Delete(Framebuffer *framebuffer){
+    s_VTable.Delete(framebuffer);
+}
 
 }//namespace StraitX::
 

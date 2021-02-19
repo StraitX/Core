@@ -9,7 +9,7 @@ namespace GL{
 struct FramebufferImpl: Framebuffer{
     u32 Handle;
 
-    FramebufferImpl(u32 handle);
+    FramebufferImpl(u32 handle, const RenderPass *const pass, const FramebufferProperties &props);
 
     FramebufferImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props);
 

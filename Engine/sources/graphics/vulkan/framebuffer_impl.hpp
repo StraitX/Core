@@ -11,15 +11,9 @@ struct FramebufferImpl: Framebuffer{
     Vk::LogicalGPUImpl *const Owner = nullptr;
     VkFramebuffer Handle = VK_NULL_HANDLE;
 
-    FramebufferImpl() = default;
-
-    FramebufferImpl(FramebufferImpl &&other);
-
     FramebufferImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props);
 
     ~FramebufferImpl();
-
-    FramebufferImpl &operator=(FramebufferImpl &&other);
 
     static Framebuffer *NewImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props);
 

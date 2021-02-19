@@ -12,8 +12,8 @@ namespace GL{
 class SwapchainImpl: public Swapchain{
 private:
     GL::LogicalGPUImpl *m_Owner = nullptr;
-    GL::FramebufferImpl m_DefaultFramebuffer;
     GL::RenderPassImpl m_FramebufferPass;
+    GL::FramebufferImpl m_DefaultFramebuffer;
 public:
     SwapchainImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props);
 

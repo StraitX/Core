@@ -6,11 +6,13 @@
 namespace StraitX{
 namespace GL{
 
-FramebufferImpl::FramebufferImpl(u32 handle):
+FramebufferImpl::FramebufferImpl(u32 handle, const RenderPass *const pass, const FramebufferProperties &props):
+    Framebuffer(pass, props),
     Handle(handle)
 {}
 
-FramebufferImpl::FramebufferImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props)
+FramebufferImpl::FramebufferImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props):
+    Framebuffer(pass, props)
 {
     // we don't care
     (void)owner;
