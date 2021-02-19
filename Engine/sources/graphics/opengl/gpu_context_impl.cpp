@@ -44,8 +44,7 @@ void GPUContextImpl::Bind(const GraphicsPipeline *pipeline){
 void GPUContextImpl::BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer){
     (void)pass;
     m_Framebuffer = static_cast<const GL::FramebufferImpl *>(framebuffer);
-    //TODO
-    //m_Framebuffer->Bind();
+    m_Framebuffer->Bind();
 }
 
 void GPUContextImpl::EndRenderPass(){
