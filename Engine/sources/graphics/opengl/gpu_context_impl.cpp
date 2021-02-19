@@ -12,6 +12,11 @@
 namespace StraitX{
 namespace GL{
 
+GLenum GPUContextImpl::s_IndexTypeTable[] = {
+    GL_UNSIGNED_SHORT,
+    GL_UNSIGNED_INT
+};
+
 void GPUContextImpl::BeginFrame(){
     (void)0;
 }
@@ -56,13 +61,12 @@ void GPUContextImpl::BindVertexBuffer(const GPUBuffer &buffer){
 }
 
 void GPUContextImpl::BindIndexBuffer(const GPUBuffer &buffer, IndicesType indices_type){
-    // TODO
+    m_CurrentIndicesType = s_IndexTypeTable[(size_t)indices_type];
     m_Pipeline->BindIndexBuffer(buffer.Handle().U32);
 }
 
 void GPUContextImpl::DrawIndexed(u32 indices_count){
-    //TODO
-    glDrawElements(GL_TRIANGLES, indices_count, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, indices_count, m_CurrentIndicesType, nullptr);
 }
 
 GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){

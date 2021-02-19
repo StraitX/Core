@@ -3,12 +3,14 @@
 
 #include "graphics/api/gpu_context.hpp"
 #include "graphics/vulkan/logical_gpu_impl.hpp"
+#include "vulkan/vulkan_core.h"
 
 namespace StraitX{
 namespace Vk{
 
 class GPUContextImpl: public GPUContext{
 private:
+    static VkIndexType s_IndexTypeTable[];
     Vk::LogicalGPUImpl *m_Owner = nullptr;
     VkCommandPool   m_CmdPool   = VK_NULL_HANDLE;
     VkCommandBuffer m_CmdBuffer = VK_NULL_HANDLE;

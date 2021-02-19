@@ -9,9 +9,14 @@
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
 #include "graphics/vulkan/framebuffer_impl.hpp"
+#include "vulkan/vulkan_core.h"
 
 namespace StraitX{
 namespace Vk{
+VkIndexType GPUContextImpl::s_IndexTypeTable[]={
+    VK_INDEX_TYPE_UINT16,
+    VK_INDEX_TYPE_UINT32
+};
 
 GPUContextImpl::GPUContextImpl(Vk::LogicalGPUImpl *owner):
     m_Owner(owner)
@@ -129,7 +134,7 @@ void GPUContextImpl::BindVertexBuffer(const GPUBuffer &buffer){
 
 void GPUContextImpl::BindIndexBuffer(const GPUBuffer &buffer, IndicesType indices_type){
     VkBuffer handle = reinterpret_cast<VkBuffer>(buffer.Handle().U64);
-    vkCmdBindIndexBuffer(m_CmdBuffer, handle, 0, VK_INDEX_TYPE_UINT32);
+    vkCmdBindIndexBuffer(m_CmdBuffer, handle, 0, s_IndexTypeTable[(size_t)indices_type]);
 }
 
 void GPUContextImpl::DrawIndexed(u32 indices_count){

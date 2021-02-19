@@ -11,8 +11,10 @@ namespace GL{
 
 class GPUContextImpl: public GPUContext{
 private:
+    static GLenum s_IndexTypeTable[];
     const GL::GraphicsPipelineImpl *m_Pipeline = nullptr;
     const GL::FramebufferImpl *m_Framebuffer = nullptr;
+    GLenum m_CurrentIndicesType;
 public:
     virtual void BeginFrame()override;
 
