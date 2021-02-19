@@ -66,7 +66,7 @@ void GPUContextImpl::BindIndexBuffer(const GPUBuffer &buffer, IndicesType indice
 }
 
 void GPUContextImpl::DrawIndexed(u32 indices_count){
-    glDrawElements(GL_TRIANGLES, indices_count, m_CurrentIndicesType, nullptr);
+    glDrawElements(m_Pipeline->Topology, indices_count, m_CurrentIndicesType, nullptr);
 }
 
 GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){

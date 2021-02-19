@@ -19,6 +19,14 @@ GLenum GraphicsPipelineImpl::s_BlendFactorTable[]={
     GL_DST_ALPHA
 };
 
+GLenum GraphicsPipelineImpl::s_TopologyTable[] = {
+    GL_POINTS,
+    GL_LINES,
+    GL_LINE_STRIP,
+    GL_TRIANGLES,
+    GL_TRIANGLE_STRIP
+};
+
 static u32 ElementsCount(VertexAttribute attribute){
     switch (attribute){
     case VertexAttribute::Int:
@@ -67,7 +75,7 @@ static GLenum ElementType(VertexAttribute attribute){
 GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props):
     GraphicsPipeline(props),
     AttributesStride(GraphicsPipeline::CalculateStride(props.VertexAttributes)),
-    Topology(props.Topology),
+    Topology(s_TopologyTable[(size_t)props.Topology]),
     Rasterization(props.Rasterization),
     FramebufferViewport(props.FramebufferViewport),
     BlendFunc(props.BlendFunc),

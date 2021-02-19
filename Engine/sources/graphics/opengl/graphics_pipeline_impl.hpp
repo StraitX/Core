@@ -10,13 +10,14 @@ namespace GL{
 struct GraphicsPipelineImpl: GraphicsPipeline{
     static GLenum s_BlendFunctionTable[];
     static GLenum s_BlendFactorTable[];
+    static GLenum s_TopologyTable[];
     u32 VertexArray;
     u32 Program;
     bool Valid = true;
     PushArray<VertexAttribute, MaxVertexAttributes> Attributes;
     size_t AttributesStride = 0;
 
-    PrimitivesTopology Topology;
+    GLenum Topology;
     RasterizationMode Rasterization;
 // TODO apply this while binding
     Viewport FramebufferViewport;
