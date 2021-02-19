@@ -1,3 +1,4 @@
+#include "platform/compiler.hpp"
 #include "graphics_pipeline.hpp"
 
 namespace StraitX{
@@ -22,9 +23,9 @@ u32 GraphicsPipeline::s_VertexAttributeSizeTable[]={
 };
 
 GraphicsPipeline::GraphicsPipeline(const GraphicsPipelineProperties &props){
+#ifdef SX_DEBUG
     bool has_vertex = false;
     bool has_fragment = false;
-    //XXX
 
     for(auto *shader: props.Shaders){
         if(shader->GetType() == Shader::Vertex)
@@ -32,8 +33,10 @@ GraphicsPipeline::GraphicsPipeline(const GraphicsPipelineProperties &props){
         if(shader->GetType() == Shader::Fragment)
             has_fragment = true;
     }
-
     CoreAssert(has_vertex && has_fragment, "GraphicsPipeline: Is not complete");
+#else
+    (void)props;
+#endif
 }
 
 size_t GraphicsPipeline::CalculateStride(const ArrayPtr<const VertexAttribute> &attributes){
