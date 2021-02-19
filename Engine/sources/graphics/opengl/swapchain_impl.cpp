@@ -5,11 +5,26 @@
 namespace StraitX{
 namespace GL{
 
-GPUTexture *FakeFramebufferTexturePtr = nullptr;
+static GPUTexture *FakeFramebufferTexturePtr = nullptr;
+
+static AttachmentDescription TempAttachment = {
+    GPUTexture::Layout::PresentSrcOptimal,
+    GPUTexture::Layout::PresentSrcOptimal,
+    GPUTexture::Layout::ColorAttachmentOptimal,
+    GPUTexture::Format::Unknown,
+    SamplePoints::Samples_1
+};
+
+static RenderPassProperties ToFramebufferProperties(const SwapchainProperties &props){
+    //XXX not thread-safe
+    TempAttachment.Format = props.FramebufferFormat;
+    TempAttachment.Samples = props.FramebufferSamples; 
+    return {{&TempAttachment, 1}};
+}
 
 SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props):
     m_Owner(static_cast<GL::LogicalGPUImpl *>(&gpu)),
-    m_FramebufferPass(gpu, {{&props.FramebufferDescription, 1}}),
+    m_FramebufferPass(gpu, ToFramebufferProperties(props)),
     m_DefaultFramebuffer(0, &m_FramebufferPass, { {window.Size().width, window.Size().height}, {&FakeFramebufferTexturePtr, 1} })
 {
     // Yes, OpenGL, Here we go

@@ -30,13 +30,28 @@ static bool IsSupported(VkPhysicalDevice dev, VkSurfaceKHR surface, VkFormat for
     return support;
 }
 
+static AttachmentDescription TempAttachment = {
+    GPUTexture::Layout::PresentSrcOptimal,
+    GPUTexture::Layout::PresentSrcOptimal,
+    GPUTexture::Layout::ColorAttachmentOptimal,
+    GPUTexture::Format::Unknown,
+    SamplePoints::Samples_1
+};
+
+static RenderPassProperties ToFramebufferProperties(const SwapchainProperties &props){
+    //XXX not thread-safe
+    TempAttachment.Format = props.FramebufferFormat;
+    TempAttachment.Samples = props.FramebufferSamples; 
+    return {{&TempAttachment, 1}};
+}
+
 
 SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props):
     m_Owner(static_cast<Vk::LogicalGPUImpl *>(&gpu)),
     m_Colorspace(DesiredColorSpace),
-    m_Format(GPUTextureImpl::s_FormatTable[(size_t)props.FramebufferDescription.Format]),
+    m_Format(GPUTextureImpl::s_FormatTable[(size_t)props.FramebufferFormat]),
     m_AcquireFence(m_Owner->Handle),
-    m_FramebufferPass(gpu, {{&props.FramebufferDescription, 1}})
+    m_FramebufferPass(gpu, ToFramebufferProperties(props))
 {
     CoreFunctionAssert(m_Surface.Create(Vk::GraphicsAPIImpl::Instance.Handle, window),Result::Success, "Vk: SwapchainImpl: Can't obtain surface");
     
@@ -81,7 +96,7 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
 
     CoreFunctionAssert(vkCreateSwapchainKHR(m_Owner->Handle, &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: SwapchainImpl: Can't create a swapchain");
 
-    InitializeFramebuffers(props.FramebufferDescription.Format);
+    InitializeFramebuffers(props.FramebufferFormat);
 
     AcquireNext();
 }
