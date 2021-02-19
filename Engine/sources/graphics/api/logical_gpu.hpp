@@ -20,11 +20,13 @@ public:
 
     virtual void Finalize() = 0;
 
-    sx_inline static LogicalGPU &Instance(){
-        CoreAssert(s_Instance, "LogicalGPU was not loaded properly");
-        return *s_Instance;
-    }
+    sx_inline static LogicalGPU &Instance();
 };
+
+sx_inline LogicalGPU &LogicalGPU::Instance(){
+    CoreAssert(s_Instance, "LogicalGPU was not loaded properly");
+    return *s_Instance;
+}
 
 }// namespace StraitX::
 

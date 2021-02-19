@@ -27,14 +27,9 @@ private:
     friend class Engine;
     friend class GraphicsAPILoader;
 public:
-    static sx_inline GraphicsAPI &Instance(){
-        CoreAssert(s_Instance, "GraphicsAPI: has not been initialized for some reason");
-        return *s_Instance;
-    }
+    sx_inline static GraphicsAPI &Instance();
 
-    static sx_inline API CurrentAPI(){
-        return s_CurrentAPI;
-    }
+    sx_inline static API CurrentAPI();
 
     virtual Result Initialize() = 0;
 
@@ -45,6 +40,15 @@ public:
     virtual Result GetPhysicalGPUs(PhysicalGPU *array) = 0;
 
 };
+
+sx_inline GraphicsAPI &GraphicsAPI::Instance(){
+    CoreAssert(s_Instance, "GraphicsAPI: has not been initialized for some reason");
+    return *s_Instance;
+}
+
+sx_inline GraphicsAPI::API GraphicsAPI::CurrentAPI(){
+    return s_CurrentAPI;
+}
 
 }// namespace StraitX::
 

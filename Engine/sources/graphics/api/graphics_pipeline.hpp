@@ -111,15 +111,19 @@ protected:
 public:
     virtual ~GraphicsPipeline() = default;
 
-    static sx_inline GraphicsPipeline *New(const GraphicsPipelineProperties &props){
-        return s_VTable.New(LogicalGPU::Instance(), props);
-    }
+    sx_inline static GraphicsPipeline *New(const GraphicsPipelineProperties &props);
 
-    static sx_inline void Delete(GraphicsPipeline *pipeline){
-        s_VTable.Delete(pipeline);
-    }
+    sx_inline static void Delete(GraphicsPipeline *pipeline);
 
 };
+
+sx_inline GraphicsPipeline *GraphicsPipeline::New(const GraphicsPipelineProperties &props){
+    return s_VTable.New(LogicalGPU::Instance(), props);
+}
+
+sx_inline void GraphicsPipeline::Delete(GraphicsPipeline *pipeline){
+    s_VTable.Delete(pipeline);
+}
 
 }//namespace StraitX::
 

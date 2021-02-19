@@ -45,30 +45,40 @@ private:
     friend class GraphicsAPILoader;
 public:
 
-    constexpr Shader(Shader::Type type, Shader::Lang lang):
-        m_Type(type),
-        m_Lang(lang)
-    {}
+    constexpr Shader(Shader::Type type, Shader::Lang lang);
 
     virtual ~Shader() = default;
 
-    constexpr Shader::Type GetType()const{
-        return m_Type;
-    }
+    constexpr Shader::Type GetType()const;
 
-    constexpr Shader::Lang GetLang()const{
-        return m_Lang;
-    }
+    constexpr Shader::Lang GetLang()const;
 
-    sx_inline static Shader *New(Shader::Type type, Shader::Lang lang, const u8 *sources, u32 length){
-        return s_VTable.New(LogicalGPU::Instance(), type, lang, sources, length);
-    }
+    sx_inline static Shader *New(Shader::Type type, Shader::Lang lang, const u8 *sources, u32 length);
 
-    sx_inline static void Delete(Shader *shader){
-        s_VTable.Delete(shader);
-    }
+    sx_inline static void Delete(Shader *shader);
 
 };
+
+constexpr Shader::Shader(Shader::Type type, Shader::Lang lang):
+    m_Type(type),
+    m_Lang(lang)
+{}
+
+constexpr Shader::Type Shader::GetType()const{
+    return m_Type;
+}
+
+constexpr Shader::Lang Shader::GetLang()const{
+    return m_Lang;
+}
+
+sx_inline Shader *Shader::New(Shader::Type type, Shader::Lang lang, const u8 *sources, u32 length){
+    return s_VTable.New(LogicalGPU::Instance(), type, lang, sources, length);
+}
+
+sx_inline void Shader::Delete(Shader *shader){
+    s_VTable.Delete(shader);
+}
 
 }//namespace StraitX::
 

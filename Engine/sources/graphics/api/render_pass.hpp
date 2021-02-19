@@ -48,18 +48,30 @@ public:
 
     virtual ~RenderPass() = default;
 
-    constexpr const PushArray<AttachmentDescription, MaxAttachmentsCount> &Attachments()const{ return m_Attachments; }
+    constexpr const PushArray<AttachmentDescription, MaxAttachmentsCount> &Attachments()const;
 
-    constexpr bool HasDepth()const{ return m_HasDepth; }
+    constexpr bool HasDepth()const;
 
-    static sx_inline RenderPass *New(const RenderPassProperties &properties){
-        return s_VTable.New(LogicalGPU::Instance(), properties);
-    }
+    sx_inline static RenderPass *New(const RenderPassProperties &properties);
 
-    static sx_inline void Delete(RenderPass *pass){
-        s_VTable.Delete(pass);
-    }
+    sx_inline static void Delete(RenderPass *pass);
 };
+
+constexpr const PushArray<AttachmentDescription, MaxAttachmentsCount> &RenderPass::Attachments()const{
+    return m_Attachments;
+}
+
+constexpr bool RenderPass::HasDepth()const{
+    return m_HasDepth;
+}
+
+sx_inline RenderPass *RenderPass::New(const RenderPassProperties &properties){
+    return s_VTable.New(LogicalGPU::Instance(), properties);
+}
+
+sx_inline void RenderPass::Delete(RenderPass *pass){
+    s_VTable.Delete(pass);
+}
 
 }//namespace StraitX::
 
