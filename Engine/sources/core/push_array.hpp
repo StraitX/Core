@@ -15,14 +15,17 @@ public:
     typedef T_Type * iterator;
     typedef const T_Type * const_iterator;
 private:
-    T_Type m_Array[T_Capacity];
+    // we don't want c++ to construct objects for us
+    u8 m_Memory[T_Capacity * sizeof(T_Type)];
     size_t m_Size = 0;
 public:
     constexpr PushArray() = default;
 
-    PushArray(const PushArray &other) = default;
+    constexpr PushArray(const PushArray &other) = default;
 
     constexpr PushArray(std::initializer_list<T_Type> initializer_list);
+
+    ~PushArray();
 
     constexpr void Push(const T_Type &element);
 
@@ -59,7 +62,7 @@ constexpr PushArray<T_Type, T_Capacity>::PushArray(std::initializer_list<T_Type>
 
     size_t i = 0;
     for(auto &e: initializer_list){
-        m_Array[i] = e;
+        operator[](i) = e;
         ++i;
     }
 
@@ -67,45 +70,51 @@ constexpr PushArray<T_Type, T_Capacity>::PushArray(std::initializer_list<T_Type>
 }
 
 template<typename T_Type, size_t T_Capacity>
+PushArray<T_Type, T_Capacity>::~PushArray(){
+    while(Size())
+        Pop();
+}
+
+template<typename T_Type, size_t T_Capacity>
 constexpr void PushArray<T_Type, T_Capacity>::Push(const T_Type &element){
     CoreAssert(m_Size < T_Capacity, "PushArray: Can't push an element, array is full");
-    m_Array[m_Size++] = element;
+    operator[](m_Size++) = element;
 }
 
 template<typename T_Type, size_t T_Capacity>
 constexpr void PushArray<T_Type, T_Capacity>::Push(T_Type &&element){
     CoreAssert(m_Size < T_Capacity, "PushArray: Can't push an element, array is full");
-    m_Array[m_Size++] = Move(element);
+    operator[](m_Size++) = Move(element);
 }
 
 template<typename T_Type, size_t T_Capacity>
 constexpr void PushArray<T_Type, T_Capacity>::Pop(){
-    m_Array[--m_Size].~T_Type();
+    operator[](--m_Size).~T_Type();
 }
 
 template<typename T_Type, size_t T_Capacity>
 template<typename ...T_Args>
 constexpr void PushArray<T_Type, T_Capacity>::Emplace(T_Args&&...args){
     CoreAssert(m_Size < T_Capacity, "PushArray: Can't emplace an element, array is full");
-    new(&m_Array[m_Size++])T_Type(args...);
+    new(&operator[](m_Size++))T_Type(args...);
 }
 
 template<typename T_Type, size_t T_Capacity>
 constexpr T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index){
     CoreAssert(index < m_Size, "PushArray: Can't index more than PushArray::Size() elements");
-    return m_Array[index];
+    return begin()[index];
 }
 
 template<typename T_Type, size_t T_Capacity>
 constexpr const T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index)const{
     CoreAssert(index < m_Size, "PushArray: Can't index more than PushArray::Size() elements");
-    return m_Array[index];
+    return begin()[index];
 }
 
 template<typename T_Type, size_t T_Capacity>
 constexpr PushArray<T_Type, T_Capacity> &PushArray<T_Type, T_Capacity>::operator=(const PushArray &other){
     for(size_t i = 0; i<other.m_Size; ++i)
-        m_Array[i] = other.m_Array[i];
+        operator[](i) = other.m_Array[i];
     m_Size = other.m_Size;
     return *this;
 }
@@ -122,7 +131,7 @@ constexpr size_t PushArray<T_Type, T_Capacity>::Capacity()const{
 
 template<typename T_Type, size_t T_Capacity>
 constexpr typename PushArray<T_Type, T_Capacity>::iterator PushArray<T_Type, T_Capacity>::begin(){
-    return m_Array;
+    return reinterpret_cast<T_Type*>(m_Memory);
 }
 
 template<typename T_Type, size_t T_Capacity>
@@ -132,7 +141,7 @@ constexpr typename PushArray<T_Type, T_Capacity>::iterator PushArray<T_Type, T_C
 
 template<typename T_Type, size_t T_Capacity>
 constexpr typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capacity>::begin()const{
-    return m_Array;
+    return reinterpret_cast<const T_Type*>(m_Memory);
 }
 
 template<typename T_Type, size_t T_Capacity>
