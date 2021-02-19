@@ -25,7 +25,7 @@ public:
     constexpr ArrayPtr(std::initializer_list<T_Type> initializer_list);
 
     template <size_t T_Capacity>
-    constexpr ArrayPtr(PushArray<T_Type,T_Capacity> &push_array);
+    constexpr ArrayPtr(const PushArray<T_Type,T_Capacity> &push_array);
 
     constexpr T_Type &operator[](T_Size index);
 
@@ -74,8 +74,8 @@ constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(std::initializer_list<T_Type> initi
 
 template <typename T_Type, typename T_Size>
 template <size_t T_Capacity>
-constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(PushArray<T_Type,T_Capacity> &push_array):
-    m_Pointer(push_array.begin()),
+constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(const PushArray<T_Type,T_Capacity> &push_array):
+    m_Pointer(const_cast<iterator>(push_array.begin())),
     m_Size(push_array.Size())
 {}
 
