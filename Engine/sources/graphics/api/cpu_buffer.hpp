@@ -43,14 +43,14 @@ private:
     friend class Vk::CPUBufferImpl;
     friend class GraphicsAPILoader;
 public:
-    CPUBuffer();
+    sx_inline CPUBuffer();
 
 #ifdef SX_DEBUG
-    ~CPUBuffer();
+    sx_inline ~CPUBuffer();
 #endif
-    void New(u32 size);
+    sx_inline void New(u32 size);
 
-    void Delete();
+    sx_inline void Delete();
 
     constexpr void *Pointer()const;
 

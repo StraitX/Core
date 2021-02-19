@@ -78,15 +78,15 @@ private:
     friend class GL::GPUTextureImpl;
 public:
 
-    GPUTexture();
+    sx_inline GPUTexture();
 
-    GPUTexture(GPUTexture &&other);
+    sx_inline GPUTexture(GPUTexture &&other);
 
     GPUTexture &operator=(GPUTexture &&other);
 
-    void New(Format format, Usage usage, u32 width, u32 height);
+    sx_inline void New(Format format, Usage usage, u32 width, u32 height);
 
-    void Delete();
+    sx_inline void Delete();
 
     constexpr GPUResourceHandle Handle()const;
 

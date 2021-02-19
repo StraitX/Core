@@ -51,14 +51,14 @@ private:
     friend class GL::GPUBufferImpl;
     friend class Vk::GPUBufferImpl;
 public:
-    GPUBuffer();
+    sx_inline GPUBuffer();
 
 #ifdef SX_DEBUG
-    ~GPUBuffer();
+    sx_inline ~GPUBuffer();
 #endif
-    void New(u32 size, GPUMemoryType mem_type, UsageType usage);
+    sx_inline void New(u32 size, GPUMemoryType mem_type, UsageType usage);
 
-    void Delete();
+    sx_inline void Delete();
 
     constexpr GPUResourceHandle Handle()const;
 
