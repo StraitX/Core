@@ -31,6 +31,7 @@ private:
     static VTable s_VTable;
 
     Vector2u m_Size;
+    //XXX: Ugly Moment for derived classes
     PushArray<const GPUTexture *, MaxAttachmentsCount> m_Attachments;
 
     friend class GraphicsAPILoader;
