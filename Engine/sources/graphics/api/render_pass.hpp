@@ -38,32 +38,16 @@ public:
     };
 private:
     static VTable s_VTable;
-    PushArray<AttachmentDescription, MaxAttachmentsCount> m_Attachments;
-    bool m_HasDepth = false;
 
     friend class GraphicsAPILoader;
 public:
 
-    RenderPass(const ArrayPtr<const AttachmentDescription> &attachments);
-
     virtual ~RenderPass() = default;
-
-    constexpr const PushArray<AttachmentDescription, MaxAttachmentsCount> &Attachments()const;
-
-    constexpr bool HasDepth()const;
 
     sx_inline static RenderPass *New(const RenderPassProperties &properties);
 
     sx_inline static void Delete(RenderPass *pass);
 };
-
-constexpr const PushArray<AttachmentDescription, MaxAttachmentsCount> &RenderPass::Attachments()const{
-    return m_Attachments;
-}
-
-constexpr bool RenderPass::HasDepth()const{
-    return m_HasDepth;
-}
 
 sx_inline RenderPass *RenderPass::New(const RenderPassProperties &properties){
     return s_VTable.New(LogicalGPU::Instance(), properties);

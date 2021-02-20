@@ -11,9 +11,6 @@ namespace GL{
 constexpr size_t MaxColorAttachments = 8;
 
 struct RenderPassImpl: RenderPass{
-    AttachmentDescription DepthAttachment;
-    PushArray<AttachmentDescription, MaxColorAttachments> ColorAttachments;
-
     RenderPassImpl(const LogicalGPU &owner, const RenderPassProperties &props);
 
     virtual ~RenderPassImpl()override;

@@ -6,14 +6,19 @@
 namespace StraitX{
 namespace GL{
 
-struct FramebufferImpl: Framebuffer{
-    u32 Handle;
+class FramebufferImpl: public Framebuffer{
+private:
+    u32 m_Handle;
+    Vector2u m_Size;
+public:
 
     FramebufferImpl(u32 handle, const RenderPass *const pass, const FramebufferProperties &props);
 
     FramebufferImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props);
 
     ~FramebufferImpl();
+
+    virtual Vector2u Size()const override;
 
     void Bind()const;
 

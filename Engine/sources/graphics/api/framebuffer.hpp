@@ -30,19 +30,12 @@ public:
 private:
     static VTable s_VTable;
 
-    Vector2u m_Size;
-    //XXX: Ugly Moment for derived classes
-    PushArray<const GPUTexture *, MaxAttachmentsCount> m_Attachments;
-
     friend class GraphicsAPILoader;
 public:
-    Framebuffer(const RenderPass *const pass, const FramebufferProperties &props);
 
     virtual ~Framebuffer() = default;
 
-    constexpr Vector2u Size()const;
-
-    constexpr const PushArray<const GPUTexture *, MaxAttachmentsCount>& Attachments()const;
+    virtual Vector2u Size()const = 0;
 
     static Framebuffer *New(const RenderPass *const pass, const FramebufferProperties &props);
 
@@ -50,14 +43,6 @@ public:
 
 };
 
-
-constexpr Vector2u Framebuffer::Size()const{ 
-    return m_Size; 
-}
-
-constexpr const PushArray<const GPUTexture *, MaxAttachmentsCount>& Framebuffer::Attachments()const{
-    return m_Attachments;
-}
 
 sx_inline Framebuffer *Framebuffer::New(const RenderPass *const pass,const FramebufferProperties &props){
     return s_VTable.New(LogicalGPU::Instance(), pass, props);

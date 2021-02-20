@@ -54,6 +54,7 @@ VkBlendOp GraphicsPipelineImpl::s_BlendFunctionTable[] = {
 GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props):
     GraphicsPipeline(props),
     Owner(static_cast<Vk::LogicalGPUImpl*>(&owner)),
+    Pass(static_cast<const Vk::RenderPassImpl*>(props.Pass)),
     Scissors({{props.FramebufferViewport.x, props.FramebufferViewport.y}, {props.FramebufferViewport.Width, props.FramebufferViewport.Height}})
 {
     //===Shader Stages===
@@ -167,7 +168,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     depth_stencil_info.maxDepthBounds = 1.0;
 
     //===ColorBlendState===
-    size_t states_count = props.Pass->Attachments().Size() - props.Pass->HasDepth();
+    size_t states_count = Pass->Attachments.Size() - Pass->HasDepth();
 
     ArrayPtr<VkPipelineColorBlendAttachmentState> blend_states((VkPipelineColorBlendAttachmentState*)alloca(states_count * sizeof(VkPipelineColorBlendAttachmentState)), states_count);
     for(size_t i = 0; i<states_count; ++i){
@@ -230,11 +231,11 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     info.pViewportState = &viewport_state_info;
     info.pRasterizationState = &rasterization_info;
     info.pMultisampleState = &multisampling_state;
-    info.pDepthStencilState = props.Pass->HasDepth() ? &depth_stencil_info : nullptr;
+    info.pDepthStencilState = Pass->HasDepth() ? &depth_stencil_info : nullptr;
     info.pColorBlendState = &blend_info;
     info.pDynamicState = &dynamic_info;
     info.layout = layout;
-    info.renderPass = static_cast<const Vk::RenderPassImpl*>(props.Pass)->Handle;
+    info.renderPass = Pass->Handle;
     info.subpass = 0;
     info.basePipelineHandle = VK_NULL_HANDLE;
     info.basePipelineIndex = InvalidIndex;

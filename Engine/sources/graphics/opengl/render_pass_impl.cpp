@@ -6,9 +6,7 @@
 namespace StraitX{
 namespace GL{
 
-RenderPassImpl::RenderPassImpl(const LogicalGPU &owner, const RenderPassProperties &props):
-    RenderPass(props.Attachments)
-{
+RenderPassImpl::RenderPassImpl(const LogicalGPU &owner, const RenderPassProperties &props){
     (void)owner;
 }
 

@@ -4,6 +4,7 @@
 #include "platform/vulkan.hpp"
 #include "graphics/api/graphics_pipeline.hpp"
 #include "graphics/vulkan/logical_gpu_impl.hpp"
+#include "graphics/vulkan/render_pass_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -17,6 +18,7 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
 
     Vk::LogicalGPUImpl *Owner = nullptr;
     VkPipeline Handle = VK_NULL_HANDLE;
+    const Vk::RenderPassImpl *Pass;
     VkResult Status = VK_INCOMPLETE;
     VkRect2D Scissors = {};
 
