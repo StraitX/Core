@@ -29,11 +29,6 @@ void GPUContextImpl::Submit(){
     glFlush();
 }
 
-
-void GPUContextImpl::SubmitAsync(){
-    (void)0;
-}
-
 void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){
     CoreAssert(dst.Size() <= size + dst_offset, "GL: GPUContext: Copy: Dst Buffer overflow");
 

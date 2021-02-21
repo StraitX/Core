@@ -76,11 +76,6 @@ void GPUContextImpl::Submit(){
     SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer, ArrayPtr<const VkSemaphore>(&semaphores.First, 1), ArrayPtr<const VkSemaphore>(&semaphores.Second, 1));
 }
 
-void GPUContextImpl::SubmitAsync(){
-    SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer, {}, {});
-}
-
-
 void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){  
     CoreAssert(dst.Size() <= size + dst_offset, "Vk: GPUContext: Copy: Dst Buffer overflow");
 

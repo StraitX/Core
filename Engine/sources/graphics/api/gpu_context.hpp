@@ -44,8 +44,6 @@ public:
 
     virtual void Submit() = 0;
 
-    virtual void SubmitAsync() = 0;
-
     virtual void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0) = 0;
 
     virtual void Bind(const GraphicsPipeline *pipeline) = 0;
