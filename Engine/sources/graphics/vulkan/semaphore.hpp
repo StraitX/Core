@@ -25,7 +25,7 @@ sx_inline Semaphore::Semaphore(const LogicalGPUImpl *owner):
     info.pNext = nullptr;
     info.flags = 0;
 
-    CoreAssert(vkCreateSemaphore(Owner->Handle, &info, nullptr, &Handle) == VK_SUCCESS, "Vk: Can't create semaphore");
+    CoreFunctionAssert(vkCreateSemaphore(Owner->Handle, &info, nullptr, &Handle),VK_SUCCESS, "Vk: Can't create semaphore");
 }
 
 sx_inline Semaphore::~Semaphore(){
