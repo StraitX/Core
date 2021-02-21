@@ -9,7 +9,6 @@
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
 #include "graphics/vulkan/framebuffer_impl.hpp"
-#include "vulkan/vulkan_core.h"
 
 namespace StraitX{
 namespace Vk{
