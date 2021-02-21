@@ -22,7 +22,7 @@ public:
 
     virtual void Submit()override;
 
-    virtual void SumbitAsync()override;
+    virtual void SubmitAsync()override;
 
     virtual void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0)override;
 

@@ -27,12 +27,11 @@ void GPUContextImpl::EndFrame(){
 
 void GPUContextImpl::Submit(){
     glFlush();
-    glGetErrors(SX_THIS_LINE);
 }
 
 
-void GPUContextImpl::SumbitAsync(){
-    Submit();
+void GPUContextImpl::SubmitAsync(){
+    (void)0;
 }
 
 void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){
