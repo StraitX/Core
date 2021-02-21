@@ -32,7 +32,7 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
     (void)props;
 }
 
-void SwapchainImpl::SwapFramebuffers(GPUContext &context){
+void SwapchainImpl::SwapFramebuffers(GPUContext *context){
     (void)context;
     m_Owner->SwapBuffers();
 }

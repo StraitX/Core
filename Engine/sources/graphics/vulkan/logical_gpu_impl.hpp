@@ -2,6 +2,7 @@
 #define STRAITX_VULKAN_LOGICAL_GPU_IMPL_HPP
 
 #include "platform/vulkan.hpp"
+#include "core/array_ptr.hpp"
 #include "graphics/api/logical_gpu.hpp"
 #include "graphics/vulkan/queue.hpp"
 #include "graphics/vulkan/memory.hpp"
@@ -43,8 +44,6 @@ struct LogicalGPUImpl: public LogicalGPU{
     sx_inline void Free(VkDeviceMemory mem){
         Allocator.Free(mem);
     }
-
-    void SubmitCmdBuffer(Vk::Queue queue, VkCommandBuffer cmd_buffer);
 };
 
 }//namespace Vk::

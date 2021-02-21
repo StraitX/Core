@@ -17,7 +17,7 @@ private:
 public:
     SwapchainImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props);
 
-    virtual void SwapFramebuffers(GPUContext &context)override;
+    virtual void SwapFramebuffers(GPUContext *context)override;
 
     virtual const RenderPass *FramebufferPass()override;
 

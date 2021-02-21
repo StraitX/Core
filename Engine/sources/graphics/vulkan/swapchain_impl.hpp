@@ -37,7 +37,7 @@ public:
 
     ~SwapchainImpl();
 
-    virtual void SwapFramebuffers(GPUContext &context)override;
+    virtual void SwapFramebuffers(GPUContext *context)override;
 
     virtual const RenderPass *FramebufferPass()override;
 
@@ -51,9 +51,9 @@ private:
 
     void FinalizeFramebuffers();
 
-    void PresentCurrent();
+    void PresentCurrent(VkSemaphore wait_semaphore);
 
-    void AcquireNext();
+    void AcquireNext(VkSemaphore signal_semaphore);
 };
 
 }//namespace Vk::

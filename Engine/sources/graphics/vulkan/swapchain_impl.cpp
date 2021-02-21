@@ -5,6 +5,7 @@
 #include "graphics/vulkan/graphics_api_impl.hpp"
 #include "graphics/vulkan/swapchain_impl.hpp"
 #include "graphics/vulkan/gpu_texture_impl.hpp"
+#include "graphics/vulkan/gpu_context_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -104,7 +105,9 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
 
     InitializeFramebuffers(props.FramebufferFormat);
 
-    AcquireNext();
+    // First Acquire is synched
+    vkAcquireNextImageKHR(m_Owner->Handle, m_Handle, 0, VK_NULL_HANDLE, m_AcquireFence.Handle, &m_CurrentImage);
+    m_AcquireFence.WaitFor();
 }
 
 SwapchainImpl::~SwapchainImpl(){
@@ -117,9 +120,11 @@ SwapchainImpl::~SwapchainImpl(){
     m_Surface.Destroy();
 }
 
-void SwapchainImpl::SwapFramebuffers(GPUContext &context){
-    PresentCurrent();
-    AcquireNext();
+void SwapchainImpl::SwapFramebuffers(GPUContext *context){
+    auto semaphores = static_cast<Vk::GPUContextImpl*>(context)->NextPair();
+
+    PresentCurrent(semaphores.First);
+    AcquireNext(semaphores.Second);
 }
 
 const RenderPass *SwapchainImpl::FramebufferPass(){
@@ -169,14 +174,14 @@ void SwapchainImpl::FinalizeFramebuffers(){
     }
 }
 
-void SwapchainImpl::PresentCurrent(){
+void SwapchainImpl::PresentCurrent(VkSemaphore wait_semaphore){
     VkResult result;
 
     VkPresentInfoKHR info;
     info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
     info.pNext = nullptr;
-    info.waitSemaphoreCount = 0;
-    info.pWaitSemaphores = nullptr;
+    info.waitSemaphoreCount = 1;
+    info.pWaitSemaphores = &wait_semaphore;
     info.swapchainCount = 1;
     info.pSwapchains = &m_Handle;
     info.pImageIndices = &m_CurrentImage;
@@ -185,10 +190,8 @@ void SwapchainImpl::PresentCurrent(){
     vkQueuePresentKHR(m_Owner->GraphicsQueue.Handle, &info);
 }
 
-void SwapchainImpl::AcquireNext(){
-    vkAcquireNextImageKHR(m_Owner->Handle, m_Handle, 0, VK_NULL_HANDLE, m_AcquireFence.Handle, &m_CurrentImage);
-
-    m_AcquireFence.WaitFor();/// TODO Get rid of this // Swapchain is Immediate mode for now :'-(
+void SwapchainImpl::AcquireNext(VkSemaphore signal_semaphore){
+    vkAcquireNextImageKHR(m_Owner->Handle, m_Handle, 0, signal_semaphore, VK_NULL_HANDLE, &m_CurrentImage);
 }
 
 }//namespace Vk::

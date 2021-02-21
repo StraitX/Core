@@ -18,8 +18,11 @@ VkIndexType GPUContextImpl::s_IndexTypeTable[]={
     VK_INDEX_TYPE_UINT32
 };
 
+constexpr size_t GPUContextImpl::SemaphoreRingSize;
+
 GPUContextImpl::GPUContextImpl(Vk::LogicalGPUImpl *owner):
-    m_Owner(owner)
+    m_Owner(owner),
+    m_SemaphoreRing{m_Owner, m_Owner}
 {
     VkCommandPoolCreateInfo pool_info;
     pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -37,6 +40,12 @@ GPUContextImpl::GPUContextImpl(Vk::LogicalGPUImpl *owner):
     buffer_info.commandBufferCount = 1;
 
     CoreFunctionAssert(vkAllocateCommandBuffers(m_Owner->Handle, &buffer_info, &m_CmdBuffer), VK_SUCCESS, "Vk: GPUContextImpl: Failed to allocate command buffer");
+
+    {
+        BeginFrame();
+        EndFrame();
+        SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer, ArrayPtr<const VkSemaphore>(), ArrayPtr<const VkSemaphore>(&m_SemaphoreRing[0].Handle, 1));
+    }
 }
 
 
@@ -59,19 +68,17 @@ void GPUContextImpl::BeginFrame(){
 }
 
 void GPUContextImpl::EndFrame(){
-    (void)0;
+    CoreFunctionAssert(vkEndCommandBuffer(m_CmdBuffer),VK_SUCCESS, "Vk: GPUContext: Failed to end CmdBuffer for submission");
 }
 
 void GPUContextImpl::Submit(){
-    vkCmdPipelineBarrier(m_CmdBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 0, nullptr);
+    auto semaphores = NextPair();
 
-    SumbitAsync();
+    SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer, ArrayPtr<const VkSemaphore>(&semaphores.First, 1), ArrayPtr<const VkSemaphore>(&semaphores.Second, 1));
 }
 
 void GPUContextImpl::SumbitAsync(){
-    CoreFunctionAssert(vkEndCommandBuffer(m_CmdBuffer),VK_SUCCESS, "Vk: GPUContext: Failed to end CmdBuffer for submission");
-
-    m_Owner->SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer);
+    SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer, {}, {});
 }
 
 
@@ -154,6 +161,34 @@ void GPUContextImpl::CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageF
 
     vkCmdPipelineBarrier(m_CmdBuffer, src, dst, 0, 1, &barrier, 0, nullptr, 0, nullptr);
 }
+
+Pair<VkSemaphore, VkSemaphore> GPUContextImpl::NextPair(){
+    Pair<VkSemaphore, VkSemaphore> result = {m_SemaphoreRing[m_SemaphoreRingCounter % SemaphoreRingSize].Handle, m_SemaphoreRing[(m_SemaphoreRingCounter + 1) % SemaphoreRingSize].Handle};
+    ++m_SemaphoreRingCounter;
+    return result;
+}
+
+void GPUContextImpl::SubmitCmdBuffer(Vk::Queue queue, VkCommandBuffer cmd_buffer, const ArrayPtr<const VkSemaphore> &wait_semaphores, const ArrayPtr<const VkSemaphore> &signal_semaphores){
+    auto *stages = (VkPipelineStageFlags*)alloca(wait_semaphores.Size() * sizeof(VkPipelineStageFlags));
+    for(size_t i = 0; i<wait_semaphores.Size(); ++i){
+        stages[i] = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+    }
+
+    VkSubmitInfo info;
+    info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    info.pNext = nullptr;
+    info.commandBufferCount = 1;
+    info.pCommandBuffers = &cmd_buffer;
+    info.waitSemaphoreCount = wait_semaphores.Size();
+    info.pWaitSemaphores = wait_semaphores.Pointer();
+    info.signalSemaphoreCount = signal_semaphores.Size();
+    info.pSignalSemaphores = signal_semaphores.Pointer();
+    info.pWaitDstStageMask = stages;
+
+    CoreFunctionAssert(vkQueueSubmit(queue.Handle, 1, &info, VK_NULL_HANDLE), VK_SUCCESS, "Vk: LogicalGPU: Failed to submit CmdBuffer");
+    vkQueueWaitIdle(queue.Handle); // TODO Get rid of this // Context is Immediate mode for now :'-
+}
+
 
 GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){
     return new(Memory::Alloc(sizeof(GPUContextImpl))) GPUContextImpl(static_cast<Vk::LogicalGPUImpl*>(&owner));

@@ -37,7 +37,7 @@ public:
 
     virtual ~Swapchain() = default;
 
-    virtual void SwapFramebuffers(GPUContext &context) = 0;
+    virtual void SwapFramebuffers(GPUContext *context) = 0;
 
     virtual const RenderPass *FramebufferPass() = 0;
 
