@@ -17,6 +17,7 @@ private:
     VkCommandBuffer m_CmdBuffer = VK_NULL_HANDLE;
     static constexpr size_t SemaphoreRingSize = 2;
     Vk::Semaphore m_SemaphoreRing[SemaphoreRingSize];
+    VkCommandBuffer m_CmdBufferRing[SemaphoreRingSize];
     u8 m_SemaphoreRingCounter = 0;
 public:
     GPUContextImpl(Vk::LogicalGPUImpl *owner);
@@ -49,7 +50,7 @@ public:
 
     Pair<VkSemaphore, VkSemaphore> NextPair();
 
-    void SubmitCmdBuffer(Vk::Queue queue, VkCommandBuffer cmd_buffer, const ArrayPtr<const VkSemaphore> &wait_semaphores, const ArrayPtr<const VkSemaphore> &signal_semaphores);
+    void SubmitCmdBuffer(Vk::Queue queue, VkCommandBuffer cmd_buffer, const ArrayPtr<const VkSemaphore> &wait_semaphores, const ArrayPtr<const VkSemaphore> &signal_semaphores, VkFence signal_fence);
 
     static GPUContext *NewImpl(LogicalGPU &owner);
 

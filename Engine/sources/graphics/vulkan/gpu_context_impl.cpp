@@ -43,7 +43,7 @@ GPUContextImpl::GPUContextImpl(Vk::LogicalGPUImpl *owner):
     { // XXX: Signal first semaphore to avoid lock
         BeginFrame();
         EndFrame();
-        SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer, ArrayPtr<const VkSemaphore>(), ArrayPtr<const VkSemaphore>(&m_SemaphoreRing[0].Handle, 1));
+        SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer, ArrayPtr<const VkSemaphore>(), ArrayPtr<const VkSemaphore>(&m_SemaphoreRing[0].Handle, 1), VK_NULL_HANDLE);
     }
 }
 
@@ -72,8 +72,7 @@ void GPUContextImpl::EndFrame(){
 
 void GPUContextImpl::Submit(){
     auto semaphores = NextPair();
-
-    SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer, ArrayPtr<const VkSemaphore>(&semaphores.First, 1), ArrayPtr<const VkSemaphore>(&semaphores.Second, 1));
+    SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer, ArrayPtr<const VkSemaphore>(&semaphores.First, 1), ArrayPtr<const VkSemaphore>(&semaphores.Second, 1), VK_NULL_HANDLE);
 }
 
 void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){  
@@ -162,7 +161,7 @@ Pair<VkSemaphore, VkSemaphore> GPUContextImpl::NextPair(){
     return result;
 }
 
-void GPUContextImpl::SubmitCmdBuffer(Vk::Queue queue, VkCommandBuffer cmd_buffer, const ArrayPtr<const VkSemaphore> &wait_semaphores, const ArrayPtr<const VkSemaphore> &signal_semaphores){
+void GPUContextImpl::SubmitCmdBuffer(Vk::Queue queue, VkCommandBuffer cmd_buffer, const ArrayPtr<const VkSemaphore> &wait_semaphores, const ArrayPtr<const VkSemaphore> &signal_semaphores, VkFence signal_fence){
     auto *stages = (VkPipelineStageFlags*)alloca(wait_semaphores.Size() * sizeof(VkPipelineStageFlags));
     for(size_t i = 0; i<wait_semaphores.Size(); ++i){
         stages[i] = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
@@ -179,8 +178,8 @@ void GPUContextImpl::SubmitCmdBuffer(Vk::Queue queue, VkCommandBuffer cmd_buffer
     info.pSignalSemaphores = signal_semaphores.Pointer();
     info.pWaitDstStageMask = stages;
 
-    CoreFunctionAssert(vkQueueSubmit(queue.Handle, 1, &info, VK_NULL_HANDLE), VK_SUCCESS, "Vk: LogicalGPU: Failed to submit CmdBuffer");
-    vkQueueWaitIdle(queue.Handle); // TODO Get rid of this // Context is Immediate mode for now :'-
+    CoreFunctionAssert(vkQueueSubmit(queue.Handle, 1, &info, signal_fence), VK_SUCCESS, "Vk: LogicalGPU: Failed to submit CmdBuffer");
+    vkQueueWaitIdle(m_Owner->GraphicsQueue.Handle); // TODO Get rid of this // Context is Immediate mode for now :'-
 }
 
 
