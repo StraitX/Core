@@ -1,4 +1,4 @@
-#include "platform/windows/events_win32.hpp"
+#include "platform/windows/events.hpp"
 #include "platform/windows/virtual_keys.hpp"
 
 namespace StraitX{

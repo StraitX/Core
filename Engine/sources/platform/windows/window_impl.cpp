@@ -1,5 +1,5 @@
 #include "platform/windows/window_impl.hpp"
-#include "platform/windows/events_win32.hpp"
+#include "platform/windows/events.hpp"
 #include "platform/windows/virtual_keys.hpp"
 #include <windows.h>
 #include <stdio.h>
