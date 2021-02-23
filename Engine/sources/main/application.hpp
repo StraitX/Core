@@ -16,7 +16,7 @@ struct ApplicationConfig{
 
 class Application{
 private:
-    Engine *m_Engine;
+    Engine *m_Engine = nullptr;
     friend class Engine;
 public:
     Application() = default;
