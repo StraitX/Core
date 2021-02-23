@@ -27,6 +27,27 @@ Result WindowSystem::Finalize(){
     return ResultError(res != 0);
 }
 
+bool CheckX11Extension(const char *name){
+    int opcode, event_base, error_base;
+    return XQueryExtension(Linux::s_Display, name, &opcode, &event_base, &error_base);
+}
+
+bool CheckGLXExtension(const char *name){
+    const char *extensions = glXQueryExtensionsString(Linux::s_Display, DefaultScreen(Linux::s_Display));
+
+    return strstr(extensions, name) != 0;
+}
+
+bool WindowSystem::CheckSupport(Ext extension){
+    switch (extension) {
+    case Ext::DoubleBuffer: return CheckX11Extension("DOUBLE-BUFFER");
+    case Ext::OpenGLLegacy: return CheckX11Extension("GLX");
+    case Ext::OpenGLCore: return (CheckX11Extension("GLX") ? CheckGLXExtension("GLX_ARB_create_context") : false);
+    default: return false;
+    }
+    return false;
+}
+
 Screen WindowSystem::MainScreen(){
     ::Screen *screen = DefaultScreenOfDisplay(Linux::s_Display);
 
