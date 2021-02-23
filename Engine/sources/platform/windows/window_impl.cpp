@@ -1,4 +1,4 @@
-#include "platform/windows/window_win32.hpp"
+#include "platform/windows/window_impl.hpp"
 #include "platform/windows/events_win32.hpp"
 #include "platform/windows/virtual_keys.hpp"
 #include <windows.h>
@@ -9,43 +9,41 @@ namespace Windows{
 const char *windowClassName = "StraitXWindow";
 const char *windowTitle = "";
 
-WindowWin32::WindowWin32(DisplayWin32& display) :
-    m_Display(display),
-    m_Handle(nullptr),
-    m_Width(0),
-    m_Height(0),
-    m_UnhandledResize(false)
-{
-
-}
-
-Result WindowWin32::Open(const ScreenWin32& screen, int width, int height) {
+Result WindowImpl::Open(const ScreenWin32& screen, int width, int height) {
     m_Width = width;
     m_Height = height;
-    m_Handle = CreateWindow(windowClassName, windowTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, m_Width, m_Height, 0, 0, (HINSTANCE)m_Display.Handle(), this);
-    ShowWindow((HWND)m_Handle, SW_SHOW);
+    m_Handle = CreateWindow(windowClassName, windowTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, m_Width, m_Height, 0, 0, (HINSTANCE)GetModuleHandle(nullptr),this);
+    ShowWindow(m_Handle, SW_SHOW);
     return ResultError(m_Handle == nullptr);
 }
 
-Result WindowWin32::Close() {
-    return ResultError(DestroyWindow((HWND)m_Handle) == 0);
+Result WindowImpl::Close() {
+    return ResultError(DestroyWindow(m_Handle) == 0);
 }
 
-bool WindowWin32::IsOpen()const{
+bool WindowImpl::IsOpen()const{
     return m_Handle;
 }
 
-void WindowWin32::SetTitle(const char* title) {
-    (void)SetWindowText((HWND)m_Handle, title);
+void WindowImpl::SetTitle(const char* title) {
+    (void)SetWindowText(m_Handle, title);
 }
 
-void WindowWin32::SetSize(int width, int height) {
+void WindowImpl::SetSize(int width, int height) {
     RECT currentWindowDimens = { 0 };
-    GetWindowRect((HWND)m_Handle, &currentWindowDimens);
+    GetWindowRect(m_Handle, &currentWindowDimens);
     
-    SetWindowPos((HWND)m_Handle, HWND_TOP, currentWindowDimens.left, currentWindowDimens.top, width, height, SWP_ASYNCWINDOWPOS);
+    SetWindowPos(m_Handle, HWND_TOP, currentWindowDimens.left, currentWindowDimens.top, width, height, SWP_ASYNCWINDOWPOS);
 }
-bool WindowWin32::PollEvent(Event& event) {
+
+Size2u WindowImpl::Size()const{
+    RECT currentWindowDimens = { 0 };
+    GetWindowRect(m_Handle, &currentWindowDimens);
+    // TODO: Make sure it works
+    return {u32(currentWindowDimens.right - currentWindowDimens.left), u32(currentWindowDimens.bottom - currentWindowDimens.top)};
+}
+
+bool WindowImpl::PollEvent(Event& event) {
     MSG message = { 0 };
     if (FetchInternalEvents(event)) {
         return true;
@@ -63,14 +61,14 @@ bool WindowWin32::PollEvent(Event& event) {
     return false;
 }
 
-void WindowWin32::OnResize(int width, int height) {
+void WindowImpl::OnResize(int width, int height) {
     m_UnhandledResize = true;
     m_Width = width;
     m_Height = height;
 }
 
 
-bool WindowWin32::FetchInternalEvents(Event &event) {
+bool WindowImpl::FetchInternalEvents(Event &event) {
     if (m_UnhandledResize){
         event.Type = EventType::WindowResized;
         event.WindowResized.x = m_Width;
@@ -90,7 +88,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     }
     // assumes that there no other window implementation in the application
     // and we get our own data pointer
-    WindowWin32* window = (WindowWin32*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+    WindowImpl* window = (WindowImpl*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
     switch (uMsg)
     {

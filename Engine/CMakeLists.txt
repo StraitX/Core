@@ -136,11 +136,10 @@ if(STRAITX_PLATFORM_LINUX)
 
 elseif(STRAITX_PLATFORM_WINDOWS)
     set(SOURCES_PLATFORM_D
-       ${SOURCES_DIR}/platform/windows/platform_windows.cpp
        ${SOURCES_DIR}/platform/windows/mouse.cpp
        ${SOURCES_DIR}/platform/windows/keyboard.cpp
        ${SOURCES_DIR}/platform/windows/virtual_keys.cpp
-       ${SOURCES_DIR}/platform/windows/window_win32.cpp
+       ${SOURCES_DIR}/platform/windows/window_impl.cpp
        ${SOURCES_DIR}/platform/windows/events_win32.cpp
        ${SOURCES_DIR}/platform/windows/screen_win32.cpp
     )
