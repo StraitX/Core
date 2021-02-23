@@ -10,17 +10,9 @@ namespace StraitX{
 
 class WindowSystem{
 public:
-    enum class Ext: u8{
-        DoubleBuffer = 0,
-        OpenGLLegacy,
-        OpenGLCore
-    };
-
     static Result Initialize();
 
     static Result Finalize();
-
-    static bool CheckSupport(Ext extension);
 
     static Screen MainScreen();
 

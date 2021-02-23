@@ -8,12 +8,11 @@ namespace Windows {
 
 class ScreenImpl {
 private:
-	void* m_Handle;
-	bool m_IsPrimary;
-	Size2i m_Size;
-    Size2f m_DPI;
+	void* m_Handle = nullptr;
+	bool m_IsPrimary = true;
+	Size2i m_Size = {};
+    Size2f m_DPI = {};
 public:
-	ScreenImpl(void *handle, bool primary, const Size2i &size, const Size2f &dpi);
 
 	const Size2i &Size()const;
 
