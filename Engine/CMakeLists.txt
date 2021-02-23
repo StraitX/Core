@@ -144,6 +144,7 @@ elseif(STRAITX_PLATFORM_WINDOWS)
        ${SOURCES_DIR}/platform/windows/screen_impl.cpp
        ${SOURCES_DIR}/platform/windows/window_system_impl.cpp
        ${SOURCES_DIR}/platform/windows/glloader_impl.cpp
+       ${SOURCES_DIR}/platform/windows/vulkan_windows.cpp
        ${SOURCES_DIR}/platform/windows/vulkan_surface_impl.cpp
     )
 
