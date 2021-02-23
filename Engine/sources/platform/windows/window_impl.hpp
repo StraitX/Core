@@ -3,7 +3,7 @@
 
 #include "platform/events.hpp"
 #include "platform/result.hpp"
-#include "platform/windows/screen_win32.hpp"
+#include "platform/windows/screen_impl.hpp"
 
 struct HWND__;
 
@@ -23,7 +23,7 @@ public:
 
     WindowImpl(WindowImpl&& other);
 
-    Result Open(const ScreenWin32 &screen, int width, int height);
+    Result Open(const ScreenImpl &screen, int width, int height);
 
     Result Close();
 

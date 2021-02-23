@@ -8,8 +8,8 @@
     #include "platform/linux/screen_impl.hpp"
     typedef StraitX::Linux::ScreenImpl PlatformScreenImpl;
 #elif defined(SX_PLATFORM_WINDOWS)
-    #include "platform/windows/screen_win32.hpp"
-    typedef StraitX::Windows::ScreenWin32 PlatformScreenImpl;
+    #include "platform/windows/screen_impl.hpp"
+    typedef StraitX::Windows::ScreenImpl PlatformScreenImpl;
 #else 
     #error "Your platform does not support Screen"
 #endif

@@ -6,14 +6,14 @@
 namespace StraitX {
 namespace Windows {
 
-class ScreenWin32 {
+class ScreenImpl {
 private:
 	void* m_Handle;
 	bool m_IsPrimary;
 	Size2i m_Size;
     Size2f m_DPI;
 public:
-	ScreenWin32(void *handle, bool primary, const Size2i &size, const Size2f &dpi);
+	ScreenImpl(void *handle, bool primary, const Size2i &size, const Size2f &dpi);
 
 	const Size2i &Size()const;
 

@@ -9,7 +9,7 @@ namespace Windows{
 const char *windowClassName = "StraitXWindow";
 const char *windowTitle = "";
 
-Result WindowImpl::Open(const ScreenWin32& screen, int width, int height) {
+Result WindowImpl::Open(const ScreenImpl& screen, int width, int height) {
     m_Width = width;
     m_Height = height;
     m_Handle = CreateWindow(windowClassName, windowTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, m_Width, m_Height, 0, 0, (HINSTANCE)GetModuleHandle(nullptr),this);
