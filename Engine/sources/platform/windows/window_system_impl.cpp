@@ -2,9 +2,18 @@
 #include "platform/window_system.hpp"
 
 namespace StraitX {
+namespace Windows {
+    extern LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+    extern const char* windowClassName;
+}//namespaec Windows::
 
 Result WindowSystem::Initialize() {
-    return Result::Success;
+    WNDCLASS windowClass = { 0 };
+    windowClass.lpfnWndProc = Windows::WindowProc;
+    windowClass.lpszClassName = Windows::windowClassName;
+    windowClass.hInstance = GetModuleHandle(nullptr);
+
+	return ResultError(RegisterClass(&windowClass) == 0);
 }
 
 Result WindowSystem::Finalize() {

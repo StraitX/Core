@@ -2,7 +2,7 @@
 #include "platform/windows/events.hpp"
 #include "platform/windows/virtual_keys.hpp"
 #include <windows.h>
-#include <stdio.h>
+
 namespace StraitX{
 namespace Windows{
 
