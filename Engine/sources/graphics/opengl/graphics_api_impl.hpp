@@ -1,7 +1,7 @@
 #ifndef STRAITX_OPENGL_GRAPHICS_API_IMPL_HPP
 #define STRAITX_OPENGL_GRAPHICS_API_IMPL_HPP
 
-#include "platform/glcontext.hpp"
+#include "platform/opengl_context.hpp"
 #include "graphics/api/graphics_api.hpp"
 
 

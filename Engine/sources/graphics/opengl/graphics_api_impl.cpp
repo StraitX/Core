@@ -13,7 +13,7 @@ GraphicsAPIImpl GraphicsAPIImpl::Instance;
 constexpr Version OpenGLVersion = {4, 6, 0};
 
 Result GraphicsAPIImpl::Initialize(){
-    GLContext context;
+    OpenGLContext context;
     if(context.CreateDummy(OpenGLVersion) != Result::Success)
         return Result::Failure;
     if(context.MakeCurrent() != Result::Success)

@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_SWAPCHAIN_IMPL_HPP
 
 #include "platform/vulkan.hpp"
-#include "platform/vk_surface.hpp"
+#include "platform/vulkan_surface.hpp"
 #include "core/math/vector2.hpp"
 #include "core/push_array.hpp"
 #include "graphics/api/swapchain.hpp"
@@ -17,7 +17,7 @@ namespace Vk{
 class SwapchainImpl: public Swapchain{
 private:
     Vk::LogicalGPUImpl *m_Owner = nullptr;
-    Vk::Surface m_Surface;
+    VulkanSurface m_Surface;
     Vector2u m_Size = {0, 0}; 
 
     VkFormat m_Format = VK_FORMAT_UNDEFINED;

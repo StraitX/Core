@@ -117,9 +117,9 @@ if(STRAITX_PLATFORM_LINUX)
         ${SOURCES_DIR}/platform/linux/events.cpp
         ${SOURCES_DIR}/platform/linux/screen_impl.cpp
         ${SOURCES_DIR}/platform/linux/glloader_impl.cpp
-        ${SOURCES_DIR}/platform/linux/glcontext_impl.cpp
+        ${SOURCES_DIR}/platform/linux/opengl_context_impl.cpp
         ${SOURCES_DIR}/platform/linux/vulkan_linux.cpp
-        ${SOURCES_DIR}/platform/linux/vk_surface_impl.cpp
+        ${SOURCES_DIR}/platform/linux/vulkan_surface_impl.cpp
         ${SOURCES_DIR}/platform/linux/file_impl.cpp
     )
 

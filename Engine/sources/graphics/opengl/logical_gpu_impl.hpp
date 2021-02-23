@@ -1,7 +1,7 @@
 #ifndef STRAITX_OPENGL_LOGICAL_GPU_IMPL_HPP
 #define STRAITX_OPENGL_LOGICAL_GPU_IMPL_HPP
 
-#include "platform/glcontext.hpp"
+#include "platform/opengl_context.hpp"
 #include "graphics/api/logical_gpu.hpp"
 
 namespace StraitX{
@@ -9,7 +9,7 @@ namespace GL{
 
 class LogicalGPUImpl: public LogicalGPU{
 private:
-    GLContext m_Context;
+    OpenGLContext m_Context;
 public:
     static LogicalGPUImpl Instance;
 

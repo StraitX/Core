@@ -9,12 +9,12 @@ struct __GLXcontextRec;
 namespace StraitX{
 namespace Linux{
 
-class GLContextImpl{
+class OpenGLContextImpl{
 private:
     __GLXcontextRec *m_Handle = nullptr;
     unsigned long m_WindowHandle = 0;
 public:
-    GLContextImpl() = default;
+    OpenGLContextImpl() = default;
 
     Result Create(WindowImpl &window, const Version &version);
 

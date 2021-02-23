@@ -6,9 +6,8 @@
 #include "platform/window.hpp"
 
 namespace StraitX{
-namespace Vk{
 
-struct Surface{
+struct VulkanSurface{
     VkSurfaceKHR Handle = VK_NULL_HANDLE;
     VkInstance Owner = VK_NULL_HANDLE;
 
@@ -17,7 +16,6 @@ struct Surface{
     void Destroy();
 };
 
-};//namespace Vk::
 };//namespace StraitX::
 
 #endif //STRAITX_VULKAN_SURFACE_HPP

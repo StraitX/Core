@@ -1,4 +1,4 @@
-#include "platform/linux/glcontext_impl.hpp"
+#include "platform/linux/opengl_context_impl.hpp"
 #include <X11/Xlib.h>
 #include <stdlib.h>
 #include <GL/glx.h>
@@ -18,7 +18,7 @@ static int ctxErrorHandler( ::Display *dpy, XErrorEvent *ev )
 
 typedef GLXContext (*glXCreateContextAttribsARBProc)(::Display*, GLXFBConfig, GLXContext, Bool, const int*);
 
-Result GLContextImpl::Create(WindowImpl &window, const Version &version){
+Result OpenGLContextImpl::Create(WindowImpl &window, const Version &version){
     m_WindowHandle = window.Handle;
 
     
@@ -52,7 +52,7 @@ Result GLContextImpl::Create(WindowImpl &window, const Version &version){
     return Result::Success;
 }
 
-Result GLContextImpl::CreateDummy(const Version &version){
+Result OpenGLContextImpl::CreateDummy(const Version &version){
     WindowImpl window;
     window.FBConfig = WindowImpl::PickBestFBConfig(DefaultScreen(s_Display));
 
@@ -74,22 +74,22 @@ Result GLContextImpl::CreateDummy(const Version &version){
     return Create(window, version);
 }
 
-void GLContextImpl::Destroy(){
+void OpenGLContextImpl::Destroy(){
     glXDestroyContext(s_Display, m_Handle);
     m_WindowHandle = 0;
     m_Handle = nullptr;
 }
 
-void GLContextImpl::DestroyDummy(){
+void OpenGLContextImpl::DestroyDummy(){
     XDestroyWindow(s_Display, m_WindowHandle);
     Destroy();
 }
 
-Result GLContextImpl::MakeCurrent(){
+Result OpenGLContextImpl::MakeCurrent(){
     return ResultError(glXMakeCurrent(s_Display, m_WindowHandle, m_Handle) != True);
 }
 
-void GLContextImpl::SwapBuffers(){
+void OpenGLContextImpl::SwapBuffers(){
     glXSwapBuffers(s_Display, m_WindowHandle);
 }
 

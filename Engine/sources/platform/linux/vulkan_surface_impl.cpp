@@ -5,18 +5,16 @@
 #undef None
 #undef KeyRelease
 #undef KeyPress
-#include "platform/vk_surface.hpp"
-
+#include "platform/vulkan_surface.hpp"
 
 namespace StraitX{
+
 namespace Linux{
 extern ::Display *s_Display;
 }//namespace Linux::
 
-namespace Vk{
 
-
-Result Surface::Create(VkInstance owner, const Window &window){
+Result VulkanSurface::Create(VkInstance owner, const Window &window){
     Owner = owner;
     VkXlibSurfaceCreateInfoKHR info;
     info.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
@@ -28,11 +26,10 @@ Result Surface::Create(VkInstance owner, const Window &window){
     return ResultError(vkCreateXlibSurfaceKHR(Owner, &info, nullptr, &Handle) != VK_SUCCESS);
 }
 
-void Surface::Destroy(){
+void VulkanSurface::Destroy(){
     vkDestroySurfaceKHR(Owner, Handle, nullptr);
 }
 
-}//namespace Vk::
 }//namespace StraitX::
 
 
