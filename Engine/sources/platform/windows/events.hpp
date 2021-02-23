@@ -1,5 +1,5 @@
-#ifndef STRAITX_EVENTS_WIN32_HPP
-#define STRAITX_EVENTS_WIN32_HPP
+#ifndef STRAITX_WINDOWS_EVENTS_HPP
+#define STRAITX_WINDOWS_EVENTS_HPP
 
 #include "platform/events.hpp"
 #include <windows.h>
@@ -16,4 +16,4 @@ bool ToStraitXEvent(MSG& message, Event &event);
 }; //namespace Windows::
 }; //namespace StraitX::
 
-#endif // STRAITX_WINDOW_WIN32_HPP 
+#endif //STRAITX_WINDOWS_EVENTS_HPP

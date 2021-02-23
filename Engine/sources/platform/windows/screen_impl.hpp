@@ -1,5 +1,5 @@
-#ifndef STRAITX_SCREEN_WIN32_HPP
-#define STRAITX_SCREEN_WIN32_HPP 
+#ifndef STRAITX_WINDOWS_SCREEN_HPP
+#define STRAITX_WINDOWS_SCREEN_HPP
 
 #include "platform/types.hpp"
 
@@ -23,4 +23,4 @@ public:
 };// namespace Windows::
 }; // namespace StraitX::
 
-#endif //STRAITX_SCREEN_WIN32_HPP 
+#endif //STRAITX_WINDOWS_SCREEN_HPP

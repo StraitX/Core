@@ -1,5 +1,5 @@
-#ifndef STRAITX_WINDOW_WIN32_HPP
-#define STRAITX_WINDOW_WIN32_HPP
+#ifndef STRAITX_WINDOWS_WINDOW_HPP
+#define STRAITX_WINDOWS_WINDOW_HPP
 
 #include "platform/events.hpp"
 #include "platform/result.hpp"
@@ -46,4 +46,4 @@ private:
 }; //namespace Windows::
 }; //namespace StraitX::
 
-#endif // STRAITX_WINDOW_WIN32_HPP
+#endif //STRAITX_WINDOWS_WINDOW_HPP
