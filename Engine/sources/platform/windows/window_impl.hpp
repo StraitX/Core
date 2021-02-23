@@ -38,10 +38,16 @@ public:
     Size2u Size()const;
 
     void OnResize(int width, int height);
+
+    sx_inline HWND__ *Handle()const;
 private:
 
     bool FetchInternalEvents(Event &event);
 };
+
+sx_inline HWND__ *WindowImpl::Handle() const {
+    return m_Handle;
+}
 
 }; //namespace Windows::
 }; //namespace StraitX::

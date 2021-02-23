@@ -11,7 +11,7 @@
     typedef StraitX::Linux::WindowImpl PlatformWindowImpl;
 #elif defined(SX_PLATFORM_WINDOWS)
     #include "platform/windows/window_impl.hpp"
-    typedef StraitX::Windows::WindowWin32 PlatformWindowImpl;
+    typedef StraitX::Windows::WindowImpl PlatformWindowImpl;
 #else
     #error "Your platform does not support window creation"
 #endif
