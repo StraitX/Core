@@ -13,7 +13,13 @@ public:
     
     static Version OpenGLVersion();
 
+    static bool IsSupported(const char* extension_name);
+
+    static bool LoadExtensions();
+
     //defined in platform dependent code
+    static bool LoadPlatformExtensions();
+
     static void *GetOpenGLProc(const char *name);
 };
 

@@ -12,6 +12,7 @@ Result WindowSystem::Initialize() {
     windowClass.lpfnWndProc = Windows::WindowProc;
     windowClass.lpszClassName = Windows::windowClassName;
     windowClass.hInstance = GetModuleHandle(nullptr);
+    windowClass.style = CS_OWNDC;
 
 	return ResultError(RegisterClass(&windowClass) == 0);
 }

@@ -65,6 +65,8 @@ Result Engine::Initialize(){
 
     auto res = GraphicsAPILoader::Load(m_ApplicationConfig.DesiredAPI);
 
+    InitAssert("GraphicsAPILoader::Load", res);
+
     LogTrace("GraphicsAPI::Initialize: Begin");
     m_ErrorGraphicsAPI = GraphicsAPI::Instance().Initialize();
     InitAssert("GraphicsAPI::Initialize",m_ErrorGraphicsAPI);

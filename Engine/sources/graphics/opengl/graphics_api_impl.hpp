@@ -10,6 +10,7 @@ namespace GL{
 
 struct GraphicsAPIImpl: public GraphicsAPI{
     Version LoadedOpenGLVersion = {};
+    const char* VendorName = nullptr;
 
     static GraphicsAPIImpl Instance;
 

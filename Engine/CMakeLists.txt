@@ -144,11 +144,14 @@ elseif(STRAITX_PLATFORM_WINDOWS)
        ${SOURCES_DIR}/platform/windows/screen_impl.cpp
        ${SOURCES_DIR}/platform/windows/window_system_impl.cpp
        ${SOURCES_DIR}/platform/windows/glloader_impl.cpp
+       ${SOURCES_DIR}/platform/windows/wgl.cpp
+       ${SOURCES_DIR}/platform/windows/opengl_context_impl.cpp
        ${SOURCES_DIR}/platform/windows/vulkan_windows.cpp
        ${SOURCES_DIR}/platform/windows/vulkan_surface_impl.cpp
     )
 
     set(LIBS_PLATFORM
+        opengl32
         vulkan-1
     )
 

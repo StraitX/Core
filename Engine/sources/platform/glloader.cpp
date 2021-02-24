@@ -1,10 +1,21 @@
 #include "platform/glloader.hpp"
 #include <glad/glad.h>
 #include <cstdio>
+#include <string.h>
+
 namespace StraitX{
 
 Result OpenGLLoader::Load(){
-    return ResultError(gladLoadGLLoader((GLADloadproc)GetOpenGLProc)==0);
+    //this should be called with a valid dummy context
+    return ResultError(
+        !gladLoadGLLoader((GLADloadproc)GetOpenGLProc) ||
+        !LoadPlatformExtensions() ||
+        !LoadExtensions()
+    );
+}
+
+bool OpenGLLoader::IsSupported(const char* extension_name) {
+    return strstr((const char*)glGetString(GL_EXTENSIONS), extension_name);
 }
 
 Version OpenGLLoader::OpenGLVersion(){
@@ -14,6 +25,10 @@ Version OpenGLLoader::OpenGLVersion(){
     return result;
 }
 
+bool OpenGLLoader::LoadExtensions() {
+    //TODO: Implement
+    return true;
+}
 
 
 }; // namespace StraitX::

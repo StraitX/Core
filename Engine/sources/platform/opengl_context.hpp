@@ -8,6 +8,9 @@
 #ifdef SX_PLATFORM_LINUX
     #include "platform/linux/opengl_context_impl.hpp"
     typedef StraitX::Linux::OpenGLContextImpl PlatformGLContextImpl;
+#elif defined(SX_PLATFORM_WINDOWS)
+    #include "platform/windows/opengl_context_impl.hpp"
+    typedef StraitX::Windows::OpenGLContextImpl PlatformGLContextImpl;
 #else
     #error "Your platform does not support OpenGL context"
 #endif
@@ -23,7 +26,7 @@ public:
 
     Result Create(Window &window, const Version &version);
 
-    Result CreateDummy(const Version &version);
+    Result CreateDummy();
 
     void Destroy();
 
@@ -38,8 +41,8 @@ sx_inline Result OpenGLContext::Create(Window &window, const Version &version){
     return m_Impl.Create(window.Impl(), version);
 }
 
-sx_inline Result OpenGLContext::CreateDummy(const Version &version){
-    return m_Impl.CreateDummy(version);
+sx_inline Result OpenGLContext::CreateDummy(){
+    return m_Impl.CreateDummy();
 }
 
 sx_inline void OpenGLContext::DestroyDummy(){
