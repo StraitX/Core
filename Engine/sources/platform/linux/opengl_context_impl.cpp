@@ -71,7 +71,7 @@ Result OpenGLContextImpl::CreateDummy(){
     window.Handle = XCreateWindow(s_Display, RootWindow(s_Display,DefaultScreen(s_Display)), 0, 0, 1, 1, 0, visualInfo->depth,
         InputOutput, visualInfo->visual, CWBackPixel | CWColormap, &attributes);
 
-    return Create(window, {1, 0});
+    return Create(window, {4, 6, 0});
 }
 
 void OpenGLContextImpl::Destroy(){
