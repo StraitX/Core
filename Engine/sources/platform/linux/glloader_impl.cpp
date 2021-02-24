@@ -5,6 +5,10 @@
 
 namespace StraitX{
 
+bool OpenGLLoader::LoadPlatformExtensions(){
+    return true;
+}
+
 void *OpenGLLoader::GetOpenGLProc(const char *name){
     return (void*)glXGetProcAddress((const GLubyte *)name);
 }
