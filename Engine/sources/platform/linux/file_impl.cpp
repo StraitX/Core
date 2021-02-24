@@ -12,7 +12,6 @@ constexpr u32 FileCreatePermission = 0664;
 
 Result File::Open(const char *filename, Mode mode){
     assert(m_FD == InvalidFD);
-    assert(mode != Mode::Unknown);
 
     errno = 0;
 
@@ -37,7 +36,7 @@ void File::Close(){
     close(m_FD);
 
     m_FD = InvalidFD;
-    m_Mode = Mode::Unknown;
+    m_Mode = Mode::Read;
 }
 
 size_t File::Read(void *buffer, size_t size){
@@ -72,12 +71,6 @@ size_t File::Size(){
     struct stat st;
     fstat(m_FD, &st);
     return st.st_size;
-}
-
-void File::Shorten(size_t size){
-    assert(m_FD != InvalidFD);
-
-    ftruncate(m_FD, Size() - size);
 }
 
 Result File::Delete(const char *filename){

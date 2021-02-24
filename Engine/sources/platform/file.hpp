@@ -7,14 +7,13 @@
 #include "platform/noncopyable.hpp"
 
 namespace StraitX{
-
+//TODO take care about size_t and 64 32 bit OS
 class File: public NonCopyable{
 public:
     enum class Mode{
         Read        = 0,
         Write       = 1,
-        ReadWrite   = 2,
-        Unknown     = 3,
+        ReadWrite   = 2
     };
 
     enum SeekPos{
@@ -25,7 +24,7 @@ public:
     static constexpr u64 InvalidFD = -1;
 private:
     u64 m_FD = InvalidFD;
-    Mode m_Mode = Mode::Unknown;
+    Mode m_Mode = Mode::Read;
 public:
     File() = default;
 
@@ -51,8 +50,6 @@ public:
     size_t Tell();
 
     size_t Size();
-
-    void Shorten(size_t size);
 
     //Result Delete();
 
