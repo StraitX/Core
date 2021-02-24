@@ -52,7 +52,7 @@ Result OpenGLContextImpl::Create(WindowImpl &window, const Version &version){
     return Result::Success;
 }
 
-Result OpenGLContextImpl::CreateDummy(const Version &version){
+Result OpenGLContextImpl::CreateDummy(){
     WindowImpl window;
     window.FBConfig = WindowImpl::PickBestFBConfig(DefaultScreen(s_Display));
 
@@ -71,7 +71,7 @@ Result OpenGLContextImpl::CreateDummy(const Version &version){
     window.Handle = XCreateWindow(s_Display, RootWindow(s_Display,DefaultScreen(s_Display)), 0, 0, 1, 1, 0, visualInfo->depth,
         InputOutput, visualInfo->visual, CWBackPixel | CWColormap, &attributes);
 
-    return Create(window, version);
+    return Create(window, {1, 0});
 }
 
 void OpenGLContextImpl::Destroy(){

@@ -18,7 +18,7 @@ public:
 
     Result Create(WindowImpl &window, const Version &version);
 
-    Result CreateDummy(const Version &version);
+    Result CreateDummy();
 
     void Destroy();
 
