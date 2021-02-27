@@ -71,11 +71,11 @@ static Cursor BlankCursor(){
     return cursor;
 }
 
-void Mouse::SetVisible(bool is_visible, const Window &window){
+void Mouse::SetVisible(bool is_visible){
     if(is_visible){
-        XUndefineCursor(Linux::s_Display, window.Impl().Handle);
+        XUndefineCursor(Linux::s_Display, RootWindow(Linux::s_Display, DefaultScreen(Linux::s_Display)));
     }else{
-        XDefineCursor(Linux::s_Display, window.Impl().Handle, BlankCursor());
+        XDefineCursor(Linux::s_Display, RootWindow(Linux::s_Display, DefaultScreen(Linux::s_Display)), BlankCursor());
     }
 }
 
