@@ -29,7 +29,7 @@ namespace Mouse{
 
     void SetGlobalPosition(const Point &position);
 
-    void SetVisible(bool is_visible, const Window &window);
+    void SetVisible(bool is_visible);
 
 }; // namespace Mouse::
 
