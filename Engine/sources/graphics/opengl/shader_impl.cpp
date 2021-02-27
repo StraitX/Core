@@ -25,7 +25,7 @@ ShaderImpl::ShaderImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *source
     if(lang != Shader::Lang::GLSL)return;
 
     Handle = glCreateShader(ShaderTypesTable[type]);
-    glShaderSource(Handle, 1, (const GLchar *const *)&sources, (i32*)&length);
+    glShaderSource(Handle, 1, (const GLchar *const *)&sources, (s32*)&length);
 
     Compile();
 }

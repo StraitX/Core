@@ -56,8 +56,8 @@ sx_inline const Vector4<T> &Matrix4<T>::operator[](size_t index)const{
 
 
 typedef Matrix4<float> Matrix4f;
-typedef Matrix4<int> Matrix4i;
-typedef Matrix4<unsigned int> Matrix4u;    
+typedef Matrix4<s32> Matrix4i;
+typedef Matrix4<u32> Matrix4u;    
 
 }// namepsace StraitX::
 

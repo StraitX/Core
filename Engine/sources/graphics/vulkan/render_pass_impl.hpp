@@ -12,7 +12,7 @@ struct RenderPassImpl: RenderPass{
     const Vk::LogicalGPUImpl *Owner;
     VkRenderPass Handle = VK_NULL_HANDLE;
     PushArray<AttachmentDescription, MaxAttachmentsCount> Attachments;
-    i32 DepthIndex = InvalidIndex;
+    s32 DepthIndex = InvalidIndex;
 
     RenderPassImpl(const LogicalGPU &owner, const RenderPassProperties &props);
 

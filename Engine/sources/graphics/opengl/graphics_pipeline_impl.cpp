@@ -110,11 +110,11 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
 
     LogInfo("GL: Shaders: Count: %", props.Shaders.Size());
 
-    i32 link_status;
+    s32 link_status;
     glGetProgramiv(Program, GL_LINK_STATUS, &link_status);
 
     if(link_status != GL_TRUE){
-        i32 link_log_length;
+        s32 link_log_length;
         glGetProgramiv(Program, GL_INFO_LOG_LENGTH, &link_log_length);
 
         char *log = (char*)alloca(link_log_length + 1);

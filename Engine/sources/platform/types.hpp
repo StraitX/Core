@@ -6,23 +6,37 @@
 #include <cstddef>
 
 // for now
+namespace StraitX{
 
-typedef signed   char i8;
+typedef signed   char s8;
 typedef unsigned char u8;
 
-typedef signed   short i16;
+typedef signed   short s16;
 typedef unsigned short u16;
 
-typedef signed   int i32;
+typedef signed   int s32;
 typedef unsigned int u32;
 
 #if defined(SX_COMPILER_MSVC)
-    typedef signed   __int64 i64;
+    typedef signed   __int64 s64;
     typedef unsigned __int64 u64;
 #else
-    typedef signed   long long i64;
+    typedef signed   long long s64;
     typedef unsigned long long u64;
 #endif
+
+
+typedef std::size_t size_t;
+
+#if defined(SX_ARCH_X86)
+    typedef s32 offset_t;
+#elif defined(SX_ARCH_X86_64)
+    typedef s64 offset_t;
+#else
+    #error "Your architecture does not support size_t type"
+#endif
+
+static_assert(sizeof(StraitX::size_t) == sizeof(offset_t),"size_t of your arch does not match StraitX requirements");
 
 #if defined(SX_ARCH_X86)
     typedef u32 ptr_t; 
@@ -32,20 +46,18 @@ typedef unsigned int u32;
     #error "Your architecture does not support pointer types"
 #endif
 
-typedef std::size_t size_t;
-
 typedef decltype(nullptr) nullptr_t;
 
 struct Point{
-    i32 x;
-    i32 y;
+    s32 x;
+    s32 y;
 };
 template <typename T>
 struct Size2{
     T width;
     T height;
 };
-typedef Size2<i32> Size2i;
+typedef Size2<s32> Size2i;
 typedef Size2<u32> Size2u;
 typedef Size2<float> Size2f;
 
@@ -54,5 +66,7 @@ struct Version{
     u16 Minor;
     u32 Patch;
 };
+
+}//namespace StraitX::
 
 #endif // STRAITX_TYPES_HPP

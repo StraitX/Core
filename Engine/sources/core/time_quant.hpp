@@ -9,9 +9,9 @@ namespace StraitX{
 
 class TimeQuant{
 private:
-    i64 mMicroseconds;
+    s64 mMicroseconds;
 
-    TimeQuant(const i64 &microseconds);
+    TimeQuant(const s64 &microseconds);
 public:
 
     TimeQuant();
@@ -20,17 +20,17 @@ public:
 
     TimeQuant(TimeQuant &&other);
 
-    i64 ToMicroseconds();
+    s64 ToMicroseconds();
 
-    i32 ToMilliseconds();
+    s32 ToMilliseconds();
 
     float ToSeconds();
 
     friend TimeQuant Seconds(const float &seconds);
 
-    friend TimeQuant Milliseconds(const i32 &milliseconds);
+    friend TimeQuant Milliseconds(const s32 &milliseconds);
 
-    friend TimeQuant Microseconds(const i64 &microseconds);
+    friend TimeQuant Microseconds(const s64 &microseconds);
 
     TimeQuant operator+(const TimeQuant &other);
     
@@ -61,9 +61,9 @@ public:
 
 TimeQuant Seconds(const float &seconds);
 
-TimeQuant Milliseconds(const i32 &milliseconds);
+TimeQuant Milliseconds(const s32 &milliseconds);
 
-TimeQuant Microseconds(const i64 &microseconds);
+TimeQuant Microseconds(const s64 &microseconds);
 
 
 sx_inline TimeQuant TimeQuant::operator+(const TimeQuant &other){

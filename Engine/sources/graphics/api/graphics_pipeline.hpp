@@ -72,8 +72,8 @@ enum class BlendFactor{
 };
 
 struct Viewport{
-    i32 x;
-    i32 y;
+    s32 x;
+    s32 y;
     u32 Width;
     u32 Height;
 };

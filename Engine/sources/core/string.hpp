@@ -15,7 +15,7 @@ public:
     // nul character is also a character
     static size_t Length(const char *string);
 
-    static i32 Compare(const char *first, const char *second);
+    static s32 Compare(const char *first, const char *second);
 
     static bool Equals(const char *first, const char *second);
 };

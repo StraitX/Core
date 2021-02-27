@@ -218,8 +218,8 @@ constexpr Vector3<T> &operator/=(Vector3<T> &left, const Vector3<T> &right){
     return left;
 }
 
-typedef Vector3<int> Vector3i;
-typedef Vector3<unsigned int> Vector3u;
+typedef Vector3<s32> Vector3i;
+typedef Vector3<u32> Vector3u;
 typedef Vector3<float> Vector3f;
 typedef Vector3<double> Vector3d;
 
