@@ -48,6 +48,11 @@ static_assert(sizeof(StraitX::size_t) == sizeof(offset_t),"size_t of your arch d
 
 typedef decltype(nullptr) nullptr_t;
 
+template <typename T, size_t N>
+constexpr size_t lengthof(T (&)[N]){
+    return N;
+}
+
 struct Point{
     s32 x;
     s32 y;
