@@ -92,6 +92,8 @@ public:
 
     constexpr Format GetFormat()const;
 
+    constexpr Layout GetLayout()const;
+
     static bool IsDepthFormat(GPUTexture::Format format);
 
     static bool IsColorFormat(GPUTexture::Format format);
@@ -123,6 +125,10 @@ constexpr Vector2u GPUTexture::Size()const{
 
 constexpr GPUTexture::Format GPUTexture::GetFormat()const{ 
     return m_Format;
+}
+
+constexpr GPUTexture::Layout GPUTexture::GetLayout()const{
+    return m_Layout;
 }
 
 }//namespace StraitX::
