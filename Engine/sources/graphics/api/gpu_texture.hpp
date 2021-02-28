@@ -93,6 +93,8 @@ public:
     constexpr Format GetFormat()const;
 
     static bool IsDepthFormat(GPUTexture::Format format);
+
+    static bool IsColorFormat(GPUTexture::Format format);
 };
 
 sx_inline GPUTexture::GPUTexture():

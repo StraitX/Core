@@ -11,4 +11,10 @@ bool GPUTexture::IsDepthFormat(GPUTexture::Format format){
     return false;
 }
 
+bool GPUTexture::IsColorFormat(GPUTexture::Format format){
+    if(format == GPUTexture::Format::RGBA8)
+        return true;
+    return false;
+}
+
 }//namespace StraitX::
