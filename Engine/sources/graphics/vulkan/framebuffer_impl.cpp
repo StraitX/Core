@@ -15,6 +15,9 @@ FramebufferImpl::FramebufferImpl(LogicalGPU &owner, const RenderPass *const pass
     auto *attachments = (VkImageView *)alloca(props.Attachments.Size() * sizeof(VkImageView));
 
     for(size_t i = 0; i < props.Attachments.Size(); ++i){
+        //don't lose the opportunity to store attachment pointers in a single loop
+        Attachments.Push(props.Attachments[i]);
+
         attachments[i] = reinterpret_cast<VkImageView>(props.Attachments[i]->ViewHandle().U64);
     }
 

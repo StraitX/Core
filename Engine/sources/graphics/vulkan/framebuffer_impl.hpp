@@ -1,6 +1,7 @@
 #ifndef STRAITX_VULKAN_FRAMEBUFFER_IMPL_HPP
 #define STRAITX_VULKAN_FRAMEBUFFER_IMPL_HPP
 
+#include "core/push_array.hpp"
 #include "graphics/api/framebuffer.hpp"
 #include "graphics/vulkan/logical_gpu_impl.hpp"
 
@@ -11,6 +12,7 @@ struct FramebufferImpl: Framebuffer{
     Vk::LogicalGPUImpl *const Owner = nullptr;
     VkFramebuffer Handle = VK_NULL_HANDLE;
     Vector2u FramebufferSize;
+    PushArray<const GPUTexture *, MaxAttachmentsCount> Attachments;
 
     FramebufferImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props);
 
