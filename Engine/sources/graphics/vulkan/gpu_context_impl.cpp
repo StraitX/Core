@@ -7,8 +7,6 @@
 #include "graphics/vulkan/gpu_buffer_impl.hpp"
 #include "graphics/vulkan/gpu_texture_impl.hpp"
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
-#include "graphics/vulkan/render_pass_impl.hpp"
-#include "graphics/vulkan/framebuffer_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -105,16 +103,16 @@ void GPUContextImpl::Bind(const GraphicsPipeline *pipeline){
 }
 
 void GPUContextImpl::BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer){
-    const Vk::RenderPassImpl *pass_impl = static_cast<const Vk::RenderPassImpl*>(pass);
-    const Vk::FramebufferImpl *fb_impl = static_cast<const Vk::FramebufferImpl*>(framebuffer);
+    m_RenderPass = static_cast<const Vk::RenderPassImpl*>(pass);
+    m_Framebuffer = static_cast<const Vk::FramebufferImpl*>(framebuffer);
 
     VkRenderPassBeginInfo info;
     info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     info.pNext = nullptr;
     info.clearValueCount = 0;
     info.pClearValues = nullptr;
-    info.framebuffer = fb_impl->Handle;
-    info.renderPass = pass_impl->Handle;
+    info.framebuffer = m_Framebuffer->Handle;
+    info.renderPass = m_RenderPass->Handle;
     info.renderArea.offset = {0, 0};
     info.renderArea.extent.width = framebuffer->Size().x;
     info.renderArea.extent.height = framebuffer->Size().y;
@@ -124,6 +122,8 @@ void GPUContextImpl::BeginRenderPass(const RenderPass *pass, const Framebuffer *
 
 void GPUContextImpl::EndRenderPass(){
     vkCmdEndRenderPass(m_CmdBuffer);
+    m_RenderPass = nullptr;
+    m_Framebuffer = nullptr;
 }
 
 void GPUContextImpl::BindVertexBuffer(const GPUBuffer &buffer){
@@ -182,6 +182,28 @@ void GPUContextImpl::SubmitCmdBuffer(Vk::Queue queue, VkCommandBuffer cmd_buffer
     vkQueueWaitIdle(m_Owner->GraphicsQueue.Handle); // TODO Get rid of this // Context is Immediate mode for now :'-
 }
 
+void GPUContextImpl::ClearFramebufferColorAttachments(const Vector4f &color){
+    CoreAssert(m_Framebuffer, "GL: GPUContextImpl: ClearFramebufferColorAttachment Should be called inside render pass");
+
+    VkClearColorValue value;
+    value.float32[0] = color[0];
+    value.float32[1] = color[1];
+    value.float32[2] = color[2];
+    value.float32[3] = color[3];
+
+    VkImageSubresourceRange issr;
+    issr.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    issr.baseArrayLayer = 0;
+    issr.baseMipLevel = 0;
+    issr.levelCount = 1;
+    issr.layerCount = 1;
+
+    for(auto att: m_Framebuffer->Attachments)
+        if(GPUTexture::IsColorFormat(att->GetFormat()))
+            vkCmdClearColorImage(m_CmdBuffer, reinterpret_cast<VkImage>(att->Handle().U64), Vk::GPUTextureImpl::s_LayoutTable[(size_t)att->GetLayout()], &value, 1, &issr);
+
+    CmdMemoryBarrier(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT);
+}
 
 GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){
     return new(Memory::Alloc(sizeof(GPUContextImpl))) GPUContextImpl(static_cast<Vk::LogicalGPUImpl*>(&owner));

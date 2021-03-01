@@ -63,6 +63,12 @@ void GPUContextImpl::DrawIndexed(u32 indices_count){
     glDrawElements(m_Pipeline->Topology, indices_count, m_CurrentIndicesType, nullptr);
 }
 
+void GPUContextImpl::ClearFramebufferColorAttachments(const Vector4f &color){
+    CoreAssert(m_Framebuffer, "GL: GPUContextImpl: ClearFramebufferColorAttachment Should be called inside render pass");
+    glClearColor(color.x, color.y, color.z, color.w);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
 GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){
     // In OpenGL we don't have GPU distinctions so owner doesn't matter
     (void)owner;

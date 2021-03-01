@@ -58,6 +58,8 @@ public:
 
     virtual void DrawIndexed(u32 indices_count) = 0;
 
+    virtual void ClearFramebufferColorAttachments(const Vector4f &color = Vector4f(0, 0, 0, 1.f)) = 0;
+
     sx_inline static GPUContext *New(){ return s_VTable.New(LogicalGPU::Instance()); }
 
     sx_inline static void Delete(GPUContext *context){ s_VTable.Delete(context); }

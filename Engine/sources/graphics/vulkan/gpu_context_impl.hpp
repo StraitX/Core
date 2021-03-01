@@ -5,6 +5,8 @@
 #include "graphics/api/gpu_context.hpp"
 #include "graphics/vulkan/logical_gpu_impl.hpp"
 #include "graphics/vulkan/semaphore.hpp"
+#include "graphics/vulkan/render_pass_impl.hpp"
+#include "graphics/vulkan/framebuffer_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -19,6 +21,9 @@ private:
     Vk::Semaphore m_SemaphoreRing[SemaphoreRingSize];
     VkCommandBuffer m_CmdBufferRing[SemaphoreRingSize];
     u8 m_SemaphoreRingCounter = 0;
+
+    const Vk::RenderPassImpl *m_RenderPass = nullptr;
+    const Vk::FramebufferImpl *m_Framebuffer = nullptr;
 public:
     GPUContextImpl(Vk::LogicalGPUImpl *owner);
 
@@ -43,6 +48,8 @@ public:
     virtual void BindIndexBuffer(const GPUBuffer &buffer, IndicesType indices_type)override;
 
     virtual void DrawIndexed(u32 indices_count)override;
+
+    virtual void ClearFramebufferColorAttachments(const Vector4f &color)override;
 
     void CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst);
 
