@@ -81,7 +81,7 @@ constexpr T &Vector2<T>::operator[](size_t index){
 
 template <typename T>
 constexpr const T &Vector2<T>::operator[](size_t index) const{
-    return operator[](index);
+    return const_cast<Vector2<T>*>(this)->operator[](index);
 }
 
 template <typename T>
