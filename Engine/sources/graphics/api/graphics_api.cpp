@@ -1,12 +1,16 @@
 #include "graphics/api/graphics_api.hpp"
-#include "graphics/vulkan/graphics_api_impl.hpp"
-#include "graphics/opengl/graphics_api_impl.hpp"
-#include "graphics/api/logical_gpu.hpp"
-#include "graphics/opengl/logical_gpu_impl.hpp"
 
 namespace StraitX{
 
 GraphicsAPI *GraphicsAPI::s_Instance = nullptr;
 GraphicsAPI::API GraphicsAPI::s_CurrentAPI = GraphicsAPI::None;
+
+const char *GraphicsAPI::GetName(GraphicsAPI::API api){
+    switch (api){
+    case None:   return "None";
+    case Vulkan: return "Vulkan";
+    case OpenGL: return "OpenGL";
+    }
+}
 
 }// namespace StraitX::

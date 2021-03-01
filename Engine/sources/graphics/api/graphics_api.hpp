@@ -17,9 +17,7 @@ public:
     enum API{
         None = 0,
         Vulkan,
-        OpenGL,
-
-        ElementsCount
+        OpenGL
     };
 private:
     static GraphicsAPI *s_Instance;
@@ -39,6 +37,7 @@ public:
 
     virtual Result GetPhysicalGPUs(PhysicalGPU *array) = 0;
 
+    static const char *GetName(GraphicsAPI::API api);
 };
 
 sx_inline GraphicsAPI &GraphicsAPI::Instance(){

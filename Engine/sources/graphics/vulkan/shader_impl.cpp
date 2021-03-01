@@ -1,4 +1,5 @@
 #include "core/assert.hpp"
+#include "platform/memory.hpp"
 #include "graphics/vulkan/shader_impl.hpp"
 
 namespace StraitX{

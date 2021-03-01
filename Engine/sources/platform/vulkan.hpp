@@ -4,12 +4,11 @@
 #include "platform/platform_detection.hpp"
 
 #if defined(SX_PLATFORM_LINUX) || defined(SX_PLATFORM_WINDOWS)
+    #define SX_VULKAN_SUPPORTED
     #include <vulkan/vulkan.h>
-#else
-    #error "Your platform does not support vulkan yet."
 #endif
 
-#include "platform/memory.hpp"
+#include "platform/types.hpp"
 
 namespace StraitX{
 namespace Vk{
