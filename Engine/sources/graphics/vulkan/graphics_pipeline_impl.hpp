@@ -15,6 +15,7 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     static VkPolygonMode s_RasterizationModeTable[];
     static VkBlendFactor s_BlendFactorTable[];
     static VkBlendOp s_BlendFunctionTable[];
+    static VkDescriptorType s_DescriptorTypeTable[];
 
     Vk::LogicalGPUImpl *Owner = nullptr;
     VkPipeline Handle = VK_NULL_HANDLE;
@@ -22,11 +23,19 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     VkResult Status = VK_INCOMPLETE;
     VkRect2D Scissors = {};
 
+    VkPipelineLayout Layout = VK_NULL_HANDLE;
+
+    VkDescriptorPool Pool = VK_NULL_HANDLE;
+    VkDescriptorSetLayout SetLayout = VK_NULL_HANDLE;
+    VkDescriptorSet Set = VK_NULL_HANDLE;
+
     GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props);
 
     virtual ~GraphicsPipelineImpl();
 
     virtual bool IsValid()override;
+
+    virtual void Bind(size_t index, const GPUBuffer &uniform_buffer)override;
 
     static GraphicsPipeline * NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props);
 

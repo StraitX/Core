@@ -7,6 +7,21 @@
 namespace StraitX{
 namespace GL{
 
+struct Binding{
+    ShaderBindingType Type;
+    union{
+        u32 UniformBuffer;
+    }Data = {};
+
+    constexpr Binding(ShaderBindingType type, u32 buffer);
+};
+
+struct DescriptorSet{
+    PushArray<Binding,MaxShaderBindings> Bindings;
+
+    void Bind()const;
+};
+
 struct GraphicsPipelineImpl: GraphicsPipeline{
     static GLenum s_BlendFunctionTable[];
     static GLenum s_BlendFactorTable[];
@@ -26,6 +41,8 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     GLenum SrcBlendFactor;
     GLenum DstBlendFactor;
 
+    DescriptorSet Set;
+
     GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props);
 
     virtual ~GraphicsPipelineImpl();
@@ -33,6 +50,8 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     virtual bool IsValid()override;
 
     void Bind()const;
+
+    virtual void Bind(size_t index, const GPUBuffer &uniform_buffer)override;
 
     void BindVertexBuffer(u32 id)const;
 
@@ -43,6 +62,12 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     static void DeleteImpl(GraphicsPipeline *pipeline);
 
 };
+
+constexpr Binding::Binding(ShaderBindingType type, u32 buffer):
+    Type(type)
+{
+    Data.UniformBuffer = buffer;
+}
 
 }//namespace GL::
 }//namespace StraitX::

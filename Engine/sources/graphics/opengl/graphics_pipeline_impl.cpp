@@ -7,6 +7,16 @@
 namespace StraitX{
 namespace GL{
 
+void DescriptorSet::Bind() const{
+    for(size_t i = 0; i<Bindings.Size(); ++i){
+        switch (Bindings[i].Type){
+        case ShaderBindingType::UniformBuffer: 
+            glBindBufferBase(GL_UNIFORM_BUFFER, i, Bindings[i].Data.UniformBuffer); 
+            break;
+        }
+    }
+}
+
 GLenum GraphicsPipelineImpl::s_BlendFunctionTable[]={
     GL_FUNC_ADD
 };
@@ -89,6 +99,14 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
 {
     //OpenGL...
     (void)owner;
+
+    for(size_t i = 0; i<props.ShaderBindings.Size(); ++i){
+        if(props.ShaderBindings[i].Type == ShaderBindingType::UniformBuffer)
+            Set.Bindings.Push({props.ShaderBindings[i].Type, 0/*Means no buffer is currently bound*/});
+        else
+            CoreAssert(false, "GL: GraphicsPipelineImpl: Unsupported shader binding type");
+    }
+
     glGenVertexArrays(1, &VertexArray);
     glBindVertexArray(VertexArray);
 
@@ -136,6 +154,12 @@ bool GraphicsPipelineImpl::IsValid(){
     return Valid;
 }
 
+void GraphicsPipelineImpl::Bind(size_t index, const GPUBuffer &uniform_buffer){
+    Set.Bindings[index].Data.UniformBuffer = uniform_buffer.Handle().U32;
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, index, Set.Bindings[index].Data.UniformBuffer);
+}
+
 void GraphicsPipelineImpl::Bind()const{
     glPolygonMode(GL_FRONT_AND_BACK, Rasterization);
     glViewport(FramebufferViewport.x, FramebufferViewport.y, FramebufferViewport.Width, FramebufferViewport.Height);
@@ -143,8 +167,9 @@ void GraphicsPipelineImpl::Bind()const{
     glBlendEquation(BlendFunc);
     glBindVertexArray(VertexArray);
     glUseProgram(Program);
-}
 
+    Set.Bind();
+}
 
 void GraphicsPipelineImpl::BindVertexBuffer(u32 id)const{
     size_t offset = 0;

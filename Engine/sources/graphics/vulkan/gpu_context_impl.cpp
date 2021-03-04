@@ -100,6 +100,8 @@ void GPUContextImpl::Bind(const GraphicsPipeline *pipeline){
     viewport.width  = pipeline_impl->Scissors.extent.width;
     viewport.height = -(float)pipeline_impl->Scissors.extent.height;
     vkCmdSetViewport(m_CmdBuffer, 0, 1, &viewport);
+
+    vkCmdBindDescriptorSets(m_CmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_impl->Layout, 0, 1, &pipeline_impl->Set, 0, nullptr);
 }
 
 void GPUContextImpl::BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer){

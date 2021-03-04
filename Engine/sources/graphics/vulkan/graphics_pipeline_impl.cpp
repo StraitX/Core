@@ -51,12 +51,74 @@ VkBlendOp GraphicsPipelineImpl::s_BlendFunctionTable[] = {
     VK_BLEND_OP_ADD
 };
 
+VkDescriptorType GraphicsPipelineImpl::s_DescriptorTypeTable[] = {
+    VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
+};
+
 GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props):
     GraphicsPipeline(props),
     Owner(static_cast<Vk::LogicalGPUImpl*>(&owner)),
     Pass(static_cast<const Vk::RenderPassImpl*>(props.Pass)),
     Scissors({{props.FramebufferViewport.x, props.FramebufferViewport.y}, {props.FramebufferViewport.Width, props.FramebufferViewport.Height}})
 {
+    CoreAssert(props.ShaderBindings.Size() <= MaxShaderBindings, "Vk: GraphicsPipelineImpl: shader bindings overflow");
+    
+    ArrayPtr<VkDescriptorPoolSize> descriptors((VkDescriptorPoolSize*)alloca(props.ShaderBindings.Size() * sizeof(VkDescriptorPoolSize)), props.ShaderBindings.Size());
+
+    for(size_t i = 0; i<descriptors.Size(); ++i){
+        descriptors[i].type = s_DescriptorTypeTable[(size_t)props.ShaderBindings[i].Type];
+        descriptors[i].descriptorCount = 1;
+    }
+
+    VkDescriptorPoolCreateInfo pool_info;
+    pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    pool_info.pNext = nullptr;
+    pool_info.flags = 0;
+    pool_info.maxSets = 1;
+    pool_info.poolSizeCount = descriptors.Size();
+    pool_info.pPoolSizes = descriptors.Pointer();
+
+    CoreFunctionAssert(vkCreateDescriptorPool(Owner->Handle, &pool_info, nullptr, &Pool), VK_SUCCESS, "Vk: GraphicsPipelineImpl: Can't create VkDescriptorPool");
+
+    ArrayPtr<VkDescriptorSetLayoutBinding> bindings((VkDescriptorSetLayoutBinding*)alloca(props.ShaderBindings.Size() * sizeof(VkDescriptorSetLayoutBinding)), props.ShaderBindings.Size());
+
+    for(size_t i = 0; i<descriptors.Size(); ++i){
+        bindings[i].binding = i;
+        bindings[i].stageFlags = ShaderImpl::StageTable[(size_t)props.ShaderBindings[i].ShaderStage];
+        bindings[i].descriptorType = s_DescriptorTypeTable[(size_t)props.ShaderBindings[i].Type];
+        bindings[i].descriptorCount = 1;
+        bindings[i].pImmutableSamplers = nullptr;
+    }
+
+    VkDescriptorSetLayoutCreateInfo set_layout_info;
+    set_layout_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    set_layout_info.pNext = nullptr;
+    set_layout_info.flags = 0;
+    set_layout_info.bindingCount = bindings.Size();
+    set_layout_info.pBindings = bindings.Pointer();
+
+    vkCreateDescriptorSetLayout(Owner->Handle, &set_layout_info, nullptr, &SetLayout);
+
+    VkPipelineLayoutCreateInfo layout_info;
+    layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    layout_info.pNext = nullptr;
+    layout_info.flags = 0;
+    layout_info.setLayoutCount = 1;
+    layout_info.pSetLayouts = &SetLayout;
+    layout_info.pushConstantRangeCount = 0;
+    layout_info.pPushConstantRanges = nullptr;
+
+    CoreFunctionAssert(vkCreatePipelineLayout(Owner->Handle, &layout_info, nullptr, &Layout), VK_SUCCESS, "Vk: GraphicsPipelineImpl: Can't create Pipeline Layout");
+
+    VkDescriptorSetAllocateInfo set_info;
+    set_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    set_info.pNext = nullptr;
+    set_info.descriptorPool = Pool;
+    set_info.descriptorSetCount = 1;
+    set_info.pSetLayouts = &SetLayout;
+
+    vkAllocateDescriptorSets(Owner->Handle, &set_info, &Set);
+
     //===Shader Stages===
     ArrayPtr<VkPipelineShaderStageCreateInfo> stages((VkPipelineShaderStageCreateInfo *)alloca(props.Shaders.Size() * sizeof(VkPipelineShaderStageCreateInfo)), props.Shaders.Size());
 
@@ -207,18 +269,6 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     dynamic_info.dynamicStateCount = sizeof(dynamic_states)/sizeof(VkDynamicState);
     dynamic_info.pDynamicStates = dynamic_states;
 
-    VkPipelineLayoutCreateInfo layout_info;
-    layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    layout_info.pNext = nullptr;
-    layout_info.flags = 0;
-    layout_info.setLayoutCount = 0;
-    layout_info.pSetLayouts = nullptr;
-    layout_info.pushConstantRangeCount = 0;
-    layout_info.pPushConstantRanges = nullptr;
-
-    VkPipelineLayout layout;
-    CoreFunctionAssert(vkCreatePipelineLayout(Owner->Handle, &layout_info, nullptr, &layout), VK_SUCCESS, "Vk: GraphicsPipelineImpl: Can't create Pipeline Layout");
-
     VkGraphicsPipelineCreateInfo info;
     info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     info.pNext = nullptr;
@@ -234,7 +284,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     info.pDepthStencilState = Pass->HasDepth() ? &depth_stencil_info : nullptr;
     info.pColorBlendState = &blend_info;
     info.pDynamicState = &dynamic_info;
-    info.layout = layout;
+    info.layout = Layout;
     info.renderPass = Pass->Handle;
     info.subpass = 0;
     info.basePipelineHandle = VK_NULL_HANDLE;
@@ -242,15 +292,38 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
 
     Status = vkCreateGraphicsPipelines(Owner->Handle, VK_NULL_HANDLE, 1, &info, nullptr, &Handle);
 
-    vkDestroyPipelineLayout(Owner->Handle, layout, nullptr);
 }
 
 GraphicsPipelineImpl::~GraphicsPipelineImpl(){
+    vkDestroyDescriptorSetLayout(Owner->Handle, SetLayout, nullptr);
+    vkDestroyDescriptorPool(Owner->Handle, Pool, nullptr);
+    vkDestroyPipelineLayout(Owner->Handle, Layout, nullptr);
     vkDestroyPipeline(Owner->Handle, Handle, nullptr);
 }
 
 bool GraphicsPipelineImpl::IsValid(){
     return Status == VK_SUCCESS;
+}
+
+void GraphicsPipelineImpl::Bind(size_t index, const GPUBuffer &uniform_buffer){
+    VkDescriptorBufferInfo buffer;
+    buffer.buffer = reinterpret_cast<VkBuffer>(uniform_buffer.Handle().U64);
+    buffer.offset = 0;
+    buffer.range = VK_WHOLE_SIZE;
+
+    VkWriteDescriptorSet write;
+    write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    write.pNext = nullptr;
+    write.dstSet = Set;
+    write.dstBinding = index;
+    write.dstArrayElement = 0;
+    write.descriptorCount = 1;
+    write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    write.pImageInfo = nullptr;
+    write.pBufferInfo = &buffer;
+    write.pTexelBufferView = nullptr;
+
+    vkUpdateDescriptorSets(Owner->Handle, 1, &write, 0, nullptr);
 }
 
 GraphicsPipeline * GraphicsPipelineImpl::NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props){

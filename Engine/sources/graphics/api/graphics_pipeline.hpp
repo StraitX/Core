@@ -5,6 +5,7 @@
 #include "core/noncopyable.hpp"
 #include "core/validable.hpp"
 #include "graphics/api/shader.hpp"
+#include "graphics/api/gpu_buffer.hpp"
 #include "graphics/api/logical_gpu.hpp"
 #include "graphics/api/render_pass.hpp"
 
@@ -27,12 +28,11 @@ enum class VertexAttribute{
     Float3,
     Float4
 };
-/*
-enum class ShaderBindingType{
-    UniformBuffer = 1,
-    //Sampler       = 2
-};
 
+enum class ShaderBindingType{
+    UniformBuffer = 0,
+    //Sampler       = 1
+};
 
 struct ShaderBinding{
     ShaderBindingType Type;
@@ -43,7 +43,10 @@ struct ShaderBinding{
         ShaderStage(shader_stage)
     {}
 };
-*/
+
+//TODO: Take value from docs
+constexpr size_t MaxShaderBindings = 8;
+
 enum class PrimitivesTopology{
     Points = 0,
     Lines,
@@ -88,7 +91,7 @@ struct GraphicsPipelineProperties{
     BlendFactor SrcBlendFactor;
     BlendFactor DstBlendFactor;
     const RenderPass *Pass;
-    //ArrayPtr<const ShaderBinding> ShaderBindings;
+    ArrayPtr<const ShaderBinding> ShaderBindings;
 };
 //OpenGL said that
 constexpr size_t MaxVertexAttributes = 8;
@@ -118,6 +121,8 @@ public:
     sx_inline static GraphicsPipeline *New(const GraphicsPipelineProperties &props);
 
     sx_inline static void Delete(GraphicsPipeline *pipeline);
+
+    virtual void Bind(size_t index, const GPUBuffer &uniform_buffer) = 0;
 
     static size_t CalculateStride(const ArrayPtr<const VertexAttribute> &attributes);
 
