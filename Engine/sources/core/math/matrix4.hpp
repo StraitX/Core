@@ -23,6 +23,7 @@ struct Matrix4{
 
     const Vector4<T> &operator[](size_t index)const;
 
+    constexpr Matrix4 GetTransposed();
 };
 
 template <typename T>
@@ -53,7 +54,15 @@ sx_inline const Vector4<T> &Matrix4<T>::operator[](size_t index)const{
     CoreAssert(index < 4 && index >= 0, "Matrix4: Can't address move than 4 rows"); 
     return Rows[index];
 }
-
+template <typename T>
+constexpr Matrix4<T> Matrix4<T>::GetTransposed(){
+    return {
+        {Rows[0][0], Rows[1][0], Rows[2][0], Rows[3][0]},
+        {Rows[0][1], Rows[1][1], Rows[2][1], Rows[3][1]},
+        {Rows[0][2], Rows[1][2], Rows[2][2], Rows[3][2]},
+        {Rows[0][3], Rows[1][3], Rows[2][3], Rows[3][3]}
+    };
+}
 
 typedef Matrix4<float> Matrix4f;
 typedef Matrix4<s32> Matrix4i;
