@@ -26,7 +26,7 @@ Point Mouse::RelativePosition(const Window &window){
 void Mouse::SetGlobalPosition(const Point &position){
     SetCursorPos(position.x, position.y);
 }
-void Mouse::SetVisible(bool is_visible, const Window &window){
+void Mouse::SetVisible(bool is_visible){
     // TODO: implement
 }
 
