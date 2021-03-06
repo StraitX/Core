@@ -8,11 +8,22 @@ namespace Windows{
 
 const char *windowClassName = "StraitXWindow";
 const char *windowTitle = "";
+DWORD style = WS_OVERLAPPEDWINDOW;
 
 Result WindowImpl::Open(const ScreenImpl& screen, int width, int height) {
     m_Width = width;
     m_Height = height;
-    m_Handle = CreateWindow(windowClassName, windowTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, m_Width, m_Height, 0, 0, (HINSTANCE)GetModuleHandle(nullptr),this);
+       
+
+    RECT dimensions = { 0, 0, m_Width, m_Height };
+
+    AdjustWindowRect(&dimensions, style, false);
+
+    //Warning: width and height now are used for better purpose
+    width = dimensions.right - dimensions.left;
+    height = dimensions.bottom - dimensions.top;
+
+    m_Handle = CreateWindow(windowClassName, windowTitle, style, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, (HINSTANCE)GetModuleHandle(nullptr),this);
     ShowWindow(m_Handle, SW_SHOW);
     return ResultError(m_Handle == nullptr);
 }
@@ -29,16 +40,9 @@ void WindowImpl::SetTitle(const char* title) {
     (void)SetWindowText(m_Handle, title);
 }
 
-void WindowImpl::SetSize(int width, int height) {
-    RECT currentWindowDimens = { 0 };
-    GetWindowRect(m_Handle, &currentWindowDimens);
-    
-    SetWindowPos(m_Handle, HWND_TOP, currentWindowDimens.left, currentWindowDimens.top, width, height, SWP_ASYNCWINDOWPOS);
-}
-
 Size2u WindowImpl::Size()const{
     RECT currentWindowDimens = { 0 };
-    GetWindowRect(m_Handle, &currentWindowDimens);
+    GetClientRect(m_Handle, &currentWindowDimens);
     // TODO: Make sure it works
     return {u32(currentWindowDimens.right - currentWindowDimens.left), u32(currentWindowDimens.bottom - currentWindowDimens.top)};
 }
