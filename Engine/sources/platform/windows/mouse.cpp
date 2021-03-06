@@ -27,7 +27,7 @@ void Mouse::SetGlobalPosition(const Point &position){
     SetCursorPos(position.x, position.y);
 }
 void Mouse::SetVisible(bool is_visible){
-    // TODO: implement
+    ShowCursor(is_visible);
 }
 
 }; // namespace StraitX::
