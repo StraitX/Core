@@ -15,13 +15,14 @@ class GraphicsAPILoader;
 
 class Shader: public NonCopyable, public Validable{
 public:
-    enum Type: u8{
-        Vertex,
-        Geometry,
-        TessellationControl,
-        TessellationEvaluation,
-        Fragment,
-        Compute
+    typedef u8 Types;
+    enum Type: Types{
+        Vertex                  = 0x01,
+        Geometry                = 0x02,
+        TessellationControl     = 0x04,
+        TessellationEvaluation  = 0x08,
+        Fragment                = 0x10,
+        Compute                 = 0x20
     };
     enum class Lang: u8{
         Unknown = 0,

@@ -7,24 +7,28 @@
 namespace StraitX{
 namespace GL{
 
-GLenum ShaderTypesTable[]={
-    GL_VERTEX_SHADER,
-    GL_GEOMETRY_SHADER,
-    GL_TESS_CONTROL_SHADER,
-    GL_TESS_EVALUATION_SHADER,
-    GL_FRAGMENT_SHADER,
-    GL_COMPUTE_SHADER
-};
-
-ShaderImpl::ShaderImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *sources, u32 length):
-    Shader(type,lang)
+static GLenum GetStage(Shader::Type type) {
+    switch (type)
+    {
+    case StraitX::Shader::Vertex: return GL_VERTEX_SHADER;
+    case StraitX::Shader::Geometry: return GL_GEOMETRY_SHADER;
+    case StraitX::Shader::TessellationControl: return GL_TESS_CONTROL_SHADER;
+    case StraitX::Shader::TessellationEvaluation: return GL_TESS_EVALUATION_SHADER;
+    case StraitX::Shader::Fragment: return GL_FRAGMENT_SHADER;
+    case StraitX::Shader::Compute: return GL_COMPUTE_SHADER;
+    }
+    return 0;
+}
+    
+ShaderImpl::ShaderImpl(LogicalGPU& owner, Type type, Lang lang, const u8* sources, u32 length) :
+    Shader(type, lang)
 {
     //OpenGL, GPUless, we know...
     (void)owner;
 
-    if(lang != Shader::Lang::GLSL)return;
+    if (lang != Shader::Lang::GLSL)return;
 
-    Handle = glCreateShader(ShaderTypesTable[type]);
+    Handle = glCreateShader(GetStage(type));
     glShaderSource(Handle, 1, (const GLchar *const *)&sources, (s32*)&length);
 
     Compile();

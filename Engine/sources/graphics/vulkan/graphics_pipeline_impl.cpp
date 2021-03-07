@@ -84,7 +84,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
 
     for(size_t i = 0; i<descriptors.Size(); ++i){
         bindings[i].binding = i;
-        bindings[i].stageFlags = ShaderImpl::StageTable[(size_t)props.ShaderBindings[i].ShaderStage];
+        bindings[i].stageFlags = props.ShaderBindings[i].VisibleShaders;
         bindings[i].descriptorType = s_DescriptorTypeTable[(size_t)props.ShaderBindings[i].Type];
         bindings[i].descriptorCount = 1;
         bindings[i].pImmutableSamplers = nullptr;
@@ -132,7 +132,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
         stages[i].pSpecializationInfo = nullptr;
         stages[i].module = shader->Handle;
         stages[i].pName = "main";
-        stages[i].stage = Vk::ShaderImpl::StageTable[shader->GetType()];
+        stages[i].stage = Vk::ShaderImpl::GetStage(shader->GetType());
 
         CoreAssert(shader->GetType() != Shader::TessellationControl && shader->GetType() != Shader::TessellationEvaluation,"Vk: GraphicsPipelineImpl: Tessellation shaders are not supported");
     }

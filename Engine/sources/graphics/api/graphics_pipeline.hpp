@@ -36,11 +36,11 @@ enum class ShaderBindingType{
 
 struct ShaderBinding{
     ShaderBindingType Type;
-    Shader::Type ShaderStage;
+    Shader::Types VisibleShaders;
 
-    constexpr ShaderBinding(ShaderBindingType type, Shader::Type shader_stage):
+    constexpr ShaderBinding(ShaderBindingType type, Shader::Types visible_shaders):
         Type(type),
-        ShaderStage(shader_stage)
+        VisibleShaders(visible_shaders)
     {}
 };
 

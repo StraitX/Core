@@ -9,8 +9,6 @@ namespace StraitX{
 namespace Vk{
 
 struct ShaderImpl: public Shader{
-    static VkShaderStageFlagBits StageTable[];
-
     Vk::LogicalGPUImpl &Owner;
     VkShaderModule Handle = VK_NULL_HANDLE;
     VkResult Status = VK_ERROR_INITIALIZATION_FAILED;
@@ -20,6 +18,8 @@ struct ShaderImpl: public Shader{
     ~ShaderImpl();
 
     bool IsValid()override;
+
+    static VkShaderStageFlagBits GetStage(Shader::Type type);
 
     static Shader *NewImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *sources, u32 length);
 
