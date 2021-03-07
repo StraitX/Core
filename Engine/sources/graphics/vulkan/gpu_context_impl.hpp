@@ -29,9 +29,9 @@ public:
 
     ~GPUContextImpl();
 
-    virtual void BeginFrame()override;
+    virtual void Begin()override;
 
-    virtual void EndFrame()override;
+    virtual void End()override;
 
     virtual void Submit()override;
 

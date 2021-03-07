@@ -39,8 +39,8 @@ GPUContextImpl::GPUContextImpl(Vk::LogicalGPUImpl *owner):
     CoreFunctionAssert(vkAllocateCommandBuffers(m_Owner->Handle, &buffer_info, &m_CmdBuffer), VK_SUCCESS, "Vk: GPUContextImpl: Failed to allocate command buffer");
 
     { // XXX: Signal first semaphore to avoid lock
-        BeginFrame();
-        EndFrame();
+        Begin();
+        End();
         SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer, ArrayPtr<const VkSemaphore>(), ArrayPtr<const VkSemaphore>(&m_SemaphoreRing[0].Handle, 1), VK_NULL_HANDLE);
     }
 }
@@ -54,7 +54,7 @@ GPUContextImpl::~GPUContextImpl(){
     vkDestroyCommandPool(m_Owner->Handle, m_CmdPool, nullptr);
 }
 
-void GPUContextImpl::BeginFrame(){
+void GPUContextImpl::Begin(){
     VkCommandBufferBeginInfo begin_info;
     begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     begin_info.pNext = nullptr;
@@ -64,7 +64,7 @@ void GPUContextImpl::BeginFrame(){
     CoreFunctionAssert(vkBeginCommandBuffer(m_CmdBuffer, &begin_info), VK_SUCCESS, "Vk: GPUContext: Failed to begin CmdBuffer");
 }
 
-void GPUContextImpl::EndFrame(){
+void GPUContextImpl::End(){
     CoreFunctionAssert(vkEndCommandBuffer(m_CmdBuffer),VK_SUCCESS, "Vk: GPUContext: Failed to end CmdBuffer for submission");
 }
 

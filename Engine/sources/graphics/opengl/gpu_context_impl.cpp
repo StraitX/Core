@@ -17,11 +17,11 @@ GLenum GPUContextImpl::s_IndexTypeTable[] = {
     GL_UNSIGNED_INT
 };
 
-void GPUContextImpl::BeginFrame(){
+void GPUContextImpl::Begin(){
     (void)0;
 }
 
-void GPUContextImpl::EndFrame(){
+void GPUContextImpl::End(){
     m_Pipeline = nullptr;
 }
 

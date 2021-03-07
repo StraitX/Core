@@ -38,9 +38,9 @@ public:
 
     virtual ~GPUContext() = default;
 
-    virtual void BeginFrame() = 0;
+    virtual void Begin() = 0;
 
-    virtual void EndFrame() = 0;
+    virtual void End() = 0;
 
     virtual void Submit() = 0;
 
