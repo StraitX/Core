@@ -12,6 +12,7 @@ enum class EventType{
     WindowClose,
     WindowResized,
     WindowDraw,
+    MouseWheel,
     MouseButtonPress,
     MouseButtonRelease,
     KeyPress,
@@ -28,6 +29,10 @@ struct WindowResizedEvent{
 };
 
 struct WindowDrawEvent{
+};
+
+struct MouseWheelEvent {
+    s32 Delta;
 };
 
 struct MouseButtonEvent{
@@ -47,6 +52,7 @@ struct Event{
         WindowCloseEvent WindowClose;
         WindowResizedEvent WindowResized;
         WindowDrawEvent WindowDraw;
+        MouseWheelEvent MouseWheel;
         MouseButtonEvent MouseButtonPress;
         MouseButtonEvent MouseButtonRelease;
         KeyEvent KeyPress;
