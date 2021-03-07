@@ -14,6 +14,10 @@ bool ToStraitXEvent(MSG& message, Event& event) {
 	case WM_PAINT:
 		event.Type = EventType::WindowDraw;
 		return true;
+	case WM_MOUSEWHEEL:
+		event.Type = EventType::MouseWheel;
+		event.MouseWheel.Delta = GET_WHEEL_DELTA_WPARAM(message.wParam) / WHEEL_DELTA;
+		return true;
 
 	case WM_LBUTTONDOWN:
 		event.Type = EventType::MouseButtonPress;
