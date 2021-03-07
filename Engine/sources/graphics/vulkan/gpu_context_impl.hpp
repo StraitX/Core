@@ -49,7 +49,7 @@ public:
 
     virtual void DrawIndexed(u32 indices_count)override;
 
-    virtual void ClearFramebufferColorAttachments(const Vector4f &color)override;
+    virtual void ClearFramebufferColorAttachments(const Framebuffer *fb, const Vector4f &color)override;
 
     void CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst);
 

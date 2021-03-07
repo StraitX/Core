@@ -184,8 +184,9 @@ void GPUContextImpl::SubmitCmdBuffer(Vk::Queue queue, VkCommandBuffer cmd_buffer
     vkQueueWaitIdle(m_Owner->GraphicsQueue.Handle); // TODO Get rid of this // Context is Immediate mode for now :'-
 }
 
-void GPUContextImpl::ClearFramebufferColorAttachments(const Vector4f &color){
-    CoreAssert(m_Framebuffer, "GL: GPUContextImpl: ClearFramebufferColorAttachment Should be called inside render pass");
+void GPUContextImpl::ClearFramebufferColorAttachments(const Framebuffer *fb, const Vector4f &color){
+    auto fb_impl = static_cast<const Vk::FramebufferImpl*>(fb);
+    CoreAssert(m_Framebuffer != fb_impl, "Vk: GPUContextImpl: can't clear framebuffer which is being used in current render pass");
 
     VkClearColorValue value;
     value.float32[0] = color[0];
@@ -200,7 +201,7 @@ void GPUContextImpl::ClearFramebufferColorAttachments(const Vector4f &color){
     issr.levelCount = 1;
     issr.layerCount = 1;
 
-    for(auto att: m_Framebuffer->Attachments)
+    for(auto att: fb_impl->Attachments)
         if(GPUTexture::IsColorFormat(att->GetFormat()))
             vkCmdClearColorImage(m_CmdBuffer, reinterpret_cast<VkImage>(att->Handle().U64), Vk::GPUTextureImpl::s_LayoutTable[(size_t)att->GetLayout()], &value, 1, &issr);
 

@@ -36,7 +36,7 @@ public:
 
     virtual void DrawIndexed(u32 indices_count)override;
 
-    virtual void ClearFramebufferColorAttachments(const Vector4f &color)override;
+    virtual void ClearFramebufferColorAttachments(const Framebuffer *framebuffer, const Vector4f &color)override;
 
     static GPUContext *NewImpl(LogicalGPU &owner);
 
