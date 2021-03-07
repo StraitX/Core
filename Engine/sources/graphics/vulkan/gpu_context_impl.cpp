@@ -74,7 +74,7 @@ void GPUContextImpl::Submit(){
 }
 
 void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){  
-    CoreAssert(dst.Size() <= size + dst_offset, "Vk: GPUContext: Copy: Dst Buffer overflow");
+    CoreAssert(size + dst_offset <= dst.Size(), "Vk: GPUContext: Copy: Dst Buffer overflow");
 
     VkBufferCopy copy;
     copy.dstOffset = dst_offset;

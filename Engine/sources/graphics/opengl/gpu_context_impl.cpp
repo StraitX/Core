@@ -30,7 +30,7 @@ void GPUContextImpl::Submit(){
 }
 
 void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){
-    CoreAssert(dst.Size() <= size + dst_offset, "GL: GPUContext: Copy: Dst Buffer overflow");
+    CoreAssert(size + dst_offset <= dst.Size(), "GL: GPUContext: Copy: Dst Buffer overflow");
 
     glBindBuffer(GL_COPY_WRITE_BUFFER, dst.Handle().U32);
     glBufferSubData(GL_COPY_WRITE_BUFFER, dst_offset, size, src.Pointer());
