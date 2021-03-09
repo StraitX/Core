@@ -86,9 +86,7 @@ set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/framebuffer.cpp
 )
 
-set(SOURCES_GRAPHICS 
-    ${SOURCES_GRAPHICS_VULKAN}
-    ${SOURCES_GRAPHICS_OPENGL}
+set(SOURCES_GRAPHICS_I
     ${SOURCES_GRAPHICS_API}
 )
 
@@ -140,6 +138,11 @@ if(STRAITX_PLATFORM_LINUX)
         ${THIRDPARTY_DIR}/vulkan-sdk/linux/lib
     )
 
+    set(SOURCES_GRAPHICS_D
+        ${SOURCES_GRAPHICS_VULKAN}
+        ${SOURCES_GRAPHICS_OPENGL}
+    )
+
 elseif(STRAITX_PLATFORM_WINDOWS)
     set(SOURCES_PLATFORM_D
        ${SOURCES_DIR}/platform/windows/mouse.cpp
@@ -166,6 +169,11 @@ elseif(STRAITX_PLATFORM_WINDOWS)
         ${THIRDPARTY_DIR}/vulkan-sdk/windows/lib
     )
 
+    set(SOURCES_GRAPHICS_D
+        ${SOURCES_GRAPHICS_VULKAN}
+        ${SOURCES_GRAPHICS_OPENGL}
+    )
+
 elseif(STRAITX_PLATFORM_MACOS)
     set(SOURCES_PLATFORM_D
 
@@ -178,6 +186,10 @@ elseif(STRAITX_PLATFORM_MACOS)
     set(LIBS_DIRS_PLATFORM
 
     )
+
+    set(SOURCES_GRAPHICS_D
+        ${SOURCES_GRAPHICS_OPENGL}
+    )
 else()
     message(FATAL_ERROR "Your platform is not supported yet")
 endif()
@@ -189,7 +201,8 @@ add_library(StraitX STATIC
     ${SOURCES_PLATFORM_D} 
     ${SOURCES_PLATFORM_I}
     ${SOURCES_CORE}
-    ${SOURCES_GRAPHICS}
+    ${SOURCES_GRAPHICS_I}
+    ${SOURCES_GRAPHICS_D}
     ${SOURCES_SERVERS}
     ${SOURCES_MAIN}
 )

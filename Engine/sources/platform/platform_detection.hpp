@@ -10,7 +10,6 @@
 
     #define SX_PLATFORM_MACOS
     #define SX_PLATFORM_NAME "MacOS"
-    #error Apple operating systems are not supported yet
 
 #elif defined(__unix__)
 
