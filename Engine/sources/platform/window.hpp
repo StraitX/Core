@@ -12,6 +12,9 @@
 #elif defined(SX_PLATFORM_WINDOWS)
     #include "platform/windows/window_impl.hpp"
     typedef StraitX::Windows::WindowImpl PlatformWindowImpl;
+#elif defined(SX_PLATFORM_MACOS)
+    #include "platform/macos/window_impl.hpp"
+    typedef StraitX::MacOS::WindowImpl PlatformWindowImpl;
 #else
     #error "Your platform does not support window creation"
 #endif

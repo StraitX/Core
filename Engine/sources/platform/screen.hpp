@@ -10,7 +10,10 @@
 #elif defined(SX_PLATFORM_WINDOWS)
     #include "platform/windows/screen_impl.hpp"
     typedef StraitX::Windows::ScreenImpl PlatformScreenImpl;
-#else 
+#elif defined(SX_PLATFORM_MACOS)
+    #include "platform/macos/screen_impl.hpp"
+    typedef StraitX::MacOS::ScreenImpl PlatformScreenImpl;
+#else
     #error "Your platform does not support Screen"
 #endif
 

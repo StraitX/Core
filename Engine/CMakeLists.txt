@@ -176,11 +176,18 @@ elseif(STRAITX_PLATFORM_WINDOWS)
 
 elseif(STRAITX_PLATFORM_MACOS)
     set(SOURCES_PLATFORM_D
-
+        ${SOURCES_DIR}/platform/macos/screen_impl.cpp
+        ${SOURCES_DIR}/platform/macos/window_impl.cpp
+        ${SOURCES_DIR}/platform/macos/window_system_impl.cpp
+        ${SOURCES_DIR}/platform/macos/glloader_impl.mm
+        ${SOURCES_DIR}/platform/macos/opengl_context_impl.cpp
     )
 
     set(LIBS_PLATFORM
-
+        "-framework Cocoa"
+        "-framework AppKit"
+        "-framework CoreData"
+        "-framework Foundation"
     )
 
     set(LIBS_DIRS_PLATFORM

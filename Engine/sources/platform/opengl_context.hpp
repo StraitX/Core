@@ -11,6 +11,9 @@
 #elif defined(SX_PLATFORM_WINDOWS)
     #include "platform/windows/opengl_context_impl.hpp"
     typedef StraitX::Windows::OpenGLContextImpl PlatformGLContextImpl;
+#elif defined(SX_PLATFORM_MACOS)
+    #include "platform/macos/opengl_context_impl.hpp"
+    typedef StraitX::MacOS::OpenGLContextImpl PlatformGLContextImpl;
 #else
     #error "Your platform does not support OpenGL context"
 #endif
