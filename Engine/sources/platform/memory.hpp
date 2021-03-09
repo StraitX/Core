@@ -4,7 +4,7 @@
 #include "platform/types.hpp"
 #include "platform/platform_detection.hpp"
 
-#ifdef SX_PLATFORM_LINUX
+#if defined(SX_PLATFORM_LINUX) || defined(SX_PLATFORM_MACOS)
     #include <alloca.h>
 #elif defined(SX_PLATFORM_WINDOWS)
     #include <malloc.h>
