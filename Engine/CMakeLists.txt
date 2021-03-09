@@ -164,6 +164,18 @@ elseif(STRAITX_PLATFORM_WINDOWS)
         ${THIRDPARTY_DIR}/vulkan-sdk/windows/lib
     )
 
+elseif(STRAITX_PLATFORM_MACOS)
+    set(SOURCES_PLATFORM_D
+
+    )
+
+    set(LIBS_PLATFORM
+
+    )
+
+    set(LIBS_DIRS_PLATFORM
+
+    )
 else()
     message(FATAL_ERROR "Your platform is not supported yet")
 endif()
