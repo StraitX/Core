@@ -13,9 +13,8 @@ const char *RequiredPlatformExtensions[] = {
 size_t RequiredPlatformExtensionsCount = sizeof(RequiredPlatformExtensions)/sizeof(char*);
 
 const char *RequiredPlatformLayers[]={
-    "VK_LAYER_MESA_overlay"
 #ifdef SX_DEBUG
-    ,"VK_LAYER_KHRONOS_validation"
+    "VK_LAYER_KHRONOS_validation"
 #endif
 };
 size_t RequiredPlatformLayersCount = sizeof(RequiredPlatformLayers)/sizeof(char*);

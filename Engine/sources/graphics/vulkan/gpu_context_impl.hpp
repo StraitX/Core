@@ -51,6 +51,8 @@ public:
 
     virtual void ClearFramebufferColorAttachments(const Framebuffer *fb, const Vector4f &color)override;
 
+    virtual void SwapFramebuffers(Swapchain *swapchain)override;
+
     void CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst);
 
     void CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_acces, VkAccessFlags dst_access);

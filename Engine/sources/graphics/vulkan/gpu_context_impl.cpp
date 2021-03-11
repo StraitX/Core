@@ -7,6 +7,7 @@
 #include "graphics/vulkan/gpu_buffer_impl.hpp"
 #include "graphics/vulkan/gpu_texture_impl.hpp"
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
+#include "graphics/vulkan/swapchain_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -206,6 +207,14 @@ void GPUContextImpl::ClearFramebufferColorAttachments(const Framebuffer *fb, con
             vkCmdClearColorImage(m_CmdBuffer, reinterpret_cast<VkImage>(att->Handle().U64), Vk::GPUTextureImpl::s_LayoutTable[(size_t)att->GetLayout()], &value, 1, &issr);
 
     CmdMemoryBarrier(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT);
+}
+
+void GPUContextImpl::SwapFramebuffers(Swapchain *swapchain){
+    auto *swapchain_impl = static_cast<Vk::SwapchainImpl*>(swapchain);
+    auto semaphores = NextPair();
+
+    swapchain_impl->PresentCurrent(semaphores.First);
+    swapchain_impl->AcquireNext(semaphores.Second);
 }
 
 GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){

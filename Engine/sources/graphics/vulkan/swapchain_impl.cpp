@@ -120,13 +120,6 @@ SwapchainImpl::~SwapchainImpl(){
     m_Surface.Destroy();
 }
 
-void SwapchainImpl::SwapFramebuffers(GPUContext *context){
-    auto semaphores = static_cast<Vk::GPUContextImpl*>(context)->NextPair();
-
-    PresentCurrent(semaphores.First);
-    AcquireNext(semaphores.Second);
-}
-
 const RenderPass *SwapchainImpl::FramebufferPass(){
     return &m_FramebufferPass;
 }

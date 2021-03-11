@@ -1,4 +1,5 @@
 #include <new>
+#include "graphics/opengl/swapchain_impl.hpp"
 #include "platform/memory.hpp"
 #include "platform/opengl.hpp"
 #include "graphics/opengl/debug.hpp"
@@ -71,6 +72,10 @@ void GPUContextImpl::ClearFramebufferColorAttachments(const Framebuffer *framebu
         glClear(GL_COLOR_BUFFER_BIT);
     }
     if (m_Framebuffer)m_Framebuffer->Bind();
+}
+
+void GPUContextImpl::SwapFramebuffers(Swapchain *swapchain){
+    static_cast<GL::SwapchainImpl*>(swapchain)->m_Owner->SwapBuffers();
 }
 
 GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){

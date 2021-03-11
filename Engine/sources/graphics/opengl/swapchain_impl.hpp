@@ -9,15 +9,12 @@
 namespace StraitX{
 namespace GL{
 
-class SwapchainImpl: public Swapchain{
-private:
+struct SwapchainImpl: public Swapchain{
     GL::LogicalGPUImpl *m_Owner = nullptr;
     GL::RenderPassImpl m_FramebufferPass;
     GL::FramebufferImpl m_DefaultFramebuffer;
-public:
-    SwapchainImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props);
 
-    virtual void SwapFramebuffers(GPUContext *context)override;
+    SwapchainImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props);
 
     virtual const RenderPass *FramebufferPass()override;
 

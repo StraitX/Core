@@ -38,6 +38,8 @@ public:
 
     virtual void ClearFramebufferColorAttachments(const Framebuffer *framebuffer, const Vector4f &color)override;
 
+    virtual void SwapFramebuffers(Swapchain *swapchain)override;
+
     static GPUContext *NewImpl(LogicalGPU &owner);
 
     static void DeleteImpl(GPUContext *context);

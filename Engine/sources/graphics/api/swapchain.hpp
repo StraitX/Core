@@ -3,7 +3,6 @@
 
 #include "platform/window.hpp"
 #include "core/noncopyable.hpp"
-#include "graphics/api/gpu_context.hpp"
 #include "graphics/api/logical_gpu.hpp"
 #include "graphics/api/render_pass.hpp"
 #include "graphics/api/framebuffer.hpp"
@@ -36,8 +35,6 @@ private:
 public:
 
     virtual ~Swapchain() = default;
-
-    virtual void SwapFramebuffers(GPUContext *context) = 0;
 
     virtual const RenderPass *FramebufferPass() = 0;
 

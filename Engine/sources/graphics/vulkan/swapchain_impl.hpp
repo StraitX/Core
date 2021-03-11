@@ -37,8 +37,6 @@ public:
 
     ~SwapchainImpl();
 
-    virtual void SwapFramebuffers(GPUContext *context)override;
-
     virtual const RenderPass *FramebufferPass()override;
 
     virtual const Framebuffer *CurrentFramebuffer()override;
@@ -50,7 +48,7 @@ private:
     void InitializeFramebuffers(GPUTexture::Format images_format);
 
     void FinalizeFramebuffers();
-
+public:
     void PresentCurrent(VkSemaphore wait_semaphore);
 
     void AcquireNext(VkSemaphore signal_semaphore);
