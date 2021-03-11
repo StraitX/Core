@@ -18,7 +18,7 @@ struct SXWindowWrapper;
     StraitX::MacOS::SXWindowWrapper *m_Wrapper;
 }
 
--(instancetype)initWithSXWindow:(StraitX::MacOS::SXWindowWrapper*)owner;
+-(instancetype)initWithSXWindow:(StraitX::MacOS::SXWindowWrapper*)owner Width: (int)width Height: (int)height;
 
 @end
 

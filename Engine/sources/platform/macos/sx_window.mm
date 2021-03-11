@@ -3,8 +3,9 @@
 
 @implementation SXView
 
--(instancetype)initWithSXWindow:(StraitX::MacOS::SXWindowWrapper*)owner{
-    self = [super init];
+-(instancetype)initWithSXWindow:(StraitX::MacOS::SXWindowWrapper*)owner Width: (int)width Height: (int)height{
+    NSRect frame = NSMakeRect(0, 0, width, height);
+    self = [super initWithFrame:frame];
 
     if(self==nil)return nil;
 
@@ -147,13 +148,17 @@ Result SXWindowWrapper::Open(const ScreenImpl &screen, int width, int height){
 
     if(Delegate == nil)goto deleagete_fail;
 
-    View = [[SXView alloc]initWithSXWindow: this];
+    View = [[SXView alloc]initWithSXWindow: this Width: width Height: height];
 
     if(View == nil)goto view_fail;
 
     [Handle setDelegate: Delegate];
     [Handle setContentView: View];
-
+    //[Handle setFirstResponder: View];
+    [Handle center];//TODO replicate on other OSes
+    [Handle makeKeyWindow];
+    [Handle setOpaque:YES];
+    
     return Result::Success;
 view_fail:
     //somehow delete Delegate
