@@ -37,8 +37,8 @@ struct MouseWheelEvent {
 
 struct MouseButtonEvent{
     Mouse::Button Button;
-    u32 x;
-    u32 y;
+    s32 x;
+    s32 y;
 };
 
 struct KeyEvent{
