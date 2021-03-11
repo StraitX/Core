@@ -1,5 +1,6 @@
 #include "platform/linux/events.hpp"
 #include "platform/linux/keys.hpp"
+#include <X11/X.h>
 
 
 namespace StraitX{
@@ -57,10 +58,18 @@ Event ToStraitXEvent(const XEvent &event){
         return sxEvent;  
 
     case ButtonPress:
-        sxEvent.Type = EventType::MouseButtonPress;
-        sxEvent.MouseButtonPress.Button = XButtonToMouseButton(event.xbutton.button);
-        sxEvent.MouseButtonPress.x = event.xbutton.x;
-        sxEvent.MouseButtonPress.y = event.xbutton.y;
+        if(event.xbutton.button == Button4){
+            sxEvent.Type = EventType::MouseWheel;
+            sxEvent.MouseWheel.Delta = 1;
+        }else if(event.xbutton.button == Button5){
+            sxEvent.Type = EventType::MouseWheel;
+            sxEvent.MouseWheel.Delta = -1;
+        }else{
+            sxEvent.Type = EventType::MouseButtonPress;
+            sxEvent.MouseButtonPress.Button = XButtonToMouseButton(event.xbutton.button);
+            sxEvent.MouseButtonPress.x = event.xbutton.x;
+            sxEvent.MouseButtonPress.y = event.xbutton.y;
+        }
         return sxEvent;
 
     case ButtonRelease:
