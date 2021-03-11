@@ -1,9 +1,13 @@
+#import <Cocoa/Cocoa.h>
 #include "platform/window_system.hpp"
 
 namespace StraitX{
 
 Result WindowSystem::Initialize(){
-    return Result::Success;
+    if(NSApplicationLoad() != YES)
+        return Result::Failure;
+    [NSApplication sharedApplication];
+    return ResultError(NSApp == nil);
 }
 
 Result WindowSystem::Finalize(){
