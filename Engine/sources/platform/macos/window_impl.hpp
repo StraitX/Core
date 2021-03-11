@@ -9,6 +9,7 @@ namespace StraitX{
 namespace MacOS{
 
 struct WindowImpl{
+    void *Handle = nullptr;
 
     WindowImpl() = default;
 
