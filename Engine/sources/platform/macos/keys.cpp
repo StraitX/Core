@@ -1,0 +1,75 @@
+#include "platform/macos/keys.hpp"
+
+namespace StraitX{
+namespace MacOS{
+
+Keyboard::KeyCode ToStraitXKeyCode(int key_code){
+    switch (key_code){
+    case KEY_A: return Keyboard::A;
+    case KEY_S: return Keyboard::S;
+    case KEY_D: return Keyboard::D;
+    case KEY_F: return Keyboard::F;
+    case KEY_H: return Keyboard::H;
+    case KEY_G: return Keyboard::G;
+    case KEY_Z: return Keyboard::Z;
+    case KEY_X: return Keyboard::X;
+    case KEY_C: return Keyboard::C;
+    case KEY_V: return Keyboard::V;
+    case KEY_B: return Keyboard::B;
+    case KEY_Q: return Keyboard::Q;
+    case KEY_W: return Keyboard::W;
+    case KEY_E: return Keyboard::E;
+    case KEY_R: return Keyboard::R;
+    case KEY_Y: return Keyboard::Y;
+    case KEY_T: return Keyboard::T;
+    case KEY_1: return Keyboard::Key_1;
+    case KEY_2: return Keyboard::Key_2;
+    case KEY_3: return Keyboard::Key_3;
+    case KEY_4: return Keyboard::Key_4;
+    case KEY_6: return Keyboard::Key_6;
+    case KEY_5: return Keyboard::Key_5;
+    case KEY_EQUALS: return Keyboard::Equal;
+    case KEY_9: return Keyboard::Key_9;
+    case KEY_7: return Keyboard::Key_7;
+    case KEY_MINUS: return Keyboard::Minus;
+    case KEY_8: return Keyboard::Key_8;
+    case KEY_0: return Keyboard::Key_0;
+    case KEY_RIGHTBRACKET: return Keyboard::RightBracket;
+    case KEY_O: return Keyboard::O;
+    case KEY_U: return Keyboard::U;
+    case KEY_LEFTBRACKET: return Keyboard::LeftBracket;
+    case KEY_I: return Keyboard::I;
+    case KEY_P: return Keyboard::P;
+    case KEY_RETURN: return Keyboard::Enter;
+    case KEY_L: return Keyboard::L;
+    case KEY_J: return Keyboard::J;
+    case KEY_APOSTROPHE: return Keyboard::Quote;
+    case KEY_K: return Keyboard::K;
+    case KEY_SEMICOLON: return Keyboard::Semicolon;
+    case KEY_FRONTSLASH: return Keyboard::Slash;
+    case KEY_COMMA: return Keyboard::Comma;
+    case KEY_BACKSLASH: return Keyboard::Backslash;
+    case KEY_N: return Keyboard::N;
+    case KEY_M: return Keyboard::M;
+    case KEY_PERIOD: return Keyboard::Period;
+    case KEY_TAB: return Keyboard::Tab;
+    case KEY_SPACE: return Keyboard::Space;
+    case KEY_BACKAPOSTROPHE: return Keyboard::Unknown; // TODO wtf?
+    case KEY_DELETE: return Keyboard::Delete;
+    case KEY_ESCAPE: return Keyboard::Escape;
+    case KEY_COMMAND: return Keyboard::Unknown; // TODO meta key
+    case KEY_SHIFT: return Keyboard::LeftShift;
+    case KEY_CAPSLOCK: return Keyboard::CapsLock;
+    case KEY_OPTION: return Keyboard::Unknown; //TODO wtf?
+    case KEY_CONTROL: return Keyboard::LeftControl;
+    case KEY_UP: return Keyboard::Up;
+    case KEY_DOWN: return Keyboard::Down;
+    case KEY_LEFT: return Keyboard::Left;
+    case KEY_RIGHT: return Keyboard::Right;
+    default:
+        return Keyboard::Unknown;
+    }
+}
+
+}//namespace MacOS::
+}//namespace StraitX::

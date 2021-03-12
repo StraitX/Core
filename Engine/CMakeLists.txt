@@ -176,6 +176,7 @@ elseif(STRAITX_PLATFORM_WINDOWS)
 
 elseif(STRAITX_PLATFORM_MACOS)
     set(SOURCES_PLATFORM_D
+        ${SOURCES_DIR}/platform/macos/keys.cpp
         ${SOURCES_DIR}/platform/macos/screen_impl.cpp
         ${SOURCES_DIR}/platform/macos/sx_window.mm
         ${SOURCES_DIR}/platform/macos/window_impl.mm

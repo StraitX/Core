@@ -1,5 +1,5 @@
-#include "core/log.hpp"
 #include "platform/macos/sx_window.hpp"
+#include "platform/macos/keys.hpp"
 
 @implementation SXView
 
@@ -50,27 +50,27 @@
     m_Wrapper->OnMouseButtonRelease(StraitX::Mouse::Middle,pos.x, event.window.contentView.frame.size.height - pos.y);
 }
 
-- (BOOL)canBecomeKeyView
-{
+-(BOOL)canBecomeKeyView{
     return YES;
 }
 
-- (BOOL)acceptsFirstResponder
-{
+-(BOOL)acceptsFirstResponder{
     return YES;
 }
 
-- (BOOL)wantsUpdateLayer
-{
+-(BOOL)wantsUpdateLayer{
     return YES;
 }
 
 -(void)keyDown:(NSEvent *)event{
-    m_Wrapper->OnKeyPress(StraitX::Keyboard::A);
+    m_Wrapper->OnKeyPress(StraitX::MacOS::ToStraitXKeyCode([event keyCode]));
 }
 
 -(void)keyUp:(NSEvent *)event{
-    m_Wrapper->OnKeyRelease(StraitX::Keyboard::A);
+    m_Wrapper->OnKeyRelease(StraitX::MacOS::ToStraitXKeyCode([event keyCode]));
+}
+-(void)flagsChanged:(NSEvent*)event{
+    //m_Wrapper->OnKeyPress(StraitX::MacOS::ToStraitXKeyCode([event keyCode]));
 }
 
 -(void)scrollWheel:(NSEvent *)event{
