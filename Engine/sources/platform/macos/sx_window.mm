@@ -50,12 +50,19 @@
     m_Wrapper->OnMouseButtonRelease(StraitX::Mouse::Middle,pos.x, event.window.contentView.frame.size.height - pos.y);
 }
 
--(BOOL)canBecomeKeyView{
-    return  YES;
+- (BOOL)canBecomeKeyView
+{
+    return YES;
 }
 
--(BOOL)acceptsFirstResponder{
-    return  YES;
+- (BOOL)acceptsFirstResponder
+{
+    return YES;
+}
+
+- (BOOL)wantsUpdateLayer
+{
+    return YES;
 }
 
 -(void)keyDown:(NSEvent *)event{
@@ -114,7 +121,10 @@
         return nil;
     m_Wrapper = owner;
     [self setBackgroundColor:[NSColor blueColor]];
-    [self makeKeyAndOrderFront:NSApp];
+    [self makeKeyAndOrderFront:[NSApplication sharedApplication]];
+    [self makeKeyWindow];
+    [self makeMainWindow];
+
     return self;
 }
 
@@ -125,13 +135,22 @@
 -(void)processEvents{
     [NSApplication sharedApplication];
     NSEvent *e = nil;
-    
+
     while((e = [NSApp nextEventMatchingMask:NSEventMaskAny
                                             untilDate:nil
                                                inMode:NSDefaultRunLoopMode
                                         dequeue:YES]) != nil){
         [NSApp sendEvent:e];
     }
+}
+
+-(BOOL)canBecomeKeyWindow{
+    // Required for NSWindowStyleMaskBorderless windows
+    return YES;
+}
+
+-(BOOL)canBecomeMainWindow{
+    return YES;
 }
 
 @end
@@ -154,11 +173,14 @@ Result SXWindowWrapper::Open(const ScreenImpl &screen, int width, int height){
 
     [Handle setDelegate: Delegate];
     [Handle setContentView: View];
-    //[Handle setFirstResponder: View];
+    [Handle setInitialFirstResponder: View];
+    [Handle setNextResponder: View];
+    [Handle makeFirstResponder: View];
     [Handle center];//TODO replicate on other OSes
     [Handle makeKeyWindow];
     [Handle setOpaque:YES];
-    
+    [Handle makeKeyAndOrderFront: nil];
+
     return Result::Success;
 view_fail:
     //somehow delete Delegate

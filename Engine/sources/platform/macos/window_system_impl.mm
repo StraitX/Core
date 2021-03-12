@@ -4,9 +4,11 @@
 namespace StraitX{
 
 Result WindowSystem::Initialize(){
-    if(NSApplicationLoad() != YES)
-        return Result::Failure;
-    [NSApplication sharedApplication];
+
+    NSApplication *app = [NSApplication sharedApplication];
+    [app setActivationPolicy: NSApplicationActivationPolicyRegular];
+    [app activateIgnoringOtherApps: YES];
+
     return ResultError(NSApp == nil);
 }
 

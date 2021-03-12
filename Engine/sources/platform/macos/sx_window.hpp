@@ -44,6 +44,8 @@ struct SXWindowWrapper;
 
 -(void)processEvents;
 
+-(BOOL)canBecomeKeyWindow;
+
 @end
 
 namespace StraitX{
