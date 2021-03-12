@@ -3,6 +3,7 @@
 #include "core/log.hpp"
 #include "graphics/opengl/shader_impl.hpp"
 #include "graphics/opengl/graphics_pipeline_impl.hpp"
+#include "graphics/opengl/graphics_api_impl.hpp"
 
 namespace StraitX{
 namespace GL{
@@ -117,8 +118,13 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
         Attributes.Push(props.VertexAttributes[i]);
 
         glEnableVertexAttribArray(i);
-        glVertexAttribFormat(i, ElementsCount(props.VertexAttributes[i]),ElementType(props.VertexAttributes[i]),false, 0 /*offset from the begining of the buffer*/);
-        glVertexAttribBinding(i,i);
+        
+        if(GraphicsAPIImpl::Instance.LoadedOpenGLVersion.Major == 4 && GraphicsAPIImpl::Instance.LoadedOpenGLVersion.Minor >= 3){
+            glVertexAttribFormat(i, ElementsCount(props.VertexAttributes[i]),ElementType(props.VertexAttributes[i]),false, 0 /*offset from the begining of the buffer*/);
+            glVertexAttribBinding(i,i);
+        }else{
+            LogWarn("OpenGL: fallback to a compatible OpenGL profile")
+        }
     }
 
     Program = glCreateProgram();
@@ -172,10 +178,19 @@ void GraphicsPipelineImpl::Bind()const{
 }
 
 void GraphicsPipelineImpl::BindVertexBuffer(u32 id)const{
-    size_t offset = 0;
-    for(size_t i = 0; i<Attributes.Size(); ++i){
-        glBindVertexBuffer(i, id, offset, AttributesStride);
-        offset+=GraphicsPipeline::s_VertexAttributeSizeTable[(size_t)Attributes[i]];
+    if(GraphicsAPIImpl::Instance.LoadedOpenGLVersion.Major == 4 && GraphicsAPIImpl::Instance.LoadedOpenGLVersion.Minor >= 3){
+        size_t offset = 0;
+        for(size_t i = 0; i<Attributes.Size(); ++i){
+            glBindVertexBuffer(i, id, offset, AttributesStride);
+            offset+=GraphicsPipeline::s_VertexAttributeSizeTable[(size_t)Attributes[i]];
+        }
+    }else{
+        glBindBuffer(GL_ARRAY_BUFFER, id);
+        size_t offset = 0;
+        for(size_t i = 0; i<Attributes.Size(); ++i){
+            glVertexAttribPointer(0, ElementsCount(Attributes[i]),ElementType(Attributes[i]), false, AttributesStride, (void*)offset);
+            offset+=GraphicsPipeline::s_VertexAttributeSizeTable[(size_t)Attributes[i]];
+        }
     }
 }
 
