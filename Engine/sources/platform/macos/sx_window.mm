@@ -86,6 +86,10 @@
         m_Wrapper->OnMouseWheel((int)deltaY);
 }
 
+-(void)mouseDragged:(NSEvent *)event{
+    (void)event;
+}
+
 @end
 
 @implementation SXWindowDelegate
