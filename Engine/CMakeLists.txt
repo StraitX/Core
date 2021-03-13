@@ -124,7 +124,7 @@ if(STRAITX_PLATFORM_LINUX)
         ${SOURCES_DIR}/platform/linux/opengl_context_impl.cpp
         ${SOURCES_DIR}/platform/linux/vulkan_linux.cpp
         ${SOURCES_DIR}/platform/linux/vulkan_surface_impl.cpp
-        ${SOURCES_DIR}/platform/linux/file_impl.cpp
+        ${SOURCES_DIR}/platform/unix/file_impl.cpp
     )
 
     set(LIBS_PLATFORM
@@ -186,6 +186,7 @@ elseif(STRAITX_PLATFORM_MACOS)
         ${SOURCES_DIR}/platform/macos/glloader_impl.mm
         ${SOURCES_DIR}/platform/macos/ns_opengl_context_wrapper.mm
         ${SOURCES_DIR}/platform/macos/opengl_context_impl.mm
+        ${SOURCES_DIR}/platform/unix/file_impl.cpp
     )
 
     set(LIBS_PLATFORM
