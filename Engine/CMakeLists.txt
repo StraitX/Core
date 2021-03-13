@@ -179,7 +179,7 @@ elseif(STRAITX_PLATFORM_MACOS)
         ${SOURCES_DIR}/platform/macos/sx_application.mm
         ${SOURCES_DIR}/platform/macos/keys.cpp
         ${SOURCES_DIR}/platform/macos/keyboard_impl.cpp
-        ${SOURCES_DIR}/platform/macos/mouse_impl.cpp
+        ${SOURCES_DIR}/platform/macos/mouse_impl.mm
         ${SOURCES_DIR}/platform/macos/screen_impl.cpp
         ${SOURCES_DIR}/platform/macos/sx_window.mm
         ${SOURCES_DIR}/platform/macos/window_impl.mm
