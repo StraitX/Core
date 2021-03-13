@@ -24,7 +24,7 @@ public:
 };
 
 sx_inline LogicalGPU &LogicalGPU::Instance(){
-    CoreAssert(s_Instance, "LogicalGPU was not loaded properly");
+    //CoreAssert(s_Instance, "LogicalGPU was not loaded properly");
     return *s_Instance;
 }
 

@@ -188,7 +188,7 @@ void GraphicsPipelineImpl::BindVertexBuffer(u32 id)const{
         glBindBuffer(GL_ARRAY_BUFFER, id);
         size_t offset = 0;
         for(size_t i = 0; i<Attributes.Size(); ++i){
-            glVertexAttribPointer(0, ElementsCount(Attributes[i]),ElementType(Attributes[i]), false, AttributesStride, (void*)offset);
+            glVertexAttribPointer(i, ElementsCount(Attributes[i]),ElementType(Attributes[i]), false, AttributesStride, (void*)offset);
             offset+=GraphicsPipeline::s_VertexAttributeSizeTable[(size_t)Attributes[i]];
         }
     }
