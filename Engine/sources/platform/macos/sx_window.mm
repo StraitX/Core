@@ -91,6 +91,14 @@
     (void)event;
 }
 
+-(void)rightMouseDragged:(NSEvent *)event{
+    (void)event;
+}
+
+-(void)otherMouseDragged:(NSEvent *)event{
+    (void)event;
+}
+
 @end
 
 @implementation SXWindowDelegate
