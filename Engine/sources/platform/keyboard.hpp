@@ -130,6 +130,8 @@ namespace Keyboard{
 
     bool IsKeyPressed(KeyCode code);
 
+    const char *GetName(KeyCode code);
+
 }; // namespace Keyboard::
 }; // namespace StraitX::
 

@@ -25,6 +25,7 @@ set(SOURCES_PLATFORM_I
     ${SOURCES_DIR}/platform/memory.cpp
     ${SOURCES_DIR}/platform/result.cpp
     ${SOURCES_DIR}/platform/glloader.cpp
+    ${SOURCES_DIR}/platform/keyboard.cpp
 )
 
 set(SOURCES_CORE
