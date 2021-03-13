@@ -54,18 +54,40 @@ Keyboard::KeyCode ToStraitXKeyCode(int key_code){
     case KEY_PERIOD: return Keyboard::Period;
     case KEY_TAB: return Keyboard::Tab;
     case KEY_SPACE: return Keyboard::Space;
-    case KEY_BACKAPOSTROPHE: return Keyboard::Unknown; // TODO wtf?
+    case KEY_BACKAPOSTROPHE: return Keyboard::Quote;
     case KEY_DELETE: return Keyboard::Delete;
     case KEY_ESCAPE: return Keyboard::Escape;
-    case KEY_COMMAND: return Keyboard::Unknown; // TODO meta key
-    case KEY_SHIFT: return Keyboard::LeftShift;
+    case KEY_COMMAND: return Keyboard::LeftSuper;
+    case KEY_LEFTSHIFT: return Keyboard::LeftShift;
     case KEY_CAPSLOCK: return Keyboard::CapsLock;
-    case KEY_OPTION: return Keyboard::Unknown; //TODO wtf?
-    case KEY_CONTROL: return Keyboard::LeftControl;
+    case KEY_LEFTALT: return Keyboard::LeftAlt;
+    case KEY_LEFTCONTROL: return Keyboard::LeftControl;
+    case KEY_RIGHTSHIFHT: return Keyboard::RightShift;
+    case KEY_RIGHTALT: return Keyboard::RightAlt;
+    case KEY_RIGHTCTRL: return Keyboard::RightControl;
+    case KEY_HOME: return Keyboard::Home;
+    case KEY_END: return Keyboard::End;
+    case KEY_PAGEUP: return Keyboard::PageUp;
+    case KEY_PAGEDOWN: return Keyboard::PageDown;
     case KEY_UP: return Keyboard::Up;
     case KEY_DOWN: return Keyboard::Down;
     case KEY_LEFT: return Keyboard::Left;
     case KEY_RIGHT: return Keyboard::Right;
+    case KEY_F1: return Keyboard::F1;
+    case KEY_F2: return Keyboard::F2;
+    case KEY_F3: return Keyboard::F3;
+    case KEY_F4: return Keyboard::F4;
+    case KEY_F5: return Keyboard::F5;
+    case KEY_F6: return Keyboard::F6;
+    case KEY_F7: return Keyboard::F7;
+    case KEY_F8: return Keyboard::F8;
+    case KEY_F9: return Keyboard::F9;
+    case KEY_F10: return Keyboard::F10;
+    case KEY_F11: return Keyboard::F11;
+    case KEY_F12: return Keyboard::F12;
+    case KEY_F13: return Keyboard::F13;
+    case KEY_F14: return Keyboard::F14;
+    case KEY_F15: return Keyboard::F15;
     default:
         return Keyboard::Unknown;
     }
