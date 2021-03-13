@@ -17,7 +17,16 @@ Result WindowSystem::Finalize(){
 }
 
 Screen WindowSystem::MainScreen(){
-    return {{}};
+    NSScreen *screen = [NSScreen mainScreen];
+
+    NSDictionary *description = [screen deviceDescription];
+    NSSize displayPixelSize = [[description objectForKey:NSDeviceSize] sizeValue];
+    CGSize displayPhysicalSize = CGDisplayScreenSize([[description objectForKey:@"NSScreenNumber"] unsignedIntValue]);
+
+    return MacOS::ScreenImpl(
+        {(s32)screen.frame.size.width, (s32)screen.frame.size.height}, 
+        {float(displayPixelSize.width / displayPhysicalSize.width) * 25.4f, float(displayPixelSize.height / displayPhysicalSize.height) * 25.4f}
+    );
 }
 
 }//namespace StraitX::
