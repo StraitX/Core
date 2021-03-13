@@ -42,8 +42,6 @@ struct SXWindowWrapper;
 
 -(void)close;
 
--(void)processEvents;
-
 -(BOOL)canBecomeKeyWindow;
 
 @end

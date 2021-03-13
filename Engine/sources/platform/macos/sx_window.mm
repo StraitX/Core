@@ -1,3 +1,4 @@
+#include "platform/macos/sx_application.hpp"
 #include "platform/macos/sx_window.hpp"
 #include "platform/macos/keys.hpp"
 
@@ -139,18 +140,6 @@
     [self close];
 }
 
--(void)processEvents{
-    [NSApplication sharedApplication];
-    NSEvent *e = nil;
-
-    while((e = [NSApp nextEventMatchingMask:NSEventMaskAny
-                                            untilDate:nil
-                                               inMode:NSDefaultRunLoopMode
-                                        dequeue:YES]) != nil){
-        [NSApp sendEvent:e];
-    }
-}
-
 -(BOOL)canBecomeKeyWindow{
     // Required for NSWindowStyleMaskBorderless windows
     return YES;
@@ -210,7 +199,9 @@ void SXWindowWrapper::SetTitle(const char *title){
 }
 
 bool SXWindowWrapper::PollEvent(Event &event){
-    [Handle processEvents];
+    [NSApplication sharedApplication];
+
+    SXApplication::ProcessEvents();
 
     if(!EventsQueue.empty()){
         event = EventsQueue.front();
