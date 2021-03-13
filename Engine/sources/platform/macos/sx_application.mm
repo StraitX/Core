@@ -21,6 +21,8 @@ void SXApplication::ProcessEvents(){
             s_KeyboardState[ToStraitXKeyCode([e keyCode])] = true;
         else if([e type] == NSEventTypeKeyUp)
             s_KeyboardState[ToStraitXKeyCode([e keyCode])] = false;
+        else if([e type] == NSEventTypeFlagsChanged)
+            s_KeyboardState[ToStraitXKeyCode([e keyCode])] = ([e modifierFlags] == 256) ? false : true;
         else;
     }
 
