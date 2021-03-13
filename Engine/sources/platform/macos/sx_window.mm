@@ -70,7 +70,10 @@
     m_Wrapper->OnKeyRelease(StraitX::MacOS::ToStraitXKeyCode([event keyCode]));
 }
 -(void)flagsChanged:(NSEvent*)event{
-    //m_Wrapper->OnKeyPress(StraitX::MacOS::ToStraitXKeyCode([event keyCode]));
+    if([event modifierFlags] == 256)//TODO: deal with this value
+        m_Wrapper->OnKeyRelease(StraitX::MacOS::ToStraitXKeyCode([event keyCode]));
+    else
+        m_Wrapper->OnKeyPress(StraitX::MacOS::ToStraitXKeyCode([event keyCode]));
 }
 
 -(void)scrollWheel:(NSEvent *)event{
