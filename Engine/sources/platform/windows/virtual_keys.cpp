@@ -31,10 +31,44 @@ Mouse::Button VirtualKeyToMouseButton(short button) {
 }
 
 short KeyCodeToVirtualKey(Keyboard::KeyCode code) {
-    if (code >= 65 && code <= 90 || code >= 48 && code <= 57)
-        return (short)code;
 	switch (code)
 	{
+    case StraitX::Keyboard::A: return 65;
+    case StraitX::Keyboard::B: return 66;
+    case StraitX::Keyboard::C: return 67;
+    case StraitX::Keyboard::D: return 68;
+    case StraitX::Keyboard::E: return 69;
+    case StraitX::Keyboard::F: return 70;
+    case StraitX::Keyboard::G: return 71;
+    case StraitX::Keyboard::H: return 72;
+    case StraitX::Keyboard::I: return 73;
+    case StraitX::Keyboard::J: return 74;
+    case StraitX::Keyboard::K: return 75;
+    case StraitX::Keyboard::L: return 76;
+    case StraitX::Keyboard::M: return 77;
+    case StraitX::Keyboard::N: return 78;
+    case StraitX::Keyboard::O: return 79;
+    case StraitX::Keyboard::P: return 80;
+    case StraitX::Keyboard::Q: return 81;
+    case StraitX::Keyboard::R: return 82;
+    case StraitX::Keyboard::S: return 83;
+    case StraitX::Keyboard::T: return 84;
+    case StraitX::Keyboard::U: return 85;
+    case StraitX::Keyboard::V: return 86;
+    case StraitX::Keyboard::W: return 87;
+    case StraitX::Keyboard::X: return 88;
+    case StraitX::Keyboard::Y: return 89;
+    case StraitX::Keyboard::Z: return 90;
+    case StraitX::Keyboard::Key_0: return 48;
+    case StraitX::Keyboard::Key_1: return 49;
+    case StraitX::Keyboard::Key_2: return 50;
+    case StraitX::Keyboard::Key_3: return 51;
+    case StraitX::Keyboard::Key_4: return 52;
+    case StraitX::Keyboard::Key_5: return 53;
+    case StraitX::Keyboard::Key_6: return 54;
+    case StraitX::Keyboard::Key_7: return 55;
+    case StraitX::Keyboard::Key_8: return 56;
+    case StraitX::Keyboard::Key_9: return 57;
     case StraitX::Keyboard::Unknown: return 0;
     case StraitX::Keyboard::LeftBracket: return VK_OEM_4;
     case StraitX::Keyboard::Backslash: return VK_OEM_5;
@@ -122,11 +156,45 @@ short KeyCodeToVirtualKey(Keyboard::KeyCode code) {
 }
 
 Keyboard::KeyCode VirtualKeyToKeyCode(short code) {
-    if (code >= 65 && code <= 90 || code >= 48 && code <= 57)
-        return (Keyboard::KeyCode)code;
     switch (code)
     {
     case 0: return StraitX::Keyboard::Unknown;
+    case 65: return StraitX::Keyboard::A;
+    case 66: return StraitX::Keyboard::B;
+    case 67: return StraitX::Keyboard::C;
+    case 68: return StraitX::Keyboard::D;
+    case 69: return StraitX::Keyboard::E;
+    case 70: return StraitX::Keyboard::F;
+    case 71: return StraitX::Keyboard::G;
+    case 72: return StraitX::Keyboard::H;
+    case 73: return StraitX::Keyboard::I;
+    case 74: return StraitX::Keyboard::J;
+    case 75: return StraitX::Keyboard::K;
+    case 76: return StraitX::Keyboard::L;
+    case 77: return StraitX::Keyboard::M;
+    case 78: return StraitX::Keyboard::N;
+    case 79: return StraitX::Keyboard::O;
+    case 80: return StraitX::Keyboard::P;
+    case 81: return StraitX::Keyboard::Q;
+    case 82: return StraitX::Keyboard::R;
+    case 83: return StraitX::Keyboard::S;
+    case 84: return StraitX::Keyboard::T;
+    case 85: return StraitX::Keyboard::U;
+    case 86: return StraitX::Keyboard::V;
+    case 87: return StraitX::Keyboard::W;
+    case 88: return StraitX::Keyboard::X;
+    case 89: return StraitX::Keyboard::Y;
+    case 90: return StraitX::Keyboard::Z;
+    case 48: return StraitX::Keyboard::Key_0;
+    case 49: return StraitX::Keyboard::Key_1;
+    case 50: return StraitX::Keyboard::Key_2;
+    case 51: return StraitX::Keyboard::Key_3;
+    case 52: return StraitX::Keyboard::Key_4;
+    case 53: return StraitX::Keyboard::Key_5;
+    case 54: return StraitX::Keyboard::Key_6;
+    case 55: return StraitX::Keyboard::Key_7;
+    case 56: return StraitX::Keyboard::Key_8;
+    case 57: return StraitX::Keyboard::Key_9;
     case VK_OEM_4: return StraitX::Keyboard::LeftBracket;
     case VK_OEM_5: return StraitX::Keyboard::Backslash;
     case VK_OEM_6: return StraitX::Keyboard::RightBracket;
