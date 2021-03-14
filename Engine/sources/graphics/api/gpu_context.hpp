@@ -84,7 +84,7 @@ protected:
 
     virtual void SubmitImpl() = 0;
 
-    virtual void CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0) = 0;
+    virtual void CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset) = 0;
 
     virtual void BindImpl(const GraphicsPipeline *pipeline) = 0;
 
@@ -144,7 +144,7 @@ sx_inline void GPUContext::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 
     CoreAssert(m_State == State::Recording,"Context should be in recording state before Copy()");
     CoreAssert(dst.Usage() & GPUBuffer::TransferDestination,"copy destination buffer should be created with GPUBuffer::TransferDestination usage flag");
 #endif
-    CopyImpl(src, dst, size);
+    CopyImpl(src, dst, size, dst_offset);
 }
 
 sx_inline void GPUContext::Bind(const GraphicsPipeline *pipeline){
