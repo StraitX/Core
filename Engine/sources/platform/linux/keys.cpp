@@ -244,6 +244,7 @@ Keyboard::KeyCode XKeyCodeToKeyCode(unsigned int keyCode){
         case XK_Control_R: return Keyboard::RightControl;
         case XK_Alt_R: return Keyboard::RightAlt;
         case XK_Super_R: return Keyboard::RightSuper;
+        case XK_Menu: return Keyboard::Menu;
         default: return Keyboard::Unknown;
     }
 }
