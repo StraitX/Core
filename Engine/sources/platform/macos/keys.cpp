@@ -67,6 +67,24 @@ Keyboard::KeyCode ToStraitXKeyCode(int key_code){
     case KEY_RIGHTSHIFHT: return Keyboard::RightShift;
     case KEY_RIGHTALT: return Keyboard::RightAlt;
     case KEY_RIGHTCTRL: return Keyboard::RightControl;
+    case KEY_NUMPAD_DEL: return Keyboard::Delete; // check this
+    case KEY_NUMPAD_MULT: return Keyboard::KeypadMultiply;
+    case KEY_NUMPAD_PLUS: return Keyboard::KeypadAdd;
+    case KEY_NUMLOCK: return Keyboard::NumLock;
+    case KEY_NUMPAD_DIV: return Keyboard::KeypadDivide;
+    case KEY_NUMPAD_ENTER: return Keyboard::KeypadEnter;
+    case KEY_NUMPAD_MINUS: return Keyboard::KeypadSubstract;
+    case KEY_NUMPAD_0: return Keyboard::Keypad_0;
+    case KEY_NUMPAD_1: return Keyboard::Keypad_1;
+    case KEY_NUMPAD_2: return Keyboard::Keypad_2;
+    case KEY_NUMPAD_3: return Keyboard::Keypad_3;
+    case KEY_NUMPAD_4: return Keyboard::Keypad_4;
+    case KEY_NUMPAD_5: return Keyboard::Keypad_5;
+    case KEY_NUMPAD_6: return Keyboard::Keypad_6;
+    case KEY_NUMPAD_7: return Keyboard::Keypad_7;
+    case KEY_NUMPAD_8: return Keyboard::Keypad_8;
+    case KEY_NUMPAD_9: return Keyboard::Keypad_9;
+    case KEY_MENU: return Keyboard::Menu;
     case KEY_HOME: return Keyboard::Home;
     case KEY_END: return Keyboard::End;
     case KEY_PAGEUP: return Keyboard::PageUp;
