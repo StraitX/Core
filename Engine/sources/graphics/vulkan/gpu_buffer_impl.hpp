@@ -13,10 +13,11 @@ struct GPUBufferImpl{
     VkBuffer &Handle;
     VkDeviceMemory &Memory;
     u32 &Size;
+    GPUBuffer::UsageType &Usage;
 
     constexpr GPUBufferImpl(GPUBuffer &buffer);
 
-    constexpr GPUBufferImpl(Vk::LogicalGPUImpl *const owner, VkBuffer &Handle, VkDeviceMemory &Memory, u32 &size);
+    constexpr GPUBufferImpl(Vk::LogicalGPUImpl *const owner, VkBuffer &Handle, VkDeviceMemory &Memory, u32 &size, GPUBuffer::UsageType &usage);
 
     sx_inline void Create(u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
 

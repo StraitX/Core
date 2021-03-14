@@ -6,7 +6,7 @@ namespace GL{
 
 void GPUBufferImpl::NewImpl(GPUBuffer &buffer, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
     buffer.m_Size = size;
-    (void)usage;
+    buffer.m_Usage = usage;
     
     glGenBuffers(1, &buffer.m_Handle.U32);
     glBindBuffer(GL_COPY_WRITE_BUFFER, buffer.m_Handle.U32);

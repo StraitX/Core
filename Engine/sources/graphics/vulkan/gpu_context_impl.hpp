@@ -29,29 +29,29 @@ public:
 
     ~GPUContextImpl();
 
-    virtual void Begin()override;
+    virtual void BeginImpl()override;
 
-    virtual void End()override;
+    virtual void EndImpl()override;
 
-    virtual void Submit()override;
+    virtual void SubmitImpl()override;
 
-    virtual void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0)override;
+    virtual void CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0)override;
 
-    virtual void Bind(const GraphicsPipeline *pipeline)override;
+    virtual void BindImpl(const GraphicsPipeline *pipeline)override;
 
-    virtual void BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer)override;
+    virtual void BeginRenderPassImpl(const RenderPass *pass, const Framebuffer *framebuffer)override;
 
-    virtual void EndRenderPass()override;
+    virtual void EndRenderPassImpl()override;
 
-    virtual void BindVertexBuffer(const GPUBuffer &buffer)override;
+    virtual void BindVertexBufferImpl(const GPUBuffer &buffer)override;
 
-    virtual void BindIndexBuffer(const GPUBuffer &buffer, IndicesType indices_type)override;
+    virtual void BindIndexBufferImpl(const GPUBuffer &buffer, IndicesType indices_type)override;
 
-    virtual void DrawIndexed(u32 indices_count)override;
+    virtual void DrawIndexedImpl(u32 indices_count)override;
 
-    virtual void ClearFramebufferColorAttachments(const Framebuffer *fb, const Vector4f &color)override;
+    virtual void ClearFramebufferColorAttachmentsImpl(const Framebuffer *fb, const Vector4f &color)override;
 
-    virtual void SwapFramebuffers(Swapchain *swapchain)override;
+    virtual void SwapFramebuffersImpl(Swapchain *swapchain)override;
 
     void CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst);
 

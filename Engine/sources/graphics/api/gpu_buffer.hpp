@@ -46,6 +46,7 @@ private:
     u32 m_Size = 0;
     GPUResourceHandle m_Handle = {};
     GPUResourceHandle m_BackingMemory = {};
+    UsageType m_Usage = {};
 
     friend class GraphicsAPILoader;
     friend class GL::GPUBufferImpl;
@@ -63,6 +64,8 @@ public:
     constexpr GPUResourceHandle Handle()const;
 
     constexpr u32 Size()const;
+
+    constexpr UsageType Usage()const;
 
 };
 
@@ -95,6 +98,10 @@ constexpr GPUResourceHandle GPUBuffer::Handle()const{
 
 constexpr u32 GPUBuffer::Size()const{
     return m_Size;
+}
+
+constexpr GPUBuffer::UsageType GPUBuffer::Usage()const{
+    return m_Usage;
 }
 
 }//namespace StraitX::

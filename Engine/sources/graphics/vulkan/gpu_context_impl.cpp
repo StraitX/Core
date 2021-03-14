@@ -40,8 +40,8 @@ GPUContextImpl::GPUContextImpl(Vk::LogicalGPUImpl *owner):
     CoreFunctionAssert(vkAllocateCommandBuffers(m_Owner->Handle, &buffer_info, &m_CmdBuffer), VK_SUCCESS, "Vk: GPUContextImpl: Failed to allocate command buffer");
 
     { // XXX: Signal first semaphore to avoid lock
-        Begin();
-        End();
+        BeginImpl();
+        EndImpl();
         SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer, ArrayPtr<const VkSemaphore>(), ArrayPtr<const VkSemaphore>(&m_SemaphoreRing[0].Handle, 1), VK_NULL_HANDLE);
     }
 }
@@ -55,7 +55,7 @@ GPUContextImpl::~GPUContextImpl(){
     vkDestroyCommandPool(m_Owner->Handle, m_CmdPool, nullptr);
 }
 
-void GPUContextImpl::Begin(){
+void GPUContextImpl::BeginImpl(){
     VkCommandBufferBeginInfo begin_info;
     begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     begin_info.pNext = nullptr;
@@ -65,16 +65,16 @@ void GPUContextImpl::Begin(){
     CoreFunctionAssert(vkBeginCommandBuffer(m_CmdBuffer, &begin_info), VK_SUCCESS, "Vk: GPUContext: Failed to begin CmdBuffer");
 }
 
-void GPUContextImpl::End(){
+void GPUContextImpl::EndImpl(){
     CoreFunctionAssert(vkEndCommandBuffer(m_CmdBuffer),VK_SUCCESS, "Vk: GPUContext: Failed to end CmdBuffer for submission");
 }
 
-void GPUContextImpl::Submit(){
+void GPUContextImpl::SubmitImpl(){
     auto semaphores = NextPair();
     SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer, ArrayPtr<const VkSemaphore>(&semaphores.First, 1), ArrayPtr<const VkSemaphore>(&semaphores.Second, 1), VK_NULL_HANDLE);
 }
 
-void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){  
+void GPUContextImpl::CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){  
     CoreAssert(size + dst_offset <= dst.Size(), "Vk: GPUContext: Copy: Dst Buffer overflow");
 
     VkBufferCopy copy;
@@ -87,7 +87,7 @@ void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, 
     CmdMemoryBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT);
 }
 
-void GPUContextImpl::Bind(const GraphicsPipeline *pipeline){
+void GPUContextImpl::BindImpl(const GraphicsPipeline *pipeline){
     auto *pipeline_impl = static_cast<const Vk::GraphicsPipelineImpl *>(pipeline);
     vkCmdBindPipeline(m_CmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_impl->Handle);
     
@@ -105,7 +105,7 @@ void GPUContextImpl::Bind(const GraphicsPipeline *pipeline){
     vkCmdBindDescriptorSets(m_CmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_impl->Layout, 0, 1, &pipeline_impl->Set, 0, nullptr);
 }
 
-void GPUContextImpl::BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer){
+void GPUContextImpl::BeginRenderPassImpl(const RenderPass *pass, const Framebuffer *framebuffer){
     m_RenderPass = static_cast<const Vk::RenderPassImpl*>(pass);
     m_Framebuffer = static_cast<const Vk::FramebufferImpl*>(framebuffer);
 
@@ -123,24 +123,24 @@ void GPUContextImpl::BeginRenderPass(const RenderPass *pass, const Framebuffer *
     vkCmdBeginRenderPass(m_CmdBuffer, &info, VK_SUBPASS_CONTENTS_INLINE);
 }
 
-void GPUContextImpl::EndRenderPass(){
+void GPUContextImpl::EndRenderPassImpl(){
     vkCmdEndRenderPass(m_CmdBuffer);
     m_RenderPass = nullptr;
     m_Framebuffer = nullptr;
 }
 
-void GPUContextImpl::BindVertexBuffer(const GPUBuffer &buffer){
+void GPUContextImpl::BindVertexBufferImpl(const GPUBuffer &buffer){
     VkBuffer handle = reinterpret_cast<VkBuffer>(buffer.Handle().U64);
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(m_CmdBuffer, 0, 1, &handle, &offset);
 }
 
-void GPUContextImpl::BindIndexBuffer(const GPUBuffer &buffer, IndicesType indices_type){
+void GPUContextImpl::BindIndexBufferImpl(const GPUBuffer &buffer, IndicesType indices_type){
     VkBuffer handle = reinterpret_cast<VkBuffer>(buffer.Handle().U64);
     vkCmdBindIndexBuffer(m_CmdBuffer, handle, 0, s_IndexTypeTable[(size_t)indices_type]);
 }
 
-void GPUContextImpl::DrawIndexed(u32 indices_count){
+void GPUContextImpl::DrawIndexedImpl(u32 indices_count){
     vkCmdDrawIndexed(m_CmdBuffer, indices_count, 1, 0, 0, 0);
 }
 
@@ -185,7 +185,7 @@ void GPUContextImpl::SubmitCmdBuffer(Vk::Queue queue, VkCommandBuffer cmd_buffer
     vkQueueWaitIdle(m_Owner->GraphicsQueue.Handle); // TODO Get rid of this // Context is Immediate mode for now :'-
 }
 
-void GPUContextImpl::ClearFramebufferColorAttachments(const Framebuffer *fb, const Vector4f &color){
+void GPUContextImpl::ClearFramebufferColorAttachmentsImpl(const Framebuffer *fb, const Vector4f &color){
     auto fb_impl = static_cast<const Vk::FramebufferImpl*>(fb);
     CoreAssert(m_Framebuffer != fb_impl, "Vk: GPUContextImpl: can't clear framebuffer which is being used in current render pass");
 
@@ -209,7 +209,7 @@ void GPUContextImpl::ClearFramebufferColorAttachments(const Framebuffer *fb, con
     CmdMemoryBarrier(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT);
 }
 
-void GPUContextImpl::SwapFramebuffers(Swapchain *swapchain){
+void GPUContextImpl::SwapFramebuffersImpl(Swapchain *swapchain){
     auto *swapchain_impl = static_cast<Vk::SwapchainImpl*>(swapchain);
     auto semaphores = NextPair();
 

@@ -6,18 +6,20 @@ namespace StraitX{
 namespace Vk{
 
 constexpr GPUBufferImpl::GPUBufferImpl(GPUBuffer &buffer):
-    GPUBufferImpl(static_cast<LogicalGPUImpl*>(buffer.m_Owner), reinterpret_cast<VkBuffer&>(buffer.m_Handle.U64), reinterpret_cast<VkDeviceMemory&>(buffer.m_BackingMemory.U64), buffer.m_Size)
+    GPUBufferImpl(static_cast<LogicalGPUImpl*>(buffer.m_Owner), reinterpret_cast<VkBuffer&>(buffer.m_Handle.U64), reinterpret_cast<VkDeviceMemory&>(buffer.m_BackingMemory.U64), buffer.m_Size, buffer.m_Usage)
 {}
 
-constexpr GPUBufferImpl::GPUBufferImpl(Vk::LogicalGPUImpl *const owner, VkBuffer &handle, VkDeviceMemory &memory, u32 &size):
+constexpr GPUBufferImpl::GPUBufferImpl(Vk::LogicalGPUImpl *const owner, VkBuffer &handle, VkDeviceMemory &memory, u32 &size, GPUBuffer::UsageType &usage):
     Owner(owner),
     Handle(handle),
     Memory(memory),
-    Size(size)
+    Size(size),
+    Usage(usage)
 {}
 
 void GPUBufferImpl::Create(u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
     Size = size;
+    Usage = usage;
 
     VkBufferCreateInfo info;
     info.sType                  = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;

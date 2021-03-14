@@ -18,53 +18,53 @@ GLenum GPUContextImpl::s_IndexTypeTable[] = {
     GL_UNSIGNED_INT
 };
 
-void GPUContextImpl::Begin(){
+void GPUContextImpl::BeginImpl(){
     (void)0;
 }
 
-void GPUContextImpl::End(){
+void GPUContextImpl::EndImpl(){
     m_Pipeline = nullptr;
 }
 
-void GPUContextImpl::Submit(){
+void GPUContextImpl::SubmitImpl(){
     glFlush();
 }
 
-void GPUContextImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){
+void GPUContextImpl::CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){
     CoreAssert(size + dst_offset <= dst.Size(), "GL: GPUContext: Copy: Dst Buffer overflow");
 
     glBindBuffer(GL_COPY_WRITE_BUFFER, dst.Handle().U32);
     glBufferSubData(GL_COPY_WRITE_BUFFER, dst_offset, size, src.Pointer());
 }
 
-void GPUContextImpl::Bind(const GraphicsPipeline *pipeline){
+void GPUContextImpl::BindImpl(const GraphicsPipeline *pipeline){
     m_Pipeline = static_cast<const GL::GraphicsPipelineImpl*>(pipeline);
     m_Pipeline->Bind();
 }
-void GPUContextImpl::BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer){
+void GPUContextImpl::BeginRenderPassImpl(const RenderPass *pass, const Framebuffer *framebuffer){
     (void)pass;
     m_Framebuffer = static_cast<const GL::FramebufferImpl *>(framebuffer);
     m_Framebuffer->Bind();
 }
 
-void GPUContextImpl::EndRenderPass(){
+void GPUContextImpl::EndRenderPassImpl(){
     m_Framebuffer = nullptr;
 }
 
-void GPUContextImpl::BindVertexBuffer(const GPUBuffer &buffer){
+void GPUContextImpl::BindVertexBufferImpl(const GPUBuffer &buffer){
     m_Pipeline->BindVertexBuffer(buffer.Handle().U32);
 }
 
-void GPUContextImpl::BindIndexBuffer(const GPUBuffer &buffer, IndicesType indices_type){
+void GPUContextImpl::BindIndexBufferImpl(const GPUBuffer &buffer, IndicesType indices_type){
     m_CurrentIndicesType = s_IndexTypeTable[(size_t)indices_type];
     m_Pipeline->BindIndexBuffer(buffer.Handle().U32);
 }
 
-void GPUContextImpl::DrawIndexed(u32 indices_count){
+void GPUContextImpl::DrawIndexedImpl(u32 indices_count){
     glDrawElements(m_Pipeline->Topology, indices_count, m_CurrentIndicesType, nullptr);
 }
 
-void GPUContextImpl::ClearFramebufferColorAttachments(const Framebuffer *framebuffer, const Vector4f &color){
+void GPUContextImpl::ClearFramebufferColorAttachmentsImpl(const Framebuffer *framebuffer, const Vector4f &color){
     CoreAssert(m_Framebuffer != framebuffer, "GL: GPUContextImpl: can't clear framebuffer which is being used in current render pass");
     static_cast<const GL::FramebufferImpl*>(framebuffer)->Bind();
     {
@@ -74,7 +74,7 @@ void GPUContextImpl::ClearFramebufferColorAttachments(const Framebuffer *framebu
     if (m_Framebuffer)m_Framebuffer->Bind();
 }
 
-void GPUContextImpl::SwapFramebuffers(Swapchain *swapchain){
+void GPUContextImpl::SwapFramebuffersImpl(Swapchain *swapchain){
     static_cast<GL::SwapchainImpl*>(swapchain)->m_Owner->SwapBuffers();
 }
 
