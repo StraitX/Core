@@ -52,13 +52,13 @@ GPUVendor ExtractGPUVendor(const char *string){
 
     String::ToLowerCase(str);
 
-    if(String::Contain(str, "nvidia"))
+    if(String::Contains(str, "nvidia"))
         return GPUVendor::Nvidia;
-    if(String::Contain(str, "intel"))
+    if(String::Contains(str, "intel"))
         return GPUVendor::Intel;
-    if(String::Contain(str, "amd"))
+    if(String::Contains(str, "amd"))
         return GPUVendor::AMD;
-    if(String::Contain(str, "microsoft"))
+    if(String::Contains(str, "microsoft"))
         return GPUVendor::Microsoft;
 
     return GPUVendor::Unknown;
