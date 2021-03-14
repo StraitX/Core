@@ -54,10 +54,12 @@ Keyboard::KeyCode ToStraitXKeyCode(int key_code){
     case KEY_PERIOD: return Keyboard::Period;
     case KEY_TAB: return Keyboard::Tab;
     case KEY_SPACE: return Keyboard::Space;
-    case KEY_BACKAPOSTROPHE: return Keyboard::Quote;
+    case KEY_BACKAPOSTROPHE: return Keyboard::GraveAccent;
+    case KEY_DELETE_BACKSPACE: return Keyboard::Backspace;
     case KEY_DELETE: return Keyboard::Delete;
     case KEY_ESCAPE: return Keyboard::Escape;
-    case KEY_COMMAND: return Keyboard::LeftSuper;
+    case KEY_RIGHTCOMMAND: return Keyboard::RightSuper;
+    case KEY_LEFTCOMMAND: return Keyboard::LeftSuper;
     case KEY_LEFTSHIFT: return Keyboard::LeftShift;
     case KEY_CAPSLOCK: return Keyboard::CapsLock;
     case KEY_LEFTALT: return Keyboard::LeftAlt;
