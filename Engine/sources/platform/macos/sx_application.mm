@@ -16,7 +16,8 @@ void SXApplication::ProcessEvents(){
                                             untilDate:nil
                                                inMode:NSDefaultRunLoopMode
                                         dequeue:YES]) != nil){
-        [NSApp sendEvent:e];
+        if([e type] != NSEventTypePressure)
+            [NSApp sendEvent:e];
 
         if([e type] == NSEventTypeKeyDown)
             s_KeyboardState[ToStraitXKeyCode([e keyCode])] = true;
