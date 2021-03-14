@@ -28,8 +28,8 @@ public:
     template<typename T, typename...Args>
     static void Printf(const char *fmt, T arg,const Args&...args){
         // i do not belive in buffer overflow
-        char buffer[256];
-        Memory::Set(buffer,0,256);
+        char buffer[1024];
+        Memory::Set(buffer,0,1024);
         BufferPrintf(buffer,fmt,arg,args...);
         Printf(buffer);
     }

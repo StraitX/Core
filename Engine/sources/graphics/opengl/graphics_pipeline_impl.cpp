@@ -158,11 +158,8 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
             int got = 0;
             glGetShaderSource(shader_impl->Handle,shader_impl->SourcesLength, &got, sources);
             sources[shader_impl->SourcesLength] = 0;
-
-            LogInfo("Sources: %",sources);
             
             for(size_t i = 0;(sources = String::Find(sources,"uniform")); ++i){
-                LogInfo("Size %, index %",shader_impl->UniformBindings.Size(),i);
                 sources += 7;
                 while(*sources == ' ')
                     ++sources;

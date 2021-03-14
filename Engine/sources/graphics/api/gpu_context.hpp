@@ -205,7 +205,7 @@ sx_inline void GPUContext::DrawIndexed(u32 indices_count){
 
 sx_inline void GPUContext::ClearFramebufferColorAttachments(const Framebuffer *framebuffer, const Vector4f &color){
 #ifdef SX_DEBUG
-    CoreAssert(m_State != State::InPass, "you can't issue draw call inside of the render pass");
+    CoreAssert(m_State != State::InPass, "you can't clear framebuffer attachments inside of the render pass");
     CoreAssert(framebuffer, "Framebuffer* should not be nullptr");
 #endif
     ClearFramebufferColorAttachmentsImpl(framebuffer, color);
