@@ -13,6 +13,9 @@ namespace StraitX{
 
 class GraphicsAPILoader;
 
+//took it from head
+constexpr size_t MaxUniformBindings = 8;
+
 class Shader: public NonCopyable, public Validable{
 public:
     typedef u8 Types;

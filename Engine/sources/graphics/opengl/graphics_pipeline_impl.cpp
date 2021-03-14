@@ -1,6 +1,7 @@
 #include <new>
 #include "platform/memory.hpp"
 #include "core/log.hpp"
+#include "core/string.hpp"
 #include "graphics/opengl/shader_impl.hpp"
 #include "graphics/opengl/graphics_pipeline_impl.hpp"
 #include "graphics/opengl/graphics_api_impl.hpp"
@@ -148,6 +149,36 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
         LogError("GL: GraphicsPipeline: Shader Linkage failed: %", log);
 
         Valid = false;
+    }
+
+    for(const auto *shader: props.Shaders){
+        const auto *shader_impl = static_cast<const GL::ShaderImpl*>(shader);
+        if(shader_impl->RequiresPreprocess()){
+            char *sources = (char *)alloca(shader_impl->SourcesLength + 1);
+            int got = 0;
+            glGetShaderSource(shader_impl->Handle,shader_impl->SourcesLength, &got, sources);
+            sources[shader_impl->SourcesLength] = 0;
+
+            LogInfo("Sources: %",sources);
+            
+            for(size_t i = 0;(sources = String::Find(sources,"uniform")); ++i){
+                LogInfo("Size %, index %",shader_impl->UniformBindings.Size(),i);
+                sources += 7;
+                while(*sources == ' ')
+                    ++sources;
+
+                size_t name_len = 0;
+                for(; *(sources + name_len) != '{' && *(sources + name_len) != ' ' && *(sources + name_len) != '\n';)
+                    ++name_len;
+                
+                char *name = (char*)alloca(name_len + 1);
+                Memory::Copy(sources, name, name_len);
+                name[name_len] = 0;
+
+                auto index = glGetUniformBlockIndex(Program, name);
+                glUniformBlockBinding(Program,index, shader_impl->UniformBindings[i]);
+            }
+        }
     }
 }
 
