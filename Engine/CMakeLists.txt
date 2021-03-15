@@ -90,6 +90,7 @@ set(SOURCES_GRAPHICS_API
 set(SOURCES_GRAPHICS_I
     ${SOURCES_GRAPHICS_API}
     ${SOURCES_DIR}/graphics/color.cpp
+    ${SOURCES_DIR}/graphics/image_loader.cpp
 )
 
 set(SOURCES_SERVERS
