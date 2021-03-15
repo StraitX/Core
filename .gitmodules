@@ -4,3 +4,6 @@
 [submodule "Engine/thirdparty/vulkan-sdk"]
 	path = Engine/thirdparty/vulkan-sdk
 	url = https://github.com/E1Hephaestus/vulkan-sdk
+[submodule "Engine/thirdparty/stb_image"]
+	path = Engine/thirdparty/stb_image
+	url = https://github.com/E1Hephaestus/stb_image

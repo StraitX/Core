@@ -102,16 +102,6 @@ set(SOURCES_MAIN
     ${SOURCES_DIR}/main/main.cpp
 )
 
-set(LIBS_ENGINE
-    glad
-)
-
-set(INCLUDES
-    ${SOURCES_DIR}
-    ${THIRDPARTY_DIR}/glad/include
-    ${THIRDPARTY_DIR}/vulkan-sdk/include
-)
-
 if(STRAITX_PLATFORM_LINUX)
 
     set(SOURCES_PLATFORM_D
@@ -211,6 +201,19 @@ endif()
 
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/glad)
+add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/stb_image)
+
+set(INCLUDES
+    ${SOURCES_DIR}
+    ${THIRDPARTY_DIR}/glad/include
+    ${THIRDPARTY_DIR}/vulkan-sdk/include
+    ${THIRDPARTY_DIR}/stb_image
+)
+
+set(LIBS_ENGINE
+    glad
+    stb_image
+)
 
 add_library(StraitX STATIC 
     ${SOURCES_PLATFORM_D} 
