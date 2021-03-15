@@ -19,7 +19,7 @@ constexpr T dot(const Vector3<T> &left, const Vector3<T> &right){
 }
 
 template <typename T>
-constexpr sx_inline T dot(const Vector4<T> &left, const Vector4<T> &right){
+constexpr T dot(const Vector4<T> &left, const Vector4<T> &right){
     return left.x * right.x + left.y * right.y + left.z * right.z + left.w * right.w;
 }
 
