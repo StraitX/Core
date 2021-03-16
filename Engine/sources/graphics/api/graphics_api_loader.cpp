@@ -52,6 +52,8 @@ Result GraphicsAPILoader::Load(GraphicsAPI::API api){
 
     GPUTexture::s_VTable = api_vtable->GPUTextureVTable;
 
+    Sampler::s_VTable = api_vtable->SamplerVTable;
+
     Shader::s_VTable = api_vtable->ShaderVTable;
 
     RenderPass::s_VTable = api_vtable->RenderPassVTable;
