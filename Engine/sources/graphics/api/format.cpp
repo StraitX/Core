@@ -32,4 +32,8 @@ bool IsColorFormat(TextureFormat format){
     return !IsDepthFormat(format);
 }
 
+TextureFormat ToTextureFormat(PixelFormat format){
+    return TextureFormat::RGBA8;
+}
+
 }//namespace StraitX::

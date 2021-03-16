@@ -25,6 +25,8 @@ bool IsDepthFormat(TextureFormat format);
 
 bool IsColorFormat(TextureFormat format);
 
+TextureFormat ToTextureFormat(PixelFormat format);
+
 }//namespace StraitX::
 
 #endif//STRAITX_FORMAT_HPP
