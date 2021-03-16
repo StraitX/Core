@@ -9,11 +9,11 @@ namespace StraitX{
 
 class CPUTexture: private CPUBuffer{
 private:
-    PixelFormat m_Format = {};
+    TextureFormat m_Format = {};
     u32 m_Width = 0;
     u32 m_Height = 0;
 public:
-    sx_inline void New(u32 width, u32 height, PixelFormat format);
+    sx_inline void New(u32 width, u32 height, TextureFormat format);
 
     sx_inline void Delete();
 
@@ -25,10 +25,10 @@ public:
 
     constexpr Vector2u Size()const;
 
-    constexpr PixelFormat Format()const;
+    constexpr TextureFormat Format()const;
 };
 
-sx_inline void CPUTexture::New(u32 width, u32 height, PixelFormat format){
+sx_inline void CPUTexture::New(u32 width, u32 height, TextureFormat format){
     CPUBuffer::New(width * height * GetPixelSize(format));
     m_Format = format;
     m_Width = width;
@@ -55,7 +55,7 @@ constexpr Vector2u CPUTexture::Size()const{
     return {m_Width, m_Height};
 }
 
-constexpr PixelFormat CPUTexture::Format()const{
+constexpr TextureFormat CPUTexture::Format()const{
     return m_Format;
 }
 

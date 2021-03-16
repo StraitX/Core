@@ -5,11 +5,25 @@
 
 namespace StraitX{
 
-enum class PixelFormat{
+enum class PixelFormat: u8{
     RGBA8 = 1 
 };
 
+enum class TextureFormat : u8{
+    Unknown = 0,
+    RGBA8,
+    Depth24Stencil8,
+    BGRA8
+};
+
 size_t GetPixelSize(PixelFormat format);
+
+size_t GetPixelSize(TextureFormat format);
+
+
+bool IsDepthFormat(TextureFormat format);
+
+bool IsColorFormat(TextureFormat format);
 
 }//namespace StraitX::
 
