@@ -47,6 +47,7 @@ set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/swapchain_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/cpu_buffer_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/gpu_texture_impl.cpp
+    ${SOURCES_DIR}/graphics/vulkan/sampler_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/shader_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/render_pass_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/graphics_pipeline_impl.cpp
@@ -63,6 +64,7 @@ set(SOURCES_GRAPHICS_OPENGL
     ${SOURCES_DIR}/graphics/opengl/swapchain_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/cpu_buffer_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/gpu_texture_impl.cpp
+    ${SOURCES_DIR}/graphics/opengl/sampler_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/shader_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/render_pass_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/graphics_pipeline_impl.cpp
@@ -82,6 +84,7 @@ set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/swapchain.cpp
     ${SOURCES_DIR}/graphics/api/cpu_buffer.cpp
     ${SOURCES_DIR}/graphics/api/gpu_texture.cpp
+    ${SOURCES_DIR}/graphics/api/sampler.cpp
     ${SOURCES_DIR}/graphics/api/shader.cpp
     ${SOURCES_DIR}/graphics/api/render_pass.cpp
     ${SOURCES_DIR}/graphics/api/graphics_pipeline.cpp

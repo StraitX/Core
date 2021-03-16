@@ -7,6 +7,7 @@
 #include "graphics/vulkan/gpu_buffer_impl.hpp"
 #include "graphics/vulkan/cpu_buffer_impl.hpp"
 #include "graphics/vulkan/gpu_texture_impl.hpp"
+#include "graphics/vulkan/sampler_impl.hpp"
 #include "graphics/vulkan/shader_impl.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
@@ -22,6 +23,7 @@ GraphicsAPIVtable VulkanVTable = {
     {&Vk::GPUBufferImpl::NewImpl, &Vk::GPUBufferImpl::DeleteImpl},
     {&Vk::CPUBufferImpl::NewImpl, &Vk::CPUBufferImpl::DeleteImpl},
     {&Vk::GPUTextureImpl::NewImpl, &Vk::GPUTextureImpl::DeleteImpl},
+    {&Vk::SamplerImpl::NewImpl, &Vk::SamplerImpl::DeleteImpl},
     {&Vk::ShaderImpl::NewImpl, &Vk::ShaderImpl::DeleteImpl},
     {&Vk::RenderPassImpl::NewImpl, &Vk::RenderPassImpl::DeleteImpl},
     {&Vk::GraphicsPipelineImpl::NewImpl, &Vk::GraphicsPipelineImpl::DeleteImpl},

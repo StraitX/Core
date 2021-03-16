@@ -8,6 +8,7 @@
 #include "graphics/api/gpu_buffer.hpp"
 #include "graphics/api/cpu_buffer.hpp"
 #include "graphics/api/gpu_texture.hpp"
+#include "graphics/api/sampler.hpp"
 #include "graphics/api/shader.hpp"
 #include "graphics/api/render_pass.hpp"
 #include "graphics/api/graphics_pipeline.hpp"
@@ -29,6 +30,8 @@ struct GraphicsAPIVtable{
     CPUBuffer::VTable CPUBufferVTable = {};
 
     GPUTexture::VTable GPUTextureVTable = {};
+
+    Sampler::VTable SamplerVTable = {};
 
     Shader::VTable ShaderVTable = {};
 
