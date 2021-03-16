@@ -9,23 +9,26 @@ namespace GL{
 GLint InternalFormatTable[]={
     0,
     GL_RGBA8,
-    GL_DEPTH_STENCIL
+    GL_DEPTH_STENCIL,
+    GL_BGRA
 };
 
 GLenum FormatTable[] = {
     0,
     GL_RGBA,
-    GL_DEPTH_STENCIL
+    GL_DEPTH_STENCIL,
+    GL_BGRA
 };
 
 GLenum TypeTable[] = {
     0,
     GL_UNSIGNED_BYTE,
+    GL_UNSIGNED_BYTE,
     GL_UNSIGNED_BYTE
 };
 
-void GPUTextureImpl::NewImpl(GPUTexture &texture, GPUTexture::Format format, GPUTexture::Usage usage, u32 width, u32 height){
-    CoreAssert(format != GPUTexture::Format::Unknown,"GPUTexture: Can't be created with Format::Unknown");
+void GPUTextureImpl::NewImpl(GPUTexture &texture, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
+    CoreAssert(format != TextureFormat::Unknown,"GPUTexture: Can't be created with Format::Unknown");
 
     texture.m_Width = width;
     texture.m_Height = height;

@@ -18,24 +18,24 @@ struct GPUTextureImpl{
     u32 &Width;
     u32 &Height;
     GPUTexture::Layout &Layout;
-    GPUTexture::Format &Format;
+    TextureFormat &Format;
     GPUTexture::Usage  &Usage;
 
     sx_inline GPUTextureImpl(GPUTexture &texture);
 
-    void Create(GPUTexture::Format format, GPUTexture::Usage usage, u32 width, u32 height);
+    void Create(TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
 
-    void CreateFromImage(VkImage image, GPUTexture::Format format, u32 width, u32 height);
+    void CreateFromImage(VkImage image, TextureFormat format, u32 width, u32 height);
 
     void Destroy();
 
-    static VkImageView CreateImageView(const Vk::LogicalGPUImpl *owner, VkImage image, GPUTexture::Format format, u32 width, u32 height);
+    static VkImageView CreateImageView(const Vk::LogicalGPUImpl *owner, VkImage image, TextureFormat format, u32 width, u32 height);
 
     static void DestroyImageView(const Vk::LogicalGPUImpl *owner, VkImageView view);
 
     static VkSampleCountFlagBits ToVkSampleCount(SamplePoints samples);
 
-    static void NewImpl(GPUTexture &texture, GPUTexture::Format format, GPUTexture::Usage usage, u32 width, u32 height);
+    static void NewImpl(GPUTexture &texture, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
 
     static void DeleteImpl(GPUTexture &texture);
 

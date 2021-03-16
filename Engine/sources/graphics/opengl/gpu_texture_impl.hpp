@@ -8,7 +8,7 @@ namespace GL{
 
 struct GPUTextureImpl{
 
-    static void NewImpl(GPUTexture &texture, GPUTexture::Format format, GPUTexture::Usage usage, u32 width, u32 height);
+    static void NewImpl(GPUTexture &texture, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
 
     static void DeleteImpl(GPUTexture &texture);
 

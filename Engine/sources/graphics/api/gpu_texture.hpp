@@ -4,6 +4,7 @@
 #include "core/noncopyable.hpp"
 #include "core/math/vector2.hpp"
 #include "graphics/api/gpu_configuration.hpp"
+#include "graphics/api/format.hpp"
 #include "graphics/api/cpu_buffer.hpp"
 #include "graphics/api/logical_gpu.hpp"
 
@@ -15,6 +16,14 @@ class GPUTextureImpl;
 
 namespace Vk{
 class GPUTextureImpl;
+}//namespace Vk::
+
+namespace GL{
+class GPUContextImpl;
+}//namespace GL::
+
+namespace Vk{
+class GPUContextImpl;
 }//namespace Vk::
 
 enum class SamplePoints{
@@ -36,7 +45,8 @@ public:
         DepthStencilAttachmentOptimal,
         TransferSrcOptimal,
         TransferDstOptimal,
-        PresentSrcOptimal
+        PresentSrcOptimal,
+        ShaderReadOnlyOptimal
     };
 
     using Usage = u32;
@@ -48,13 +58,8 @@ public:
         ColorAttachmentOptimal  = 0x00000010,
         DepthStencilOptimal     = 0x00000020,
     };
-    enum class Format : u8{
-        Unknown = 0,
-        RGBA8,
-        Depth24Stencil8
-    };
     struct VTable{
-        using NewProc    = void (*)(GPUTexture &texture, Format format, Usage usage, u32 width, u32 height);
+        using NewProc    = void (*)(GPUTexture &texture, TextureFormat format, Usage usage, u32 width, u32 height);
         using DeleteProc = void (*)(GPUTexture &texture);
 
         NewProc    New    = nullptr;
@@ -70,17 +75,19 @@ private:
     u32 m_Width  = 0;
     u32 m_Height = 0;
     Layout m_Layout = Layout::Undefined;
-    Format m_Format = Format::Unknown;
+    TextureFormat m_Format = TextureFormat::Unknown;
     Usage m_Usage = {};
 
     friend class GraphicsAPILoader;
     friend class Vk::GPUTextureImpl;
     friend class GL::GPUTextureImpl;
+    friend class Vk::GPUContextImpl;
+    friend class GL::GPUContextImpl;
 public:
 
     sx_inline GPUTexture();
 
-    sx_inline void New(Format format, Usage usage, u32 width, u32 height);
+    sx_inline void New(TextureFormat format, Usage usage, u32 width, u32 height);
 
     sx_inline void Delete();
 
@@ -90,20 +97,19 @@ public:
 
     constexpr Vector2u Size()const;
 
-    constexpr Format GetFormat()const;
+    constexpr TextureFormat GetFormat()const;
 
     constexpr Layout GetLayout()const;
 
-    static bool IsDepthFormat(GPUTexture::Format format);
+    constexpr Usage GetUsage()const;
 
-    static bool IsColorFormat(GPUTexture::Format format);
 };
 
 sx_inline GPUTexture::GPUTexture():
     m_Owner(&LogicalGPU::Instance())
 {}
 
-sx_inline void GPUTexture::New(Format format, Usage usage, u32 width, u32 height){
+sx_inline void GPUTexture::New(TextureFormat format, Usage usage, u32 width, u32 height){
     s_VTable.New(*this, format, usage, width, height);
 }
 
@@ -123,12 +129,16 @@ constexpr Vector2u GPUTexture::Size()const{
     return {m_Width, m_Height}; 
 }
 
-constexpr GPUTexture::Format GPUTexture::GetFormat()const{ 
+constexpr TextureFormat GPUTexture::GetFormat()const{ 
     return m_Format;
 }
 
 constexpr GPUTexture::Layout GPUTexture::GetLayout()const{
     return m_Layout;
+}
+
+constexpr GPUTexture::Usage GPUTexture::GetUsage()const{
+    return m_Usage;
 }
 
 }//namespace StraitX::
