@@ -14,7 +14,7 @@ struct AttachmentDescription{
     GPUTexture::Layout InitialLayout = GPUTexture::Layout::Undefined;
     GPUTexture::Layout FinalLayout = GPUTexture::Layout::Undefined;
     GPUTexture::Layout InPassLayout = GPUTexture::Layout::Undefined;
-    GPUTexture::Format Format = GPUTexture::Format::Unknown;
+    TextureFormat Format = TextureFormat::Unknown;
     SamplePoints Samples = SamplePoints::Samples_1;
 };
 

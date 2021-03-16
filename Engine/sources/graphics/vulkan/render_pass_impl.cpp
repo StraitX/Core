@@ -18,7 +18,7 @@ RenderPassImpl::RenderPassImpl(const LogicalGPU &owner, const RenderPassProperti
         //also fill attachment desctiptions array
         Attachments.Push(props.Attachments[i]);
 
-        if(GPUTexture::IsDepthFormat(props.Attachments[i].Format))
+        if(IsDepthFormat(props.Attachments[i].Format))
             DepthIndex = i;
 
         attachments[i].flags = 0;
