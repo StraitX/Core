@@ -72,6 +72,7 @@ set(SOURCES_GRAPHICS_OPENGL
 )
 
 set(SOURCES_GRAPHICS_API
+    ${SOURCES_DIR}/graphics/api/format.cpp
     ${SOURCES_DIR}/graphics/api/graphics_api_loader.cpp
     ${SOURCES_DIR}/graphics/api/graphics_api.cpp
     ${SOURCES_DIR}/graphics/api/gpu_configuration.cpp
@@ -91,6 +92,7 @@ set(SOURCES_GRAPHICS_I
     ${SOURCES_GRAPHICS_API}
     ${SOURCES_DIR}/graphics/color.cpp
     ${SOURCES_DIR}/graphics/image_loader.cpp
+    ${SOURCES_DIR}/graphics/image.cpp
 )
 
 set(SOURCES_SERVERS
