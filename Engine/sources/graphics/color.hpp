@@ -6,10 +6,10 @@
 namespace StraitX{
 
 struct Color{
-    float R = 0;
-    float G = 0;
-    float B = 0;
-    float A = 1;
+    float R = 0.0f;
+    float G = 0.0f;
+    float B = 0.0f;
+    float A = 1.0f;
 
     constexpr Color() = default;
 
