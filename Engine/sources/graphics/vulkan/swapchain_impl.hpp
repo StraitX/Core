@@ -20,7 +20,7 @@ private:
     VulkanSurface m_Surface;
     Vector2u m_Size = {0, 0}; 
 
-    VkFormat m_Format = VK_FORMAT_UNDEFINED;
+    VkFormat m_Format = VK_FORMAT_B8G8R8A8_UNORM;
     VkColorSpaceKHR m_Colorspace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
 
     VkSwapchainKHR m_Handle = VK_NULL_HANDLE; 
@@ -45,7 +45,7 @@ public:
 
     static void DeleteImpl(Swapchain *swapchain);
 private:
-    void InitializeFramebuffers(GPUTexture::Format images_format);
+    void InitializeFramebuffers(VkFormat images_format);
 
     void FinalizeFramebuffers();
 public:

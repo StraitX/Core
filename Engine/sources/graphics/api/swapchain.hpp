@@ -13,7 +13,6 @@ constexpr size_t MaxFramebuffers = 3;
 
 struct SwapchainProperties{
     u32 FramebuffersCount = 2;
-    GPUTexture::Format FramebufferFormat = GPUTexture::Format::Unknown;
     SamplePoints FramebufferSamples = SamplePoints::Samples_1;
 };
 

@@ -11,13 +11,13 @@ static AttachmentDescription TempAttachment = {
     GPUTexture::Layout::PresentSrcOptimal,
     GPUTexture::Layout::PresentSrcOptimal,
     GPUTexture::Layout::ColorAttachmentOptimal,
-    GPUTexture::Format::Unknown,
+    TextureFormat::Unknown,
     SamplePoints::Samples_1
 };
 
 static RenderPassProperties ToFramebufferProperties(const SwapchainProperties &props){
     //XXX not thread-safe
-    TempAttachment.Format = props.FramebufferFormat;
+    TempAttachment.Format = TextureFormat::RGBA8;
     TempAttachment.Samples = props.FramebufferSamples; 
     return {{&TempAttachment, 1}};
 }

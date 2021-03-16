@@ -35,13 +35,13 @@ static AttachmentDescription TempAttachment = {
     GPUTexture::Layout::PresentSrcOptimal,
     GPUTexture::Layout::PresentSrcOptimal,
     GPUTexture::Layout::ColorAttachmentOptimal,
-    GPUTexture::Format::Unknown,
+    TextureFormat::Unknown,
     SamplePoints::Samples_1
 };
 
 static RenderPassProperties ToFramebufferProperties(const SwapchainProperties &props){
     //XXX not thread-safe
-    TempAttachment.Format = props.FramebufferFormat;
+    TempAttachment.Format = TextureFormat::RGBA8;
     TempAttachment.Samples = props.FramebufferSamples; 
     return {{&TempAttachment, 1}};
 }
@@ -50,7 +50,6 @@ static RenderPassProperties ToFramebufferProperties(const SwapchainProperties &p
 SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props):
     m_Owner(static_cast<Vk::LogicalGPUImpl *>(&gpu)),
     m_Colorspace(DesiredColorSpace),
-    m_Format(GPUTextureImpl::s_FormatTable[(size_t)props.FramebufferFormat]),
     m_AcquireFence(m_Owner->Handle),
     m_ImagesCount(props.FramebuffersCount),
     m_FramebufferPass(gpu, ToFramebufferProperties(props))
@@ -103,7 +102,7 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
 
     CoreFunctionAssert(vkCreateSwapchainKHR(m_Owner->Handle, &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: SwapchainImpl: Can't create a swapchain");
 
-    InitializeFramebuffers(props.FramebufferFormat);
+    InitializeFramebuffers(m_Format);
 
     // First Acquire is synched
     vkAcquireNextImageKHR(m_Owner->Handle, m_Handle, 0, VK_NULL_HANDLE, m_AcquireFence.Handle, &m_CurrentImage);
@@ -137,7 +136,7 @@ void SwapchainImpl::DeleteImpl(Swapchain *swapchain){
     Memory::Free(swapchain);
 }
 
-void SwapchainImpl::InitializeFramebuffers(GPUTexture::Format format){
+void SwapchainImpl::InitializeFramebuffers(VkFormat format){
     u32 images_count = 0;
     vkGetSwapchainImagesKHR(m_Owner->Handle, m_Handle, &images_count, nullptr);
     CoreAssert(images_count <= MaxFramebuffers, "Vk: Swapchain: unsupported amount of Images");
@@ -149,7 +148,7 @@ void SwapchainImpl::InitializeFramebuffers(GPUTexture::Format format){
     for(u32 i = 0; i<images_count; ++i){
         m_Images.Emplace();
         GPUTextureImpl impl(m_Images[i]);
-        impl.CreateFromImage(images[i], format, m_Size.x, m_Size.y);
+        impl.CreateFromImage(images[i], TextureFormat::BGRA8, m_Size.x, m_Size.y);
 
         const GPUTexture *tp = &m_Images[i];
         FramebufferProperties props;
