@@ -37,6 +37,8 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
 
     virtual void Bind(size_t index, const GPUBuffer &uniform_buffer)override;
 
+    virtual void Bind(size_t index, const GPUTexture &texture, const Sampler &sampler)override;
+
     static GraphicsPipeline * NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props);
 
     static void DeleteImpl(GraphicsPipeline *pipeline);

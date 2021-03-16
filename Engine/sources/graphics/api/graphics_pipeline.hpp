@@ -8,6 +8,8 @@
 #include "graphics/api/gpu_buffer.hpp"
 #include "graphics/api/logical_gpu.hpp"
 #include "graphics/api/render_pass.hpp"
+#include "graphics/api/gpu_texture.hpp"
+#include "graphics/api/sampler.hpp"
 
 namespace StraitX{
 
@@ -31,7 +33,7 @@ enum class VertexAttribute{
 
 enum class ShaderBindingType{
     UniformBuffer = 0,
-    //Sampler       = 1
+    Sampler       = 1
 };
 
 struct ShaderBinding{
@@ -123,6 +125,8 @@ public:
     sx_inline static void Delete(GraphicsPipeline *pipeline);
 
     virtual void Bind(size_t index, const GPUBuffer &uniform_buffer) = 0;
+
+    virtual void Bind(size_t index, const GPUTexture &texture, const Sampler &sampler) = 0;
 
     static size_t CalculateStride(const ArrayPtr<const VertexAttribute> &attributes);
 

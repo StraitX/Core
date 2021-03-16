@@ -3,6 +3,7 @@
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
 #include "graphics/vulkan/shader_impl.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
+#include "graphics/vulkan/gpu_texture_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -52,7 +53,8 @@ VkBlendOp GraphicsPipelineImpl::s_BlendFunctionTable[] = {
 };
 
 VkDescriptorType GraphicsPipelineImpl::s_DescriptorTypeTable[] = {
-    VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
+    VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+    VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
 };
 
 GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props):
@@ -321,6 +323,27 @@ void GraphicsPipelineImpl::Bind(size_t index, const GPUBuffer &uniform_buffer){
     write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     write.pImageInfo = nullptr;
     write.pBufferInfo = &buffer;
+    write.pTexelBufferView = nullptr;
+
+    vkUpdateDescriptorSets(Owner->Handle, 1, &write, 0, nullptr);
+}
+
+void GraphicsPipelineImpl::Bind(size_t index, const GPUTexture &texture, const Sampler &sampler){
+    VkDescriptorImageInfo image;
+    image.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;//GPUTextureImpl::s_LayoutTable[(size_t)texture.GetLayout()];
+    image.imageView = reinterpret_cast<VkImageView>(texture.ViewHandle().U64);
+    image.sampler = reinterpret_cast<VkSampler>(sampler.Handle().U64);
+
+    VkWriteDescriptorSet write;
+    write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    write.pNext = nullptr;
+    write.dstSet = Set;
+    write.dstBinding = index;
+    write.dstArrayElement = 0;
+    write.descriptorCount = 1;
+    write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    write.pImageInfo = &image;
+    write.pBufferInfo = nullptr;
     write.pTexelBufferView = nullptr;
 
     vkUpdateDescriptorSets(Owner->Handle, 1, &write, 0, nullptr);

@@ -3,6 +3,7 @@
 #include "core/log.hpp"
 #include "core/string.hpp"
 #include "graphics/opengl/shader_impl.hpp"
+#include "graphics/opengl/debug.hpp"
 #include "graphics/opengl/graphics_pipeline_impl.hpp"
 #include "graphics/opengl/graphics_api_impl.hpp"
 
@@ -14,6 +15,10 @@ void DescriptorSet::Bind() const{
         switch (Bindings[i].Type){
         case ShaderBindingType::UniformBuffer: 
             glBindBufferBase(GL_UNIFORM_BUFFER, i, Bindings[i].Data.UniformBuffer); 
+            break;
+        case ShaderBindingType::Sampler:
+            glBindTextureUnit(i,Bindings[i].Data.Texture.Texture);
+            glBindSampler(Bindings[i].Data.Texture.Sampler, i);
             break;
         }
     }
@@ -103,10 +108,16 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     (void)owner;
 
     for(size_t i = 0; i<props.ShaderBindings.Size(); ++i){
-        if(props.ShaderBindings[i].Type == ShaderBindingType::UniformBuffer)
-            Set.Bindings.Push({props.ShaderBindings[i].Type, 0/*Means no buffer is currently bound*/});
-        else
+        switch(props.ShaderBindings[i].Type){
+            //push without any bindings
+        case ShaderBindingType::UniformBuffer:
+            Set.Bindings.Push({props.ShaderBindings[i].Type, 0, 0});
+        case ShaderBindingType::Sampler:
+            Set.Bindings.Push({props.ShaderBindings[i].Type, 0});
+            break;
+        default:
             CoreAssert(false, "GL: GraphicsPipelineImpl: Unsupported shader binding type");
+        }
     }
 
     glGenVertexArrays(1, &VertexArray);
@@ -150,7 +161,8 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
 
         Valid = false;
     }
-
+    glUseProgram(Program);
+    
     for(const auto *shader: props.Shaders){
         const auto *shader_impl = static_cast<const GL::ShaderImpl*>(shader);
         if(shader_impl->RequiresPreprocess()){
@@ -163,17 +175,31 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
                 sources += 7;
                 while(*sources == ' ')
                     ++sources;
+                if(String::Find(sources, "sampler2D") == sources){
+                    sources+=9;
+                    while(*sources == ' ')
+                        ++sources;
+                    size_t name_len = 0;
+                    for(; *(sources + name_len) != ';' && *(sources + name_len) != ' ';)
+                        ++name_len;
+                    char *name = (char*)alloca(name_len + 1);
+                    Memory::Copy(sources, name, name_len);
+                    name[name_len] = 0;
+                    LogInfo("SamplerName: %, Unit %",name,shader_impl->UniformBindings[i]);
+                    GL(glUniform1i(glGetUniformLocation(Program,name),shader_impl->UniformBindings[i]));
+                }else{
+                    size_t name_len = 0;
+                    for(; *(sources + name_len) != '{' && *(sources + name_len) != ' ' && *(sources + name_len) != '\n';)
+                        ++name_len;
+                    
+                    char *name = (char*)alloca(name_len + 1);
+                    Memory::Copy(sources, name, name_len);
+                    name[name_len] = 0;
 
-                size_t name_len = 0;
-                for(; *(sources + name_len) != '{' && *(sources + name_len) != ' ' && *(sources + name_len) != '\n';)
-                    ++name_len;
-                
-                char *name = (char*)alloca(name_len + 1);
-                Memory::Copy(sources, name, name_len);
-                name[name_len] = 0;
+                    LogInfo("UniformName: %, Binding %",name,shader_impl->UniformBindings[i]);
 
-                auto index = glGetUniformBlockIndex(Program, name);
-                glUniformBlockBinding(Program,index, shader_impl->UniformBindings[i]);
+                    glUniformBlockBinding(Program,glGetUniformBlockIndex(Program, name), shader_impl->UniformBindings[i]);
+                }
             }
         }
     }
@@ -192,6 +218,16 @@ void GraphicsPipelineImpl::Bind(size_t index, const GPUBuffer &uniform_buffer){
     Set.Bindings[index].Data.UniformBuffer = uniform_buffer.Handle().U32;
 
     glBindBufferBase(GL_UNIFORM_BUFFER, index, Set.Bindings[index].Data.UniformBuffer);
+}
+
+void GraphicsPipelineImpl::Bind(size_t index, const GPUTexture &texture, const Sampler &sampler){
+    Set.Bindings[index].Data.Texture.Texture = texture.Handle().U32;
+    Set.Bindings[index].Data.Texture.Sampler = sampler.Handle().U32;
+
+    glActiveTexture(GL_TEXTURE0 + index);
+    glBindTexture(GL_TEXTURE_2D, texture.Handle().U32);
+    //glBindTextureUnit(index, texture.Handle().U32);
+    glBindSampler(sampler.Handle().U32, index);
 }
 
 void GraphicsPipelineImpl::Bind()const{

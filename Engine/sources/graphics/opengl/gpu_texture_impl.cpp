@@ -46,8 +46,8 @@ void GPUTextureImpl::DeleteImpl(GPUTexture &texture){
 }
 
 void GPUTextureImpl::BindZero(const GPUTexture &texture){
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture.m_Handle.U32);
+    GL(glActiveTexture(GL_TEXTURE0));
+    GL(glBindTexture(GL_TEXTURE_2D, texture.m_Handle.U32));
 }
 
 }//namespace GL::

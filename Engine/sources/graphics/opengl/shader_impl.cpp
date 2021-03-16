@@ -43,7 +43,7 @@ ShaderImpl::ShaderImpl(LogicalGPU& owner, Type type, Lang lang, const u8* src, u
             size_t len = String::LineLength(input);
             if(String::Find(input, len, "uniform")){
                 CoreAssert(String::Find(input, len, "binding")!=nullptr, "GL: GLSL: uniform should have an explicit binding");
-                CoreAssert(String::Find(input, len, "std140")!=nullptr, "GL: GLSL: uniform should have std140 layout specified");
+                //TODO: CoreAssert(String::Find(input, len, "std140")!=nullptr, "GL: GLSL: uniform should have std140 layout specified");
             }
             i+=len;
             input+=len;
@@ -74,10 +74,18 @@ ShaderImpl::ShaderImpl(LogicalGPU& owner, Type type, Lang lang, const u8* src, u
         const char *binding = nullptr;
 
         while((binding = String::Find(input + i,"binding"))){
+            bool empty = false;
             for(;(input+i) != binding;++i)
                 output[output_written++]=*(input + i);
-            while(output[output_written]!=',')
+            while(output[output_written]!=','){
+                if(output[output_written] == '('){
+                    empty = true;
+                    while(output[output_written]!='l')
+                        --output_written;
+                    break;
+                }
                 --output_written;
+            }
             
             i += 7;
 
@@ -90,6 +98,9 @@ ShaderImpl::ShaderImpl(LogicalGPU& owner, Type type, Lang lang, const u8* src, u
 
             while(*(input + i) >= '0' && *(input + i) <= '9')
                 ++i;
+            while(*(input + i) != ')')
+               ++i;
+            if(empty)++i;
         }
         for(; i<length + 1; ++i)
             output[output_written++] = input[i];

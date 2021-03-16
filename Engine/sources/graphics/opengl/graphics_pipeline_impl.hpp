@@ -11,9 +11,15 @@ struct Binding{
     ShaderBindingType Type;
     union{
         u32 UniformBuffer;
+        struct {
+            u32 Texture;
+            u32 Sampler;
+        }Texture;
     }Data = {};
 
     constexpr Binding(ShaderBindingType type, u32 buffer);
+
+    constexpr Binding(ShaderBindingType type, u32 texture, u32 sampler);
 };
 
 struct DescriptorSet{
@@ -53,6 +59,8 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
 
     virtual void Bind(size_t index, const GPUBuffer &uniform_buffer)override;
 
+    virtual void Bind(size_t index, const GPUTexture &texture, const Sampler &sampler)override;
+
     void BindVertexBuffer(u32 id)const;
 
     void BindIndexBuffer(u32 id)const;
@@ -67,6 +75,13 @@ constexpr Binding::Binding(ShaderBindingType type, u32 buffer):
     Type(type)
 {
     Data.UniformBuffer = buffer;
+}
+
+constexpr Binding::Binding(ShaderBindingType type, u32 texture, u32 sampler):
+    Type(type)
+{
+    Data.Texture.Texture = texture;
+    Data.Texture.Sampler = sampler;
 }
 
 }//namespace GL::
