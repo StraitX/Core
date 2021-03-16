@@ -22,8 +22,8 @@ stbi_io_callbacks stb_callbacks = {
     stb_eof
 };
 
-bool ImageLoader::LoadImage(File &file, u32 &width, u32 &height, u8 *&pixels){
-    constexpr int desired_channels = 4;
+bool ImageLoader::LoadImage(File &file, u32 &width, u32 &height, PixelFormat format, u8 *&pixels){
+    int desired_channels = GetPixelSize(format);
     int x, y, channels;
     auto data = stbi_load_from_callbacks(&stb_callbacks, &file, &x, &y, &channels, desired_channels);
 
