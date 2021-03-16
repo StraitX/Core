@@ -41,7 +41,7 @@ static AttachmentDescription TempAttachment = {
 
 static RenderPassProperties ToFramebufferProperties(const SwapchainProperties &props){
     //XXX not thread-safe
-    TempAttachment.Format = TextureFormat::RGBA8;
+    TempAttachment.Format = TextureFormat::BGRA8;
     TempAttachment.Samples = props.FramebufferSamples; 
     return {{&TempAttachment, 1}};
 }
