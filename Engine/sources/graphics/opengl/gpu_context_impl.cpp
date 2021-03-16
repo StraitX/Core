@@ -37,6 +37,14 @@ void GPUContextImpl::CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 si
     glBufferSubData(GL_COPY_WRITE_BUFFER, dst_offset, size, src.Pointer());
 }
 
+void GPUContextImpl::CopyImpl(const CPUTexture &src, const GPUTexture &dst){
+    glTextureSubImage2D(dst.Handle().U32, 0, 0, 0, src.Size().x, src.Size().y, GL_RGBA, GL_UNSIGNED_BYTE, src.Pointer());
+}
+
+void GPUContextImpl::ChangeLayoutImpl(GPUTexture &texture, GPUTexture::Layout new_layout){
+    texture.m_Layout = new_layout;
+}
+
 void GPUContextImpl::BindImpl(const GraphicsPipeline *pipeline){
     m_Pipeline = static_cast<const GL::GraphicsPipelineImpl*>(pipeline);
     m_Pipeline->Bind();

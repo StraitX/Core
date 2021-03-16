@@ -37,6 +37,10 @@ public:
 
     virtual void CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0)override;
 
+    virtual void CopyImpl(const CPUTexture &src, const GPUTexture &dst)override;
+
+    virtual void ChangeLayoutImpl(GPUTexture &texture, GPUTexture::Layout new_layout)override;
+
     virtual void BindImpl(const GraphicsPipeline *pipeline)override;
 
     virtual void BeginRenderPassImpl(const RenderPass *pass, const Framebuffer *framebuffer)override;

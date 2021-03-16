@@ -6,6 +6,7 @@
 #include "graphics/api/logical_gpu.hpp"
 #include "graphics/api/cpu_buffer.hpp"
 #include "graphics/api/gpu_buffer.hpp"
+#include "graphics/api/cpu_texture.hpp"
 #include "graphics/api/gpu_texture.hpp"
 #include "graphics/api/graphics_pipeline.hpp"
 #include "graphics/api/swapchain.hpp"
@@ -61,6 +62,10 @@ public:
 
     void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0);
 
+    void Copy(const CPUTexture &src, const GPUTexture &dst);
+
+    void ChangeLayout(GPUTexture &texture, GPUTexture::Layout new_layout);
+
     void Bind(const GraphicsPipeline *pipeline);
 
     void BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer);
@@ -85,6 +90,10 @@ protected:
     virtual void SubmitImpl() = 0;
 
     virtual void CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset) = 0;
+
+    virtual void CopyImpl(const CPUTexture &src, const GPUTexture &dst) = 0;
+
+    virtual void ChangeLayoutImpl(GPUTexture &texture, GPUTexture::Layout new_layout) = 0;
 
     virtual void BindImpl(const GraphicsPipeline *pipeline) = 0;
 
@@ -145,6 +154,21 @@ sx_inline void GPUContext::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 
     CoreAssert(dst.Usage() & GPUBuffer::TransferDestination,"copy destination buffer should be created with GPUBuffer::TransferDestination usage flag");
 #endif
     CopyImpl(src, dst, size, dst_offset);
+}
+
+sx_inline void GPUContext::Copy(const CPUTexture &src, const GPUTexture &dst){
+#ifdef SX_DEBUG
+    CoreAssert(src.Size() == dst.Size(), "Source texture size and destination size should match");
+    CoreAssert(src.Format() == dst.GetFormat(),"src and dst should have same format");
+    CoreAssert(dst.GetUsage() & GPUTexture::TransferDst, "Texture should be created with TransferDst usage flag");
+    CoreAssert(dst.GetLayout() == GPUTexture::Layout::TransferDstOptimal || dst.GetLayout() == GPUTexture::Layout::General, "Destination texture should be in TransferDstOptimal or General layout");
+#endif
+    CopyImpl(src,dst);
+}
+
+sx_inline void GPUContext::ChangeLayout(GPUTexture &texture, GPUTexture::Layout new_layout){
+    CoreAssert(texture.GetLayout() != new_layout, "Texture is already in new_layout");
+    ChangeLayoutImpl(texture, new_layout);
 }
 
 sx_inline void GPUContext::Bind(const GraphicsPipeline *pipeline){
