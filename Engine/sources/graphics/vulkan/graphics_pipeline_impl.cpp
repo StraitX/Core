@@ -69,7 +69,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
 
     for(size_t i = 0; i<descriptors.Size(); ++i){
         descriptors[i].type = s_DescriptorTypeTable[(size_t)props.ShaderBindings[i].Type];
-        descriptors[i].descriptorCount = props.ShaderBindings[i].Count;
+        descriptors[i].descriptorCount = props.ShaderBindings[i].Size;
     }
 
     VkDescriptorPoolCreateInfo pool_info;
@@ -85,10 +85,10 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     ArrayPtr<VkDescriptorSetLayoutBinding> bindings((VkDescriptorSetLayoutBinding*)alloca(props.ShaderBindings.Size() * sizeof(VkDescriptorSetLayoutBinding)), props.ShaderBindings.Size());
 
     for(size_t i = 0; i<descriptors.Size(); ++i){
-        bindings[i].binding = i;
+        bindings[i].binding = props.ShaderBindings[i].Binding;
         bindings[i].stageFlags = props.ShaderBindings[i].VisibleShaders;
         bindings[i].descriptorType = s_DescriptorTypeTable[(size_t)props.ShaderBindings[i].Type];
-        bindings[i].descriptorCount = props.ShaderBindings[i].Count;
+        bindings[i].descriptorCount = props.ShaderBindings[i].Size;
         bindings[i].pImmutableSamplers = nullptr;
     }
 

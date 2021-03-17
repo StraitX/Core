@@ -37,12 +37,14 @@ enum class ShaderBindingType{
 };
 
 struct ShaderBinding{
-    size_t Count;
+    u32 Binding;
+    u32 Size;
     ShaderBindingType Type;
     Shader::Types VisibleShaders;
 
-    constexpr ShaderBinding(size_t count, ShaderBindingType type, Shader::Types visible_shaders):
-        Count(count),
+    constexpr ShaderBinding(u32 binding, u32 size, ShaderBindingType type, Shader::Types visible_shaders):
+        Binding(binding),
+        Size(size),
         Type(type),
         VisibleShaders(visible_shaders)
     {}
