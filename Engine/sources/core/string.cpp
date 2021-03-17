@@ -70,11 +70,11 @@ char *String::Find(char *string, const char *internal){
 }
 
 const char *String::Find(const char *string, size_t limit, const char *internal){
-    for(size_t i = 0;*string && i<limit; ++string){
+    for(size_t i = 0;*string && i<limit; ++string, ++i){
         size_t j = i;
         const char *it = internal;
         const char *out = string;
-        for(; *it && *out && j<limit; ++it, ++out){
+        for(; *it && *out && j<limit; ++it, ++out, ++j){
             if(*it != *out)
                 goto wrong;
         }
