@@ -69,7 +69,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
 
     for(size_t i = 0; i<descriptors.Size(); ++i){
         descriptors[i].type = s_DescriptorTypeTable[(size_t)props.ShaderBindings[i].Type];
-        descriptors[i].descriptorCount = 1;
+        descriptors[i].descriptorCount = props.ShaderBindings[i].Count;
     }
 
     VkDescriptorPoolCreateInfo pool_info;
@@ -88,7 +88,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
         bindings[i].binding = i;
         bindings[i].stageFlags = props.ShaderBindings[i].VisibleShaders;
         bindings[i].descriptorType = s_DescriptorTypeTable[(size_t)props.ShaderBindings[i].Type];
-        bindings[i].descriptorCount = 1;
+        bindings[i].descriptorCount = props.ShaderBindings[i].Count;
         bindings[i].pImmutableSamplers = nullptr;
     }
 
@@ -307,7 +307,7 @@ bool GraphicsPipelineImpl::IsValid(){
     return Status == VK_SUCCESS;
 }
 
-void GraphicsPipelineImpl::Bind(size_t index, const GPUBuffer &uniform_buffer){
+void GraphicsPipelineImpl::Bind(size_t binding, size_t index, const GPUBuffer &uniform_buffer){
     VkDescriptorBufferInfo buffer;
     buffer.buffer = reinterpret_cast<VkBuffer>(uniform_buffer.Handle().U64);
     buffer.offset = 0;
@@ -317,8 +317,8 @@ void GraphicsPipelineImpl::Bind(size_t index, const GPUBuffer &uniform_buffer){
     write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     write.pNext = nullptr;
     write.dstSet = Set;
-    write.dstBinding = index;
-    write.dstArrayElement = 0;
+    write.dstBinding = binding;
+    write.dstArrayElement = index;
     write.descriptorCount = 1;
     write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     write.pImageInfo = nullptr;
@@ -328,7 +328,7 @@ void GraphicsPipelineImpl::Bind(size_t index, const GPUBuffer &uniform_buffer){
     vkUpdateDescriptorSets(Owner->Handle, 1, &write, 0, nullptr);
 }
 
-void GraphicsPipelineImpl::Bind(size_t index, const GPUTexture &texture, const Sampler &sampler){
+void GraphicsPipelineImpl::Bind(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler){
     VkDescriptorImageInfo image;
     image.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;//GPUTextureImpl::s_LayoutTable[(size_t)texture.GetLayout()];
     image.imageView = reinterpret_cast<VkImageView>(texture.ViewHandle().U64);
@@ -338,8 +338,8 @@ void GraphicsPipelineImpl::Bind(size_t index, const GPUTexture &texture, const S
     write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     write.pNext = nullptr;
     write.dstSet = Set;
-    write.dstBinding = index;
-    write.dstArrayElement = 0;
+    write.dstBinding = binding;
+    write.dstArrayElement = index;
     write.descriptorCount = 1;
     write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     write.pImageInfo = &image;

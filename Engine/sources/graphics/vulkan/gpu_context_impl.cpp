@@ -240,8 +240,12 @@ void GPUContextImpl::ClearFramebufferColorAttachmentsImpl(const Framebuffer *fb,
     issr.layerCount = 1;
 
     for(auto att: fb_impl->Attachments)
-        if(IsColorFormat(att->GetFormat()))
+        if(IsColorFormat(att->GetFormat())){
+            auto layout = att->GetLayout();
+            ChangeLayoutImpl(*const_cast<GPUTexture*>(att), GPUTexture::Layout::General);
             vkCmdClearColorImage(m_CmdBuffer, reinterpret_cast<VkImage>(att->Handle().U64), Vk::GPUTextureImpl::s_LayoutTable[(size_t)att->GetLayout()], &value, 1, &issr);
+            ChangeLayoutImpl(*const_cast<GPUTexture*>(att), layout);
+        }
 
     CmdMemoryBarrier(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT);
 }

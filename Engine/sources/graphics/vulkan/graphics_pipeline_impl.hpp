@@ -35,9 +35,9 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
 
     virtual bool IsValid()override;
 
-    virtual void Bind(size_t index, const GPUBuffer &uniform_buffer)override;
+    virtual void Bind(size_t binding, size_t index, const GPUBuffer &uniform_buffer)override;
 
-    virtual void Bind(size_t index, const GPUTexture &texture, const Sampler &sampler)override;
+    virtual void Bind(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler)override;
 
     static GraphicsPipeline * NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props);
 

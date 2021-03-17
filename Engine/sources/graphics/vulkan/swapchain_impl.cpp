@@ -98,7 +98,7 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
     info.imageExtent = capabilities.currentExtent;
     info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE; // XXX For now we support just a single queue
     info.imageArrayLayers = 1;
-    info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
     CoreFunctionAssert(vkCreateSwapchainKHR(m_Owner->Handle, &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: SwapchainImpl: Can't create a swapchain");
 
@@ -149,6 +149,7 @@ void SwapchainImpl::InitializeFramebuffers(VkFormat format){
         m_Images.Emplace();
         GPUTextureImpl impl(m_Images[i]);
         impl.CreateFromImage(images[i], TextureFormat::BGRA8, m_Size.x, m_Size.y);
+        impl.Layout = GPUTexture::Layout::PresentSrcOptimal;
 
         const GPUTexture *tp = &m_Images[i];
         FramebufferProperties props;

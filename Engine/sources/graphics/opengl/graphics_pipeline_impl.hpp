@@ -7,23 +7,26 @@
 namespace StraitX{
 namespace GL{
 
-struct Binding{
+struct VirtualBinding{
     ShaderBindingType Type;
-    union{
-        u32 UniformBuffer;
-        struct {
-            u32 Texture;
-            u32 Sampler;
-        }Texture;
-    }Data = {};
+    u32 BaseGLBinding;
+    u32 ArraySize = 0;
+};
 
-    constexpr Binding(ShaderBindingType type, u32 buffer);
+struct UniformBufferBinding{
+    u32 UniformBuffer = 0;
+};
 
-    constexpr Binding(ShaderBindingType type, u32 texture, u32 sampler);
+struct SamplerBinding{
+    u32 Texture = 0;
+    u32 Sampler = 0;
 };
 
 struct DescriptorSet{
-    PushArray<Binding,MaxShaderBindings> Bindings;
+    VirtualBinding VirtualBindings[MaxShaderBindings];
+    UniformBufferBinding UniformBufferBindings[32];
+    //first one is wasted because we use texture unit zero for creation bindings
+    SamplerBinding SamplerBindings[32];
 
     void Bind()const;
 };
@@ -57,9 +60,9 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
 
     void Bind()const;
 
-    virtual void Bind(size_t index, const GPUBuffer &uniform_buffer)override;
+    virtual void Bind(size_t binding, size_t index, const GPUBuffer &uniform_buffer)override;
 
-    virtual void Bind(size_t index, const GPUTexture &texture, const Sampler &sampler)override;
+    virtual void Bind(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler)override;
 
     void BindVertexBuffer(u32 id)const;
 
@@ -70,19 +73,6 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     static void DeleteImpl(GraphicsPipeline *pipeline);
 
 };
-
-constexpr Binding::Binding(ShaderBindingType type, u32 buffer):
-    Type(type)
-{
-    Data.UniformBuffer = buffer;
-}
-
-constexpr Binding::Binding(ShaderBindingType type, u32 texture, u32 sampler):
-    Type(type)
-{
-    Data.Texture.Texture = texture;
-    Data.Texture.Sampler = sampler;
-}
 
 }//namespace GL::
 }//namespace StraitX::

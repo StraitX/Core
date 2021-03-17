@@ -37,10 +37,12 @@ enum class ShaderBindingType{
 };
 
 struct ShaderBinding{
+    size_t Count;
     ShaderBindingType Type;
     Shader::Types VisibleShaders;
 
-    constexpr ShaderBinding(ShaderBindingType type, Shader::Types visible_shaders):
+    constexpr ShaderBinding(size_t count, ShaderBindingType type, Shader::Types visible_shaders):
+        Count(count),
         Type(type),
         VisibleShaders(visible_shaders)
     {}
@@ -124,9 +126,9 @@ public:
 
     sx_inline static void Delete(GraphicsPipeline *pipeline);
 
-    virtual void Bind(size_t index, const GPUBuffer &uniform_buffer) = 0;
+    virtual void Bind(size_t binding, size_t index, const GPUBuffer &uniform_buffer) = 0;
 
-    virtual void Bind(size_t index, const GPUTexture &texture, const Sampler &sampler) = 0;
+    virtual void Bind(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler) = 0;
 
     static size_t CalculateStride(const ArrayPtr<const VertexAttribute> &attributes);
 
