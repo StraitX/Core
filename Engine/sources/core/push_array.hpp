@@ -16,8 +16,8 @@ public:
     typedef const T_Type * const_iterator;
 private:
     // we don't want c++ to construct objects for us
-    u8 m_Memory[T_Capacity * sizeof(T_Type)];
     size_t m_Size = 0;
+    u8 m_Memory[T_Capacity * sizeof(T_Type)];
 public:
     constexpr PushArray() = default;
 
