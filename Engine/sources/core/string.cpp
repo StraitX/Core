@@ -6,6 +6,10 @@ bool String::Contains(const char *string, const char *internal){
     return Find(string,internal);
 }
 
+bool String::Contains(const char *string, size_t limit, const char *internal){
+    return Find(string, limit, internal);
+}
+
 void String::ToUpperCase(char *string){
     for(;*string; ++string){
         if(*string <= 'z' && *string >= 'a')
@@ -29,7 +33,7 @@ size_t String::Length(const char *string){
 }
 
 size_t String::LineLength(const char *string){
-    size_t length = 1;
+    size_t length = 0;
     while(*string != '\n' && *string != '\0'){
         ++string;
         ++length;
@@ -87,6 +91,24 @@ wrong:
 
 char *String::Find(char *string, size_t limit, const char *internal){
     return (char*)Find((const char*)string, limit, internal);
+}
+
+const char *String::IgnoreUntil(const char *string, char ch){
+    while(*string && *string != ch)string++;
+    return string;
+}
+
+char *String::IgnoreUntil(char *string, char ch){
+    return (char*)IgnoreUntil((const char*)string, ch);
+}
+
+const char *String::Ignore(const char *string, char ch){
+    while(*string && *string == ch)string++;
+    return string;
+}
+
+char *String::Ignore(char *string, char ch){
+    return (char *)Ignore((const char *)string, ch);
 }
 
 }//namespace StraitX::
