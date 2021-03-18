@@ -104,24 +104,18 @@ void GPUContextImpl::CopyImpl(const CPUTexture &src, const GPUTexture &dst){
 }
 
 void GPUContextImpl::ChangeLayoutImpl(GPUTexture &texture, GPUTexture::Layout new_layout){
-    VkImageMemoryBarrier info;
-    info.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    info.pNext = nullptr;
-    info.srcAccessMask = VK_ACCESS_MEMORY_WRITE_BIT;
-    info.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-    info.srcQueueFamilyIndex = 0;
-    info.dstQueueFamilyIndex = 0;
-    info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    info.subresourceRange.baseArrayLayer = 0;
-    info.subresourceRange.baseMipLevel = 0;
-    info.subresourceRange.levelCount = 1;
-    info.subresourceRange.layerCount = 1;
-    info.image = (VkImage)texture.Handle().U64;
-    info.oldLayout = GPUTextureImpl::s_LayoutTable[(size_t)texture.GetLayout()];
-    info.newLayout = GPUTextureImpl::s_LayoutTable[(size_t)new_layout];
-    texture.m_Layout = new_layout;
 
-    vkCmdPipelineBarrier(m_CmdBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &info);
+    CmdImageBarrier(
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
+        VK_ACCESS_MEMORY_WRITE_BIT, 
+        VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+        GPUTextureImpl::s_LayoutTable[(size_t)texture.GetLayout()], 
+        GPUTextureImpl::s_LayoutTable[(size_t)new_layout], 
+        (VkImage)texture.Handle().U64
+    );
+
+    texture.m_Layout = new_layout;
 }
 
 void GPUContextImpl::BindImpl(const GraphicsPipeline *pipeline){
@@ -195,6 +189,30 @@ void GPUContextImpl::CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageF
     vkCmdPipelineBarrier(m_CmdBuffer, src, dst, 0, 1, &barrier, 0, nullptr, 0, nullptr);
 }
 
+void GPUContextImpl::CmdImageBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, 
+                                     VkAccessFlags src_acces, VkAccessFlags dst_access, 
+                                     VkImageLayout old, VkImageLayout next, VkImage img)
+{
+    VkImageMemoryBarrier barrier;
+    barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    barrier.pNext = nullptr;
+    barrier.srcAccessMask = src_acces;
+    barrier.dstAccessMask = dst_access;
+    barrier.oldLayout = old;
+    barrier.newLayout = next;
+    barrier.srcQueueFamilyIndex = 0;
+    barrier.dstQueueFamilyIndex = 0;
+    barrier.image = img;
+    barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    barrier.subresourceRange.baseArrayLayer = 0;
+    barrier.subresourceRange.baseMipLevel = 0;
+    barrier.subresourceRange.levelCount = 1;
+    barrier.subresourceRange.layerCount = 1;
+
+    vkCmdPipelineBarrier(m_CmdBuffer, src, dst, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+}
+
+
 Pair<VkSemaphore, VkSemaphore> GPUContextImpl::NextPair(){
     Pair<VkSemaphore, VkSemaphore> result = {m_SemaphoreRing[m_SemaphoreRingCounter % SemaphoreRingSize].Handle, m_SemaphoreRing[(m_SemaphoreRingCounter + 1) % SemaphoreRingSize].Handle};
     ++m_SemaphoreRingCounter;
@@ -239,15 +257,19 @@ void GPUContextImpl::ClearFramebufferColorAttachmentsImpl(const Framebuffer *fb,
     issr.levelCount = 1;
     issr.layerCount = 1;
 
-    for(auto att: fb_impl->Attachments)
+    for(auto att: fb_impl->Attachments){
         if(IsColorFormat(att->GetFormat())){
-            auto layout = att->GetLayout();
-            ChangeLayoutImpl(*const_cast<GPUTexture*>(att), GPUTexture::Layout::General);
-            vkCmdClearColorImage(m_CmdBuffer, reinterpret_cast<VkImage>(att->Handle().U64), Vk::GPUTextureImpl::s_LayoutTable[(size_t)att->GetLayout()], &value, 1, &issr);
-            ChangeLayoutImpl(*const_cast<GPUTexture*>(att), layout);
-        }
 
-    CmdMemoryBarrier(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT);
+            auto layout = GPUTextureImpl::s_LayoutTable[(size_t)att->GetLayout()];
+            constexpr auto clear_layout = VK_IMAGE_LAYOUT_GENERAL;
+
+            CmdImageBarrier(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, layout, clear_layout, (VkImage)att->Handle().U64);
+
+            vkCmdClearColorImage(m_CmdBuffer, (VkImage)att->Handle().U64, clear_layout, &value, 1, &issr);
+
+            CmdImageBarrier(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_READ_BIT, clear_layout, layout, (VkImage)att->Handle().U64);
+        }
+    }
 }
 
 void GPUContextImpl::SwapFramebuffersImpl(Swapchain *swapchain){
