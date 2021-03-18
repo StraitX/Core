@@ -56,12 +56,15 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
 {
     CoreFunctionAssert(m_Surface.Create(Vk::GraphicsAPIImpl::Instance.Handle, window),Result::Success, "Vk: SwapchainImpl: Can't obtain surface");
     
-    VkBool32 supported;
-    vkGetPhysicalDeviceSurfaceSupportKHR(m_Owner->PhysicalHandle, m_Owner->GraphicsQueue.FamilyIndex, m_Surface.Handle, &supported);
-    if(!supported){
-        LogError("Vk: SwapchainImpl: Current Physical Device does not support swapchain");
-        return;
+    {
+        VkBool32 supported;
+        vkGetPhysicalDeviceSurfaceSupportKHR(m_Owner->PhysicalHandle, m_Owner->GraphicsQueue.FamilyIndex, m_Surface.Handle, &supported);
+        if(!supported){
+            LogError("Vk: SwapchainImpl: Current Physical Device does not support swapchain");
+            return;
+        }
     }
+    
     VkSurfaceCapabilitiesKHR capabilities;
     CoreFunctionAssert(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_Owner->PhysicalHandle, m_Surface.Handle, &capabilities), VK_SUCCESS, "Vk: SwapchainImpl: can't obtain surface sapabilites");
 
@@ -139,32 +142,29 @@ void SwapchainImpl::DeleteImpl(Swapchain *swapchain){
 void SwapchainImpl::InitializeFramebuffers(VkFormat format){
     u32 images_count = 0;
     vkGetSwapchainImagesKHR(m_Owner->Handle, m_Handle, &images_count, nullptr);
-    CoreAssert(images_count <= MaxFramebuffers, "Vk: Swapchain: unsupported amount of Images");
-    LogInfo("Vk: Swapchain: Got % images",images_count);
     auto *images = (VkImage*)alloca(images_count * sizeof(VkImage));
-
     vkGetSwapchainImagesKHR(m_Owner->Handle, m_Handle, &images_count, images);
 
-    for(u32 i = 0; i<images_count; ++i){
-        m_Images.Emplace();
-        GPUTextureImpl impl(m_Images[i]);
-        impl.CreateFromImage(images[i], TextureFormat::BGRA8, m_Size.x, m_Size.y);
-        impl.Layout = GPUTexture::Layout::PresentSrcOptimal;
+    CoreAssert(images_count <= MaxFramebuffers, "Vk: Swapchain: unsupported amount of Images");
 
-        const GPUTexture *tp = &m_Images[i];
+    for(u32 i = 0; i<images_count; ++i){
+        GPUTextureImpl(m_Images.Emplace()).CreateWithImage(images[i], GPUTexture::Layout::PresentSrcOptimal, TextureFormat::BGRA8, GPUTexture::UsageBits::Sampled, m_Size.x, m_Size.y);
+
+        const GPUTexture *attachments[] = {
+            &m_Images[i]
+        };
         FramebufferProperties props;
-        props.Size = m_Size;
-        props.Attachments = {&tp, 1};
+        props.Size        = m_Size;
+        props.Attachments = {attachments, lengthof(attachments)};
+
         m_Framebuffers.Emplace(*m_Owner,&m_FramebufferPass, props);
     }
 }
 
 void SwapchainImpl::FinalizeFramebuffers(){
-    for(auto &image: m_Images){
-        GPUTextureImpl impl(image);
-        impl.Destroy();
-        m_Framebuffers.Pop();
-    }
+    m_Framebuffers.Clear();
+    for(auto &image: m_Images)
+        GPUTextureImpl(image).DestroyWithoutImage();
 }
 
 void SwapchainImpl::PresentCurrent(VkSemaphore wait_semaphore){
