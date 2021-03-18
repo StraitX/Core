@@ -46,7 +46,7 @@
 
 // sx_inline will force inline in release mode
 #ifdef SX_RELEASE
-    #if defined(SX_COMPILER_GCC)
+    #if defined(SX_COMPILER_GCC) || defined (SX_COMPILER_CLANG)
         #define sx_inline __attribute__((always_inline)) inline
     #elif defined(SX_COMPILER_MSVC)
         #define sx_inline __forceinline
