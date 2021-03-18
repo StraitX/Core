@@ -5,6 +5,12 @@
 namespace StraitX{
 namespace Vk{
 
+u32 GetBufferMemoryRequirements(VkDevice owner, VkBuffer buffer){
+    VkMemoryRequirements req;
+    vkGetBufferMemoryRequirements(owner, buffer, &req);
+    return req.size;
+}
+
 constexpr GPUBufferImpl::GPUBufferImpl(GPUBuffer &buffer):
     GPUBufferImpl(static_cast<LogicalGPUImpl*>(buffer.m_Owner), reinterpret_cast<VkBuffer&>(buffer.m_Handle.U64), reinterpret_cast<VkDeviceMemory&>(buffer.m_BackingMemory.U64), buffer.m_Size, buffer.m_Usage)
 {}
@@ -44,21 +50,13 @@ void GPUBufferImpl::Destroy(){
     Owner->Free(Memory);
 }
 
-u32 GPUBufferImpl::GetBufferMemoryRequirements(VkDevice owner, VkBuffer buffer){
-    VkMemoryRequirements req;
-    vkGetBufferMemoryRequirements(owner, buffer, &req);
-    return req.size;
-}
-
 // buffer got his owner in constructor
 void GPUBufferImpl::NewImpl(GPUBuffer &buffer, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
-    GPUBufferImpl impl(buffer);
-    impl.Create(size, mem_type, usage);
+    GPUBufferImpl(buffer).Create(size, mem_type, usage);
 }
 
 void GPUBufferImpl::DeleteImpl(GPUBuffer &buffer){
-    GPUBufferImpl impl(buffer);
-    impl.Destroy();
+    GPUBufferImpl(buffer).Destroy();
 }
 
 }//namespace Vk::

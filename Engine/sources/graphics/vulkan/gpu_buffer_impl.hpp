@@ -19,11 +19,9 @@ struct GPUBufferImpl{
 
     constexpr GPUBufferImpl(Vk::LogicalGPUImpl *const owner, VkBuffer &Handle, VkDeviceMemory &Memory, u32 &size, GPUBuffer::UsageType &usage);
 
-    sx_inline void Create(u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
+    void Create(u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
 
-    sx_inline void Destroy();
-
-    sx_inline static u32 GetBufferMemoryRequirements(VkDevice owner, VkBuffer buffer);
+    void Destroy();
 
     static void NewImpl(GPUBuffer &buffer, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
 
