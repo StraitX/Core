@@ -25,13 +25,11 @@ struct GPUTextureImpl{
 
     void Create(TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
 
-    void CreateFromImage(VkImage image, TextureFormat format, u32 width, u32 height);
-
     void Destroy();
 
-    static VkImageView CreateImageView(const Vk::LogicalGPUImpl *owner, VkImage image, TextureFormat format, u32 width, u32 height);
+    void CreateWithImage(VkImage image, GPUTexture::Layout layout, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
 
-    static void DestroyImageView(const Vk::LogicalGPUImpl *owner, VkImageView view);
+    void DestroyWithoutImage();
 
     static VkSampleCountFlagBits ToVkSampleCount(SamplePoints samples);
 
