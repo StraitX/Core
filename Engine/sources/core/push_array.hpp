@@ -36,7 +36,7 @@ public:
     constexpr void Clear();
 
     template<typename ...T_Args>
-    constexpr void Emplace(T_Args&&...args);
+    constexpr T_Type &Emplace(T_Args&&...args);
 
     constexpr T_Type &operator[](size_t index);
 
@@ -101,9 +101,9 @@ constexpr void PushArray<T_Type, T_Capacity>::Clear(){
 
 template<typename T_Type, size_t T_Capacity>
 template<typename ...T_Args>
-constexpr void PushArray<T_Type, T_Capacity>::Emplace(T_Args&&...args){
+constexpr T_Type &PushArray<T_Type, T_Capacity>::Emplace(T_Args&&...args){
     CoreAssert(m_Size < T_Capacity, "PushArray: Can't emplace an element, array is full");
-    new(&operator[](m_Size++))T_Type(args...);
+    return *new(&operator[](m_Size++))T_Type(args...);
 }
 
 template<typename T_Type, size_t T_Capacity>
