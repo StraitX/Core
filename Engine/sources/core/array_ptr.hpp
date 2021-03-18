@@ -1,7 +1,6 @@
 #ifndef STRAITX_ARRAY_PTR_HPP
 #define STRAITX_ARRAY_PTR_HPP 
 
-#include <initializer_list>
 #include "platform/types.hpp"
 #include "core/assert.hpp"
 #include "core/push_array.hpp"
@@ -21,8 +20,6 @@ public:
     constexpr ArrayPtr(T_Type *pointer, T_Size size);
 
     constexpr ArrayPtr(const ArrayPtr &other);
-
-    constexpr ArrayPtr(std::initializer_list<T_Type> initializer_list);
 
     template <size_t T_Capacity>
     constexpr ArrayPtr(const PushArray<T_Type,T_Capacity> &push_array);
@@ -63,14 +60,6 @@ constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(const ArrayPtr &other):
     m_Pointer(other.m_Pointer),
     m_Size(other.m_Size)
 {}
-
-template <typename T_Type, typename T_Size>
-constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(std::initializer_list<T_Type> initializer_list):
-    m_Pointer(initializer_list.begin()),
-    m_Size(initializer_list.size())
-{
-    static_assert(IsConst<T_Type>::Value, "ArrayPtr with non-const type can't be constructed via initializer list");
-}
 
 template <typename T_Type, typename T_Size>
 template <size_t T_Capacity>
