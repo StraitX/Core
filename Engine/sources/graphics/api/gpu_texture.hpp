@@ -64,7 +64,7 @@ public:
 private:
     static VTable s_VTable;
 
-    LogicalGPU * const m_Owner = nullptr;
+    LogicalGPU * m_Owner = nullptr;
     GPUResourceHandle m_Handle = {};
     GPUResourceHandle m_ViewHandle = {};
     GPUResourceHandle m_BackingMemory = {};
@@ -83,7 +83,7 @@ private:
     friend class GL::DMAImpl;
 public:
 
-    sx_inline GPUTexture();
+    constexpr GPUTexture() = default;
 
     sx_inline void New(TextureFormat format, Usage usage, u32 width, u32 height);
 
@@ -105,11 +105,8 @@ public:
 
 };
 
-sx_inline GPUTexture::GPUTexture():
-    m_Owner(&LogicalGPU::Instance())
-{}
-
 sx_inline void GPUTexture::New(TextureFormat format, Usage usage, u32 width, u32 height){
+    m_Owner = &LogicalGPU::Instance();
     s_VTable.New(*this, format, usage, width, height);
 }
 

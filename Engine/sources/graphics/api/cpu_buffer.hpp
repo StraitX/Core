@@ -33,7 +33,7 @@ public:
 private:
     static VTable s_VTable;
 
-    LogicalGPU *const m_Owner = nullptr;
+    LogicalGPU *m_Owner = nullptr;
     GPUResourceHandle m_Handle = {};
     GPUResourceHandle m_BackingMemory = {};
     void *m_Pointer = nullptr;
@@ -43,8 +43,7 @@ private:
     friend class Vk::CPUBufferImpl;
     friend class GraphicsAPILoader;
 public:
-    sx_inline CPUBuffer();
-
+    constexpr CPUBuffer() = default;
 #ifdef SX_DEBUG
     sx_inline ~CPUBuffer();
 #endif
@@ -64,10 +63,6 @@ public:
     
 };
 
-sx_inline CPUBuffer::CPUBuffer():
-    m_Owner(&LogicalGPU::Instance())
-{}
-
 // Use destructor to avoid Buffer leaks
 #ifdef SX_DEBUG
 CPUBuffer::~CPUBuffer(){
@@ -76,6 +71,7 @@ CPUBuffer::~CPUBuffer(){
 #endif
 
 sx_inline void CPUBuffer::New(u32 size){
+    m_Owner = &LogicalGPU::Instance();
     CoreAssert(m_Pointer == nullptr, "CPUBuffer: New() should be called on empty object");
     s_VTable.New(*this, size);
 }

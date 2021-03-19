@@ -3,6 +3,7 @@
 
 #include "platform/compiler.hpp"
 #include "core/noncopyable.hpp"
+#include "core/algorithm.hpp"
 #include "graphics/api/gpu_configuration.hpp"
 #include "graphics/api/logical_gpu.hpp"
 
@@ -42,7 +43,7 @@ public:
 private:
     static VTable s_VTable;
 
-    LogicalGPU *const m_Owner = nullptr;
+    LogicalGPU *m_Owner = nullptr;
     u32 m_Size = 0;
     GPUResourceHandle m_Handle = {};
     GPUResourceHandle m_BackingMemory = {};
@@ -52,8 +53,7 @@ private:
     friend class GL::GPUBufferImpl;
     friend class Vk::GPUBufferImpl;
 public:
-    sx_inline GPUBuffer();
-
+    constexpr GPUBuffer() = default;
 #ifdef SX_DEBUG
     sx_inline ~GPUBuffer();
 #endif
@@ -70,11 +70,6 @@ public:
     constexpr UsageType Usage()const;
 
 };
-
-sx_inline GPUBuffer::GPUBuffer():
-    m_Owner(&LogicalGPU::Instance())
-{}
-
 // Use destructor to avoid Buffer leaks
 #ifdef SX_DEBUG
 GPUBuffer::~GPUBuffer(){
@@ -83,6 +78,7 @@ GPUBuffer::~GPUBuffer(){
 #endif
 
 sx_inline void GPUBuffer::New(u32 size, GPUMemoryType mem_type, UsageType usage){
+    m_Owner = &LogicalGPU::Instance();
     CoreAssert(m_Handle.U64 == 0, "GPUBuffer: New() should be called on empty object");
     s_VTable.New(*this, size, mem_type, usage);
 }
