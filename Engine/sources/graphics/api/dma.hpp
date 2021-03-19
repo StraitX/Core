@@ -15,9 +15,11 @@ public:
     struct VTable{
         using CopyCPU2GPUBufferProc = void (*)(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset);
         using CopyCPU2GPUTextureProc = void (*)(const CPUTexture &src, const GPUTexture &dst);
+        using ChangeGPUTextureLayoutProc = void (*)(GPUTexture &texture, GPUTexture::Layout layout);
 
         CopyCPU2GPUBufferProc  CopyCPU2GPUBuffer  = nullptr;
         CopyCPU2GPUTextureProc CopyCPU2GPUTexture = nullptr;
+        ChangeGPUTextureLayoutProc ChangeGPUTextureLayout = nullptr;
     };
 private:
     static VTable s_VTable;
@@ -28,6 +30,8 @@ public:
     static void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0);
 
     static void Copy(const CPUTexture &src, const GPUTexture &dst);
+
+    static void ChangeLayout(GPUTexture &texture, GPUTexture::Layout layout);
 };
 
 sx_inline void DMA::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){
@@ -36,6 +40,10 @@ sx_inline void DMA::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u
 
 sx_inline void DMA::Copy(const CPUTexture &src, const GPUTexture &dst){
     s_VTable.CopyCPU2GPUTexture(src, dst);
+}
+
+sx_inline void DMA::ChangeLayout(GPUTexture &texture, GPUTexture::Layout layout){
+    s_VTable.ChangeGPUTextureLayout(texture, layout);
 }
 
 }//namespace StraitX::

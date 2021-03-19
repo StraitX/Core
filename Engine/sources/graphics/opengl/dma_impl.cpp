@@ -13,5 +13,9 @@ void DMAImpl::CopyCPU2GPUTextureImpl(const CPUTexture &src, const GPUTexture &ds
     glTextureSubImage2D(dst.Handle().U32, 0, 0, 0, src.Size().x, src.Size().y, GL_RGBA, GL_UNSIGNED_BYTE, src.Pointer());
 }
 
+void DMAImpl::ChangeGPUTextureLayoutImpl(GPUTexture &src, GPUTexture::Layout layout){
+    src.m_Layout = layout;
+}
+
 }//namespace GL::
 }//namespace StraitX::

@@ -12,18 +12,14 @@ namespace StraitX{
 
 namespace GL{
 class GPUTextureImpl;
+class GPUContextImpl;
+class DMAImpl;
 }//namespace GL::
 
 namespace Vk{
 class GPUTextureImpl;
-}//namespace Vk::
-
-namespace GL{
 class GPUContextImpl;
-}//namespace GL::
-
-namespace Vk{
-class GPUContextImpl;
+class DMAImpl;
 }//namespace Vk::
 
 enum class SamplePoints{
@@ -83,6 +79,8 @@ private:
     friend class GL::GPUTextureImpl;
     friend class Vk::GPUContextImpl;
     friend class GL::GPUContextImpl;
+    friend class Vk::DMAImpl;
+    friend class GL::DMAImpl;
 public:
 
     sx_inline GPUTexture();
