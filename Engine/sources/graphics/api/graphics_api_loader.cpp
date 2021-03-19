@@ -62,6 +62,8 @@ Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     
     Framebuffer::s_VTable = api_vtable->FramebufferVTable;
 
+    DMA::s_VTable = api_vtable->DMAVTable;
+
     return Result::Success;
 }
 

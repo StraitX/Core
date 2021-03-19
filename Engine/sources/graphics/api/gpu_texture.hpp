@@ -36,7 +36,7 @@ enum class SamplePoints{
 
 class GraphicsAPILoader;
 
-class GPUTexture: NonCopyable{
+class GPUTexture: public NonCopyable{
 public:
     enum class Layout : u8{
         Undefined = 0,
@@ -91,6 +91,8 @@ public:
 
     sx_inline void Delete();
 
+    constexpr LogicalGPU *Owner()const;
+
     constexpr GPUResourceHandle Handle()const;
 
     constexpr GPUResourceHandle ViewHandle()const;
@@ -115,6 +117,10 @@ sx_inline void GPUTexture::New(TextureFormat format, Usage usage, u32 width, u32
 
 sx_inline void GPUTexture::Delete(){
     s_VTable.Delete(*this);
+}
+
+constexpr LogicalGPU *GPUTexture::Owner()const{
+    return m_Owner;
 }
 
 constexpr GPUResourceHandle GPUTexture::Handle()const{ 

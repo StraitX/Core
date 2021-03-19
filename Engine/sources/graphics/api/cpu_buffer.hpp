@@ -21,7 +21,7 @@ class CPUBufferImpl;
 
 class GraphicsAPILoader;
 
-class CPUBuffer: NonCopyable{
+class CPUBuffer: public NonCopyable{
 public:
     struct VTable{
         using NewProc    = void (*)(CPUBuffer &buffer, u32 size);

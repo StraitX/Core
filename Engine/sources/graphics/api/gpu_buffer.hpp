@@ -18,7 +18,7 @@ class GPUBufferImpl;
 
 class GraphicsAPILoader;
 
-class GPUBuffer: NonCopyable{
+class GPUBuffer: public NonCopyable{
 public:
     enum UsageTypeBits: u8{ // don't mess them up, these are tied to vulkan spec
         TransferSource      = 0x01,      
@@ -61,6 +61,8 @@ public:
 
     sx_inline void Delete();
 
+    constexpr LogicalGPU *Owner()const;
+
     constexpr GPUResourceHandle Handle()const;
 
     constexpr u32 Size()const;
@@ -90,6 +92,10 @@ sx_inline void GPUBuffer::Delete(){
 #ifdef SX_DEBUG
     m_Handle.U64 = 0;
 #endif
+}
+
+constexpr LogicalGPU *GPUBuffer::Owner()const{
+    return m_Owner;
 }
 
 constexpr GPUResourceHandle GPUBuffer::Handle()const{

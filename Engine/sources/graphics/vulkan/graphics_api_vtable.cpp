@@ -12,6 +12,7 @@
 #include "graphics/vulkan/render_pass_impl.hpp"
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
 #include "graphics/vulkan/framebuffer_impl.hpp"
+#include "graphics/vulkan/dma_impl.hpp"
 
 namespace StraitX{
 
@@ -27,7 +28,8 @@ GraphicsAPIVtable VulkanVTable = {
     {&Vk::ShaderImpl::NewImpl, &Vk::ShaderImpl::DeleteImpl},
     {&Vk::RenderPassImpl::NewImpl, &Vk::RenderPassImpl::DeleteImpl},
     {&Vk::GraphicsPipelineImpl::NewImpl, &Vk::GraphicsPipelineImpl::DeleteImpl},
-    {&Vk::FramebufferImpl::NewImpl, &Vk::FramebufferImpl::DeleteImpl}
+    {&Vk::FramebufferImpl::NewImpl, &Vk::FramebufferImpl::DeleteImpl},
+    {&Vk::DMAImpl::CopyCPU2GPUBufferImpl, &Vk::DMAImpl::CopyCPU2GPUTextureImpl}
 };
 
 }//namespace StraitX::

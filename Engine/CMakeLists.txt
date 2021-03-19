@@ -52,6 +52,7 @@ set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/render_pass_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/graphics_pipeline_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/framebuffer_impl.cpp
+    ${SOURCES_DIR}/graphics/vulkan/dma_impl.cpp
 
     ${SOURCES_DIR}/graphics/vulkan/graphics_api_vtable.cpp
 )
@@ -69,6 +70,7 @@ set(SOURCES_GRAPHICS_OPENGL
     ${SOURCES_DIR}/graphics/opengl/render_pass_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/graphics_pipeline_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/framebuffer_impl.cpp
+    ${SOURCES_DIR}/graphics/opengl/dma_impl.cpp
 
     ${SOURCES_DIR}/graphics/opengl/graphics_api_vtable.cpp
 )
@@ -89,6 +91,7 @@ set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/render_pass.cpp
     ${SOURCES_DIR}/graphics/api/graphics_pipeline.cpp
     ${SOURCES_DIR}/graphics/api/framebuffer.cpp
+    ${SOURCES_DIR}/graphics/api/dma.cpp
 )
 
 set(SOURCES_GRAPHICS_I

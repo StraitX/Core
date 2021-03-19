@@ -38,13 +38,11 @@ void CPUBufferImpl::Destroy(){
 }
 
 void CPUBufferImpl::NewImpl(CPUBuffer &buffer, u32 size){
-    CPUBufferImpl impl(buffer);
-    impl.Create(size);
+    CPUBufferImpl(buffer).Create(size);
 }
 
 void CPUBufferImpl::DeleteImpl(CPUBuffer &buffer){
-    CPUBufferImpl impl(buffer);
-    impl.Destroy();
+    CPUBufferImpl(buffer).Destroy();
 }
 
 }//namespace Vk::

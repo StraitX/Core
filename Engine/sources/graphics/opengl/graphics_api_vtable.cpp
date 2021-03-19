@@ -12,6 +12,7 @@
 #include "graphics/opengl/render_pass_impl.hpp"
 #include "graphics/opengl/graphics_pipeline_impl.hpp"
 #include "graphics/opengl/framebuffer_impl.hpp"
+#include "graphics/opengl/dma_impl.hpp"
 
 namespace StraitX{
 
@@ -27,7 +28,8 @@ GraphicsAPIVtable OpenGLVTable = {
     {&GL::ShaderImpl::NewImpl, &GL::ShaderImpl::DeleteImpl},
     {&GL::RenderPassImpl::NewImpl, &GL::RenderPassImpl::DeleteImpl},
     {&GL::GraphicsPipelineImpl::NewImpl, &GL::GraphicsPipelineImpl::DeleteImpl},
-    {&GL::FramebufferImpl::NewImpl, &GL::FramebufferImpl::DeleteImpl}
+    {&GL::FramebufferImpl::NewImpl, &GL::FramebufferImpl::DeleteImpl},
+    {&GL::DMAImpl::CopyCPU2GPUBufferImpl, &GL::DMAImpl::CopyCPU2GPUTextureImpl}
 };
 
 }//namespace StraitX::

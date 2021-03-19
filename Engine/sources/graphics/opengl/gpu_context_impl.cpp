@@ -9,6 +9,7 @@
 #include "graphics/opengl/gpu_texture_impl.hpp"
 #include "graphics/opengl/graphics_pipeline_impl.hpp"
 #include "graphics/opengl/framebuffer_impl.hpp"
+#include "graphics/opengl/dma_impl.hpp"
 
 namespace StraitX{
 namespace GL{
@@ -31,14 +32,11 @@ void GPUContextImpl::SubmitImpl(){
 }
 
 void GPUContextImpl::CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){
-    CoreAssert(size + dst_offset <= dst.Size(), "GL: GPUContext: Copy: Dst Buffer overflow");
-
-    glBindBuffer(GL_COPY_WRITE_BUFFER, dst.Handle().U32);
-    glBufferSubData(GL_COPY_WRITE_BUFFER, dst_offset, size, src.Pointer());
+    DMAImpl::CopyCPU2GPUBufferImpl(src, dst, size, dst_offset);
 }
 
 void GPUContextImpl::CopyImpl(const CPUTexture &src, const GPUTexture &dst){
-    glTextureSubImage2D(dst.Handle().U32, 0, 0, 0, src.Size().x, src.Size().y, GL_RGBA, GL_UNSIGNED_BYTE, src.Pointer());
+    DMAImpl::CopyCPU2GPUTextureImpl(src, dst);
 }
 
 void GPUContextImpl::ChangeLayoutImpl(GPUTexture &texture, GPUTexture::Layout new_layout){

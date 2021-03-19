@@ -77,6 +77,23 @@ Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
     }
     Allocator.Initialize(this);
 
+    VkCommandPoolCreateInfo pool_info;
+    pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    pool_info.pNext = nullptr;
+    pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+    pool_info.queueFamilyIndex = GraphicsQueue.FamilyIndex;
+
+    CoreFunctionAssert(vkCreateCommandPool(Handle, &pool_info, nullptr, &Pool), VK_SUCCESS, "Vk: LogicalGPU: Failed to create command pool");
+
+    VkCommandBufferAllocateInfo buffer_info;
+    buffer_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    buffer_info.pNext = nullptr;
+    buffer_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    buffer_info.commandPool = Pool;
+    buffer_info.commandBufferCount = 1;
+
+    CoreFunctionAssert(vkAllocateCommandBuffers(Handle, &buffer_info, &TransferCmdBuffer), VK_SUCCESS, "Vk: LogicalGPU: Failed to allocate command buffer");
+
     return Result::Success;
 }
 

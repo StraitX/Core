@@ -29,6 +29,9 @@ struct LogicalGPUImpl: public LogicalGPU{
     Vk::Queue GraphicsQueue;
     Vk::Queue TransferQueue;
 
+    VkCommandPool Pool;
+    VkCommandBuffer TransferCmdBuffer;
+
     static LogicalGPUImpl Instance;
 
     Result Initialize(const PhysicalGPU &gp)override;

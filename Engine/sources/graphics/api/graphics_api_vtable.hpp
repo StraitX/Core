@@ -13,6 +13,7 @@
 #include "graphics/api/render_pass.hpp"
 #include "graphics/api/graphics_pipeline.hpp"
 #include "graphics/api/framebuffer.hpp"
+#include "graphics/api/dma.hpp"
 
 namespace StraitX{
 
@@ -40,6 +41,8 @@ struct GraphicsAPIVtable{
     GraphicsPipeline::VTable GraphicsPipelineVTable = {};
 
     Framebuffer::VTable FramebufferVTable = {};
+
+    DMA::VTable DMAVTable = {};
 };
 
 }//namespace StraitX::
