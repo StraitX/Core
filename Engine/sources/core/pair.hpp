@@ -68,7 +68,15 @@ constexpr Pair<F, S> &Pair<F,S>::operator=(const Pair<F, S> &other){
     Second = other.Second;
     return *this;
 }
+template<typename F, typename S>
+constexpr bool operator==(const Pair<F, S> &left, const Pair<F, S> &right){
+    return left.First == right.First && left.Second == right.Second;
+}
 
+template<typename F, typename S>
+constexpr bool operator!=(const Pair<F, S> &left, const Pair<F, S> &right){
+    return !(left == right);
+}
 
 }//namespace StraitX::
 
