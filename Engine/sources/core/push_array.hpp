@@ -35,6 +35,10 @@ public:
 
     constexpr void Clear();
 
+    iterator Find(const T_Type &element);
+
+    const_iterator Find(const T_Type &element)const;
+
     template<typename ...T_Args>
     constexpr T_Type &Emplace(T_Args&&...args);
 
@@ -97,6 +101,21 @@ template<typename T_Type, size_t T_Capacity>
 constexpr void PushArray<T_Type, T_Capacity>::Clear(){
     while(Size())
         Pop();
+}
+
+template<typename T_Type, size_t T_Capacity>
+typename PushArray<T_Type, T_Capacity>::iterator PushArray<T_Type, T_Capacity>::Find(const T_Type &element){
+    return const_cast<iterator>(const_cast<const PushArray<T_Type, T_Capacity>*>(this)->Find(element));
+}
+
+template<typename T_Type, size_t T_Capacity>
+typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capacity>::Find(const T_Type &element)const{
+    auto it = begin();
+    for(;it != end(); ++it){
+        if(*it == element)
+            return it;
+    }
+    return it;
 }
 
 template<typename T_Type, size_t T_Capacity>
