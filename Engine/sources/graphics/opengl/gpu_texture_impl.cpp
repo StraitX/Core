@@ -13,14 +13,14 @@ GLint InternalFormatTable[]={
     GL_BGRA
 };
 
-GLenum FormatTable[] = {
+GLenum GPUTextureImpl::s_FormatTable[] = {
     0,
     GL_RGBA,
     GL_DEPTH_STENCIL,
     GL_BGRA
 };
 
-GLenum TypeTable[] = {
+GLenum GPUTextureImpl::s_TypeTable[] = {
     0,
     GL_UNSIGNED_BYTE,
     GL_UNSIGNED_BYTE,
@@ -38,7 +38,7 @@ void GPUTextureImpl::NewImpl(GPUTexture &texture, TextureFormat format, GPUTextu
 
     glGenTextures(1, &texture.m_Handle.U32);
     BindZero(texture);
-    GL(glTexImage2D(GL_TEXTURE_2D, 0, InternalFormatTable[(u32)format], texture.m_Width, texture.m_Height, 0, FormatTable[(u32)format], TypeTable[(u32)format], nullptr));
+    GL(glTexImage2D(GL_TEXTURE_2D, 0, InternalFormatTable[(u32)format], texture.m_Width, texture.m_Height, 0, s_FormatTable[(u32)format], s_TypeTable[(u32)format], nullptr));
 }
 
 void GPUTextureImpl::DeleteImpl(GPUTexture &texture){
