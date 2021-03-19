@@ -13,7 +13,7 @@ class GraphicsAPILoader;
 class DMA{
 public:
     struct VTable{
-        using CopyCPU2GPUBufferProc = void (*)(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset);
+        using CopyCPU2GPUBufferProc = void (*)(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset);
         using CopyCPU2GPUTextureProc = void (*)(const CPUTexture &src, const GPUTexture &dst);
         using ChangeGPUTextureLayoutProc = void (*)(GPUTexture &texture, GPUTexture::Layout layout);
 
@@ -27,15 +27,15 @@ private:
     friend class GraphicsAPILoader;
 public:
 
-    static void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0);
+    static void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset = 0, u32 dst_offset = 0);
 
     static void Copy(const CPUTexture &src, const GPUTexture &dst);
 
     static void ChangeLayout(GPUTexture &texture, GPUTexture::Layout layout);
 };
 
-sx_inline void DMA::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){
-    s_VTable.CopyCPU2GPUBuffer(src, dst, size, dst_offset);
+sx_inline void DMA::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
+    s_VTable.CopyCPU2GPUBuffer(src, dst, size, src_offset, dst_offset);
 }
 
 sx_inline void DMA::Copy(const CPUTexture &src, const GPUTexture &dst){

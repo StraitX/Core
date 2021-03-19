@@ -6,7 +6,7 @@
 namespace StraitX{
 namespace Vk{
 
-void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){
+void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
     auto gpu = static_cast<const Vk::LogicalGPUImpl*>(dst.Owner());
 
     VkCommandBufferBeginInfo begin_info;
@@ -18,7 +18,7 @@ void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, 
     vkBeginCommandBuffer(gpu->TransferCmdBuffer, &begin_info);
     {
         VkBufferCopy copy;
-        copy.srcOffset = 0;
+        copy.srcOffset = src_offset;
         copy.dstOffset = dst_offset;
         copy.size = size;
         vkCmdCopyBuffer(gpu->TransferCmdBuffer, (VkBuffer)src.Handle().U64, (VkBuffer)dst.Handle().U64, 1, &copy);

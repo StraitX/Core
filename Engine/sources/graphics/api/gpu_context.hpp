@@ -60,7 +60,7 @@ public:
 
     void Submit();
 
-    void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0);
+    void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset = 0, u32 dst_offset = 0);
 
     void Copy(const CPUTexture &src, const GPUTexture &dst);
 
@@ -89,7 +89,7 @@ protected:
 
     virtual void SubmitImpl() = 0;
 
-    virtual void CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset) = 0;
+    virtual void CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset) = 0;
 
     virtual void CopyImpl(const CPUTexture &src, const GPUTexture &dst) = 0;
 
@@ -146,14 +146,14 @@ sx_inline void GPUContext::Submit(){
     SubmitImpl();
 }
 
-sx_inline void GPUContext::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){
+sx_inline void GPUContext::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
 #ifdef SX_DEBUG
     CoreAssert(m_State != State::InPass,"You can't Copy() inside render pass");
 
     CoreAssert(m_State == State::Recording,"Context should be in recording state before Copy()");
     CoreAssert(dst.Usage() & GPUBuffer::TransferDestination,"copy destination buffer should be created with GPUBuffer::TransferDestination usage flag");
 #endif
-    CopyImpl(src, dst, size, dst_offset);
+    CopyImpl(src, dst, size, src_offset, dst_offset);
 }
 
 sx_inline void GPUContext::Copy(const CPUTexture &src, const GPUTexture &dst){

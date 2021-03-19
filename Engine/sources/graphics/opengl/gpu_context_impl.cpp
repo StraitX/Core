@@ -31,8 +31,8 @@ void GPUContextImpl::SubmitImpl(){
     glFlush();
 }
 
-void GPUContextImpl::CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset){
-    DMAImpl::CopyCPU2GPUBufferImpl(src, dst, size, dst_offset);
+void GPUContextImpl::CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
+    DMAImpl::CopyCPU2GPUBufferImpl(src, dst, size, src_offset, dst_offset);
 }
 
 void GPUContextImpl::CopyImpl(const CPUTexture &src, const GPUTexture &dst){

@@ -22,7 +22,7 @@ public:
 
     virtual void SubmitImpl()override;
 
-    virtual void CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 dst_offset = 0)override;
+    virtual void CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset = 0)override;
 
     virtual void CopyImpl(const CPUTexture &src, const GPUTexture &dst)override;
 
