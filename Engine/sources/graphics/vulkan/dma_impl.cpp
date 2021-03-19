@@ -123,6 +123,7 @@ void DMAImpl::ChangeGPUTextureLayoutImpl(GPUTexture &src, GPUTexture::Layout lay
     vkQueueSubmit(gpu->GraphicsQueue.Handle, 1, &submit_info, fence.Handle);
 
     fence.WaitFor();
+    src.m_Layout = layout;
 }
 
 }//namespace Vk::
