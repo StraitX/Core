@@ -3,6 +3,7 @@
 #include "core/log.hpp"
 #include "graphics/api/graphics_api.hpp"
 #include "graphics/api/graphics_api_loader.hpp"
+#include "graphics/api/logical_gpu.hpp"
 #include "main/application.hpp"
 #include "main/engine.hpp"
 
@@ -60,7 +61,9 @@ Result Engine::Initialize(){
     LogTrace("========= First stage init =========");
 
     LogInfo("WindowSystem::Initialize: Begin");
-    m_ErrorWindowSystem = WindowSystem::Initialize();
+    {
+        m_ErrorWindowSystem = WindowSystem::Initialize();
+    }
     InitAssert("WindowSystem::Initialize", m_ErrorWindowSystem);
 
     auto res = GraphicsAPILoader::Load(m_ApplicationConfig.DesiredAPI);
@@ -68,29 +71,56 @@ Result Engine::Initialize(){
     InitAssert("GraphicsAPILoader::Load", res);
 
     LogTrace("GraphicsAPI::Initialize: Begin");
-    m_ErrorGraphicsAPI = GraphicsAPI::Instance().Initialize();
+    {
+        m_ErrorGraphicsAPI = GraphicsAPI::Instance().Initialize();
+    }
     InitAssert("GraphicsAPI::Initialize",m_ErrorGraphicsAPI);
 
     LogTrace("========= Second stage init =========");
 
     LogTrace("DisplayServer::Initialize: Begin");
-    m_ErrorDisplayServer = m_DisplayServer.Initialize();
-    m_DisplayServer.m_Window.SetTitle(m_ApplicationConfig.ApplicationName);
+    {
+        m_ErrorDisplayServer = m_DisplayServer.Initialize();
+        m_DisplayServer.m_Window.SetTitle(m_ApplicationConfig.ApplicationName);
+    }
     InitAssert("DisplayServer::Initialize", m_ErrorDisplayServer);
+
+    LogTrace("LogicalGPU::Initialize: Begin");
+    {
+        auto devices_count = GraphicsAPI::Instance().GetPhysicalGPUCount();
+        auto *devices = (PhysicalGPU*)alloca(sizeof(PhysicalGPU) * devices_count);
+
+        if(!devices_count){
+            LogError("GraphicsAPI: Can't find any gpu");
+            return Result::Unsupported;
+        }
+        GraphicsAPI::Instance().GetPhysicalGPUs(devices);
+
+        LogInfo("GraphicsAPI: Got % GPU%", devices_count, devices_count == 1 ? ' ' : 's');
+        for(size_t i = 0; i<devices_count; i++)
+            Output::Printf("GPU[%]\n Vendor: %\n Type: %\n QueueFamilies: %\n", i, GetName(devices[i].Vendor), GetName(devices[i].Type), devices[i].QueueFamiliesCount);
+
+        m_ErrorDevice = LogicalGPU::Instance().Initialize(devices[0]);
+    }
+    InitAssert("LogicalGPU::Initialize", m_ErrorDevice);
 
     LogTrace("========= Third stage init =========");
 
     //Engine should be completely initialized at this moment
     LogTrace("StraitXMain: Begin");
-    m_Application = StraitXMain();
-    m_ErrorMX = (m_Application == nullptr ? Result::NullObject : Result::Success);
+    {
+        m_Application = StraitXMain();
+        m_ErrorMX = (m_Application == nullptr ? Result::NullObject : Result::Success);
+    }
     InitAssert("StraitXMain",m_ErrorMX);
     
     m_Application->SetEngine(this);
 
     LogTrace("Application::OnInitialize: Begin");
-    m_ErrorApplication = m_Application->OnInitialize();
-    CoreAssert((int)m_ErrorApplication >= 0 && m_ErrorApplication < Result::ResultCodesCount, "Application::OnInitialize() returned unsupported result code");
+    {
+        m_ErrorApplication = m_Application->OnInitialize();
+        CoreAssert((int)m_ErrorApplication >= 0 && m_ErrorApplication < Result::ResultCodesCount, "Application::OnInitialize() returned unsupported result code");
+    }
     InitAssert("Application::OnInitialize",m_ErrorApplication);
 
     return Result::Success;
@@ -109,6 +139,12 @@ Result Engine::Finalize(){
         LogTrace("StraitXExit: Begin");
         m_ErrorMX = StraitXExit(m_Application);
         Log("StraitXExit",m_ErrorMX);
+    }
+    
+    if(m_ErrorDevice == Result::Success){
+        LogTrace("LogicalGPU::Finalize: Begin");
+        LogicalGPU::Instance().Finalize();
+        LogTrace("LogicalGPU::Finalize: End");
     }
 
     if(m_ErrorDisplayServer == Result::Success){
