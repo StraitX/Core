@@ -13,13 +13,15 @@ private:
     u32 m_Width = 0;
     u32 m_Height = 0;
 public:
-    sx_inline void New(u32 width, u32 height, TextureFormat format);
+    void New(u32 width, u32 height, TextureFormat format);
 
-    sx_inline void Delete();
+    void New(u32 width, u32 height, TextureFormat format, const void *pixels);
+
+    void Delete();
 
     constexpr void *Pointer()const;
 
-    sx_inline void CopyData(const void *source);
+    void CopyData(const void *source);
 
     constexpr GPUResourceHandle Handle()const;
 
@@ -33,6 +35,11 @@ sx_inline void CPUTexture::New(u32 width, u32 height, TextureFormat format){
     m_Format = format;
     m_Width = width;
     m_Height = height;
+}
+
+sx_inline void CPUTexture::New(u32 width, u32 height, TextureFormat format, const void *pixels){
+    New(width, height, format);
+    CopyData(pixels);
 }
 
 sx_inline void CPUTexture::Delete(){

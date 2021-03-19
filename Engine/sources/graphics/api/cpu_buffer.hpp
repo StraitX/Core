@@ -48,9 +48,11 @@ public:
 #ifdef SX_DEBUG
     sx_inline ~CPUBuffer();
 #endif
-    sx_inline void New(u32 size);
+    void New(u32 size);
 
-    sx_inline void Delete();
+    void New(u32 size, const void *data);
+
+    void Delete();
 
     constexpr void *Pointer()const;
 
@@ -76,6 +78,11 @@ CPUBuffer::~CPUBuffer(){
 sx_inline void CPUBuffer::New(u32 size){
     CoreAssert(m_Pointer == nullptr, "CPUBuffer: New() should be called on empty object");
     s_VTable.New(*this, size);
+}
+
+sx_inline void CPUBuffer::New(u32 size, const void *data){
+    New(size);
+    CopyData(data, size);
 }
 
 sx_inline void CPUBuffer::Delete(){
