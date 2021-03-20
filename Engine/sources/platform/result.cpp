@@ -4,8 +4,7 @@
 
 namespace StraitX{
 
-
-const char *ResultNames[(int)Result::ResultCodesCount] = {
+const char *Result::s_ResultNamesTable[(int)Result::ResultCodesCount] = {
     S(Success),
     S(Failure),
     S(NotFound),

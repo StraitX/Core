@@ -1,35 +1,79 @@
 #ifndef STRAITX_ERROR_HPP
 #define STRAITX_ERROR_HPP
 
+#include "platform/types.hpp"
+
 namespace StraitX{
 
-#include "platform/compiler.hpp"
+class Result{
+public:
+    enum Type: u8{
+        Success =  0,
+        Failure,
+        NotFound,
+        InvalidArgs,
+        NullObject,
+        AlreadyDone,
+        Unsupported,
+        Overflow,
+        Unavailable,
+        PermissionDenied,
+        AlreadyExist,
+        IsDirectory,
+        None,
+        MemoryFailure,
 
-enum class Result{
-    Success =  0,
-    Failure,
-    NotFound,
-    InvalidArgs,
-    NullObject,
-    AlreadyDone,
-    Unsupported,
-    Overflow,
-    Unavailable,
-    PermissionDenied,
-    AlreadyExist,
-    IsDirectory,
-    None,
-    MemoryFailure,
+        ResultCodesCount
+    };
+private:
+    static const char *s_ResultNamesTable[(size_t)Result::ResultCodesCount];
+    u8 m_Value;
+public:
+    constexpr Result(Type result);
 
-    ResultCodesCount
+    explicit constexpr Result(bool result);
+
+    constexpr explicit operator bool()const;
+
+    constexpr bool operator!()const;
+
+    friend constexpr bool operator==(Result l, Result r);
+
+    friend constexpr bool operator!=(Result l, Result r);
+
+    constexpr const char *Name()const;
 };
 
-sx_inline Result ResultError(bool is_error){
-    return Result((int)is_error);
+constexpr Result::Result(Type result):
+    m_Value(result)
+{}
+
+constexpr Result::Result(bool result):
+    Result((Type)!result)
+{}
+
+constexpr Result::operator bool()const{
+    return !bool(m_Value);
 }
 
-extern const char *ResultNames[(int)Result::ResultCodesCount];
+constexpr bool Result::operator!()const{
+    return bool(m_Value);
+}
+constexpr bool operator==(Result l, Result r){
+    return l.m_Value == r.m_Value;
+}
 
+constexpr bool operator!=(Result l, Result r){
+    return !(l == r);
+}
+
+constexpr const char *Result::Name()const{
+    return s_ResultNamesTable[m_Value];
+}
+
+constexpr Result ResultError(bool is_error){
+    return Result(!is_error);
+}
 
 }; // namespace StraitX::
 
