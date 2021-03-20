@@ -9,7 +9,7 @@ namespace StraitX{
 namespace Vk{
 
 struct GPUBufferImpl{
-    Vk::LogicalGPUImpl *const Owner;
+    LogicalGPU *&Owner;
     VkBuffer &Handle;
     VkDeviceMemory &Memory;
     u32 &Size;
@@ -17,13 +17,13 @@ struct GPUBufferImpl{
 
     constexpr GPUBufferImpl(GPUBuffer &buffer);
 
-    constexpr GPUBufferImpl(Vk::LogicalGPUImpl *const owner, VkBuffer &Handle, VkDeviceMemory &Memory, u32 &size, GPUBuffer::UsageType &usage);
+    constexpr GPUBufferImpl(LogicalGPU *&owner, VkBuffer &Handle, VkDeviceMemory &Memory, u32 &size, GPUBuffer::UsageType &usage);
 
-    void Create(u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
+    void Create(LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
 
     void Destroy();
 
-    static void NewImpl(GPUBuffer &buffer, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
+    static void NewImpl(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
 
     static void DeleteImpl(GPUBuffer &buffer);
 };
