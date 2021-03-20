@@ -22,6 +22,7 @@ public:
         IsDirectory,
         None,
         MemoryFailure,
+        WrongFormat,
 
         ResultCodesCount
     };
@@ -31,7 +32,7 @@ private:
 public:
     constexpr Result(Type result);
 
-    explicit constexpr Result(bool result);
+    constexpr explicit Result(bool result);
 
     constexpr explicit operator bool()const;
 

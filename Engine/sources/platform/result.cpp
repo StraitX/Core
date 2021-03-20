@@ -18,7 +18,8 @@ const char *Result::s_ResultNamesTable[(int)Result::ResultCodesCount] = {
     S(AlreadyExist),
     S(IsDirectory),
     S(None),
-    S(MemoryFailure)
+    S(MemoryFailure),
+    S(WrongFormat)
 };
 
 }; // namespace StraitX::
