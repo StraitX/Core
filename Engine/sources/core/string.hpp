@@ -31,6 +31,10 @@ public:
 
     static char *Find(char *string, size_t limit, const char *internal);
 
+    static const char *FindLast(const char *string, const char *internal);
+
+    static char *FindLast(char *string, const char *internal);
+
     static const char *IgnoreUntil(const char *string, char ch);
 
     static char *IgnoreUntil(char *string, char ch);
@@ -58,6 +62,10 @@ sx_inline char *String::Find(char *string, const char *internal){
 
 sx_inline char *String::Find(char *string, size_t limit, const char *internal){
     return (char*)Find((const char*)string, limit, internal);
+}
+
+sx_inline char *String::FindLast(char *string, const char *internal){
+    return (char*)FindLast((const char *)string, internal);
 }
 
 sx_inline char *String::IgnoreUntil(char *string, char ch){

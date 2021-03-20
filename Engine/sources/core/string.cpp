@@ -73,6 +73,20 @@ wrong:
     return nullptr;
 }
 
+const char *String::FindLast(const char *string, const char *internal){
+    const char *result = nullptr;
+    for(;*string;++string){
+        auto in = string;
+        auto out = internal;
+        for(; *in && *out; ++in, ++out)
+            if(*in != *out)goto wrong;
+        result = string;
+wrong:
+        (void)0;
+    }
+    return result;
+}
+
 const char *String::IgnoreUntil(const char *string, char ch){
     while(*string && *string != ch)string++;
     return string;
