@@ -42,7 +42,7 @@ public:
 
     friend constexpr bool operator!=(Result l, Result r);
 
-    constexpr const char *Name()const;
+    const char *Name()const;
 };
 
 constexpr Result::Result(Type result):
@@ -68,7 +68,7 @@ constexpr bool operator!=(Result l, Result r){
     return !(l == r);
 }
 
-constexpr const char *Result::Name()const{
+sx_inline const char *Result::Name()const{
     return s_ResultNamesTable[m_Value];
 }
 
