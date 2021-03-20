@@ -2,6 +2,7 @@
 #define STRAITX_SAMPLER_HPP
 
 #include "platform/types.hpp"
+#include "platform/compiler.hpp"
 #include "graphics/api/gpu_configuration.hpp"
 #include "graphics/api/logical_gpu.hpp"
 
@@ -56,7 +57,9 @@ private:
     friend class GL::SamplerImpl;
 public:
     Sampler() = default;
-
+#ifdef SX_DEBUG
+    ~Sampler();
+#endif
     sx_inline void New(SamplerProperties props);
 
     sx_inline void Delete();
@@ -64,12 +67,19 @@ public:
     constexpr GPUResourceHandle Handle()const;
 };
 
+#ifdef SX_DEBUG
+sx_inline Sampler::~Sampler(){
+    CoreAssert(m_Handle.U64 == 0, "Sampler: Delete() should be called before destruction");
+}
+#endif
+
 sx_inline void Sampler::New(SamplerProperties props){
     s_VTable.New(*this, LogicalGPU::Instance(), props);
 }
 
 sx_inline void Sampler::Delete(){
     s_VTable.Delete(*this);
+    m_Handle.U64 = 0;
 }
 
 constexpr GPUResourceHandle Sampler::Handle()const{

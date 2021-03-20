@@ -84,9 +84,7 @@ sx_inline void GPUBuffer::New(u32 size, GPUMemoryType mem_type, UsageType usage)
 
 sx_inline void GPUBuffer::Delete(){
     s_VTable.Delete(*this);
-#ifdef SX_DEBUG
     m_Handle.U64 = 0;
-#endif
 }
 
 constexpr LogicalGPU *GPUBuffer::Owner()const{

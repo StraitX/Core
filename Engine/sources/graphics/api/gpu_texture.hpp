@@ -1,6 +1,7 @@
 #ifndef STRAITX_GPU_TEXTURE_HPP
 #define STRAITX_GPU_TEXTURE_HPP
 
+#include "platform/compiler.hpp"
 #include "core/noncopyable.hpp"
 #include "core/math/vector2.hpp"
 #include "graphics/api/gpu_configuration.hpp"
@@ -84,7 +85,9 @@ private:
 public:
 
     constexpr GPUTexture() = default;
-
+#ifdef SX_DEBUG
+    ~GPUTexture();
+#endif
     sx_inline void New(TextureFormat format, Usage usage, u32 width, u32 height);
 
     sx_inline void Delete();
@@ -104,13 +107,18 @@ public:
     constexpr Usage GetUsage()const;
 
 };
-
+#ifdef SX_DEBUG
+sx_inline GPUTexture::~GPUTexture(){
+    CoreAssert(m_Handle.U64 == 0, "GPUTexture: Delete() should be called before destruction");
+}
+#endif
 sx_inline void GPUTexture::New(TextureFormat format, Usage usage, u32 width, u32 height){
     s_VTable.New(*this, LogicalGPU::Instance(), format, usage, width, height);
 }
 
 sx_inline void GPUTexture::Delete(){
     s_VTable.Delete(*this);
+    m_Handle.U64 = 0;
 }
 
 constexpr LogicalGPU *GPUTexture::Owner()const{

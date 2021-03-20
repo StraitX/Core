@@ -163,8 +163,10 @@ void SwapchainImpl::InitializeFramebuffers(VkFormat format){
 
 void SwapchainImpl::FinalizeFramebuffers(){
     m_Framebuffers.Clear();
-    for(auto &image: m_Images)
+    for(auto &image: m_Images){
         GPUTextureImpl(image).DestroyWithoutImage();
+        GPUTextureImpl(image).Handle = 0;
+    }
 }
 
 void SwapchainImpl::PresentCurrent(VkSemaphore wait_semaphore){

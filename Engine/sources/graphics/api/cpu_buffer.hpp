@@ -66,7 +66,7 @@ public:
 // Use destructor to avoid Buffer leaks
 #ifdef SX_DEBUG
 CPUBuffer::~CPUBuffer(){
-    CoreAssert(m_Pointer == nullptr, "CPUBuffer: Delete should be called before destruction");
+    CoreAssert(m_Handle.U64 == 0, "CPUBuffer: Delete should be called before destruction");
 }
 #endif
 
@@ -82,12 +82,12 @@ sx_inline void CPUBuffer::New(u32 size, const void *data){
 
 sx_inline void CPUBuffer::Delete(){
     s_VTable.Delete(*this);
-#ifdef SX_DEBUG
+    m_Handle.U64 = 0;
     m_Pointer = nullptr;
-#endif
 }
 
 constexpr void *CPUBuffer::Pointer()const{
+    CoreAssert(m_Handle.U64, "CPUBuffer: Can't retrieve a pointer, buffer is not created");
     CoreAssert(m_Pointer, "CPUBuffer: For some reason Pointer is null");
     return m_Pointer;
 }
