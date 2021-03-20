@@ -55,7 +55,7 @@ public:
         DepthStencilOptimal     = 0x00000020,
     };
     struct VTable{
-        using NewProc    = void (*)(GPUTexture &texture, TextureFormat format, Usage usage, u32 width, u32 height);
+        using NewProc    = void (*)(GPUTexture &texture, LogicalGPU &owner, TextureFormat format, Usage usage, u32 width, u32 height);
         using DeleteProc = void (*)(GPUTexture &texture);
 
         NewProc    New    = nullptr;
@@ -106,8 +106,7 @@ public:
 };
 
 sx_inline void GPUTexture::New(TextureFormat format, Usage usage, u32 width, u32 height){
-    m_Owner = &LogicalGPU::Instance();
-    s_VTable.New(*this, format, usage, width, height);
+    s_VTable.New(*this, LogicalGPU::Instance(), format, usage, width, height);
 }
 
 sx_inline void GPUTexture::Delete(){

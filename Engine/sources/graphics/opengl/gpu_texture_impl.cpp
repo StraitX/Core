@@ -27,9 +27,10 @@ GLenum GPUTextureImpl::s_TypeTable[] = {
     GL_UNSIGNED_BYTE
 };
 
-void GPUTextureImpl::NewImpl(GPUTexture &texture, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
+void GPUTextureImpl::NewImpl(GPUTexture &texture, LogicalGPU &owner, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
     CoreAssert(format != TextureFormat::Unknown,"GPUTexture: Can't be created with Format::Unknown");
 
+    texture.m_Owner = &owner;
     texture.m_Width = width;
     texture.m_Height = height;
     texture.m_Layout = GPUTexture::Layout::Undefined;

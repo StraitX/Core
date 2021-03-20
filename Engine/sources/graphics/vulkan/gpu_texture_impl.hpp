@@ -11,7 +11,7 @@ struct GPUTextureImpl{
     static VkImageLayout s_LayoutTable[];
     static VkFormat s_FormatTable[];
 
-    Vk::LogicalGPUImpl *const Owner;
+    LogicalGPU *&Owner;
     VkImage &Handle;
     VkImageView &ViewHandle;
     VkDeviceMemory &Memory;
@@ -23,24 +23,24 @@ struct GPUTextureImpl{
 
     sx_inline GPUTextureImpl(GPUTexture &texture);
 
-    void Create(TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
+    void Create(LogicalGPU &owner, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
 
     void Destroy();
 
-    void CreateWithImage(VkImage image, GPUTexture::Layout layout, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
+    void CreateWithImage(Vk::LogicalGPUImpl *owner, VkImage image, GPUTexture::Layout layout, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
 
     void DestroyWithoutImage();
 
     static VkSampleCountFlagBits ToVkSampleCount(SamplePoints samples);
 
-    static void NewImpl(GPUTexture &texture, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
+    static void NewImpl(GPUTexture &texture, LogicalGPU &owner, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
 
     static void DeleteImpl(GPUTexture &texture);
 
 };
 
 sx_inline GPUTextureImpl::GPUTextureImpl(GPUTexture &texture):
-    Owner(static_cast<Vk::LogicalGPUImpl *>(texture.m_Owner)),
+    Owner(texture.m_Owner),
     Handle(reinterpret_cast<VkImage&>(texture.m_Handle.U64)),
     ViewHandle(reinterpret_cast<VkImageView&>(texture.m_ViewHandle.U64)),
     Memory(reinterpret_cast<VkDeviceMemory&>(texture.m_BackingMemory)),

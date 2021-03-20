@@ -148,7 +148,7 @@ void SwapchainImpl::InitializeFramebuffers(VkFormat format){
     CoreAssert(images_count <= MaxFramebuffers, "Vk: Swapchain: unsupported amount of Images");
 
     for(u32 i = 0; i<images_count; ++i){
-        GPUTextureImpl(m_Images.Emplace()).CreateWithImage(images[i], GPUTexture::Layout::PresentSrcOptimal, TextureFormat::BGRA8, GPUTexture::UsageBits::Sampled, m_Size.x, m_Size.y);
+        GPUTextureImpl(m_Images.Emplace()).CreateWithImage(m_Owner, images[i], GPUTexture::Layout::PresentSrcOptimal, TextureFormat::BGRA8, GPUTexture::UsageBits::Sampled, m_Size.x, m_Size.y);
 
         const GPUTexture *attachments[] = {
             &m_Images[i]

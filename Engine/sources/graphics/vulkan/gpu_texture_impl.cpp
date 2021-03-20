@@ -26,8 +26,10 @@ VkImageLayout GPUTextureImpl::s_LayoutTable[] = {
 
 
 
-void GPUTextureImpl::Create(TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
+void GPUTextureImpl::Create(LogicalGPU &owner, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
     CoreAssert(format != TextureFormat::Unknown,"GPUTexture: Can't be created with Format::Unknown");
+
+    auto device = static_cast<Vk::LogicalGPUImpl*>(&owner);
 
     VkImageCreateInfo info;
     info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -48,19 +50,20 @@ void GPUTextureImpl::Create(TextureFormat format, GPUTexture::Usage usage, u32 w
     info.pQueueFamilyIndices = nullptr;
     info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;// should be undefined by the spec
 
-    CoreFunctionAssert(vkCreateImage(Owner->Handle, &info, nullptr, &Handle), VK_SUCCESS, "Vk: GPUTextureImpl: Can't create VkImage");
+    CoreFunctionAssert(vkCreateImage(device->Handle, &info, nullptr, &Handle), VK_SUCCESS, "Vk: GPUTextureImpl: Can't create VkImage");
 
     VkMemoryRequirements req;
-    vkGetImageMemoryRequirements(Owner->Handle, Handle, &req);
+    vkGetImageMemoryRequirements(device->Handle, Handle, &req);
 
-    Memory = Owner->Alloc(req.size, MemoryTypes::VRAM);
+    Memory = device->Alloc(req.size, MemoryTypes::VRAM);
 
-    CoreFunctionAssert(vkBindImageMemory(Owner->Handle, Handle, Memory, 0), VK_SUCCESS, "Vk: GPUTextureImpl: can't bind image memory");
+    CoreFunctionAssert(vkBindImageMemory(device->Handle, Handle, Memory, 0), VK_SUCCESS, "Vk: GPUTextureImpl: can't bind image memory");
 
-    CreateWithImage(Handle, GPUTexture::Layout::Undefined, format, usage, width, height);
+    CreateWithImage(device, Handle, GPUTexture::Layout::Undefined, format, usage, width, height);
 }
 
-void GPUTextureImpl::CreateWithImage(VkImage image, GPUTexture::Layout layout, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
+void GPUTextureImpl::CreateWithImage(Vk::LogicalGPUImpl *owner, VkImage image, GPUTexture::Layout layout, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
+    Owner = owner;
     Handle = image;
     ViewHandle = VK_NULL_HANDLE;
     //Memory = image should already have binded memory
@@ -69,6 +72,8 @@ void GPUTextureImpl::CreateWithImage(VkImage image, GPUTexture::Layout layout, T
     Layout = layout;
     Format = format;
     Usage = usage;
+
+    Assert(Owner);
 
     VkImageViewCreateInfo view_info;
     view_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -87,26 +92,31 @@ void GPUTextureImpl::CreateWithImage(VkImage image, GPUTexture::Layout layout, T
     view_info.subresourceRange.layerCount = 1;
     view_info.subresourceRange.levelCount = 1;
 
-    CoreFunctionAssert(vkCreateImageView(Owner->Handle, &view_info, nullptr, &ViewHandle), VK_SUCCESS, "Vk: GPUTextureImpl: Can't create VkImageView");
+    CoreFunctionAssert(vkCreateImageView(owner->Handle, &view_info, nullptr, &ViewHandle), VK_SUCCESS, "Vk: GPUTextureImpl: Can't create VkImageView");
 }
 
 void GPUTextureImpl::Destroy(){
     DestroyWithoutImage();
 
-    vkDestroyImage(Owner->Handle, Handle, nullptr);
+    auto device = static_cast<Vk::LogicalGPUImpl*>(Owner);
 
-    Owner->Free(Memory);
+    vkDestroyImage(device->Handle, Handle, nullptr);
+
+    device->Free(Memory);
 }
 
 void GPUTextureImpl::DestroyWithoutImage(){
-    vkDestroyImageView(Owner->Handle, ViewHandle, nullptr);
+    Assert(Owner);
+    auto device = static_cast<Vk::LogicalGPUImpl*>(Owner);
+    Assert(device);
+    vkDestroyImageView(device->Handle, ViewHandle, nullptr);
 }
 
 VkSampleCountFlagBits GPUTextureImpl::ToVkSampleCount(SamplePoints samples){
     return static_cast<VkSampleCountFlagBits>((u32)std::pow(2, (u32)samples));
 }
-void GPUTextureImpl::NewImpl(GPUTexture &texture, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
-    GPUTextureImpl(texture).Create(format, usage, width, height);
+void GPUTextureImpl::NewImpl(GPUTexture &texture, LogicalGPU &owner, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
+    GPUTextureImpl(texture).Create(owner, format, usage, width, height);
 }
 
 void GPUTextureImpl::DeleteImpl(GPUTexture &texture){
