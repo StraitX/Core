@@ -6,9 +6,12 @@
 #include "core/math/vector2.hpp"
 #include "core/noncopyable.hpp"
 #include "graphics/api/format.hpp"
+#include "graphics/color.hpp"
+#include "graphics/image_loader.hpp"
 
 namespace StraitX{
-    // image is NonCopyable just for now
+
+// image is NonCopyable just for now
 class Image: public NonCopyable{
 private:
     u8 *m_Data = nullptr;
@@ -20,9 +23,15 @@ public:
 
     ~Image();
 
-    bool LoadFromFile(const char *filename, PixelFormat format = PixelFormat::RGBA8);
+    void Create(u32 width, u32 height, const Color &color = Color::Black);
 
-    bool LoadFromFile(File &file, PixelFormat format);
+    Result LoadFromFile(const char *filename, PixelFormat desired_format = PixelFormat::RGBA8);
+
+    Result LoadFromFile(File &file, PixelFormat desired_format = PixelFormat::RGBA8);
+
+    Result SaveToFile(File &file, ImageFormat save_format);
+
+    Result SaveToFile(const char *filename);
 
     constexpr u8 *Data()const;
 
