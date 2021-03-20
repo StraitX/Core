@@ -18,7 +18,8 @@ VkSamplerAddressMode WrapModeTable[]={
     VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
 };
 
-void SamplerImpl::NewImpl(Sampler &sampler, SamplerProperties props){
+void SamplerImpl::NewImpl(Sampler &sampler, LogicalGPU &owner, SamplerProperties props){
+    sampler.m_Owner = &owner;
     auto *device = static_cast<Vk::LogicalGPUImpl*>(sampler.m_Owner);
     auto &handle = reinterpret_cast<VkSampler&>(sampler.m_Handle.U64);
 

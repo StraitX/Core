@@ -16,7 +16,9 @@ static GLenum WrapModeTable[]={
     GL_CLAMP_TO_BORDER
 };
 
-void SamplerImpl::NewImpl(Sampler &sampler, SamplerProperties props){
+void SamplerImpl::NewImpl(Sampler &sampler, LogicalGPU &owner, SamplerProperties props){
+    sampler.m_Owner = &owner;
+    
     glGenSamplers(1,&sampler.m_Handle.U32);
     glSamplerParameteri(sampler.m_Handle.U32, GL_TEXTURE_MIN_FILTER, FilteringTable[(size_t)props.MinFiltering]);
     glSamplerParameteri(sampler.m_Handle.U32, GL_TEXTURE_MAG_FILTER, FilteringTable[(size_t)props.MagFiltering]);

@@ -40,14 +40,14 @@ class GraphicsAPILoader;
 class Sampler{
 public:
     struct VTable{
-        using NewProc    = void (*)(Sampler &sampler, SamplerProperties props);
+        using NewProc    = void (*)(Sampler &sampler, LogicalGPU &owner, SamplerProperties props);
         using DeleteProc = void (*)(Sampler &sampler);
 
         NewProc    New    = nullptr;
         DeleteProc Delete = nullptr;
     };
 private:
-    LogicalGPU *const m_Owner;
+    LogicalGPU *m_Owner;
     GPUResourceHandle m_Handle;
 
     static VTable s_VTable;
@@ -55,7 +55,7 @@ private:
     friend class Vk::SamplerImpl;
     friend class GL::SamplerImpl;
 public:
-    sx_inline Sampler();
+    Sampler() = default;
 
     sx_inline void New(SamplerProperties props);
 
@@ -64,12 +64,8 @@ public:
     constexpr GPUResourceHandle Handle()const;
 };
 
-sx_inline Sampler::Sampler():
-    m_Owner(&LogicalGPU::Instance())
-{}
-
 sx_inline void Sampler::New(SamplerProperties props){
-    s_VTable.New(*this, props);
+    s_VTable.New(*this, LogicalGPU::Instance(), props);
 }
 
 sx_inline void Sampler::Delete(){
