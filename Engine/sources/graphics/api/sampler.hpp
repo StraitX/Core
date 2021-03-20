@@ -20,11 +20,11 @@ enum class WrapMode: u8{
 };
 
 struct SamplerProperties{
-    FilteringMode MinFiltering;
-    FilteringMode MagFiltering;
-    WrapMode WrapU;
-    WrapMode WrapV;
-    WrapMode WrapS;
+    FilteringMode MinFiltering = FilteringMode::Linear;
+    FilteringMode MagFiltering = FilteringMode::Linear;
+    WrapMode WrapU = WrapMode::ClampToEdge;
+    WrapMode WrapV = WrapMode::ClampToEdge;
+    WrapMode WrapS = WrapMode::ClampToEdge;
 };
 
 namespace GL{
