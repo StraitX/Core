@@ -22,7 +22,7 @@ stbi_io_callbacks stb_callbacks = {
     stb_eof
 };
 
-bool ImageLoader::LoadImage(File &file, u32 &width, u32 &height, PixelFormat format, u8 *&pixels){
+Result ImageLoader::LoadImage(File &file, u32 &width, u32 &height, PixelFormat format, u8 *&pixels){
     int desired_channels = GetPixelSize(format);
     int x, y, channels;
     auto data = stbi_load_from_callbacks(&stb_callbacks, &file, &x, &y, &channels, desired_channels);
@@ -31,19 +31,39 @@ bool ImageLoader::LoadImage(File &file, u32 &width, u32 &height, PixelFormat for
     height = 0;
     pixels = nullptr;
 
-    if(data == nullptr)return false;
+    if(data == nullptr)return Result::Failure;
 
     if(channels != desired_channels){
         stbi_image_free(data);
-        return false;
+        return Result::WrongFormat;
     }
 
     width = x;
     height = y;
     pixels = data;
 
-    return true;
+    return Result::Success;
 }
+
+static void stbi_write_function(void *context, void *data, int size){
+    File *file = static_cast<File*>(context);
+    file->Write(data, size);
+}
+
+Result ImageLoader::SaveImage(File &file, u32 width, u32 height, PixelFormat p_format, ImageFormat i_format, u8 *pixels){
+    switch (i_format) {
+    case ImageFormat::PNG:
+        return Result((bool)stbi_write_png_to_func(stbi_write_function, &file, width, height, GetPixelSize(p_format), pixels, width * GetPixelSize(p_format)));
+    case ImageFormat::JPG:
+        return Result((bool)stbi_write_jpg_to_func(stbi_write_function, &file, width, height, GetPixelSize(p_format), pixels, 100));
+    case ImageFormat::BMP:
+        return Result((bool)stbi_write_bmp_to_func(stbi_write_function, &file, width, height, GetPixelSize(p_format), pixels));
+    case ImageFormat::TGA:
+        return Result((bool)stbi_write_tga_to_func(stbi_write_function, &file, width, height, GetPixelSize(p_format), pixels));
+    }
+    return Result::Success;
+}
+
 
 
 }//namespace StraitX::
