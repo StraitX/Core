@@ -9,7 +9,7 @@ namespace StraitX{
 namespace Vk{
 
 struct CPUBufferImpl{
-    LogicalGPUImpl * const Owner;
+    LogicalGPU *&Owner;
     VkBuffer &Handle;
     VkDeviceMemory &Memory;
     u32 &Size;
@@ -18,14 +18,14 @@ struct CPUBufferImpl{
     // NOTE: CPUBuffer should already have an owner because we can't cast type of pointer in a reference to pointer variable
     constexpr CPUBufferImpl(CPUBuffer &buffer):
         CPUBufferImpl(
-            static_cast<Vk::LogicalGPUImpl *>(buffer.m_Owner), 
+            buffer.m_Owner, 
             reinterpret_cast<VkBuffer&>(buffer.m_Handle.U64),
             reinterpret_cast<VkDeviceMemory&>(buffer.m_BackingMemory.U64), 
             buffer.m_Size, 
             buffer.m_Pointer)
     {}
 
-    constexpr CPUBufferImpl(LogicalGPUImpl *owner, VkBuffer &handle, VkDeviceMemory &memory, u32 &size, void *&pointer):
+    constexpr CPUBufferImpl(LogicalGPU *&owner, VkBuffer &handle, VkDeviceMemory &memory, u32 &size, void *&pointer):
         Owner(owner),
         Handle(handle),
         Memory(memory),
@@ -33,11 +33,11 @@ struct CPUBufferImpl{
         Pointer(pointer)
     {}
 
-    sx_inline void Create(u32 size);
+    sx_inline void Create(LogicalGPU *owner, u32 size);
 
     sx_inline void Destroy();
 
-    static void NewImpl(CPUBuffer &buffer, u32 size);
+    static void NewImpl(CPUBuffer &buffer, LogicalGPU &owner, u32 size);
 
     static void DeleteImpl(CPUBuffer &buffer);
 };

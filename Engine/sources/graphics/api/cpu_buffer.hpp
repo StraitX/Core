@@ -24,7 +24,7 @@ class GraphicsAPILoader;
 class CPUBuffer: public NonCopyable{
 public:
     struct VTable{
-        using NewProc    = void (*)(CPUBuffer &buffer, u32 size);
+        using NewProc    = void (*)(CPUBuffer &buffer, LogicalGPU &owner, u32 size);
         using DeleteProc = void (*)(CPUBuffer &buffer);
 
         NewProc    New    = nullptr;
@@ -71,9 +71,8 @@ CPUBuffer::~CPUBuffer(){
 #endif
 
 sx_inline void CPUBuffer::New(u32 size){
-    m_Owner = &LogicalGPU::Instance();
     CoreAssert(m_Pointer == nullptr, "CPUBuffer: New() should be called on empty object");
-    s_VTable.New(*this, size);
+    s_VTable.New(*this, LogicalGPU::Instance(), size);
 }
 
 sx_inline void CPUBuffer::New(u32 size, const void *data){

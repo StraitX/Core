@@ -7,7 +7,7 @@ namespace StraitX{
 namespace GL{
 
 struct CPUBufferImpl{
-    static void NewImpl(CPUBuffer &buffer, u32 size);
+    static void NewImpl(CPUBuffer &buffer, LogicalGPU &owner, u32 size);
 
     static void DeleteImpl(CPUBuffer &buffer);
 };
