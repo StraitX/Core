@@ -19,11 +19,9 @@ void DescriptorSet::Bind() const{
             glBindBufferBase(GL_UNIFORM_BUFFER, i, UniformBufferBindings[i].UniformBuffer);
     }
     for(auto i = 0; i<lengthof(SamplerBindings); ++i){
-        if(SamplerBindings[i].Texture && SamplerBindings[i].Sampler){
-            glActiveTexture(GL_TEXTURE0 + i);
-            glBindTexture(GL_TEXTURE_2D, SamplerBindings[i].Texture);
-            glBindSampler(i, SamplerBindings[i].Sampler);
-        }
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_2D, SamplerBindings[i].Texture);
+        glBindSampler(i, SamplerBindings[i].Sampler);
     }
 }
 
@@ -230,8 +228,8 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
         }
     }
 
-    size_t current_uniform = 0;
-    size_t current_sampler = 1;
+    u32 current_uniform = 0;
+    u32 current_sampler = 0;
 
     for(u32 i = 0; i<lengthof(Set.VirtualBindings); ++i){
         for(auto shader: props.Shaders){
@@ -284,32 +282,69 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
                 in_sources += offset;
                 out_sources += offset;
             }
+            if(SupportsUniformBindings()){
 
-            auto binding_index = String::IgnoreUntil(String::Find(statement.Pointer(), statement.Size(), "binding") + 7, '=');
+                auto binding_index = String::IgnoreUntil(String::Find(statement.Pointer(), statement.Size(), "binding") + 7, '=');
 
-            while(*binding_index < '0' || *binding_index > '9')++binding_index; 
+                while(*binding_index < '0' || *binding_index > '9')++binding_index; 
 
-            {
-                size_t offset = binding_index - in_sources;
-                Memory::Copy(in_sources, out_sources, offset);
-                in_sources += offset;
-                out_sources += offset;
-            }
-            u32 index = -1;
-            std::sscanf(in_sources, "%u", &index);
+                {
+                    size_t offset = binding_index - in_sources;
+                    Memory::Copy(in_sources, out_sources, offset);
+                    in_sources += offset;
+                    out_sources += offset;
+                }
+                u32 index = -1;
+                std::sscanf(in_sources, "%u", &index);
 
-            while(*in_sources >= '0' && *in_sources <= '9')++in_sources;
+                while(*in_sources >= '0' && *in_sources <= '9')++in_sources;
 
 
-            auto type = GetUniformStatementType(statement);
+                auto type = GetUniformStatementType(statement);
 
-            out_sources = BufferPrint(out_sources, Set.VirtualBindings[index].BaseGLBinding);
+                out_sources = BufferPrint(out_sources, Set.VirtualBindings[index].BaseGLBinding);
 
-            {
-                size_t offset = statement.Size() - (in_sources - statement.Pointer());
-                Memory::Copy(in_sources, out_sources, offset);
-                in_sources += offset;
-                out_sources += offset;
+                {
+                    size_t offset = statement.Size() - (in_sources - statement.Pointer());
+                    Memory::Copy(in_sources, out_sources, offset);
+                    in_sources += offset;
+                    out_sources += offset;
+                }
+            }else{
+                if(String::Find(statement.Pointer(), statement.Size(), ",")){
+                    
+                    const char *binding = String::Find(statement.Pointer(), statement.Size(), "binding");
+                    do{
+                        *out_sources++ = *in_sources++;
+                    }while(in_sources != binding);
+
+                    while(*out_sources!='(' && *out_sources != ',')--out_sources;
+
+                    if(*out_sources == '(')++out_sources;
+
+                    while(*in_sources != ',' && *in_sources != ')')++in_sources;
+
+                    if(*in_sources == ',')++in_sources;
+
+                    auto end = statement.Pointer() + statement.Size();
+
+                    {
+                        size_t offset = end - in_sources;
+                        Memory::Copy(in_sources, out_sources, offset);
+
+                        in_sources += offset;
+                        out_sources += offset;
+                    }
+                }else{
+                    const char *uniform = String::Find(statement.Pointer(), statement.Size(), "uniform");
+                    in_sources = uniform;
+
+                    size_t offset = statement.Size() - (uniform - statement.Pointer());
+
+                    Memory::Copy(in_sources, out_sources, offset);
+                    in_sources += offset;
+                    out_sources += offset;
+                }
             }
 
         }
@@ -322,8 +357,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
 
         *out_sources = 0;
 
-        LogInfo("Sources: %", shader_sources_buffer);
-        {
+        /*Compile Shader, validate and attach*/{
             int length = out_sources - shader_sources_buffer;
             glShaderSource(shaders[i], 1, &shader_sources_buffer, &length);
             glCompileShader(shaders[i]);
@@ -363,6 +397,61 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
         }
     }
 
+    glUseProgram(Program);
+    
+    for(auto shader: props.Shaders){
+        auto impl = static_cast<const GL::ShaderImpl*>(shader);
+
+        ArrayPtr<const char> statement;
+        const char *search = impl->Sources;
+        while((statement = FindFirstUniformBindingStatement(search + statement.Size())).Pointer()){
+            search = statement.Pointer();
+
+
+            const char *binding = String::Ignore(String::IgnoreUntil(String::Find(statement.Pointer(), statement.Size(), "binding") + 7, '=') + 1, ' ');
+            u32 binding_index = 0;
+            std::sscanf(binding, "%u",&binding_index);
+
+
+            ShaderBindingType type = GetUniformStatementType(statement);
+
+            switch (type) {
+            case ShaderBindingType::UniformBuffer:
+            {
+                const char *name = String::Ignore(String::Find(statement.Pointer(), "uniform") + 7, ' ');
+
+                size_t name_length = 0;
+                for(const char *i = name; *i != ' ' && *i != '{' && *i != ';'; ++i,++name_length);
+
+                char *name_null = (char*)alloca(name_length + 1);
+                Memory::Copy(name, name_null, name_length);
+                name_null[name_length] = 0;
+
+                u32 index = glGetUniformBlockIndex(Program, name_null);
+                glUniformBlockBinding(Program, index, Set.VirtualBindings[binding_index].BaseGLBinding);
+            }break;
+            case ShaderBindingType::Sampler:
+            {
+                const char *name = String::Ignore(String::Find(statement.Pointer(), "sampler2D") + 9, ' ');
+
+                size_t name_length = 0;
+                for(const char *i = name; *i != ' ' && *i != '[' && *i != ';'; ++i,++name_length);
+
+                char *name_null = (char*)alloca(name_length + 1);
+                Memory::Copy(name, name_null, name_length);
+                name_null[name_length] = 0;
+
+                s32 *units = (s32*)alloca(Set.VirtualBindings[binding_index].ArraySize * sizeof(s32));
+                for(u32 i = 0; i<Set.VirtualBindings[binding_index].ArraySize; ++i){
+                    units[i] = Set.VirtualBindings[binding_index].BaseGLBinding + i;
+                }
+                glUniform1iv(glGetUniformLocation(Program, name_null), Set.VirtualBindings[binding_index].ArraySize, units);
+            }break;
+            }
+        }
+    } 
+
+
     for(auto shader: shaders)
         glDeleteShader(shader);
 }
@@ -386,7 +475,7 @@ void GraphicsPipelineImpl::Bind(size_t binding, size_t index, const GPUTexture &
     Set.SamplerBindings[Set.VirtualBindings[binding].BaseGLBinding + index].Texture = texture.Handle().U32;
     Set.SamplerBindings[Set.VirtualBindings[binding].BaseGLBinding + index].Sampler = sampler.Handle().U32;
 
-    glActiveTexture(Set.VirtualBindings[binding].BaseGLBinding + index);
+    glActiveTexture(GL_TEXTURE0 + Set.VirtualBindings[binding].BaseGLBinding + index);
     glBindTexture(GL_TEXTURE_2D, texture.Handle().U32);
     glBindSampler(Set.VirtualBindings[binding].BaseGLBinding + index, sampler.Handle().U32);
 }
@@ -421,6 +510,14 @@ void GraphicsPipelineImpl::BindVertexBuffer(u32 id)const{
 
 void GraphicsPipelineImpl::BindIndexBuffer(u32 id)const{
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+}
+
+bool GraphicsPipelineImpl::SupportsUniformBindings()const{
+    auto &api = GraphicsAPIImpl::Instance;
+
+    if(api.LoadedOpenGLVersion.Major >= 4 && api.LoadedOpenGLVersion.Minor >= 2)return true;
+
+    return false;
 }
 
 GraphicsPipeline * GraphicsPipelineImpl::NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props){

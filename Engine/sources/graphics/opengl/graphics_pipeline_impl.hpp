@@ -24,9 +24,9 @@ struct SamplerBinding{
 
 struct DescriptorSet{
     VirtualBinding VirtualBindings[MaxShaderBindings];
-    UniformBufferBinding UniformBufferBindings[32];
-    //first one is wasted because we use texture unit zero for creation bindings
-    SamplerBinding SamplerBindings[32];
+    UniformBufferBinding UniformBufferBindings[14];
+    //last one is wasted because we reserve one texture unit for creation bindings
+    SamplerBinding SamplerBindings[16];
 
     void Bind()const;
 };
@@ -67,6 +67,8 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     void BindVertexBuffer(u32 id)const;
 
     void BindIndexBuffer(u32 id)const;
+
+    bool SupportsUniformBindings()const;
 
     static GraphicsPipeline * NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props);
 
