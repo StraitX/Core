@@ -87,7 +87,6 @@ sx_inline void CPUBuffer::Delete(){
 }
 
 constexpr void *CPUBuffer::Pointer()const{
-    CoreAssert(m_Handle.U64, "CPUBuffer: Can't retrieve a pointer, buffer is not created");
     CoreAssert(m_Pointer, "CPUBuffer: For some reason Pointer is null");
     return m_Pointer;
 }
