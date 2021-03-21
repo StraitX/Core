@@ -7,10 +7,11 @@
 namespace StraitX{
 namespace GL{
 
-class LogicalGPUImpl: public LogicalGPU{
-private:
-    OpenGLContext m_Context;
-public:
+struct LogicalGPUImpl: public LogicalGPU{
+    OpenGLContext Context;
+    s32 MaxTextureUnits;
+    s32 MaxUniformBufferBindings;
+
     static LogicalGPUImpl Instance;
 
     Result Initialize(const PhysicalGPU &gp)override;

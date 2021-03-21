@@ -51,7 +51,7 @@ struct ShaderBinding{
 };
 
 //TODO: Take value from docs
-constexpr size_t MaxShaderBindings = 8;
+constexpr size_t MaxShaderBindings = 14;
 
 enum class PrimitivesTopology{
     Points = 0,
