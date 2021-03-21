@@ -11,7 +11,8 @@ void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, 
 }
 
 void DMAImpl::CopyCPU2GPUTextureImpl(const CPUTexture &src, const GPUTexture &dst){
-    glTextureSubImage2D(dst.Handle().U32, 0, 0, 0, src.Size().x, src.Size().y, GPUTextureImpl::s_FormatTable[(size_t)src.Format()], GPUTextureImpl::s_TypeTable[(size_t)src.Format()], src.Pointer());
+    GL::GPUTextureImpl::BindZero(dst);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, src.Size().x, src.Size().y, GPUTextureImpl::s_FormatTable[(size_t)src.Format()], GPUTextureImpl::s_TypeTable[(size_t)src.Format()], src.Pointer());
 }
 
 void DMAImpl::ChangeGPUTextureLayoutImpl(GPUTexture &src, GPUTexture::Layout layout){
