@@ -196,6 +196,64 @@ ShaderBindingType GetUniformStatementType(ArrayPtr<const char> statement){
     return ShaderBindingType::UniformBuffer;
 }
 
+void ReplaceVersionTo(const char *&in_sources, char *&out_sources, s32 version_number){
+    const char *version = String::Ignore(String::Find(in_sources, "#version") + 8, ' ');
+    Memory::Copy(in_sources, out_sources, version - in_sources);
+    out_sources += version - in_sources;
+    in_sources = String::IgnoreUntil(version, ' ');
+    out_sources = BufferPrint(out_sources, version_number);
+}
+
+void Copy(const char *end, const char *&in_sources, char *&out_sources){
+    size_t offset = end - in_sources;
+    Memory::Copy(in_sources, out_sources, offset);
+    in_sources += offset;
+    out_sources += offset;
+}
+
+void TranslateStatementWithoutLayoutQualifiers(const ArrayPtr<const char> &statement,const char *&in_sources, char *&out_sources){
+    const char *uniform = String::Find(statement.Pointer(), statement.Size(), "uniform");
+    in_sources = uniform;
+
+    Copy(statement.Pointer() + statement.Size(), in_sources, out_sources);
+}
+
+void TranslateStatementWithoutBindingQualifier(const ArrayPtr<const char> &statement,const char *&in_sources, char *&out_sources){
+    const char *binding = String::Find(statement.Pointer(), statement.Size(), "binding");
+    do{
+        *out_sources++ = *in_sources++;
+    }while(in_sources != binding);
+
+    while(*out_sources!='(' && *out_sources != ',')--out_sources;
+
+    if(*out_sources == '(')++out_sources;
+
+    while(*in_sources != ',' && *in_sources != ')')++in_sources;
+
+    if(*in_sources == ',')++in_sources;
+
+    Copy(statement.Pointer() + statement.Size(), in_sources, out_sources);
+}
+
+u32 GetStatementBindingIndex(const ArrayPtr<const char> &statement){
+    const char *binding = String::Ignore(String::IgnoreUntil(String::Find(statement.Pointer(), statement.Size(), "binding") + 7, '=') + 1, ' ');
+    u32 binding_index = 0;
+    std::sscanf(binding, "%u",&binding_index);
+    return binding_index;
+}
+
+void TranslateStatementToBindingIndex(const ArrayPtr<const char> &statement,const char *&in_sources, char *&out_sources, u32 binding_index){
+
+    const char *binding = String::Ignore(String::IgnoreUntil(String::Find(statement.Pointer(), statement.Size(), "binding") + 7, '=') + 1, ' ');
+
+    Copy(binding, in_sources, out_sources);
+
+    out_sources = BufferPrint(out_sources, binding_index);
+
+    while(*in_sources >= '0' && *in_sources <= '9')++in_sources;
+
+    Copy(statement.Pointer() + statement.Size(), in_sources, out_sources);
+}
 
 GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props):
     GraphicsPipeline(props),
@@ -273,90 +331,31 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
         char *out_sources = shader_sources_buffer;
         const char *in_sources = impl->Sources;
 
+        if(!SupportsUniformBindings())ReplaceVersionTo(in_sources, out_sources, 410);
+
         ArrayPtr<const char> statement;
 
         while((statement = FindFirstUniformBindingStatement(in_sources)).Pointer()){
-            {
-                size_t offset = statement.Pointer() - in_sources;
-                Memory::Copy(in_sources, out_sources, offset);
-                in_sources += offset;
-                out_sources += offset;
-            }
+            Copy(statement.Pointer(), in_sources, out_sources);
+
             if(SupportsUniformBindings()){
+                u32 binding_index = GetStatementBindingIndex(statement);
 
-                auto binding_index = String::IgnoreUntil(String::Find(statement.Pointer(), statement.Size(), "binding") + 7, '=');
-
-                while(*binding_index < '0' || *binding_index > '9')++binding_index; 
-
-                {
-                    size_t offset = binding_index - in_sources;
-                    Memory::Copy(in_sources, out_sources, offset);
-                    in_sources += offset;
-                    out_sources += offset;
-                }
-                u32 index = -1;
-                std::sscanf(in_sources, "%u", &index);
-
-                while(*in_sources >= '0' && *in_sources <= '9')++in_sources;
-
-
-                auto type = GetUniformStatementType(statement);
-
-                out_sources = BufferPrint(out_sources, Set.VirtualBindings[index].BaseGLBinding);
-
-                {
-                    size_t offset = statement.Size() - (in_sources - statement.Pointer());
-                    Memory::Copy(in_sources, out_sources, offset);
-                    in_sources += offset;
-                    out_sources += offset;
-                }
+                TranslateStatementToBindingIndex(statement, in_sources, out_sources, Set.VirtualBindings[binding_index].BaseGLBinding);
             }else{
-                if(String::Find(statement.Pointer(), statement.Size(), ",")){
-                    
-                    const char *binding = String::Find(statement.Pointer(), statement.Size(), "binding");
-                    do{
-                        *out_sources++ = *in_sources++;
-                    }while(in_sources != binding);
-
-                    while(*out_sources!='(' && *out_sources != ',')--out_sources;
-
-                    if(*out_sources == '(')++out_sources;
-
-                    while(*in_sources != ',' && *in_sources != ')')++in_sources;
-
-                    if(*in_sources == ',')++in_sources;
-
-                    auto end = statement.Pointer() + statement.Size();
-
-                    {
-                        size_t offset = end - in_sources;
-                        Memory::Copy(in_sources, out_sources, offset);
-
-                        in_sources += offset;
-                        out_sources += offset;
-                    }
-                }else{
-                    const char *uniform = String::Find(statement.Pointer(), statement.Size(), "uniform");
-                    in_sources = uniform;
-
-                    size_t offset = statement.Size() - (uniform - statement.Pointer());
-
-                    Memory::Copy(in_sources, out_sources, offset);
-                    in_sources += offset;
-                    out_sources += offset;
-                }
+                // XXX !!!Every uniform should have binding!!! then i can understand if there is any other layout qualifiers by comma search
+                if(String::Find(statement.Pointer(), statement.Size(), ","))
+                    TranslateStatementWithoutBindingQualifier(statement, in_sources, out_sources);
+                else
+                    TranslateStatementWithoutLayoutQualifiers(statement, in_sources, out_sources);
             }
 
         }
 
-        {
-            size_t offset = impl->Length - (in_sources - impl->Sources);
-            Memory::Copy(in_sources, out_sources, offset);
-            out_sources += offset;
-        }
-
+        Copy(impl->Sources + impl->Length, in_sources, out_sources);
         *out_sources = 0;
 
+        LogInfo("Sources: %",shader_sources_buffer);
         /*Compile Shader, validate and attach*/{
             int length = out_sources - shader_sources_buffer;
             glShaderSource(shaders[i], 1, &shader_sources_buffer, &length);
@@ -407,11 +406,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
         while((statement = FindFirstUniformBindingStatement(search + statement.Size())).Pointer()){
             search = statement.Pointer();
 
-
-            const char *binding = String::Ignore(String::IgnoreUntil(String::Find(statement.Pointer(), statement.Size(), "binding") + 7, '=') + 1, ' ');
-            u32 binding_index = 0;
-            std::sscanf(binding, "%u",&binding_index);
-
+            u32 binding_index = GetStatementBindingIndex(statement);
 
             ShaderBindingType type = GetUniformStatementType(statement);
 

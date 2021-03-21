@@ -43,7 +43,6 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     size_t AttributesStride = 0;
 
     GLenum Topology;
-    //TODO last thing to match vulkan
     GLenum Rasterization;
     Viewport FramebufferViewport;
     GLenum BlendFunc;
