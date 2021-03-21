@@ -1,7 +1,7 @@
 #include "platform/opengl.hpp"
 #include "graphics/opengl/debug.hpp"
 #include "graphics/opengl/gpu_texture_impl.hpp"
-
+#include "graphics/opengl/logical_gpu_impl.hpp"
 
 namespace StraitX{
 namespace GL{
@@ -47,7 +47,8 @@ void GPUTextureImpl::DeleteImpl(GPUTexture &texture){
 }
 
 void GPUTextureImpl::BindZero(const GPUTexture &texture){
-    GL(glActiveTexture(GL_TEXTURE0));
+    GL::LogicalGPUImpl *owner = static_cast<GL::LogicalGPUImpl*>(texture.m_Owner);
+    GL(glActiveTexture(GL_TEXTURE0 + owner->MaxTextureUnits - 1));
     GL(glBindTexture(GL_TEXTURE_2D, texture.m_Handle.U32));
 }
 
