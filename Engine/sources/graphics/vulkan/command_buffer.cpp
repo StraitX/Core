@@ -94,8 +94,8 @@ void CommandBuffer::CmdImageBarrier(VkPipelineStageFlags src, VkPipelineStageFla
     barrier.dstAccessMask = dst_access;
     barrier.oldLayout = old;
     barrier.newLayout = next;
-    barrier.srcQueueFamilyIndex = 0;
-    barrier.dstQueueFamilyIndex = 0;
+    barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     barrier.image = img;
     barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     barrier.subresourceRange.baseArrayLayer = 0;
