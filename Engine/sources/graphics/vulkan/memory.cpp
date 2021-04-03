@@ -44,8 +44,8 @@ void MemoryTypes::Query(VkPhysicalDevice device){
            flags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
         {
             Layout = MemoryLayout::Uniform;
-            Index[RAM] = Index[UncachedRAM] = Index[VRAM] = Index[DynamicVRAM] = 0;
-            Size[RAM] = Size[UncachedRAM] = Size[VRAM] = Size[DynamicVRAM] = mem_props.memoryHeaps[mem_props.memoryTypes[0].heapIndex].size;
+            Index[RAM] = 0;
+            Size[RAM] = mem_props.memoryHeaps[mem_props.memoryTypes[0].heapIndex].size;
             return;
         }
         DLogInfo("Vk: MemoryTypes: Uniform Memory device: Unsupported Memory type");
@@ -86,7 +86,9 @@ void MemoryTypes::Query(VkPhysicalDevice device){
         }
     }   
 
-    Layout = (DynamicVRAM != InvalidIndex) ? Layout = MemoryLayout::DedicatedWithDynamic : MemoryLayout::Dedicated;
+    if(Index[VRAM] == InvalidIndex)return;
+
+    Layout = (Index[DynamicVRAM] != InvalidIndex) ? Layout = MemoryLayout::DedicatedWithDynamic : MemoryLayout::Dedicated;
 }
 
 }//namespace Vk::

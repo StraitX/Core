@@ -20,6 +20,16 @@ Result LogicalGPUImpl::Initialize(const PhysicalGPU &gpu){
         QueryQueues();
         Memory.Query(PhysicalHandle);
     }
+
+    if(GeneralQueueFamily == InvalidIndex){
+        LogError("Vk: LogicalGPU: Does not have General Queue");
+        return Result::Unsupported;
+    }
+
+    if(Memory.Layout == MemoryLayout::Unknown){
+        LogError("Vk: LogicalGPU: Unknown Memory Layout");
+        return Result::Unsupported;
+    }
     
     { // Device creation
         const char *ext[] = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
