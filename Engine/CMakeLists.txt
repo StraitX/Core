@@ -43,6 +43,7 @@ set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/memory.cpp
     ${SOURCES_DIR}/graphics/vulkan/gpu_memory_allocator.cpp
     ${SOURCES_DIR}/graphics/vulkan/gpu_buffer_impl.cpp
+    ${SOURCES_DIR}/graphics/vulkan/command_buffer.cpp
     ${SOURCES_DIR}/graphics/vulkan/gpu_context_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/swapchain_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/cpu_buffer_impl.cpp
