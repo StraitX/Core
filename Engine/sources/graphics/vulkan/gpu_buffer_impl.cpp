@@ -12,21 +12,23 @@ u32 GetBufferMemoryRequirements(VkDevice owner, VkBuffer buffer){
 }
 
 constexpr GPUBufferImpl::GPUBufferImpl(GPUBuffer &buffer):
-    GPUBufferImpl(buffer.m_Owner, reinterpret_cast<VkBuffer&>(buffer.m_Handle.U64), reinterpret_cast<VkDeviceMemory&>(buffer.m_BackingMemory.U64), buffer.m_Size, buffer.m_Usage)
+    GPUBufferImpl(buffer.m_Owner, reinterpret_cast<VkBuffer&>(buffer.m_Handle.U64), reinterpret_cast<VkDeviceMemory&>(buffer.m_BackingMemory.U64), buffer.m_Size, buffer.m_Usage, buffer.m_MemoryType)
 {}
 
-constexpr GPUBufferImpl::GPUBufferImpl(LogicalGPU *&owner, VkBuffer &handle, VkDeviceMemory &memory, u32 &size, GPUBuffer::UsageType &usage):
+constexpr GPUBufferImpl::GPUBufferImpl(LogicalGPU *&owner, VkBuffer &handle, VkDeviceMemory &memory, u32 &size, GPUBuffer::UsageType &usage, GPUMemoryType &mem_type):
     Owner(owner),
     Handle(handle),
     Memory(memory),
     Size(size),
-    Usage(usage)
+    Usage(usage),
+    MemoryType(mem_type)
 {}
 
 void GPUBufferImpl::Create(LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
     Owner = &owner;
     Size = size;
     Usage = usage;
+    MemoryType = mem_type;
 
     auto device = static_cast<Vk::LogicalGPUImpl *>(Owner);
 

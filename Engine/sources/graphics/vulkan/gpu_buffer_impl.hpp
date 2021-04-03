@@ -14,10 +14,11 @@ struct GPUBufferImpl{
     VkDeviceMemory &Memory;
     u32 &Size;
     GPUBuffer::UsageType &Usage;
+    GPUMemoryType &MemoryType;
 
     constexpr GPUBufferImpl(GPUBuffer &buffer);
 
-    constexpr GPUBufferImpl(LogicalGPU *&owner, VkBuffer &Handle, VkDeviceMemory &Memory, u32 &size, GPUBuffer::UsageType &usage);
+    constexpr GPUBufferImpl(LogicalGPU *&owner, VkBuffer &Handle, VkDeviceMemory &Memory, u32 &size, GPUBuffer::UsageType &usage, GPUMemoryType &mem_type);
 
     void Create(LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage);
 

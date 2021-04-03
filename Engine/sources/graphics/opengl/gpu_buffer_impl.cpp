@@ -8,6 +8,7 @@ void GPUBufferImpl::NewImpl(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUM
     buffer.m_Owner = &owner;
     buffer.m_Size = size;
     buffer.m_Usage = usage;
+    buffer.m_MemoryType = mem_type;
     
     glGenBuffers(1, &buffer.m_Handle.U32);
     glBindBuffer(GL_COPY_WRITE_BUFFER, buffer.m_Handle.U32);
