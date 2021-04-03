@@ -1,3 +1,4 @@
+#include "platform/memory.hpp"
 #include "graphics/vulkan/dma_impl.hpp"
 #include "graphics/vulkan/fence.hpp"
 #include "graphics/vulkan/logical_gpu_impl.hpp"
@@ -9,20 +10,31 @@ namespace Vk{
 void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
     auto gpu = static_cast<const Vk::LogicalGPUImpl*>(dst.Owner());
 
-    gpu->TransferCmdBuffer.Begin();
-    {
-        gpu->TransferCmdBuffer.CmdBufferCopy(
-            (VkBuffer)src.Handle().U64, 
-            (VkBuffer)dst.Handle().U64, 
-            size, 
-            src_offset, 
-            dst_offset
-        );
-    }
-    gpu->TransferCmdBuffer.End();
+    if(dst.MemoryType() == GPUMemoryType::DynamicVRAM || gpu->Memory.Layout == MemoryLayout::Uniform){
+        auto memory = reinterpret_cast<VkDeviceMemory>(dst.Memory().U64);
 
-    gpu->TransferCmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, gpu->TransferFence.Handle);
-    gpu->TransferFence.WaitFor();
+        void *pointer;
+        vkMapMemory(gpu->Handle, memory, 0, dst.Size(), 0, &pointer);
+        {
+            Memory::Copy((u8*)src.Pointer() + src_offset, (u8*)pointer + dst_offset, size);
+        }
+        vkUnmapMemory(gpu->Handle, memory);
+    }else{
+        gpu->TransferCmdBuffer.Begin();
+        {
+            gpu->TransferCmdBuffer.CmdBufferCopy(
+                (VkBuffer)src.Handle().U64, 
+                (VkBuffer)dst.Handle().U64, 
+                size, 
+                src_offset, 
+                dst_offset
+            );
+        }
+        gpu->TransferCmdBuffer.End();
+
+        gpu->TransferCmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, gpu->TransferFence.Handle);
+        gpu->TransferFence.WaitFor();
+    }
 }
 
 void DMAImpl::CopyCPU2GPUTextureImpl(const CPUTexture &src, const GPUTexture &dst){

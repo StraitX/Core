@@ -66,6 +66,8 @@ public:
 
     constexpr GPUResourceHandle Handle()const;
 
+    constexpr GPUResourceHandle Memory()const;
+
     constexpr u32 Size()const;
 
     constexpr UsageType Usage()const;
@@ -96,6 +98,10 @@ constexpr LogicalGPU *GPUBuffer::Owner()const{
 
 constexpr GPUResourceHandle GPUBuffer::Handle()const{
     return m_Handle;
+}
+
+constexpr GPUResourceHandle GPUBuffer::Memory()const{
+    return m_BackingMemory;
 }
 
 constexpr u32 GPUBuffer::Size()const{
