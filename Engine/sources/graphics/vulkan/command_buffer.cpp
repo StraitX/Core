@@ -69,11 +69,11 @@ void CommandBuffer::Submit(const ArrayPtr<const VkSemaphore> &wait_semaphores, c
     CoreFunctionAssert(vkQueueSubmit(Queue.Handle, 1, &info, signal_fence), VK_SUCCESS, "Vk: CommandBuffer: Failed to submit");
 }
 
-void CommandBuffer::CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst){
+void CommandBuffer::CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst)const{
     vkCmdPipelineBarrier(Handle, src, dst, 0, 0, nullptr, 0, nullptr, 0, nullptr);
 }
 
-void CommandBuffer::CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_access, VkAccessFlags dst_access){
+void CommandBuffer::CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_access, VkAccessFlags dst_access)const{
     VkMemoryBarrier barrier;
     barrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
     barrier.pNext = nullptr;
@@ -85,7 +85,7 @@ void CommandBuffer::CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFl
 
 void CommandBuffer::CmdImageBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, 
                                      VkAccessFlags src_acces, VkAccessFlags dst_access, 
-                                     VkImageLayout old, VkImageLayout next, VkImage img)
+                                     VkImageLayout old, VkImageLayout next, VkImage img)const
 {
     VkImageMemoryBarrier barrier;
     barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;

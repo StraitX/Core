@@ -11,11 +11,13 @@ void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, 
 
     gpu->TransferCmdBuffer.Begin();
     {
-        VkBufferCopy copy;
-        copy.srcOffset = src_offset;
-        copy.dstOffset = dst_offset;
-        copy.size = size;
-        vkCmdCopyBuffer(gpu->TransferCmdBuffer, (VkBuffer)src.Handle().U64, (VkBuffer)dst.Handle().U64, 1, &copy);
+        gpu->TransferCmdBuffer.CmdBufferCopy(
+            (VkBuffer)src.Handle().U64, 
+            (VkBuffer)dst.Handle().U64, 
+            size, 
+            src_offset, 
+            dst_offset
+        );
     }
     gpu->TransferCmdBuffer.End();
 
@@ -53,23 +55,15 @@ void DMAImpl::ChangeGPUTextureLayoutImpl(GPUTexture &src, GPUTexture::Layout lay
 
     gpu->TransferCmdBuffer.Begin();
     {
-        VkImageMemoryBarrier barrier;
-        barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        barrier.pNext = nullptr;
-        barrier.srcAccessMask = VK_ACCESS_MEMORY_WRITE_BIT;
-        barrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-        barrier.oldLayout = GPUTextureImpl::s_LayoutTable[(size_t)src.GetLayout()];
-        barrier.newLayout = GPUTextureImpl::s_LayoutTable[(size_t)layout];
-        barrier.srcQueueFamilyIndex = 0;
-        barrier.dstQueueFamilyIndex = 0;
-        barrier.image = (VkImage)src.Handle().U64;
-        barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        barrier.subresourceRange.baseArrayLayer = 0;
-        barrier.subresourceRange.baseMipLevel = 0;
-        barrier.subresourceRange.levelCount = 1;
-        barrier.subresourceRange.layerCount = 1;
-
-        vkCmdPipelineBarrier(gpu->TransferCmdBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+        gpu->TransferCmdBuffer.CmdImageBarrier(
+            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
+            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
+            VK_ACCESS_MEMORY_WRITE_BIT, 
+            VK_ACCESS_MEMORY_READ_BIT, 
+            GPUTextureImpl::s_LayoutTable[(size_t)src.GetLayout()], 
+            GPUTextureImpl::s_LayoutTable[(size_t)layout], 
+            (VkImage)src.Handle().U64
+        );
     }
     gpu->TransferCmdBuffer.End();
 

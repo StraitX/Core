@@ -24,11 +24,19 @@ struct CommandBuffer{
 
     void Submit(const ArrayPtr<const VkSemaphore> &wait_semaphores, const ArrayPtr<const VkSemaphore> &signal_semaphores, VkFence signal_fence)const;
 
-    void CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst);
+    sx_inline void CmdBufferCopy(VkBuffer src, VkBuffer dst, VkDeviceSize size, VkDeviceSize src_offset, VkDeviceSize dst_offset)const{
+        VkBufferCopy copy;
+        copy.srcOffset = src_offset;
+        copy.dstOffset = dst_offset;
+        copy.size = size;
+        vkCmdCopyBuffer(Handle, src, dst, 1, &copy);
+    }
 
-    void CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_acces, VkAccessFlags dst_access);
+    void CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst)const;
 
-    void CmdImageBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_acces, VkAccessFlags dst_access, VkImageLayout old, VkImageLayout next, VkImage img);
+    void CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_acces, VkAccessFlags dst_access)const;
+
+    void CmdImageBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_acces, VkAccessFlags dst_access, VkImageLayout old, VkImageLayout next, VkImage img)const;
 
     operator VkCommandBuffer()const;
 };
