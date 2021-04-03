@@ -69,6 +69,43 @@ void CommandBuffer::Submit(const ArrayPtr<const VkSemaphore> &wait_semaphores, c
     CoreFunctionAssert(vkQueueSubmit(Queue.Handle, 1, &info, signal_fence), VK_SUCCESS, "Vk: CommandBuffer: Failed to submit");
 }
 
+void CommandBuffer::CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst){
+    vkCmdPipelineBarrier(Handle, src, dst, 0, 0, nullptr, 0, nullptr, 0, nullptr);
+}
+
+void CommandBuffer::CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_access, VkAccessFlags dst_access){
+    VkMemoryBarrier barrier;
+    barrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+    barrier.pNext = nullptr;
+    barrier.srcAccessMask = src_access;
+    barrier.dstAccessMask = dst_access;
+
+    vkCmdPipelineBarrier(Handle, src, dst, 0, 1, &barrier, 0, nullptr, 0, nullptr);
+}
+
+void CommandBuffer::CmdImageBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, 
+                                     VkAccessFlags src_acces, VkAccessFlags dst_access, 
+                                     VkImageLayout old, VkImageLayout next, VkImage img)
+{
+    VkImageMemoryBarrier barrier;
+    barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    barrier.pNext = nullptr;
+    barrier.srcAccessMask = src_acces;
+    barrier.dstAccessMask = dst_access;
+    barrier.oldLayout = old;
+    barrier.newLayout = next;
+    barrier.srcQueueFamilyIndex = 0;
+    barrier.dstQueueFamilyIndex = 0;
+    barrier.image = img;
+    barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    barrier.subresourceRange.baseArrayLayer = 0;
+    barrier.subresourceRange.baseMipLevel = 0;
+    barrier.subresourceRange.levelCount = 1;
+    barrier.subresourceRange.layerCount = 1;
+
+    vkCmdPipelineBarrier(Handle, src, dst, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+}
+
 CommandBuffer::operator VkCommandBuffer()const{
     return Handle;
 }
