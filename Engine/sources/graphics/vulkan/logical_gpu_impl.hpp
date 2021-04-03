@@ -7,6 +7,8 @@
 #include "graphics/vulkan/queue.hpp"
 #include "graphics/vulkan/memory.hpp"
 #include "graphics/vulkan/gpu_memory_allocator.hpp"
+#include "graphics/vulkan/command_buffer.hpp"
+#include "graphics/vulkan/fence.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -28,8 +30,8 @@ struct LogicalGPUImpl: public LogicalGPU{
     Vk::Queue GeneralQueue;
     Vk::Queue TransferQueue;
 
-    VkCommandPool Pool;
-    VkCommandBuffer TransferCmdBuffer;
+    Vk::CommandBuffer TransferCmdBuffer;
+    Vk::Fence TransferFence;
 
     static LogicalGPUImpl Instance;
 

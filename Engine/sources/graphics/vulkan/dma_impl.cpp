@@ -9,13 +9,7 @@ namespace Vk{
 void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
     auto gpu = static_cast<const Vk::LogicalGPUImpl*>(dst.Owner());
 
-    VkCommandBufferBeginInfo begin_info;
-    begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    begin_info.pNext = nullptr;
-    begin_info.flags = 0;
-    begin_info.pInheritanceInfo = nullptr;
-
-    vkBeginCommandBuffer(gpu->TransferCmdBuffer, &begin_info);
+    gpu->TransferCmdBuffer.Begin();
     {
         VkBufferCopy copy;
         copy.srcOffset = src_offset;
@@ -23,32 +17,16 @@ void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, 
         copy.size = size;
         vkCmdCopyBuffer(gpu->TransferCmdBuffer, (VkBuffer)src.Handle().U64, (VkBuffer)dst.Handle().U64, 1, &copy);
     }
-    vkEndCommandBuffer(gpu->TransferCmdBuffer);
+    gpu->TransferCmdBuffer.End();
 
-    VkSubmitInfo submit_info = {};
-    submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submit_info.pNext = nullptr;
-    submit_info.commandBufferCount = 1;
-    submit_info.pCommandBuffers = &gpu->TransferCmdBuffer;
-    submit_info.signalSemaphoreCount = 0;
-    submit_info.waitSemaphoreCount = 0;
-
-    Vk::Fence fence(gpu->Handle);
-    vkQueueSubmit(gpu->GeneralQueue.Handle, 1, &submit_info, fence.Handle);
-
-    fence.WaitFor();
+    gpu->TransferCmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, gpu->TransferFence.Handle);
+    gpu->TransferFence.WaitFor();
 }
 
 void DMAImpl::CopyCPU2GPUTextureImpl(const CPUTexture &src, const GPUTexture &dst){
     auto gpu = static_cast<const Vk::LogicalGPUImpl*>(dst.Owner());
 
-    VkCommandBufferBeginInfo begin_info;
-    begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    begin_info.pNext = nullptr;
-    begin_info.flags = 0;
-    begin_info.pInheritanceInfo = nullptr;
-
-    vkBeginCommandBuffer(gpu->TransferCmdBuffer, &begin_info);
+    gpu->TransferCmdBuffer.Begin();
     {
         VkBufferImageCopy copy;
         copy.bufferImageHeight = src.Size().y;
@@ -64,32 +42,16 @@ void DMAImpl::CopyCPU2GPUTextureImpl(const CPUTexture &src, const GPUTexture &ds
         copy.imageSubresource.mipLevel = 0;
         vkCmdCopyBufferToImage(gpu->TransferCmdBuffer, (VkBuffer)src.Handle().U64, (VkImage)dst.Handle().U64, GPUTextureImpl::s_LayoutTable[(size_t)dst.GetLayout()], 1, &copy);
     }
-    vkEndCommandBuffer(gpu->TransferCmdBuffer);
+    gpu->TransferCmdBuffer.End();
 
-    VkSubmitInfo submit_info = {};
-    submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submit_info.pNext = nullptr;
-    submit_info.commandBufferCount = 1;
-    submit_info.pCommandBuffers = &gpu->TransferCmdBuffer;
-    submit_info.signalSemaphoreCount = 0;
-    submit_info.waitSemaphoreCount = 0;
-
-    Vk::Fence fence(gpu->Handle);
-    vkQueueSubmit(gpu->GeneralQueue.Handle, 1, &submit_info, fence.Handle);
-
-    fence.WaitFor();
+    gpu->TransferCmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, gpu->TransferFence.Handle);
+    gpu->TransferFence.WaitFor();
 }
 
 void DMAImpl::ChangeGPUTextureLayoutImpl(GPUTexture &src, GPUTexture::Layout layout){
     auto gpu = static_cast<const Vk::LogicalGPUImpl*>(src.Owner());
 
-    VkCommandBufferBeginInfo begin_info;
-    begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    begin_info.pNext = nullptr;
-    begin_info.flags = 0;
-    begin_info.pInheritanceInfo = nullptr;
-
-    vkBeginCommandBuffer(gpu->TransferCmdBuffer, &begin_info);
+    gpu->TransferCmdBuffer.Begin();
     {
         VkImageMemoryBarrier barrier;
         barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -109,20 +71,11 @@ void DMAImpl::ChangeGPUTextureLayoutImpl(GPUTexture &src, GPUTexture::Layout lay
 
         vkCmdPipelineBarrier(gpu->TransferCmdBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
     }
-    vkEndCommandBuffer(gpu->TransferCmdBuffer);
+    gpu->TransferCmdBuffer.End();
 
-    VkSubmitInfo submit_info = {};
-    submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submit_info.pNext = nullptr;
-    submit_info.commandBufferCount = 1;
-    submit_info.pCommandBuffers = &gpu->TransferCmdBuffer;
-    submit_info.signalSemaphoreCount = 0;
-    submit_info.waitSemaphoreCount = 0;
+    gpu->TransferCmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, gpu->TransferFence.Handle);
+    gpu->TransferFence.WaitFor();
 
-    Vk::Fence fence(gpu->Handle);
-    vkQueueSubmit(gpu->GeneralQueue.Handle, 1, &submit_info, fence.Handle);
-
-    fence.WaitFor();
     src.m_Layout = layout;
 }
 
