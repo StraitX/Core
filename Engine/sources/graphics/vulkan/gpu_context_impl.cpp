@@ -57,12 +57,13 @@ void GPUContextImpl::SubmitImpl(){
 void GPUContextImpl::CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){  
     CoreAssert(size + dst_offset <= dst.Size(), "Vk: GPUContext: Copy: Dst Buffer overflow");
 
-    VkBufferCopy copy;
-    copy.dstOffset = dst_offset;
-    copy.srcOffset = src_offset;
-    copy.size = size;
-
-    vkCmdCopyBuffer(m_CmdBuffer, (VkBuffer)src.Handle().U64, (VkBuffer)dst.Handle().U64, 1, &copy);
+    m_CmdBuffer.CmdBufferCopy(
+        (VkBuffer)src.Handle().U64, 
+        (VkBuffer)dst.Handle().U64, 
+        size, 
+        src_offset, 
+        dst_offset
+    );
 
     m_CmdBuffer.CmdMemoryBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT);
 }
