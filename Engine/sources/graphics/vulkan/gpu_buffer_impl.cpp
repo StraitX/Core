@@ -44,7 +44,7 @@ void GPUBufferImpl::Create(LogicalGPU &owner, u32 size, GPUMemoryType mem_type, 
 
     CoreFunctionAssert(vkCreateBuffer(device->Handle, &info, nullptr, &Handle), VK_SUCCESS, "Vk: GPUBufferImpl: Can't create buffer");
 
-    Memory = device->Alloc(GetBufferMemoryRequirements(device->Handle, Handle), (mem_type == GPUMemoryType::VRAM) ? MemoryTypes::VRAM : MemoryTypes::DynamicVRAM);
+    Memory = device->Alloc(GetBufferMemoryRequirements(device->Handle, Handle), MemoryTypes::ToSupported(MemoryType, device->Memory.Layout));
 
     CoreFunctionAssert(vkBindBufferMemory(device->Handle, Handle, Memory, 0),VK_SUCCESS, "GPUBuffer: can't bind buffer's memory");
 }

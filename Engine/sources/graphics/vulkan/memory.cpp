@@ -87,6 +87,7 @@ void MemoryTypes::Query(VkPhysicalDevice device){
     }   
 
     if(Index[VRAM] == InvalidIndex)return;
+    if(Index[RAM]  == InvalidIndex)return;
 
     Layout = (Index[DynamicVRAM] != InvalidIndex) ? Layout = MemoryLayout::DedicatedWithDynamic : MemoryLayout::Dedicated;
 }

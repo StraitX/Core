@@ -10,7 +10,7 @@ namespace Vk{
 void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
     auto gpu = static_cast<const Vk::LogicalGPUImpl*>(dst.Owner());
 
-    if(dst.MemoryType() == GPUMemoryType::DynamicVRAM || gpu->Memory.Layout == MemoryLayout::Uniform){
+    if(MemoryTypes::IsMappable(MemoryTypes::ToSupported(dst.MemoryType(), gpu->Memory.Layout))){
         auto memory = reinterpret_cast<VkDeviceMemory>(dst.Memory().U64);
 
         void *pointer;
