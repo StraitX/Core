@@ -34,7 +34,7 @@ void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, 
     submit_info.waitSemaphoreCount = 0;
 
     Vk::Fence fence(gpu->Handle);
-    vkQueueSubmit(gpu->GraphicsQueue.Handle, 1, &submit_info, fence.Handle);
+    vkQueueSubmit(gpu->GeneralQueue.Handle, 1, &submit_info, fence.Handle);
 
     fence.WaitFor();
 }
@@ -75,7 +75,7 @@ void DMAImpl::CopyCPU2GPUTextureImpl(const CPUTexture &src, const GPUTexture &ds
     submit_info.waitSemaphoreCount = 0;
 
     Vk::Fence fence(gpu->Handle);
-    vkQueueSubmit(gpu->GraphicsQueue.Handle, 1, &submit_info, fence.Handle);
+    vkQueueSubmit(gpu->GeneralQueue.Handle, 1, &submit_info, fence.Handle);
 
     fence.WaitFor();
 }
@@ -120,7 +120,7 @@ void DMAImpl::ChangeGPUTextureLayoutImpl(GPUTexture &src, GPUTexture::Layout lay
     submit_info.waitSemaphoreCount = 0;
 
     Vk::Fence fence(gpu->Handle);
-    vkQueueSubmit(gpu->GraphicsQueue.Handle, 1, &submit_info, fence.Handle);
+    vkQueueSubmit(gpu->GeneralQueue.Handle, 1, &submit_info, fence.Handle);
 
     fence.WaitFor();
     src.m_Layout = layout;

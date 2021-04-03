@@ -4,12 +4,16 @@
 namespace StraitX{
 namespace Vk{
 
+constexpr int32_t VkErrorUnUpdatedDescriptor = -1539028524;
+
 VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
     void* pUserData) 
 {
+    if(pCallbackData->messageIdNumber == VkErrorUnUpdatedDescriptor)return VK_FALSE;
+
     const char *prefix;
     switch(messageSeverity){
     case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: prefix = "Trace"; break;
@@ -20,7 +24,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
         break;
     }
 
-    std::fprintf(stderr,"[%s]: VulkanValidator: \n",prefix);
+    std::fprintf(stderr,"[%s:[%i]]: VulkanValidator: \n", prefix, pCallbackData->messageIdNumber);
     std::fprintf(stderr,"%s\n",pCallbackData->pMessage);
 
     return VK_FALSE;

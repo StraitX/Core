@@ -26,7 +26,7 @@ GPUContextImpl::GPUContextImpl(Vk::LogicalGPUImpl *owner):
     pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     pool_info.pNext = nullptr;
     pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-    pool_info.queueFamilyIndex = m_Owner->GraphicsQueue.FamilyIndex;
+    pool_info.queueFamilyIndex = m_Owner->GeneralQueue.FamilyIndex;
 
     CoreFunctionAssert(vkCreateCommandPool(m_Owner->Handle, &pool_info, nullptr, &m_CmdPool), VK_SUCCESS, "Vk: GPUContextImpl: Failed to create command pool");
 
@@ -42,13 +42,13 @@ GPUContextImpl::GPUContextImpl(Vk::LogicalGPUImpl *owner):
     { // XXX: Signal first semaphore to avoid lock
         BeginImpl();
         EndImpl();
-        SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer, ArrayPtr<const VkSemaphore>(), ArrayPtr<const VkSemaphore>(&m_SemaphoreRing[0].Handle, 1), VK_NULL_HANDLE);
+        SubmitCmdBuffer(m_Owner->GeneralQueue, m_CmdBuffer, ArrayPtr<const VkSemaphore>(), ArrayPtr<const VkSemaphore>(&m_SemaphoreRing[0].Handle, 1), VK_NULL_HANDLE);
     }
 }
 
 
 GPUContextImpl::~GPUContextImpl(){
-    vkQueueWaitIdle(m_Owner->GraphicsQueue.Handle);
+    vkQueueWaitIdle(m_Owner->GeneralQueue.Handle);
 
     vkFreeCommandBuffers(m_Owner->Handle, m_CmdPool, 1, &m_CmdBuffer);
 
@@ -71,7 +71,7 @@ void GPUContextImpl::EndImpl(){
 
 void GPUContextImpl::SubmitImpl(){
     auto semaphores = NextPair();
-    SubmitCmdBuffer(m_Owner->GraphicsQueue, m_CmdBuffer, ArrayPtr<const VkSemaphore>(&semaphores.First, 1), ArrayPtr<const VkSemaphore>(&semaphores.Second, 1), VK_NULL_HANDLE);
+    SubmitCmdBuffer(m_Owner->GeneralQueue, m_CmdBuffer, ArrayPtr<const VkSemaphore>(&semaphores.First, 1), ArrayPtr<const VkSemaphore>(&semaphores.Second, 1), VK_NULL_HANDLE);
 }
 
 void GPUContextImpl::CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){  
@@ -237,7 +237,7 @@ void GPUContextImpl::SubmitCmdBuffer(Vk::Queue queue, VkCommandBuffer cmd_buffer
     info.pWaitDstStageMask = stages;
 
     CoreFunctionAssert(vkQueueSubmit(queue.Handle, 1, &info, signal_fence), VK_SUCCESS, "Vk: LogicalGPU: Failed to submit CmdBuffer");
-    vkQueueWaitIdle(m_Owner->GraphicsQueue.Handle); // TODO Get rid of this // Context is Immediate mode for now :'-
+    vkQueueWaitIdle(m_Owner->GeneralQueue.Handle); // TODO Get rid of this // Context is Immediate mode for now :'-
 }
 
 void GPUContextImpl::ClearFramebufferColorAttachmentsImpl(const Framebuffer *fb, const Vector4f &color){

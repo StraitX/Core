@@ -58,7 +58,7 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
     
     {
         VkBool32 supported;
-        vkGetPhysicalDeviceSurfaceSupportKHR(m_Owner->PhysicalHandle, m_Owner->GraphicsQueue.FamilyIndex, m_Surface.Handle, &supported);
+        vkGetPhysicalDeviceSurfaceSupportKHR(m_Owner->PhysicalHandle, m_Owner->GeneralQueue.FamilyIndex, m_Surface.Handle, &supported);
         if(!supported){
             LogError("Vk: SwapchainImpl: Current Physical Device does not support swapchain");
             return;
@@ -113,7 +113,7 @@ SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const Swapch
 }
 
 SwapchainImpl::~SwapchainImpl(){
-    vkQueueWaitIdle(m_Owner->GraphicsQueue.Handle);
+    vkQueueWaitIdle(m_Owner->GeneralQueue.Handle);
 
     FinalizeFramebuffers();
     
@@ -182,7 +182,7 @@ void SwapchainImpl::PresentCurrent(VkSemaphore wait_semaphore){
     info.pImageIndices = &m_CurrentImage;
     info.pResults = &result;
 
-    vkQueuePresentKHR(m_Owner->GraphicsQueue.Handle, &info);
+    vkQueuePresentKHR(m_Owner->GeneralQueue.Handle, &info);
 }
 
 void SwapchainImpl::AcquireNext(VkSemaphore signal_semaphore){

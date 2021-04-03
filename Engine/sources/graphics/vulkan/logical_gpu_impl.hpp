@@ -18,15 +18,14 @@ struct LogicalGPUImpl: public LogicalGPU{
     GPUVendor Vendor = GPUVendor::Unknown;
     GPUType   Type   = GPUType::Unknown;
 
-    u32 GraphicsQueueFamily  = InvalidIndex;
-    u32 ComputeQueueFamily   = InvalidIndex;
+    u32 GeneralQueueFamily  = InvalidIndex;
     u32 TransferQueueFamily  = InvalidIndex; 
 
     MemoryTypes Memory;
 
     GPUMemoryAllocator Allocator;
 
-    Vk::Queue GraphicsQueue;
+    Vk::Queue GeneralQueue;
     Vk::Queue TransferQueue;
 
     VkCommandPool Pool;
