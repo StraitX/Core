@@ -50,10 +50,12 @@ static RenderPassProperties ToFramebufferProperties(const SwapchainProperties &p
 SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props):
     m_Owner(static_cast<Vk::LogicalGPUImpl *>(&gpu)),
     m_Colorspace(DesiredColorSpace),
-    m_AcquireFence(m_Owner->Handle),
     m_ImagesCount(props.FramebuffersCount),
     m_FramebufferPass(gpu, ToFramebufferProperties(props))
 {
+    
+    m_AcquireFence.New(m_Owner->Handle);
+
     CoreFunctionAssert(m_Surface.Create(Vk::GraphicsAPIImpl::Instance.Handle, window),Result::Success, "Vk: SwapchainImpl: Can't obtain surface");
     
     {
@@ -120,6 +122,8 @@ SwapchainImpl::~SwapchainImpl(){
     vkDestroySwapchainKHR(m_Owner->Handle, m_Handle, nullptr);
 
     m_Surface.Destroy();
+
+    m_AcquireFence.Delete();
 }
 
 const RenderPass *SwapchainImpl::FramebufferPass(){

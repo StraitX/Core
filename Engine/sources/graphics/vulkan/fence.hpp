@@ -12,9 +12,9 @@ struct Fence: NonCopyable{
     VkFence Handle = VK_NULL_HANDLE;
     VkDevice Owner = VK_NULL_HANDLE;
     
-    sx_inline Fence(VkDevice dev):
-        Owner(dev)
-    {
+    sx_inline void New(VkDevice dev){
+        Owner = dev;
+
         VkFenceCreateInfo info;
         info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         info.pNext = nullptr;
@@ -22,11 +22,11 @@ struct Fence: NonCopyable{
         CoreFunctionAssert(vkCreateFence(Owner, &info, nullptr, &Handle), VK_SUCCESS, "Vk: Fence: Creation Failed");
     }
 
-    ~Fence(){
+    sx_inline void Delete(){
         vkDestroyFence(Owner, Handle, nullptr);
     }
 
-    sx_inline void WaitFor(){
+    sx_inline void WaitFor()const{
         vkWaitForFences(Owner, 1, &Handle, true, ~0ull);
         vkResetFences(Owner, 1, &Handle);
     }
