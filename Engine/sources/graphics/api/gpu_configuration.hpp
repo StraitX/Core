@@ -34,8 +34,8 @@ enum class GPUQueueType: u8{
 };
 
 enum class GPUMemoryType: u8{
-    VRAM,
-    DynamicVRAM
+    VRAM = 0,
+    DynamicVRAM = 1
 };
 
 union GPUHandle{
