@@ -18,7 +18,6 @@ private:
     Result m_ErrorGraphicsAPI = Result::None;
     Result m_ErrorWindowSystem = Result::None;
     Result m_ErrorDisplayServer = Result::None, m_ErrorApplication = Result::None, m_ErrorMX = Result::None;
-    Result m_ErrorDevice = Result::None;
 public:
     Engine() = default;
     ~Engine() = default;

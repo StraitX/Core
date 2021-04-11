@@ -86,12 +86,6 @@ Result Engine::Initialize(){
     }
     InitAssert("DisplayServer::Initialize", m_ErrorDisplayServer);
 
-    LogTrace("LogicalGPU::Initialize: Begin");
-    {
-        m_ErrorDevice = LogicalGPU::Instance().Initialize(GraphicsAPI::s_Instance->PickBestGPU());
-    }
-    InitAssert("LogicalGPU::Initialize", m_ErrorDevice);
-
     LogTrace("========= Third stage init =========");
 
     //Engine should be completely initialized at this moment
@@ -125,12 +119,6 @@ Result Engine::Finalize(){
         LogTrace("StraitXExit: Begin");
         m_ErrorMX = StraitXExit(m_Application);
         Log("StraitXExit",m_ErrorMX);
-    }
-    
-    if(m_ErrorDevice == Result::Success){
-        LogTrace("LogicalGPU::Finalize: Begin");
-        LogicalGPU::Instance().Finalize();
-        LogTrace("LogicalGPU::Finalize: End");
     }
 
     if(m_ErrorDisplayServer == Result::Success){
