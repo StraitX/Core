@@ -1,4 +1,5 @@
 #include <new>
+#include "platform/memory.hpp"
 #include "platform/glloader.hpp"
 #include "platform/opengl.hpp"
 #include "core/log.hpp"

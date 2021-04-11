@@ -1,7 +1,7 @@
 #ifndef STRAITX_IO_HPP
 #define STRAITX_IO_HPP
 
-#include "platform/memory.hpp"
+#include "platform/types.hpp"
 
 namespace StraitX{
 
@@ -19,35 +19,38 @@ char *BufferPrint(char *buffer, const double &num);
 char *BufferPrint(char *buffer, const void *ptr);
 char *BufferPrint(char *buffer, const Version &version);
 
-class Output{
-public:
-    static void Print(const char *string);
-
-    static void Printf(const char *fmt);
-
-    template<typename T, typename...Args>
-    static void Printf(const char *fmt, T arg,const Args&...args){
-        // i do not belive in buffer overflow
-        char buffer[1024];
-        Memory::Set(buffer,0,1024);
-        BufferPrintf(buffer,fmt,arg,args...);
-        Printf(buffer);
-    }
-
-    template <typename T, typename...Args>
-    static void BufferPrintf(char *buffer, const char *fmt, T arg,const Args&...args){
-        while(*fmt!=0){
-            if(*fmt=='%'){
-                return BufferPrintf(BufferPrint(buffer,arg),fmt+1,args...);
-            }
-            *buffer = *fmt;
-            ++fmt;
-            ++buffer;
+template <typename T, typename...Args>
+void BufferPrint(char *buffer, const char *fmt, T arg,const Args&...args){
+    while(*fmt!=0){
+        if(*fmt=='%'){
+            return (void)BufferPrint(BufferPrint(buffer,arg),fmt+1,args...);
         }
+        *buffer = *fmt;
+        ++fmt;
+        ++buffer;
     }
-    static void BufferPrintf(char *buffer, const char *fmt);
-    
-};
+    *buffer = 0;
+}
+
+void Print(const char *fmt);
+
+template<typename T, typename...Args>
+void Print(const char *fmt, T arg,const Args&...args){
+    // i do not belive in buffer overflow
+    char buffer[1024];
+    BufferPrint(buffer,fmt,arg,args...);
+    Print(buffer);
+}
+
+void Println(const char *fmt);
+
+template<typename T, typename...Args>
+void Println(const char *fmt, T arg,const Args&...args){
+    Print(fmt, arg, args...);
+    Print("\n");
+}
+
+
 
 }; // namespace StraitX::
 

@@ -10,6 +10,7 @@ char *BufferPrint(char *buffer,const char *string){
         ++buffer;
         ++string;
     }
+    *buffer = 0;
     return buffer;
 }
 
@@ -56,23 +57,13 @@ char *BufferPrint(char *buffer, const Version &version){
     return BufferPrint(BufferPrint(BufferPrint(BufferPrint(BufferPrint(buffer,version.Major),'.'),version.Minor),'.'),version.Patch);
 }
 
-
-void Output::Print(const char *string){
-    puts(string);
-}
-
-void Output::Printf(const char *fmt){
+void Print(const char *fmt){
     printf("%s",fmt);
 }
 
-
-
-void Output::BufferPrintf(char *buffer, const char *string){
-    while(*string!=0){
-        *buffer=*string;
-        ++buffer;
-        ++string;
-    }
+void Println(const char *string){
+    puts(string);
 }
+
 
 }; // namespace StraitX::

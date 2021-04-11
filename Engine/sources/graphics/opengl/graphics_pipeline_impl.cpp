@@ -282,7 +282,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
             glVertexAttribFormat(i, ElementsCount(props.VertexAttributes[i]),ElementType(props.VertexAttributes[i]),false, 0 /*offset from the begining of the buffer*/);
             glVertexAttribBinding(i,i);
         }else{
-            LogWarn("OpenGL: fallback to a compatible OpenGL profile")
+            LogWarn("OpenGL: fallback to a compatible OpenGL profile");
         }
     }
 

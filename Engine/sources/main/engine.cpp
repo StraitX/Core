@@ -1,5 +1,6 @@
 #include "platform/window_system.hpp"
 #include "platform/io.hpp"
+#include "platform/memory.hpp"
 #include "core/log.hpp"
 #include "graphics/api/graphics_api.hpp"
 #include "graphics/api/graphics_api_loader.hpp"
@@ -98,7 +99,7 @@ Result Engine::Initialize(){
 
         LogInfo("GraphicsAPI: Got % GPU%", devices_count, devices_count == 1 ? ' ' : 's');
         for(size_t i = 0; i<devices_count; i++)
-            Output::Printf("GPU[%]\n Vendor: %\n Type: %\n QueueFamilies: %\n", i, GetName(devices[i].Vendor), GetName(devices[i].Type), devices[i].QueueFamiliesCount);
+            Println("GPU[%]\n Vendor: %\n Type: %\n QueueFamilies: %\n", i, GetName(devices[i].Vendor), GetName(devices[i].Type), devices[i].QueueFamiliesCount);
 
         m_ErrorDevice = LogicalGPU::Instance().Initialize(devices[0]);
     }
