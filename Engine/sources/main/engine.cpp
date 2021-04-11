@@ -88,20 +88,7 @@ Result Engine::Initialize(){
 
     LogTrace("LogicalGPU::Initialize: Begin");
     {
-        auto devices_count = GraphicsAPI::Instance().GetPhysicalGPUCount();
-        auto *devices = (PhysicalGPU*)alloca(sizeof(PhysicalGPU) * devices_count);
-
-        if(!devices_count){
-            LogError("GraphicsAPI: Can't find any gpu");
-            return Result::Unsupported;
-        }
-        GraphicsAPI::Instance().GetPhysicalGPUs(devices);
-
-        LogInfo("GraphicsAPI: Got % GPU%", devices_count, devices_count == 1 ? ' ' : 's');
-        for(size_t i = 0; i<devices_count; i++)
-            Println("GPU[%]\n Vendor: %\n Type: %\n QueueFamilies: %\n", i, GetName(devices[i].Vendor), GetName(devices[i].Type), devices[i].QueueFamiliesCount);
-
-        m_ErrorDevice = LogicalGPU::Instance().Initialize(devices[0]);
+        m_ErrorDevice = LogicalGPU::Instance().Initialize(GraphicsAPI::s_Instance->PickBestGPU());
     }
     InitAssert("LogicalGPU::Initialize", m_ErrorDevice);
 

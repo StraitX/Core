@@ -25,9 +25,6 @@ private:
     friend class Engine;
     friend class GraphicsAPILoader;
 public:
-    sx_inline static GraphicsAPI &Instance();
-
-    sx_inline static API CurrentAPI();
 
     virtual Result Initialize() = 0;
 
@@ -37,7 +34,13 @@ public:
 
     virtual Result GetPhysicalGPUs(PhysicalGPU *array) = 0;
 
+    PhysicalGPU PickBestGPU();
+
+    sx_inline static API CurrentAPI();
+
     static const char *GetName(GraphicsAPI::API api);
+
+    sx_inline static GraphicsAPI &Instance();
 };
 
 sx_inline GraphicsAPI &GraphicsAPI::Instance(){
