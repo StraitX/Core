@@ -10,7 +10,7 @@ extern ::Display *s_Display;
 
 namespace Keyboard{
 
-bool IsKeyPressed(KeyCode code){
+bool IsKeyPressed(Key code){
     KeySym sym = Linux::KeyCodeToXKeySym(code);
     ::KeyCode keyCode = XKeysymToKeycode(Linux::s_Display,sym);  
 

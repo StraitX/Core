@@ -9,9 +9,9 @@
 namespace StraitX{
 namespace Linux{
 
-KeySym KeyCodeToXKeySym(Keyboard::KeyCode code);
+KeySym KeyCodeToXKeySym(Key code);
 
-Keyboard::KeyCode XKeyCodeToKeyCode(unsigned int key);
+Key XKeyCodeToKeyCode(unsigned int key);
 
 Mouse::Button XButtonToMouseButton(unsigned int button);
 

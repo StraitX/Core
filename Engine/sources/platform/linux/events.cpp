@@ -38,10 +38,10 @@ Event ToStraitXEvent(const XEvent &event){
     case KeyPress:
         #undef KeyPress
         sxEvent.Type = EventType::KeyPress;
-        sxEvent.KeyPress.KeyCode = Keyboard::Unknown;
+        sxEvent.KeyPress.KeyCode = Key::Unknown;
         for(int i = 0; i<4; i++){
             sxEvent.KeyPress.KeyCode = XKeyCodeToKeyCode(XLookupKeysym((XKeyEvent*)&event.xkey,i));
-            if(sxEvent.KeyPress.KeyCode != Keyboard::Unknown)
+            if(sxEvent.KeyPress.KeyCode != Key::Unknown)
                 break;
         }
         return sxEvent;  
@@ -49,10 +49,10 @@ Event ToStraitXEvent(const XEvent &event){
     case KeyRelease:
         #undef KeyRelease
         sxEvent.Type = EventType::KeyRelease;
-        sxEvent.KeyRelease.KeyCode = Keyboard::Unknown;
+        sxEvent.KeyRelease.KeyCode = Key::Unknown;
         for(int i = 0; i<4; i++){
             sxEvent.KeyRelease.KeyCode = XKeyCodeToKeyCode(XLookupKeysym((XKeyEvent*)&event.xkey,i));
-            if(sxEvent.KeyRelease.KeyCode != Keyboard::Unknown)
+            if(sxEvent.KeyRelease.KeyCode != Key::Unknown)
                 break;
         }
         return sxEvent;  
