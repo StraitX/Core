@@ -5,7 +5,7 @@
 namespace StraitX{
 namespace Keyboard{
 
-bool IsKeyPressed(KeyCode code){
+bool IsKeyPressed(Key code){
 	return (GetAsyncKeyState(Windows::KeyCodeToVirtualKey(code)) & 0x8000) != 0;	
 }
 

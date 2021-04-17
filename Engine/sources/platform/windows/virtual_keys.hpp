@@ -9,11 +9,11 @@ namespace StraitX {
 namespace Windows {
 
 short MouseButtonToVirtualKey(Mouse::Button button);
-short KeyCodeToVirtualKey(Keyboard::KeyCode code);
+short KeyCodeToVirtualKey(Key code);
 
 short MouseButtonToVirtualKey(Mouse::Button button);
-Keyboard::KeyCode VirtualKeyToKeyCode(short code);
-Keyboard::KeyCode VirtualKeyExtendedToKeyCode(WPARAM key, LPARAM flags);
+Key VirtualKeyToKeyCode(short code);
+Key VirtualKeyExtendedToKeyCode(WPARAM key, LPARAM flags);
 
 }; // namespace Windows::
 }; // namespace StraitX::
