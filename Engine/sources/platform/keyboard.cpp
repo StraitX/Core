@@ -1,10 +1,11 @@
 #include <assert.h>
+#include "platform/types.hpp"
 #include "platform/keyboard.hpp"
 
 namespace StraitX {
 namespace Keyboard {
 
-static const char* KeyCodeNames[KeyCode::KeyCount] = {
+static const char* KeyCodeNames[(size_t)Key::KeysCount] = {
     "Unknown",
     "Space",
     "Quote",
@@ -125,9 +126,9 @@ static const char* KeyCodeNames[KeyCode::KeyCount] = {
     "Menu"
 };
 
-const char* GetName(KeyCode code) {
-    assert(code < KeyCount);
-	return KeyCodeNames[code];
+const char* GetName(Key code) {
+    assert((size_t)code < (size_t)Key::KeysCount);
+	return KeyCodeNames[(size_t)code];
 }
 
 }//namespace Keyboard::

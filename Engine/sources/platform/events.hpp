@@ -42,7 +42,7 @@ struct MouseButtonEvent{
 };
 
 struct KeyEvent{
-    Keyboard::KeyCode KeyCode;
+    Key KeyCode;
 };
 
 
