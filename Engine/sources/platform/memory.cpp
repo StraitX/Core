@@ -14,7 +14,7 @@ void *Memory::Realloc(void *pointer, size_t size){
     return std::realloc(pointer,size);
 }
 
-void Memory::Set(void *memory, char byte, size_t size){
+void Memory::Set(void *memory, u8 byte, size_t size){
     memset(memory,byte,size);
 }
 

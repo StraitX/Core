@@ -22,7 +22,7 @@ public:
 
     static void *Realloc(void *pointer, size_t size);
 
-    static void Set(void *memory, char byte, size_t size);
+    static void Set(void *memory, u8 byte, size_t size);
 
     static void Copy(const void *source, void *destination, size_t size);
 
