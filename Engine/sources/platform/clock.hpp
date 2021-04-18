@@ -20,6 +20,7 @@ public:
 
     void Restart();
 private:
+    // platform specific implementation
     static Time GetMonotonicTime();
 };
 
