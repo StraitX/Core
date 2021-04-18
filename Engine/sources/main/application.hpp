@@ -29,7 +29,7 @@ public:
 
     virtual Result OnFinalize(){return Result::Success;};
 
-    virtual void OnUpdate(){};
+    virtual void OnUpdate(float dt){};
 
     void Stop();
 

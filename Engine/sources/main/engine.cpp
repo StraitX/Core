@@ -1,6 +1,7 @@
 #include "platform/window_system.hpp"
 #include "platform/io.hpp"
 #include "platform/memory.hpp"
+#include "platform/clock.hpp"
 #include "core/log.hpp"
 #include "graphics/api/graphics_api.hpp"
 #include "graphics/api/graphics_api_loader.hpp"
@@ -144,6 +145,7 @@ Result Engine::Finalize(){
 }
 
 void Engine::MainLoop(){
+    Clock frametime;
     while(m_Running){
         Event e;
         while(m_DisplayServer.m_Window.PollEvent(e)){
@@ -152,7 +154,11 @@ void Engine::MainLoop(){
             else
                 (void)m_Application->OnEvent(e);
         }
-        m_Application->OnUpdate();
+        float dt = frametime.GetElapsedTime().AsSeconds();
+
+        m_Application->OnUpdate(dt);
+
+        frametime.Restart();
     }
 }
 
