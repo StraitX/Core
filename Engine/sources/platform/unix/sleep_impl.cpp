@@ -1,4 +1,5 @@
 #include <time.h>
+#include <errno.h>
 #include "platform/sleep.hpp"
 
 namespace StraitX{
@@ -8,10 +9,7 @@ void Sleep(Time time){
     desired.tv_sec  = time.AsNanoseconds() / Milliseconds(1000).AsNanoseconds();
     desired.tv_nsec = time.AsNanoseconds() % Milliseconds(1000).AsNanoseconds();
 
-    struct timespec remaining = {};
-
-    while(nanosleep(&desired, &remaining) == -1)
-        desired = remaining;
+    while(nanosleep(&desired, &desired) == -1 && errno == EINTR){}
 }
 
 }//namespace StraitX::
