@@ -5,8 +5,8 @@ namespace StraitX{
 
 void Sleep(Time time){
     struct timespec desired;
-    desired.tv_sec  = time.AsNanoseconds() / Seconds(1).AsNanoseconds();
-    desired.tv_nsec = time.AsNanoseconds() % Seconds(1).AsNanoseconds();
+    desired.tv_sec  = time.AsNanoseconds() / Milliseconds(1000).AsNanoseconds();
+    desired.tv_nsec = time.AsNanoseconds() % Milliseconds(1000).AsNanoseconds();
 
     struct timespec remaining = {};
 
