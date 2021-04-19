@@ -7,18 +7,14 @@ namespace StraitX{
 
 class Time{
 private:
-    s64 m_Nanoseconds = 0;
+    s64 m_Microseconds = 0;
 
-    constexpr Time(s64 nanoseconds);
+    constexpr Time(s64 microseconds);
 public:
 
     constexpr Time() = default;
 
     constexpr Time(const Time &other) = default;
-
-    constexpr Time(Time &&other);
-
-    constexpr s64 AsNanoseconds();
 
     constexpr s64 AsMicroseconds();
 
@@ -32,8 +28,6 @@ public:
 
     friend constexpr Time Microseconds(s64 microseconds);
 
-    friend constexpr Time Nanoseconds(s64 nanoseconds);
-
     constexpr Time operator+(const Time &other);
     
     constexpr Time operator-(const Time &other);
@@ -41,8 +35,6 @@ public:
     friend constexpr Time operator-(const Time &other);
 
     constexpr Time &operator=(const Time &other);
-
-    constexpr Time &operator=(Time &&other);
 
     constexpr Time &operator+=(const Time &other);
 
@@ -61,23 +53,12 @@ public:
     constexpr bool operator>=(const Time &other);
 };
 
-constexpr Time::Time(s64 nanoseconds):
-    m_Nanoseconds(nanoseconds)
+constexpr Time::Time(s64 microseconds):
+    m_Microseconds(microseconds)
 {}
-    
-constexpr Time::Time(Time &&other):
-    m_Nanoseconds(other.m_Nanoseconds)
-{
-    other.m_Nanoseconds= 0;
-}
-
-
-constexpr s64 Time::AsNanoseconds(){
-    return m_Nanoseconds;
-}
 
 constexpr s64 Time::AsMicroseconds(){
-    return AsNanoseconds() / 1000;
+    return m_Microseconds;
 }
 
 constexpr s64 Time::AsMilliseconds(){
@@ -88,12 +69,8 @@ constexpr float Time::AsSeconds(){
     return AsMicroseconds() / 1000000.f ;
 }
 
-constexpr Time Nanoseconds(s64 nanoseconds){
-    return Time(nanoseconds);
-}
-
 constexpr Time Microseconds(s64 microseconds){
-    return Nanoseconds(microseconds * 1000);
+    return Time(microseconds);
 }
 
 constexpr Time Milliseconds(s64 milliseconds){
@@ -105,60 +82,54 @@ constexpr Time Seconds(float seconds){
 }
 
 constexpr Time Time::operator+(const Time &other){
-    return Time(m_Nanoseconds+other.m_Nanoseconds);
+    return Time(m_Microseconds+other.m_Microseconds);
 }
     
 constexpr Time Time::operator-(const Time &other){
-    return Time(m_Nanoseconds-other.m_Nanoseconds);
+    return Time(m_Microseconds-other.m_Microseconds);
 }
 
 constexpr Time operator-(const Time &other){
-    return Time(-other.m_Nanoseconds);
+    return Time(-other.m_Microseconds);
 }
 
 constexpr Time &Time::operator=(const Time &other){
-    m_Nanoseconds = other.m_Nanoseconds;
+    m_Microseconds = other.m_Microseconds;
     return *this;
 }
 
-constexpr Time &Time::operator=(Time &&other){
-    m_Nanoseconds = other.m_Nanoseconds;
-    other.m_Nanoseconds = 0;
-    return *this;    
-}
-
 constexpr Time &Time::operator+=(const Time &other){
-    m_Nanoseconds += other.m_Nanoseconds;
+    m_Microseconds += other.m_Microseconds;
     return *this;
 }
 
 constexpr Time &Time::operator-=(const Time &other){
-    m_Nanoseconds -= other.m_Nanoseconds;
+    m_Microseconds -= other.m_Microseconds;
     return *this;
 }
 
 constexpr bool Time::operator==(const Time &other){
-    return m_Nanoseconds==other.m_Nanoseconds;
+    return m_Microseconds==other.m_Microseconds;
 }
 
 constexpr bool Time::operator!=(const Time &other){
-    return m_Nanoseconds!=other.m_Nanoseconds;
+    return m_Microseconds!=other.m_Microseconds;
 }
 
 constexpr bool Time::operator<(const Time &other){
-    return m_Nanoseconds<other.m_Nanoseconds;
+    return m_Microseconds<other.m_Microseconds;
 }
     
 constexpr bool Time::operator>(const Time &other){
-    return m_Nanoseconds>other.m_Nanoseconds;
+    return m_Microseconds>other.m_Microseconds;
 }
     
 constexpr bool Time::operator<=(const Time &other){
-    return m_Nanoseconds<=other.m_Nanoseconds;
+    return m_Microseconds<=other.m_Microseconds;
 }
 
 constexpr bool Time::operator>=(const Time &other){
-    return m_Nanoseconds>=other.m_Nanoseconds;
+    return m_Microseconds>=other.m_Microseconds;
 }
 
 

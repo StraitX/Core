@@ -3,6 +3,10 @@
 
 namespace StraitX{
 
+static constexpr Time Nanoseconds(s64 nanoseconds){
+    return Microseconds(nanoseconds/1000);
+}
+
 Time Clock::GetMonotonicTime(){
     timespec ts{};
     (void)clock_gettime(CLOCK_MONOTONIC, &ts);
