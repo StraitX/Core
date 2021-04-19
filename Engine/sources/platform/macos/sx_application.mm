@@ -5,7 +5,7 @@
 namespace StraitX{
 namespace MacOS{
 
-bool SXApplication::s_KeyboardState[Keyboard::KeyCount];
+bool SXApplication::s_KeyboardState[(size_t)Key::KeysCount];
 bool SXApplication::s_MouseState[Mouse::ButtonCount];
 
 void SXApplication::ProcessEvents(){
@@ -18,13 +18,13 @@ void SXApplication::ProcessEvents(){
                                         dequeue:YES]) != nil){
         switch ([e type]){
         case NSEventTypeKeyDown:
-            s_KeyboardState[ToStraitXKeyCode([e keyCode])] = true;
+            s_KeyboardState[(size_t)ToStraitXKeyCode([e keyCode])] = true;
             break;
         case NSEventTypeKeyUp:
-            s_KeyboardState[ToStraitXKeyCode([e keyCode])] = false;
+            s_KeyboardState[(size_t)ToStraitXKeyCode([e keyCode])] = false;
             break;
         case NSEventTypeFlagsChanged:
-            s_KeyboardState[ToStraitXKeyCode([e keyCode])] = ([e modifierFlags] == 256) ? false : true;
+            s_KeyboardState[(size_t)ToStraitXKeyCode([e keyCode])] = ([e modifierFlags] == 256) ? false : true;
             break;
         case NSEventTypeLeftMouseDown:
             s_MouseState[Mouse::Left] = true;

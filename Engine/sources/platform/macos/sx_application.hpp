@@ -9,7 +9,7 @@ namespace StraitX{
 namespace MacOS{
 
 struct SXApplication{
-    static bool s_KeyboardState[Keyboard::KeyCount];
+    static bool s_KeyboardState[(size_t)Key::KeysCount];
     static bool s_MouseState[Mouse::ButtonCount];
 
     static void ProcessEvents();

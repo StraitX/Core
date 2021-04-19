@@ -112,7 +112,7 @@ enum MacOSKeyCode{
     KEY_F15 = 113
 };
 
-Keyboard::KeyCode ToStraitXKeyCode(int key_code);
+Key ToStraitXKeyCode(int key_code);
 
 }//namespace MacOS
 }//namespace StraitX

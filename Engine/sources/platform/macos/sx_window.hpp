@@ -79,9 +79,9 @@ struct SXWindowWrapper{
 
     void OnMouseButtonRelease(Mouse::Button button, s32 x, s32 y);
 
-    void OnKeyPress(Keyboard::KeyCode key);
+    void OnKeyPress(Key key);
 
-    void OnKeyRelease(Keyboard::KeyCode key);
+    void OnKeyRelease(Key key);
 };
 
 }//namespace MacOS::

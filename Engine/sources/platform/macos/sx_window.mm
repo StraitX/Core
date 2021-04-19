@@ -268,14 +268,14 @@ void SXWindowWrapper::OnMouseButtonRelease(Mouse::Button button, s32 x, s32 y){
     EventsQueue.push(e);
 }
 
-void SXWindowWrapper::OnKeyPress(Keyboard::KeyCode key){
+void SXWindowWrapper::OnKeyPress(Key key){
     Event e;
     e.Type = EventType::KeyPress;
     e.KeyPress.KeyCode = key;
     EventsQueue.push(e);
 }
 
-void SXWindowWrapper::OnKeyRelease(Keyboard::KeyCode key){
+void SXWindowWrapper::OnKeyRelease(Key key){
     Event e;
     e.Type = EventType::KeyRelease;
     e.KeyPress.KeyCode = key;

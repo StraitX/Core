@@ -4,9 +4,9 @@
 namespace StraitX{
 namespace Keyboard{
 
-bool IsKeyPressed(KeyCode code){
+bool IsKeyPressed(Key code){
     MacOS::SXApplication::ProcessEvents();
-    return MacOS::SXApplication::s_KeyboardState[code];
+    return MacOS::SXApplication::s_KeyboardState[(size_t)code];
 }
 
 } // namespace Keyboard::
