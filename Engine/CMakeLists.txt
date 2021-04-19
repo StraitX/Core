@@ -161,6 +161,7 @@ elseif(STRAITX_PLATFORM_WINDOWS)
        ${SOURCES_DIR}/platform/windows/opengl_context_impl.cpp
        ${SOURCES_DIR}/platform/windows/vulkan_windows.cpp
        ${SOURCES_DIR}/platform/windows/vulkan_surface_impl.cpp
+       ${SOURCES_DIR}/platform/windows/clock_impl.cpp
        ${SOURCES_DIR}/platform/windows/file_impl.cpp
     )
 
