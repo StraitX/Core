@@ -155,10 +155,10 @@ void Engine::MainLoop(){
                 (void)m_Application->OnEvent(e);
         }
         float dt = frametime.GetElapsedTime().AsSeconds();
+        frametime.Restart();
 
         m_Application->OnUpdate(dt);
 
-        frametime.Restart();
     }
 }
 
