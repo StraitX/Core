@@ -76,7 +76,9 @@ constexpr PushArray<T_Type, T_Capacity>::PushArray(PushArray &&other){
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr PushArray<T_Type, T_Capacity>::PushArray(std::initializer_list<T_Type> initializer_list){
+constexpr PushArray<T_Type, T_Capacity>::PushArray(std::initializer_list<T_Type> initializer_list):
+    m_Size(initializer_list.size())
+{
     CoreAssert(initializer_list.size() <= T_Capacity, "Initializer list is bigger than PushArray capacity");
 
     size_t i = 0;
@@ -84,8 +86,6 @@ constexpr PushArray<T_Type, T_Capacity>::PushArray(std::initializer_list<T_Type>
         operator[](i) = e;
         ++i;
     }
-
-    m_Size = initializer_list.size();
 }
 
 template<typename T_Type, size_t T_Capacity>
@@ -105,7 +105,7 @@ constexpr void PushArray<T_Type, T_Capacity>::Push(T_Type &&element){
 
 template<typename T_Type, size_t T_Capacity>
 constexpr void PushArray<T_Type, T_Capacity>::Pop(){
-    operator[](--m_Size).~T_Type();
+    begin()[--m_Size].~T_Type();
 }
 
 template<typename T_Type, size_t T_Capacity>
@@ -134,7 +134,7 @@ template<typename ...T_Args>
 constexpr T_Type &PushArray<T_Type, T_Capacity>::Emplace(T_Args&&...args){
     CoreAssert(m_Size < T_Capacity, "PushArray: Can't add an element, array is full");
 
-    return *new(&operator[](m_Size++))T_Type(Forward<T_Args>(args)...);
+    return *new(&begin()[m_Size++])T_Type(Forward<T_Args>(args)...);
 }
 
 template<typename T_Type, size_t T_Capacity>
@@ -146,7 +146,7 @@ template<typename T_Type, size_t T_Capacity>
 constexpr const T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index)const{
     CoreAssert(index < m_Size, "PushArray: Can't index more than PushArray::Size() elements");
 
-    return operator[](index);
+    return begin()[index];
 }
 
 template<typename T_Type, size_t T_Capacity>
@@ -161,7 +161,8 @@ template<typename T_Type, size_t T_Capacity>
 constexpr PushArray<T_Type, T_Capacity> &PushArray<T_Type, T_Capacity>::operator=(PushArray &&other){
     Clear();
     for(auto &e: other)
-        Emplace(Move(e));
+        Emplace(Move(e)); // We assume that moved stuff does not required to be destroyed
+    other.m_Size = 0;
     return *this;
 }
 
