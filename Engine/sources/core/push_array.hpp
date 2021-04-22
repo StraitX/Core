@@ -72,7 +72,7 @@ constexpr PushArray<T_Type, T_Capacity>::PushArray(const PushArray &other){
 
 template<typename T_Type, size_t T_Capacity>
 constexpr PushArray<T_Type, T_Capacity>::PushArray(PushArray &&other){
-    *this = other;
+    *this = Move(other);
 }
 
 template<typename T_Type, size_t T_Capacity>
