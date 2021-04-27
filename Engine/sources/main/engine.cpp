@@ -5,7 +5,7 @@
 #include "core/log.hpp"
 #include "graphics/api/graphics_api.hpp"
 #include "graphics/api/graphics_api_loader.hpp"
-#include "graphics/api/logical_gpu.hpp"
+#include "graphics/api/gpu.hpp"
 #include "main/application.hpp"
 #include "main/engine.hpp"
 
@@ -74,7 +74,7 @@ Result Engine::Initialize(){
 
     LogTrace("GraphicsAPI::Initialize: Begin");
     {
-        m_ErrorGraphicsAPI = GraphicsAPI::Instance().Initialize();
+        m_ErrorGraphicsAPI = GraphicsAPI::s_Instance->Initialize();
     }
     InitAssert("GraphicsAPI::Initialize",m_ErrorGraphicsAPI);
 
@@ -130,7 +130,7 @@ Result Engine::Finalize(){
 
     if(m_ErrorGraphicsAPI == Result::Success){
         LogTrace("GraphicsAPI::Finalize: Begin");
-        GraphicsAPI::Instance().Finalize();
+        GraphicsAPI::s_Instance->Finalize();
         LogTrace("GraphicsAPI::Finalize: End");
     }
 

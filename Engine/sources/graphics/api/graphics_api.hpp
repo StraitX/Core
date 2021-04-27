@@ -5,7 +5,6 @@
 #include "platform/result.hpp"
 #include "core/assert.hpp"
 #include "core/noncopyable.hpp"
-#include "graphics/api/physical_gpu.hpp"
 
 namespace StraitX{
 
@@ -22,31 +21,18 @@ public:
 private:
     static GraphicsAPI *s_Instance;
     static API s_CurrentAPI;
+
     friend class Engine;
     friend class GraphicsAPILoader;
-public:
-
+private:
     virtual Result Initialize() = 0;
 
     virtual void Finalize() = 0;
+public:
+    static API CurrentAPI();
 
-    virtual u32 GetPhysicalGPUCount() = 0;
-
-    virtual Result GetPhysicalGPUs(PhysicalGPU *array) = 0;
-
-    PhysicalGPU PickBestGPU();
-
-    sx_inline static API CurrentAPI();
-
-    static const char *GetName(GraphicsAPI::API api);
-
-    sx_inline static GraphicsAPI &Instance();
+    static const char *Name(GraphicsAPI::API api);
 };
-
-sx_inline GraphicsAPI &GraphicsAPI::Instance(){
-    CoreAssert(s_Instance, "GraphicsAPI: has not been initialized for some reason");
-    return *s_Instance;
-}
 
 sx_inline GraphicsAPI::API GraphicsAPI::CurrentAPI(){
     return s_CurrentAPI;

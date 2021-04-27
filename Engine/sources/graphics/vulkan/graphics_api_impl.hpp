@@ -10,28 +10,30 @@
 namespace StraitX{
 namespace Vk{
 
-struct GraphicsAPIImpl: GraphicsAPI{
-    VkInstance Handle = VK_NULL_HANDLE;
-    VkDebugUtilsMessengerEXT Messenger = VK_NULL_HANDLE;
-
+class GraphicsAPIImpl: public GraphicsAPI{
+private:
+    VkInstance m_Handle = VK_NULL_HANDLE;
+    VkDebugUtilsMessengerEXT m_Messenger = VK_NULL_HANDLE;
+public:
     static GraphicsAPIImpl Instance;
 
     virtual Result Initialize()override;
 
     virtual void Finalize()override;
+private:
 
-    virtual u32 GetPhysicalGPUCount()override;
+    VkInstance Handle()const;
 
-    virtual Result GetPhysicalGPUs(PhysicalGPU *array)override;
-
-    Result Create(const Version &version, const ArrayPtr<const char *> &extensions, const ArrayPtr<const char *> &layers);
-
-    void Destroy();
+    VkPhysicalDevice PickBestPhysicalDevice()const;
 
     static bool CheckLayers(const ArrayPtr<const char *> &layers);
 
     static bool CheckExtensions(const ArrayPtr<const char *> &extensions);
 };
+
+sx_inline VkInstance GraphicsAPIImpl::Handle()const{
+    return m_Handle;
+}
 
 };//namespace Vk::
 };//namespace StraitX::

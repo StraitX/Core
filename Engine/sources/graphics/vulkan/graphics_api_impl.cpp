@@ -1,6 +1,7 @@
 #include "platform/memory.hpp"
 #include "core/log.hpp"
 #include "core/string.hpp"
+#include "graphics/api/gpu_configuration.hpp"
 #include "graphics/vulkan/graphics_api_impl.hpp"
 #include "graphics/vulkan/debug.hpp"
 
@@ -23,42 +24,10 @@ GPUType VkTypeToGPUType(u32 type){
 }
 
 Result GraphicsAPIImpl::Initialize(){
-    return Create(VulkanVersion, {RequiredPlatformExtensions, RequiredPlatformExtensionsCount}, {RequiredPlatformLayers, RequiredPlatformLayersCount});
-}
+    Version version = VulkanVersion;
+    ArrayPtr<const char *>extensions = {RequiredPlatformExtensions, RequiredPlatformExtensionsCount};
+    ArrayPtr<const char *>layers     = {RequiredPlatformLayers, RequiredPlatformLayersCount};
 
-void GraphicsAPIImpl::Finalize(){
-    Destroy();
-}
-
-u32 GraphicsAPIImpl::GetPhysicalGPUCount(){
-    u32 count = 0;
-    vkEnumeratePhysicalDevices(Handle, &count, nullptr);
-    return count;
-}
-
-Result GraphicsAPIImpl::GetPhysicalGPUs(PhysicalGPU *array){
-    u32 count = GetPhysicalGPUCount();
-    auto *devices = (VkPhysicalDevice*)alloca(count * sizeof(VkPhysicalDevice));
-    
-    if(vkEnumeratePhysicalDevices(Handle, &count, devices) != VK_SUCCESS)
-        return Result::Failure;
-
-    for(int i = 0; i<count; i++){
-        VkPhysicalDeviceProperties props;
-        vkGetPhysicalDeviceProperties(devices[i], &props);
-
-        u32 families_count = 0;
-        vkGetPhysicalDeviceQueueFamilyProperties(devices[i], &families_count, nullptr);
-
-        const_cast<GPUHandle&>(array[i].Handle).U64 = reinterpret_cast<u64>(devices[i]);
-        const_cast<GPUVendor&>(array[i].Vendor) = VendorIDToVendor(props.vendorID);
-        const_cast<GPUType&>(array[i].Type) = VkTypeToGPUType(props.deviceType);
-        const_cast<u32&>(array[i].QueueFamiliesCount) = families_count;
-    }
-    return Result::Success;
-}
-
-sx_inline Result GraphicsAPIImpl::Create(const Version &version, const ArrayPtr<const char *> &extensions, const ArrayPtr<const char *> &layers){
 
     if(!CheckExtensions(extensions))
         return Result::Unsupported;
@@ -70,22 +39,22 @@ sx_inline Result GraphicsAPIImpl::Create(const Version &version, const ArrayPtr<
     app_info.pNext = nullptr;
     app_info.apiVersion = VK_MAKE_VERSION(version.Major, version.Minor, version.Patch);
     app_info.applicationVersion = VK_MAKE_VERSION(0, 0, 1);
-    app_info.pApplicationName = "StraitXClient"; // TODO do something about it
+    app_info.pApplicationName = "StraitXClient";
     app_info.engineVersion = VK_MAKE_VERSION(0, 0, 1);
     app_info.pEngineName = "StraitX";
     
 
-    VkInstanceCreateInfo create_info;
-    create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    create_info.pNext = nullptr;
-    create_info.flags = 0;
-    create_info.pApplicationInfo = &app_info;
-    create_info.enabledExtensionCount = extensions.Size();
-    create_info.ppEnabledExtensionNames = extensions.Pointer();
-    create_info.enabledLayerCount = layers.Size();
-    create_info.ppEnabledLayerNames = layers.Pointer();
+    VkInstanceCreateInfo info;
+    info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    info.pNext = nullptr;
+    info.flags = 0;
+    info.pApplicationInfo = &app_info;
+    info.enabledExtensionCount = extensions.Size();
+    info.ppEnabledExtensionNames = extensions.Pointer();
+    info.enabledLayerCount = layers.Size();
+    info.ppEnabledLayerNames = layers.Pointer();
     
-    if(vkCreateInstance(&create_info, nullptr, &Handle) != VK_SUCCESS)
+    if(vkCreateInstance(&info, nullptr, &m_Handle) != VK_SUCCESS)
         return Result::Failure;
 
     VkDebugUtilsMessengerCreateInfoEXT debug_info{};
@@ -95,12 +64,54 @@ sx_inline Result GraphicsAPIImpl::Create(const Version &version, const ArrayPtr<
     debug_info.pfnUserCallback = DebugCallback;
     debug_info.pUserData = nullptr; // Optional
 
-    return ResultError(CreateDebugUtilsMessengerEXT(Handle, &debug_info, nullptr, &Messenger) != VK_SUCCESS);
+    if(CreateDebugUtilsMessengerEXT(m_Handle, &debug_info, nullptr, &m_Messenger) != VK_SUCCESS)
+        return Result::Failure;
+    //TODO Init GPU and DMA
+    return Result::Success;
 }
 
-sx_inline void GraphicsAPIImpl::Destroy(){
-    DestroyDebugUtilsMessengerEXT(Handle, Messenger, nullptr);
-    vkDestroyInstance(Handle, nullptr);
+void GraphicsAPIImpl::Finalize(){
+    DestroyDebugUtilsMessengerEXT(m_Handle, m_Messenger, nullptr);
+    vkDestroyInstance(m_Handle, nullptr);
+}
+
+int GetPriority(GPUType type){
+    switch (type) {
+    case GPUType::Unknown: return 0;
+    case GPUType::Other: return 0;
+    case GPUType::Virtual: return 1;
+    case GPUType::Integrated: return 2;
+    case GPUType::Discrete: return 3;
+    }
+}
+
+VkPhysicalDevice GraphicsAPIImpl::PickBestPhysicalDevice()const{
+    u32 count = 0;
+    vkEnumeratePhysicalDevices(m_Handle, &count, nullptr);
+
+    auto *devices = (VkPhysicalDevice *)alloca(sizeof(VkPhysicalDevice) * count);
+
+    vkEnumeratePhysicalDevices(m_Handle, &count, devices);
+
+    VkPhysicalDevice best = devices[0];
+    int best_score = 0;
+    
+    for(u32 i = 0; i<count; i++){
+        VkPhysicalDeviceProperties props;
+        vkGetPhysicalDeviceProperties(devices[i], &props);
+
+        u32 families_count = 0;
+        vkGetPhysicalDeviceQueueFamilyProperties(devices[i], &families_count, nullptr);
+
+        int score = GetPriority(VkTypeToGPUType(props.deviceType))*10 + families_count * 5; 
+
+        if(score > best_score){
+            best = devices[i];
+            best_score = score;
+        }
+    }
+
+    return best;
 }
 
 bool GraphicsAPIImpl::CheckLayers(const ArrayPtr<const char *> &layers){

@@ -4,6 +4,7 @@
 #include "platform/opengl.hpp"
 #include "core/log.hpp"
 #include "core/string.hpp"
+#include "servers/display_server.hpp"
 #include "graphics/opengl/graphics_api_impl.hpp"
 
 namespace StraitX{
@@ -12,38 +13,6 @@ namespace GL{
 GraphicsAPIImpl GraphicsAPIImpl::Instance;
 
 constexpr Version OpenGLVersion = {4, 6, 0};
-
-Result GraphicsAPIImpl::Initialize(){
-    OpenGLContext context;
-    if(context.CreateDummy() != Result::Success)
-        return Result::Failure;
-    if(context.MakeCurrent() != Result::Success)
-        return Result::Unavailable;
-
-
-    if(OpenGLLoader::Load() != Result::Success){
-        LogError("OpenGLLoader: Can't load OpenGL Procedures");
-        return Result::Unsupported;
-    }
-    LoadedOpenGLVersion = OpenGLLoader::OpenGLVersion();
-    VendorName = (const char*)glGetString(GL_VENDOR);
-    LogInfo("OpenGL: Loaded Version %",LoadedOpenGLVersion);
-    LogInfo("OpenGL: Renderer: %", (const char*)glGetString(GL_RENDERER));
-    LogInfo("OpenGL: Vendor: %", VendorName);
-    LogInfo("OpenGL: Version: %", (const char*)glGetString(GL_VERSION));
-
-    context.DestroyDummy();
-
-    return Result::Success;
-}
-
-void GraphicsAPIImpl::Finalize(){
-}
-
-u32 GraphicsAPIImpl::GetPhysicalGPUCount(){
-    // OpenGL allows us to control only one GPU
-    return 1;
-}
 
 
 GPUVendor ExtractGPUVendor(const char *string){
@@ -65,16 +34,42 @@ GPUVendor ExtractGPUVendor(const char *string){
     return GPUVendor::Unknown;
 }
 
-static_assert(sizeof(Version) == sizeof(u64), "sizeof(Version) should match sizeof(u64) to be inserted as Handle to OpenGL Physical GPU");
+Result GraphicsAPIImpl::Initialize(){
+    if(m_Context.Create(DisplayServer::Instance().GetWindow(), OpenGLVersion) != Result::Success)
+        return Result::Failure;
+    if(m_Context.MakeCurrent() != Result::Success)
+        return Result::Unavailable;
 
-Result GraphicsAPIImpl::GetPhysicalGPUs(PhysicalGPU *array){
 
-    const_cast<u64&>(array->Handle.U64) = *(u64*)&LoadedOpenGLVersion;
-    const_cast<GPUType&>(array->Type) = GPUType::Unknown;
-    const_cast<GPUVendor&>(array->Vendor) = ExtractGPUVendor(VendorName);
-    const_cast<u32&>(array->QueueFamiliesCount) = 1;
+    if(!OpenGLLoader::Load()){
+        LogError("OpenGLLoader: Can't load OpenGL Procedures");
+        return Result::Unsupported;
+    }
+    m_LoadedOpenGLVersion = OpenGLLoader::OpenGLVersion();
+    m_VendorString = (const char*)glGetString(GL_VENDOR);
+    m_RendererString = (const char *)glGetString(GL_RENDERER);
+    m_VersionString = (const char*)glGetString(GL_VERSION);
+
+    m_Vendor = ExtractGPUVendor(m_VendorString);
+    LogInfo("OpenGL: Loaded Version %",m_LoadedOpenGLVersion);
+    LogInfo("OpenGL: Renderer: %", m_RendererString);
+    LogInfo("OpenGL: Vendor: %", m_VendorString);
+    LogInfo("OpenGL: Version: %", m_VersionString);
+
+
+    glEnable(GL_BLEND);
+
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &MaxTextureUnits);
+    glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &MaxUniformBufferBindings);
+
+    DLogInfo("GL: MaxTextureUnits:          %", MaxTextureUnits);
+    DLogInfo("GL: MaxUniformBufferBindings: %", MaxUniformBufferBindings);
 
     return Result::Success;
+}
+
+void GraphicsAPIImpl::Finalize(){
+    m_Context.Destroy();
 }
 
 }// namespace GL::
