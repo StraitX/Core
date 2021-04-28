@@ -11,11 +11,9 @@ u8 DMAImpl::s_Instance[sizeof(DMAImpl)];
 
 void DMAImpl::Initialize(){
     new(s_Instance) DMAImpl();
-    DMAImpl::Get().m_OpFence.New(GPU::Get().Handle());
 }
 
 void DMAImpl::Finalize(){
-    DMAImpl::Get().m_OpFence.Delete();
     DMAImpl::Get().~DMAImpl();
 }
 

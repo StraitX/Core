@@ -3,7 +3,6 @@
 
 #include "platform/vulkan.hpp"
 #include "core/assert.hpp"
-#include "graphics/vulkan/gpu.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -11,24 +10,10 @@ namespace Vk{
 struct Semaphore{
     VkSemaphore Handle = VK_NULL_HANDLE;
 
-    sx_inline Semaphore();
+    Semaphore();
 
-    sx_inline ~Semaphore();
+    ~Semaphore();
 };
-
-sx_inline Semaphore::Semaphore()
-{
-    VkSemaphoreCreateInfo info;
-    info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-    info.pNext = nullptr;
-    info.flags = 0;
-
-    CoreFunctionAssert(vkCreateSemaphore(GPU::Get().Handle(), &info, nullptr, &Handle),VK_SUCCESS, "Vk: Can't create semaphore");
-}
-
-sx_inline Semaphore::~Semaphore(){
-    vkDestroySemaphore(GPU::Get().Handle(), Handle, nullptr);
-}
 
 }//Vk::
 }//StraitX::
