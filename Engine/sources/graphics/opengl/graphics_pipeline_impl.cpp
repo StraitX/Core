@@ -352,7 +352,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
         Copy(impl->Sources + impl->Length, in_sources, out_sources);
         *out_sources = 0;
 
-        LogInfo("Sources: %",shader_sources_buffer);
+        //LogInfo("Sources: %",shader_sources_buffer);
         /*Compile Shader, validate and attach*/{
             int length = out_sources - shader_sources_buffer;
             glShaderSource(shaders[i], 1, &shader_sources_buffer, &length);
