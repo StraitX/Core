@@ -57,8 +57,6 @@ SwapchainImpl::SwapchainImpl(const Window &window, const SwapchainProperties &pr
     m_TargetQueueIndex(GPU::Get().QueueIndex(m_TargetQueueFamily))
 {
     
-    m_AcquireFence.New(GPU::Get().Handle());
-
     CoreFunctionAssert(m_Surface.Create(Vk::GraphicsAPIImpl::Instance.Handle(), window),Result::Success, "Vk: SwapchainImpl: Can't obtain surface");
     
     {
@@ -125,8 +123,6 @@ SwapchainImpl::~SwapchainImpl(){
     vkDestroySwapchainKHR(GPU::Get().Handle(), m_Handle, nullptr);
 
     m_Surface.Destroy();
-
-    m_AcquireFence.Delete();
 }
 
 const RenderPass *SwapchainImpl::FramebufferPass(){
