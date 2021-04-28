@@ -20,7 +20,7 @@ struct GPUTextureImpl{
     TextureFormat &Format;
     GPUTexture::Usage  &Usage;
 
-    sx_inline GPUTextureImpl(GPUTexture &texture);
+    GPUTextureImpl(GPUTexture &texture);
 
     void Create(TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
 
@@ -37,17 +37,6 @@ struct GPUTextureImpl{
     static void DeleteImpl(GPUTexture &texture);
 
 };
-
-sx_inline GPUTextureImpl::GPUTextureImpl(GPUTexture &texture):
-    Handle(reinterpret_cast<VkImage&>(texture.m_Handle.U64)),
-    ViewHandle(reinterpret_cast<VkImageView&>(texture.m_ViewHandle.U64)),
-    Memory(reinterpret_cast<VkDeviceMemory&>(texture.m_BackingMemory)),
-    Width(texture.m_Width),
-    Height(texture.m_Height),
-    Layout(texture.m_Layout),
-    Format(texture.m_Format),
-    Usage(texture.m_Usage)
-{}
 
 }//namespace Vk::
 }//namespace StraitX::

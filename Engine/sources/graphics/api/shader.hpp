@@ -48,30 +48,30 @@ private:
     friend class GraphicsAPILoader;
 public:
 
-    constexpr Shader(Shader::Type type, Shader::Lang lang);
+    Shader(Shader::Type type, Shader::Lang lang);
 
     virtual ~Shader() = default;
 
-    constexpr Shader::Type GetType()const;
+    Shader::Type GetType()const;
 
-    constexpr Shader::Lang GetLang()const;
+    Shader::Lang GetLang()const;
 
-    sx_inline static Shader *New(Shader::Type type, Shader::Lang lang, const u8 *sources, u32 length);
+    static Shader *New(Shader::Type type, Shader::Lang lang, const u8 *sources, u32 length);
 
-    sx_inline static void Delete(Shader *shader);
+    static void Delete(Shader *shader);
 
 };
 
-constexpr Shader::Shader(Shader::Type type, Shader::Lang lang):
+sx_inline Shader::Shader(Shader::Type type, Shader::Lang lang):
     m_Type(type),
     m_Lang(lang)
 {}
 
-constexpr Shader::Type Shader::GetType()const{
+sx_inline Shader::Type Shader::GetType()const{
     return m_Type;
 }
 
-constexpr Shader::Lang Shader::GetLang()const{
+sx_inline Shader::Lang Shader::GetLang()const{
     return m_Lang;
 }
 

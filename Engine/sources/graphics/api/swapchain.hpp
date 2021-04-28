@@ -38,9 +38,9 @@ public:
 
     virtual const Framebuffer *CurrentFramebuffer() = 0;
 
-    sx_inline static Swapchain *New(const Window &window, const SwapchainProperties &props);
+    static Swapchain *New(const Window &window, const SwapchainProperties &props);
 
-    sx_inline static void Delete(Swapchain *swapchain);
+    static void Delete(Swapchain *swapchain);
 };
 
 sx_inline Swapchain *Swapchain::New(const Window &window, const SwapchainProperties &props){

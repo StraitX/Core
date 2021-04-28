@@ -25,13 +25,7 @@ public:
 
     void Submit(const ArrayPtr<const VkSemaphore> &wait_semaphores, const ArrayPtr<const VkSemaphore> &signal_semaphores, VkFence signal_fence)const;
 
-    sx_inline void CmdBufferCopy(VkBuffer src, VkBuffer dst, VkDeviceSize size, VkDeviceSize src_offset, VkDeviceSize dst_offset)const{
-        VkBufferCopy copy;
-        copy.srcOffset = src_offset;
-        copy.dstOffset = dst_offset;
-        copy.size = size;
-        vkCmdCopyBuffer(m_Handle, src, dst, 1, &copy);
-    }
+    void CmdBufferCopy(VkBuffer src, VkBuffer dst, VkDeviceSize size, VkDeviceSize src_offset, VkDeviceSize dst_offset)const;
 
     void CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst)const;
 
@@ -45,6 +39,14 @@ public:
         return m_TargetQueue;
     }
 };
+
+sx_inline void CommandBuffer::CmdBufferCopy(VkBuffer src, VkBuffer dst, VkDeviceSize size, VkDeviceSize src_offset, VkDeviceSize dst_offset)const{
+    VkBufferCopy copy;
+    copy.srcOffset = src_offset;
+    copy.dstOffset = dst_offset;
+    copy.size = size;
+    vkCmdCopyBuffer(m_Handle, src, dst, 1, &copy);
+}
 
 }//namespace Vk::
 }//namespace StraitX::

@@ -6,11 +6,11 @@
 namespace StraitX{
 namespace Vk{
 
-constexpr GPUBufferImpl::GPUBufferImpl(GPUBuffer &buffer):
+GPUBufferImpl::GPUBufferImpl(GPUBuffer &buffer):
     GPUBufferImpl(reinterpret_cast<VkBuffer&>(buffer.m_Handle.U64), reinterpret_cast<VkDeviceMemory&>(buffer.m_BackingMemory.U64), buffer.m_Size, buffer.m_Usage, buffer.m_MemoryType)
 {}
 
-constexpr GPUBufferImpl::GPUBufferImpl(VkBuffer &handle, VkDeviceMemory &memory, u32 &size, GPUBuffer::UsageType &usage, GPUMemoryType &mem_type):
+GPUBufferImpl::GPUBufferImpl(VkBuffer &handle, VkDeviceMemory &memory, u32 &size, GPUBuffer::UsageType &usage, GPUMemoryType &mem_type):
     Handle(handle),
     Memory(memory),
     Size(size),

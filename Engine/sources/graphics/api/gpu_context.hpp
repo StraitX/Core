@@ -110,9 +110,9 @@ protected:
 
     virtual void SwapFramebuffersImpl(Swapchain *swapchain) = 0;
 public:
-    sx_inline static GPUContext *New(){ return s_VTable.New(); }
+    static GPUContext *New(){ return s_VTable.New(); }
 
-    sx_inline static void Delete(GPUContext *context){ s_VTable.Delete(context); }
+    static void Delete(GPUContext *context){ s_VTable.Delete(context); }
 };
 
 

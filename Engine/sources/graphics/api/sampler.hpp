@@ -59,9 +59,9 @@ public:
 #ifdef SX_DEBUG
     ~Sampler();
 #endif
-    sx_inline void New(SamplerProperties props);
+    void New(SamplerProperties props);
 
-    sx_inline void Delete();
+    void Delete();
 
     constexpr GPUResourceHandle Handle()const;
 };

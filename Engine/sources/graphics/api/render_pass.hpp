@@ -43,9 +43,9 @@ public:
 
     virtual ~RenderPass() = default;
 
-    sx_inline static RenderPass *New(const RenderPassProperties &properties);
+    static RenderPass *New(const RenderPassProperties &properties);
 
-    sx_inline static void Delete(RenderPass *pass);
+    static void Delete(RenderPass *pass);
 };
 
 sx_inline RenderPass *RenderPass::New(const RenderPassProperties &properties){

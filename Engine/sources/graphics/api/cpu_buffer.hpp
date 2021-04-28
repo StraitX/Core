@@ -41,9 +41,9 @@ private:
     friend class Vk::CPUBufferImpl;
     friend class GraphicsAPILoader;
 public:
-    constexpr CPUBuffer() = default;
+    CPUBuffer() = default;
 #ifdef SX_DEBUG
-    sx_inline ~CPUBuffer();
+    ~CPUBuffer();
 #endif
     void New(u32 size);
 
@@ -51,19 +51,19 @@ public:
 
     void Delete();
 
-    constexpr void *Pointer()const;
+    void *Pointer()const;
 
     void CopyData(const void *source, size_t size);
 
-    constexpr GPUResourceHandle Handle()const;
+    GPUResourceHandle Handle()const;
 
-    constexpr u32 Size()const;
+    u32 Size()const;
     
 };
 
 // Use destructor to avoid Buffer leaks
 #ifdef SX_DEBUG
-CPUBuffer::~CPUBuffer(){
+sx_inline CPUBuffer::~CPUBuffer(){
     CoreAssert(m_Handle.U64 == 0, "CPUBuffer: Delete should be called before destruction");
 }
 #endif
@@ -84,16 +84,16 @@ sx_inline void CPUBuffer::Delete(){
     m_Pointer = nullptr;
 }
 
-constexpr void *CPUBuffer::Pointer()const{
+sx_inline void *CPUBuffer::Pointer()const{
     CoreAssert(m_Pointer, "CPUBuffer: For some reason Pointer is null");
     return m_Pointer;
 }
 
-constexpr GPUResourceHandle CPUBuffer::Handle()const{
+sx_inline GPUResourceHandle CPUBuffer::Handle()const{
     return m_Handle;
 }
 
-constexpr u32 CPUBuffer::Size()const{
+sx_inline u32 CPUBuffer::Size()const{
     return m_Size;
 }
 

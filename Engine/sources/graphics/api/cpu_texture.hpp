@@ -19,15 +19,15 @@ public:
 
     void Delete();
 
-    constexpr void *Pointer()const;
+    void *Pointer()const;
 
     void CopyData(const void *source);
 
-    constexpr GPUResourceHandle Handle()const;
+    GPUResourceHandle Handle()const;
 
-    constexpr Vector2u Size()const;
+    Vector2u Size()const;
 
-    constexpr TextureFormat Format()const;
+    TextureFormat Format()const;
 };
 
 sx_inline void CPUTexture::New(u32 width, u32 height, TextureFormat format){
@@ -46,7 +46,7 @@ sx_inline void CPUTexture::Delete(){
     CPUBuffer::Delete();
 }
 
-constexpr void *CPUTexture::Pointer()const{
+sx_inline void *CPUTexture::Pointer()const{
     return CPUBuffer::Pointer();
 }
 
@@ -54,15 +54,15 @@ sx_inline void CPUTexture::CopyData(const void *source){
     CPUBuffer::CopyData(source, m_Width * m_Height * GetPixelSize(m_Format));
 }
 
-constexpr GPUResourceHandle CPUTexture::Handle()const{
+sx_inline GPUResourceHandle CPUTexture::Handle()const{
     return CPUBuffer::Handle();
 }
 
-constexpr Vector2u CPUTexture::Size()const{
+sx_inline Vector2u CPUTexture::Size()const{
     return {m_Width, m_Height};
 }
 
-constexpr TextureFormat CPUTexture::Format()const{
+sx_inline TextureFormat CPUTexture::Format()const{
     return m_Format;
 }
 

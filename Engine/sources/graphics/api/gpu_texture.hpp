@@ -82,27 +82,28 @@ private:
     friend class GL::DMAImpl;
 public:
 
-    constexpr GPUTexture() = default;
+    GPUTexture() = default;
 #ifdef SX_DEBUG
     ~GPUTexture();
 #endif
-    sx_inline void New(TextureFormat format, Usage usage, u32 width, u32 height);
+    void New(TextureFormat format, Usage usage, u32 width, u32 height);
 
-    sx_inline void Delete();
+    void Delete();
 
-    constexpr GPUResourceHandle Handle()const;
+    GPUResourceHandle Handle()const;
 
-    constexpr GPUResourceHandle ViewHandle()const;
+    GPUResourceHandle ViewHandle()const;
 
-    constexpr Vector2u Size()const;
+    Vector2u Size()const;
 
-    constexpr TextureFormat GetFormat()const;
+    TextureFormat GetFormat()const;
 
-    constexpr Layout GetLayout()const;
+    Layout GetLayout()const;
 
-    constexpr Usage GetUsage()const;
+    Usage GetUsage()const;
 
 };
+
 #ifdef SX_DEBUG
 sx_inline GPUTexture::~GPUTexture(){
     CoreAssert(m_Handle.U64 == 0, "GPUTexture: Delete() should be called before destruction");
@@ -117,27 +118,27 @@ sx_inline void GPUTexture::Delete(){
     m_Handle.U64 = 0;
 }
 
-constexpr GPUResourceHandle GPUTexture::Handle()const{ 
+sx_inline GPUResourceHandle GPUTexture::Handle()const{ 
     return m_Handle; 
 }
 
-constexpr GPUResourceHandle GPUTexture::ViewHandle()const{ 
+sx_inline GPUResourceHandle GPUTexture::ViewHandle()const{ 
     return m_ViewHandle; 
 }
 
-constexpr Vector2u GPUTexture::Size()const{ 
+sx_inline Vector2u GPUTexture::Size()const{ 
     return {m_Width, m_Height}; 
 }
 
-constexpr TextureFormat GPUTexture::GetFormat()const{ 
+sx_inline TextureFormat GPUTexture::GetFormat()const{ 
     return m_Format;
 }
 
-constexpr GPUTexture::Layout GPUTexture::GetLayout()const{
+sx_inline GPUTexture::Layout GPUTexture::GetLayout()const{
     return m_Layout;
 }
 
-constexpr GPUTexture::Usage GPUTexture::GetUsage()const{
+sx_inline GPUTexture::Usage GPUTexture::GetUsage()const{
     return m_Usage;
 }
 

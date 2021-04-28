@@ -53,28 +53,28 @@ private:
     friend class GL::GPUBufferImpl;
     friend class Vk::GPUBufferImpl;
 public:
-    constexpr GPUBuffer() = default;
+    GPUBuffer() = default;
 #ifdef SX_DEBUG
-    sx_inline ~GPUBuffer();
+    ~GPUBuffer();
 #endif
-    sx_inline void New(u32 size, GPUMemoryType mem_type, UsageType usage);
+    void New(u32 size, GPUMemoryType mem_type, UsageType usage);
 
-    sx_inline void Delete();
+    void Delete();
 
-    constexpr GPUResourceHandle Handle()const;
+    GPUResourceHandle Handle()const;
 
-    constexpr GPUResourceHandle Memory()const;
+    GPUResourceHandle Memory()const;
 
-    constexpr u32 Size()const;
+    u32 Size()const;
 
-    constexpr UsageType Usage()const;
+    UsageType Usage()const;
 
-    constexpr GPUMemoryType MemoryType()const;
+    GPUMemoryType MemoryType()const;
 
 };
 // Use destructor to avoid Buffer leaks
 #ifdef SX_DEBUG
-GPUBuffer::~GPUBuffer(){
+sx_inline GPUBuffer::~GPUBuffer(){
     CoreAssert(m_Handle.U64 == 0, "GPUBuffer: Delete() should be called before destruction");
 }
 #endif
@@ -89,23 +89,23 @@ sx_inline void GPUBuffer::Delete(){
     m_Handle.U64 = 0;
 }
 
-constexpr GPUResourceHandle GPUBuffer::Handle()const{
+sx_inline GPUResourceHandle GPUBuffer::Handle()const{
     return m_Handle;
 }
 
-constexpr GPUResourceHandle GPUBuffer::Memory()const{
+sx_inline GPUResourceHandle GPUBuffer::Memory()const{
     return m_BackingMemory;
 }
 
-constexpr u32 GPUBuffer::Size()const{
+sx_inline u32 GPUBuffer::Size()const{
     return m_Size;
 }
 
-constexpr GPUBuffer::UsageType GPUBuffer::Usage()const{
+sx_inline GPUBuffer::UsageType GPUBuffer::Usage()const{
     return m_Usage;
 }
 
-constexpr GPUMemoryType GPUBuffer::MemoryType()const{
+sx_inline GPUMemoryType GPUBuffer::MemoryType()const{
     return m_MemoryType;
 }
 

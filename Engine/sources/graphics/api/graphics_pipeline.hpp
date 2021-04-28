@@ -123,15 +123,15 @@ public:
 
     virtual ~GraphicsPipeline() = default;
 
-    sx_inline static GraphicsPipeline *New(const GraphicsPipelineProperties &props);
-
-    sx_inline static void Delete(GraphicsPipeline *pipeline);
-
     virtual void Bind(size_t binding, size_t index, const GPUBuffer &uniform_buffer) = 0;
 
     virtual void Bind(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler) = 0;
 
     static size_t CalculateStride(const ArrayPtr<const VertexAttribute> &attributes);
+    
+    static GraphicsPipeline *New(const GraphicsPipelineProperties &props);
+
+    static void Delete(GraphicsPipeline *pipeline);
 
 };
 

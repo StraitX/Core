@@ -25,7 +25,16 @@ VkImageLayout GPUTextureImpl::s_LayoutTable[] = {
     VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
 };
 
-
+GPUTextureImpl::GPUTextureImpl(GPUTexture &texture):
+    Handle(reinterpret_cast<VkImage&>(texture.m_Handle.U64)),
+    ViewHandle(reinterpret_cast<VkImageView&>(texture.m_ViewHandle.U64)),
+    Memory(reinterpret_cast<VkDeviceMemory&>(texture.m_BackingMemory)),
+    Width(texture.m_Width),
+    Height(texture.m_Height),
+    Layout(texture.m_Layout),
+    Format(texture.m_Format),
+    Usage(texture.m_Usage)
+{}
 
 void GPUTextureImpl::Create(TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
     CoreAssert(format != TextureFormat::Unknown,"GPUTexture: Can't be created with Format::Unknown");

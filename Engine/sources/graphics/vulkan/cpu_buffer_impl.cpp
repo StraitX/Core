@@ -5,6 +5,22 @@
 namespace StraitX{
 namespace Vk{
 
+CPUBufferImpl::CPUBufferImpl(CPUBuffer &buffer):
+    CPUBufferImpl(
+        reinterpret_cast<VkBuffer&>(buffer.m_Handle.U64),
+        reinterpret_cast<VkDeviceMemory&>(buffer.m_BackingMemory.U64), 
+        buffer.m_Size, 
+        buffer.m_Pointer)
+{}
+
+CPUBufferImpl::CPUBufferImpl(VkBuffer &handle, VkDeviceMemory &memory, u32 &size, void *&pointer):
+    Handle(handle),
+    Memory(memory),
+    Size(size),
+    Pointer(pointer)
+{}
+
+
 void CPUBufferImpl::Create(u32 size){
     Size = size;
 
@@ -34,7 +50,7 @@ void CPUBufferImpl::Destroy(){
     vkDestroyBuffer(GPU::Get().Handle(), Handle, nullptr);
 
     vkUnmapMemory(GPU::Get().Handle(), Memory);
-    
+
     MemoryAllocator::Free(Memory);
 }
 
