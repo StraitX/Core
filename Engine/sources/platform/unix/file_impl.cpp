@@ -10,12 +10,12 @@ namespace StraitX{
 
 constexpr u32 FileCreatePermission = 0664;
 
-Result File::Open(const char *filename, Mode mode){
+Result File::Open(const char *filename, Mode mode, bool create){
     assert(m_FD == InvalidFD);
 
     errno = 0;
 
-    m_FD = open(filename, O_CREAT | (int)mode, FileCreatePermission);
+    m_FD = open(filename, (create ? O_CREAT : 0) | (int)mode, FileCreatePermission);
 
     if(m_FD == InvalidFD){
         switch (errno) {

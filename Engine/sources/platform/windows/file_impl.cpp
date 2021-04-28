@@ -6,11 +6,11 @@ namespace StraitX {
 
 static_assert(sizeof(HANDLE) <= sizeof(u64),"Win32 Handle can't fit into File::m_FD");
 
-Result File::Open(const char* filename, Mode mode) {
+Result File::Open(const char* filename, Mode mode, bool create) {
 	assert(m_FD == InvalidFD);
 
 	OFSTRUCT open_file_struct = {};
-	m_FD = OpenFile(filename, &open_file_struct, (unsigned int)mode | (Exist(filename) ? 0 : OF_CREATE));
+	m_FD = OpenFile(filename, &open_file_struct, (unsigned int)mode | (create ? (!Exist(filename) ? OF_CREATE : 0) : 0));
 
 	if (m_FD == HFILE_ERROR) { 
 		m_FD = InvalidFD;

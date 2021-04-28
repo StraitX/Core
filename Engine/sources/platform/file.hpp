@@ -29,11 +29,11 @@ public:
     File() = default;
 
     //You should close file manually
-    sx_inline File(const char *filename, Mode mode){
-        (void)Open(filename, mode);
+    sx_inline File(const char *filename, Mode mode, bool create = true){
+        (void)Open(filename, mode, create);
     }
 
-    Result Open(const char *filename, Mode mode);
+    Result Open(const char *filename, Mode mode, bool create = true);
 
     sx_inline bool IsOpen(){
         return m_FD != InvalidFD;
