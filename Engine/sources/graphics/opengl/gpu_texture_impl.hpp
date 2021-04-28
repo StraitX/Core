@@ -11,7 +11,7 @@ struct GPUTextureImpl{
     static GLenum s_FormatTable[];
     static GLenum s_TypeTable[];
 
-    static void NewImpl(GPUTexture &texture, LogicalGPU &owner, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
+    static void NewImpl(GPUTexture &texture, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
 
     static void DeleteImpl(GPUTexture &texture);
 

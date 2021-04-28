@@ -4,8 +4,7 @@
 namespace StraitX{
 namespace GL{
 
-void GPUBufferImpl::NewImpl(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
-    buffer.m_Owner = &owner;
+void GPUBufferImpl::NewImpl(GPUBuffer &buffer, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
     buffer.m_Size = size;
     buffer.m_Usage = usage;
     buffer.m_MemoryType = mem_type;

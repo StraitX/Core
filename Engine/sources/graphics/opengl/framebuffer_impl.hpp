@@ -14,7 +14,7 @@ public:
 
     FramebufferImpl(u32 handle, const RenderPass *const pass, const FramebufferProperties &props);
 
-    FramebufferImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props);
+    FramebufferImpl(const RenderPass *const pass, const FramebufferProperties &props);
 
     ~FramebufferImpl();
 
@@ -22,7 +22,7 @@ public:
 
     void Bind()const;
 
-    static Framebuffer *NewImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props);
+    static Framebuffer *NewImpl(const RenderPass *const pass, const FramebufferProperties &props);
 
     static void DeleteImpl(Framebuffer *framebuffer);
 };

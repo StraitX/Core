@@ -15,7 +15,7 @@ struct ShaderImpl: public Shader{
     Type ShaderType;
     Lang ShaderLang;
 
-    ShaderImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *sources, u32 length);
+    ShaderImpl(Type type, Lang lang, const u8 *sources, u32 length);
 
     ~ShaderImpl();
 
@@ -23,7 +23,7 @@ struct ShaderImpl: public Shader{
 
     static GLenum GetStage(Type type);
 
-    static Shader *NewImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *sources, u32 length);
+    static Shader *NewImpl(Type type, Lang lang, const u8 *sources, u32 length);
 
     static void DeleteImpl(Shader *shader);
 

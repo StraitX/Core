@@ -51,7 +51,7 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
 
     DescriptorSet Set;
 
-    GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props);
+    GraphicsPipelineImpl(const GraphicsPipelineProperties &props);
 
     virtual ~GraphicsPipelineImpl();
 
@@ -69,7 +69,7 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
 
     bool SupportsUniformBindings()const;
 
-    static GraphicsPipeline * NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props);
+    static GraphicsPipeline * NewImpl(const GraphicsPipelineProperties &props);
 
     static void DeleteImpl(GraphicsPipeline *pipeline);
 

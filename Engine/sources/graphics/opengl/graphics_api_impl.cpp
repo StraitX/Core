@@ -59,11 +59,11 @@ Result GraphicsAPIImpl::Initialize(){
 
     glEnable(GL_BLEND);
 
-    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &MaxTextureUnits);
-    glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &MaxUniformBufferBindings);
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &m_MaxTextureUnits);
+    glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &m_MaxUniformBufferBindings);
 
-    DLogInfo("GL: MaxTextureUnits:          %", MaxTextureUnits);
-    DLogInfo("GL: MaxUniformBufferBindings: %", MaxUniformBufferBindings);
+    DLogInfo("GL: MaxTextureUnits:          %", m_MaxTextureUnits);
+    DLogInfo("GL: MaxUniformBufferBindings: %", m_MaxUniformBufferBindings);
 
     return Result::Success;
 }

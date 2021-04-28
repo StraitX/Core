@@ -22,9 +22,8 @@ static RenderPassProperties ToFramebufferProperties(const SwapchainProperties &p
     return {{&TempAttachment, 1}};
 }
 
-SwapchainImpl::SwapchainImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props):
-    m_Owner(static_cast<GL::LogicalGPUImpl *>(&gpu)),
-    m_FramebufferPass(gpu, ToFramebufferProperties(props)),
+SwapchainImpl::SwapchainImpl(const Window &window, const SwapchainProperties &props):
+    m_FramebufferPass(ToFramebufferProperties(props)),
     m_DefaultFramebuffer(0, &m_FramebufferPass, { {window.Size().width, window.Size().height}, {&FakeFramebufferTexturePtr, 1} })
 {
     // Yes, OpenGL, Here we go
@@ -40,8 +39,8 @@ const Framebuffer *SwapchainImpl::CurrentFramebuffer(){
     return &m_DefaultFramebuffer;
 }
 
-Swapchain *SwapchainImpl::NewImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props){
-    return new(Memory::Alloc(sizeof(SwapchainImpl))) SwapchainImpl(gpu, window, props);
+Swapchain *SwapchainImpl::NewImpl(const Window &window, const SwapchainProperties &props){
+    return new(Memory::Alloc(sizeof(SwapchainImpl))) SwapchainImpl(window, props);
 }
 
 void SwapchainImpl::DeleteImpl(Swapchain *swapchain){

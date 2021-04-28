@@ -255,7 +255,7 @@ void TranslateStatementToBindingIndex(const ArrayPtr<const char> &statement,cons
     Copy(statement.Pointer() + statement.Size(), in_sources, out_sources);
 }
 
-GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props):
+GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &props):
     GraphicsPipeline(props),
     AttributesStride(GraphicsPipeline::CalculateStride(props.VertexAttributes)),
     Topology(s_TopologyTable[(size_t)props.Topology]),
@@ -265,9 +265,6 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     SrcBlendFactor(s_BlendFactorTable[(size_t)props.SrcBlendFactor]),
     DstBlendFactor(s_BlendFactorTable[(size_t)props.DstBlendFactor])
 {
-    //OpenGL...
-    (void)owner;
-
     glGenVertexArrays(1, &VertexArray);
     glBindVertexArray(VertexArray);
 
@@ -278,7 +275,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
 
         glEnableVertexAttribArray(i);
         
-        if(GraphicsAPIImpl::Instance.LoadedOpenGLVersion.Major == 4 && GraphicsAPIImpl::Instance.LoadedOpenGLVersion.Minor >= 3){
+        if(GraphicsAPIImpl::Instance.LoadedVersion().Major == 4 && GraphicsAPIImpl::Instance.LoadedVersion().Minor >= 3){
             glVertexAttribFormat(i, ElementsCount(props.VertexAttributes[i]),ElementType(props.VertexAttributes[i]),false, 0 /*offset from the begining of the buffer*/);
             glVertexAttribBinding(i,i);
         }else{
@@ -487,7 +484,7 @@ void GraphicsPipelineImpl::Bind()const{
 }
 
 void GraphicsPipelineImpl::BindVertexBuffer(u32 id)const{
-    if(GraphicsAPIImpl::Instance.LoadedOpenGLVersion.Major == 4 && GraphicsAPIImpl::Instance.LoadedOpenGLVersion.Minor >= 3){
+    if(GraphicsAPIImpl::Instance.LoadedVersion().Major == 4 && GraphicsAPIImpl::Instance.LoadedVersion().Minor >= 3){
         size_t offset = 0;
         for(size_t i = 0; i<Attributes.Size(); ++i){
             glBindVertexBuffer(i, id, offset, AttributesStride);
@@ -510,13 +507,13 @@ void GraphicsPipelineImpl::BindIndexBuffer(u32 id)const{
 bool GraphicsPipelineImpl::SupportsUniformBindings()const{
     auto &api = GraphicsAPIImpl::Instance;
 
-    if(api.LoadedOpenGLVersion.Major >= 4 && api.LoadedOpenGLVersion.Minor >= 2)return true;
+    if(api.LoadedVersion().Major >= 4 && api.LoadedVersion().Minor >= 2)return true;
 
     return false;
 }
 
-GraphicsPipeline * GraphicsPipelineImpl::NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props){
-    return new(Memory::Alloc(sizeof(GL::GraphicsPipelineImpl))) GL::GraphicsPipelineImpl(owner, props);
+GraphicsPipeline * GraphicsPipelineImpl::NewImpl(const GraphicsPipelineProperties &props){
+    return new(Memory::Alloc(sizeof(GL::GraphicsPipelineImpl))) GL::GraphicsPipelineImpl(props);
 }
 
 void GraphicsPipelineImpl::DeleteImpl(GraphicsPipeline *pipeline){

@@ -6,16 +6,16 @@
 namespace StraitX{
 namespace GL{
 
-RenderPassImpl::RenderPassImpl(const LogicalGPU &owner, const RenderPassProperties &props){
-    (void)owner;
+RenderPassImpl::RenderPassImpl(const RenderPassProperties &props){
+    (void)props;
 }
 
 RenderPassImpl::~RenderPassImpl(){
     (void)0;
 }
 
-RenderPass *RenderPassImpl::NewImpl(const LogicalGPU &owner, const RenderPassProperties &props){
-    return new(Memory::Alloc(sizeof(GL::RenderPassImpl))) GL::RenderPassImpl(owner, props);
+RenderPass *RenderPassImpl::NewImpl(const RenderPassProperties &props){
+    return new(Memory::Alloc(sizeof(GL::RenderPassImpl))) GL::RenderPassImpl(props);
 }
 
 void RenderPassImpl::DeleteImpl(RenderPass *pass){

@@ -11,14 +11,12 @@
 namespace StraitX{
 namespace GL{
     
-ShaderImpl::ShaderImpl(LogicalGPU& owner, Type type, Lang lang, const u8* src, u32 length) :
+ShaderImpl::ShaderImpl(Type type, Lang lang, const u8* src, u32 length) :
     Shader(type, lang),
     Length(length),
     ShaderType(type),
     ShaderLang(lang)
 {
-    //OpenGL, GPUless, we know...
-    (void)owner;
     // XXX: i assume that shader source code is totally valid now
 
     Sources = (char *)Memory::Alloc(Length + 1);
@@ -47,8 +45,8 @@ GLenum ShaderImpl::GetStage(Type type) {
     return 0;
 }
 
-Shader *ShaderImpl::NewImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *sources, u32 length){
-    return new (Memory::Alloc(sizeof(ShaderImpl))) ShaderImpl(owner, type, lang, sources, length);
+Shader *ShaderImpl::NewImpl(Type type, Lang lang, const u8 *sources, u32 length){
+    return new (Memory::Alloc(sizeof(ShaderImpl))) ShaderImpl(type, lang, sources, length);
 }
 
 void ShaderImpl::DeleteImpl(Shader *shader){

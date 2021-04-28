@@ -1,7 +1,7 @@
 #include "platform/opengl.hpp"
 #include "graphics/opengl/debug.hpp"
 #include "graphics/opengl/gpu_texture_impl.hpp"
-#include "graphics/opengl/logical_gpu_impl.hpp"
+#include "graphics/opengl/graphics_api_impl.hpp"
 
 namespace StraitX{
 namespace GL{
@@ -27,10 +27,9 @@ GLenum GPUTextureImpl::s_TypeTable[] = {
     GL_UNSIGNED_BYTE
 };
 
-void GPUTextureImpl::NewImpl(GPUTexture &texture, LogicalGPU &owner, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
+void GPUTextureImpl::NewImpl(GPUTexture &texture, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
     CoreAssert(format != TextureFormat::Unknown,"GPUTexture: Can't be created with Format::Unknown");
 
-    texture.m_Owner = &owner;
     texture.m_Width = width;
     texture.m_Height = height;
     texture.m_Layout = GPUTexture::Layout::Undefined;
@@ -47,8 +46,7 @@ void GPUTextureImpl::DeleteImpl(GPUTexture &texture){
 }
 
 void GPUTextureImpl::BindZero(const GPUTexture &texture){
-    GL::LogicalGPUImpl *owner = static_cast<GL::LogicalGPUImpl*>(texture.m_Owner);
-    GL(glActiveTexture(GL_TEXTURE0 + owner->MaxTextureUnits - 1));
+    GL(glActiveTexture(GL_TEXTURE0 + GraphicsAPIImpl::Instance.MaxTextureUnits() - 1));
     GL(glBindTexture(GL_TEXTURE_2D, texture.m_Handle.U32));
 }
 

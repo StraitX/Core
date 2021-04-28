@@ -10,6 +10,7 @@
 #include "graphics/opengl/graphics_pipeline_impl.hpp"
 #include "graphics/opengl/framebuffer_impl.hpp"
 #include "graphics/opengl/dma_impl.hpp"
+#include "graphics/opengl/graphics_api_impl.hpp"
 
 namespace StraitX{
 namespace GL{
@@ -81,12 +82,10 @@ void GPUContextImpl::ClearFramebufferColorAttachmentsImpl(const Framebuffer *fra
 }
 
 void GPUContextImpl::SwapFramebuffersImpl(Swapchain *swapchain){
-    static_cast<GL::SwapchainImpl*>(swapchain)->m_Owner->SwapBuffers();
+    GraphicsAPIImpl::Instance.Context().SwapBuffers();
 }
 
-GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){
-    // In OpenGL we don't have GPU distinctions so owner doesn't matter
-    (void)owner;
+GPUContext *GPUContextImpl::NewImpl(){
     return new(Memory::Alloc(sizeof(GPUContextImpl))) GPUContextImpl();
 }
 

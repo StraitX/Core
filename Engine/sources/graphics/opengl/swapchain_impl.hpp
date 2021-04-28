@@ -2,7 +2,6 @@
 #define STRAITX_OPENGL_SWAPCHAIN_IMPL_HPP
 
 #include "graphics/api/swapchain.hpp"
-#include "graphics/opengl/logical_gpu_impl.hpp"
 #include "graphics/opengl/framebuffer_impl.hpp"
 #include "graphics/opengl/render_pass_impl.hpp"
 
@@ -10,17 +9,16 @@ namespace StraitX{
 namespace GL{
 
 struct SwapchainImpl: public Swapchain{
-    GL::LogicalGPUImpl *m_Owner = nullptr;
     GL::RenderPassImpl m_FramebufferPass;
     GL::FramebufferImpl m_DefaultFramebuffer;
 
-    SwapchainImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props);
+    SwapchainImpl(const Window &window, const SwapchainProperties &props);
 
     virtual const RenderPass *FramebufferPass()override;
 
     virtual const Framebuffer *CurrentFramebuffer()override;
 
-    static Swapchain *NewImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props);
+    static Swapchain *NewImpl(const Window &window, const SwapchainProperties &props);
 
     static void DeleteImpl(Swapchain *swapchain);
 };

@@ -11,12 +11,9 @@ FramebufferImpl::FramebufferImpl(u32 handle, const RenderPass *const pass, const
     m_Size(props.Size)
 {}
 
-FramebufferImpl::FramebufferImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props):
+FramebufferImpl::FramebufferImpl(const RenderPass *const pass, const FramebufferProperties &props):
     m_Size(props.Size)
 {
-    // we don't care
-    (void)owner;
-
     glGenFramebuffers(1, &m_Handle);
     glBindFramebuffer(GL_FRAMEBUFFER, m_Handle);
 
@@ -39,8 +36,8 @@ void FramebufferImpl::Bind()const{
     glBindFramebuffer(GL_FRAMEBUFFER, m_Handle);
 }
 
-Framebuffer *FramebufferImpl::NewImpl(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props){
-    return new(Memory::Alloc(sizeof(GL::FramebufferImpl))) GL::FramebufferImpl(owner, pass, props);
+Framebuffer *FramebufferImpl::NewImpl(const RenderPass *const pass, const FramebufferProperties &props){
+    return new(Memory::Alloc(sizeof(GL::FramebufferImpl))) GL::FramebufferImpl(pass, props);
 }
 
 void FramebufferImpl::DeleteImpl(Framebuffer *framebuffer){

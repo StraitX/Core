@@ -2,7 +2,6 @@
 #define STRAITX_OPENGL_GPU_CONTEXT_IMPL_HPP
 
 #include "graphics/api/gpu_context.hpp"
-#include "graphics/opengl/logical_gpu_impl.hpp"
 #include "graphics/opengl/graphics_pipeline_impl.hpp"
 #include "graphics/opengl/framebuffer_impl.hpp"
 
@@ -44,7 +43,7 @@ public:
 
     virtual void SwapFramebuffersImpl(Swapchain *swapchain)override;
 
-    static GPUContext *NewImpl(LogicalGPU &owner);
+    static GPUContext *NewImpl();
 
     static void DeleteImpl(GPUContext *context);
 

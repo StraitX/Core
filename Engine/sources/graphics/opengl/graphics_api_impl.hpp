@@ -18,15 +18,38 @@ private:
     const char *m_VersionString   = nullptr;
     GPUVendor m_Vendor;
 
-    s32 MaxTextureUnits;
-    s32 MaxUniformBufferBindings;
+    s32 m_MaxTextureUnits;
+    s32 m_MaxUniformBufferBindings;
 public:
     static GraphicsAPIImpl Instance;
 
     virtual Result Initialize()override;
 
     virtual void Finalize()override;
+
+    s32 MaxTextureUnits()const;
+
+    s32 MaxUniformBufferBindings()const;
+
+    Version LoadedVersion()const;
+
+    OpenGLContext &Context();
 };
+
+sx_inline s32 GraphicsAPIImpl::MaxTextureUnits()const{
+    return m_MaxTextureUnits;
+}
+sx_inline s32 GraphicsAPIImpl::MaxUniformBufferBindings()const{
+    return m_MaxUniformBufferBindings;
+}
+
+sx_inline Version GraphicsAPIImpl::LoadedVersion()const{
+    return m_LoadedOpenGLVersion;
+}
+
+sx_inline OpenGLContext &GraphicsAPIImpl::Context(){
+    return m_Context;
+}
 
 }// namespace GL::
 }// namespace StraitX::

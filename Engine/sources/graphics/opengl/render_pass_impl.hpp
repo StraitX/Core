@@ -11,11 +11,11 @@ namespace GL{
 constexpr size_t MaxColorAttachments = 8;
 
 struct RenderPassImpl: RenderPass{
-    RenderPassImpl(const LogicalGPU &owner, const RenderPassProperties &props);
+    RenderPassImpl(const RenderPassProperties &props);
 
     virtual ~RenderPassImpl()override;
 
-    static RenderPass *NewImpl(const LogicalGPU &owner, const RenderPassProperties &props);
+    static RenderPass *NewImpl(const RenderPassProperties &props);
 
     static void DeleteImpl(RenderPass *pass);
 };
