@@ -1,13 +1,13 @@
 #include "core/assert.hpp"
 #include "platform/memory.hpp"
 #include "graphics/vulkan/shader_impl.hpp"
+#include "graphics/vulkan/gpu.hpp"
 
 namespace StraitX{
 namespace Vk{
 
-ShaderImpl::ShaderImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *sources, u32 length):
-    Shader(type, lang),
-    Owner(static_cast<Vk::LogicalGPUImpl&>(owner))
+ShaderImpl::ShaderImpl(Type type, Lang lang, const u8 *sources, u32 length):
+    Shader(type, lang)
 {
     if(lang != Shader::Lang::SPIRV)return;
     
@@ -18,12 +18,12 @@ ShaderImpl::ShaderImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *source
     info.codeSize = length;
     info.pCode = reinterpret_cast<const u32*>(sources);
 
-    Status = vkCreateShaderModule(Owner.Handle, &info, nullptr, &Handle);
+    Status = vkCreateShaderModule(GPU::Get().Handle(), &info, nullptr, &Handle);
 }
 
 ShaderImpl::~ShaderImpl(){
     if(IsValid())
-        vkDestroyShaderModule(Owner.Handle, Handle, nullptr);
+        vkDestroyShaderModule(GPU::Get().Handle(), Handle, nullptr);
 }
 
 bool ShaderImpl::IsValid(){
@@ -43,8 +43,8 @@ VkShaderStageFlagBits ShaderImpl::GetStage(Shader::Type type) {
     return (VkShaderStageFlagBits)0;
 }
 
-Shader *ShaderImpl::NewImpl(LogicalGPU &owner, Type type, Lang lang, const u8 *sources, u32 length){
-    return new(Memory::Alloc(sizeof(Vk::ShaderImpl))) ShaderImpl(owner, type, lang, sources, length);
+Shader *ShaderImpl::NewImpl(Type type, Lang lang, const u8 *sources, u32 length){
+    return new(Memory::Alloc(sizeof(Vk::ShaderImpl))) ShaderImpl(type, lang, sources, length);
 }
 
 void ShaderImpl::DeleteImpl(Shader *shader){
