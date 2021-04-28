@@ -1,6 +1,6 @@
 #include "platform/vulkan.hpp"
 #include "core/assert.hpp"
-#include "graphics/vulkan/logical_gpu_impl.hpp"
+#include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/sampler_impl.hpp"
 
 namespace StraitX{
@@ -18,9 +18,7 @@ VkSamplerAddressMode WrapModeTable[]={
     VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
 };
 
-void SamplerImpl::NewImpl(Sampler &sampler, LogicalGPU &owner, SamplerProperties props){
-    sampler.m_Owner = &owner;
-    auto *device = static_cast<Vk::LogicalGPUImpl*>(sampler.m_Owner);
+void SamplerImpl::NewImpl(Sampler &sampler, SamplerProperties props){
     auto &handle = reinterpret_cast<VkSampler&>(sampler.m_Handle.U64);
 
     VkSamplerCreateInfo info;
@@ -43,14 +41,13 @@ void SamplerImpl::NewImpl(Sampler &sampler, LogicalGPU &owner, SamplerProperties
     info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
     info.unnormalizedCoordinates = VK_FALSE;
 
-    CoreFunctionAssert(vkCreateSampler(device->Handle, &info, nullptr, &handle),VK_SUCCESS,"Vk: SamplerImpl: Can't create sampler");
+    CoreFunctionAssert(vkCreateSampler(GPU::Get().Handle(), &info, nullptr, &handle),VK_SUCCESS,"Vk: SamplerImpl: Can't create sampler");
 }
 
 void SamplerImpl::DeleteImpl(Sampler &sampler){
-    auto *device = static_cast<Vk::LogicalGPUImpl*>(sampler.m_Owner);
     auto &handle = reinterpret_cast<VkSampler&>(sampler.m_Handle.U64);
     
-    vkDestroySampler(device->Handle, handle, nullptr);
+    vkDestroySampler(GPU::Get().Handle(), handle, nullptr);
 }
 
 }//namespace Vk::

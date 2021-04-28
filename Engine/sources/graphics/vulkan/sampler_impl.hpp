@@ -7,7 +7,7 @@ namespace StraitX{
 namespace Vk{
 
 struct SamplerImpl{
-    static void NewImpl(Sampler &sampler, LogicalGPU &owner, SamplerProperties props);
+    static void NewImpl(Sampler &sampler, SamplerProperties props);
 
     static void DeleteImpl(Sampler &sampler);
 };
