@@ -5,7 +5,6 @@
 #include "core/log.hpp"
 #include "graphics/api/graphics_api.hpp"
 #include "graphics/api/graphics_api_loader.hpp"
-#include "graphics/api/gpu.hpp"
 #include "main/application.hpp"
 #include "main/engine.hpp"
 
@@ -68,6 +67,15 @@ Result Engine::Initialize(){
     }
     InitAssert("WindowSystem::Initialize", m_ErrorWindowSystem);
 
+    LogTrace("DisplayServer::Initialize: Begin");
+    {
+        m_ErrorDisplayServer = m_DisplayServer.Initialize();
+        m_DisplayServer.m_Window.SetTitle(m_ApplicationConfig.ApplicationName);
+    }
+    InitAssert("DisplayServer::Initialize", m_ErrorDisplayServer);
+
+    LogTrace("========= Second stage init =========");
+
     auto res = GraphicsAPILoader::Load(m_ApplicationConfig.DesiredAPI);
 
     InitAssert("GraphicsAPILoader::Load", res);
@@ -77,15 +85,6 @@ Result Engine::Initialize(){
         m_ErrorGraphicsAPI = GraphicsAPI::s_Instance->Initialize();
     }
     InitAssert("GraphicsAPI::Initialize",m_ErrorGraphicsAPI);
-
-    LogTrace("========= Second stage init =========");
-
-    LogTrace("DisplayServer::Initialize: Begin");
-    {
-        m_ErrorDisplayServer = m_DisplayServer.Initialize();
-        m_DisplayServer.m_Window.SetTitle(m_ApplicationConfig.ApplicationName);
-    }
-    InitAssert("DisplayServer::Initialize", m_ErrorDisplayServer);
 
     LogTrace("========= Third stage init =========");
 
@@ -122,16 +121,16 @@ Result Engine::Finalize(){
         Log("StraitXExit",m_ErrorMX);
     }
 
-    if(m_ErrorDisplayServer == Result::Success){
-        LogTrace("DisplayServer::Finalize: Begin");
-        m_ErrorDisplayServer = m_DisplayServer.Finalize();
-        Log("DisplayServer::Finalize", m_ErrorDisplayServer);
-    }
-
     if(m_ErrorGraphicsAPI == Result::Success){
         LogTrace("GraphicsAPI::Finalize: Begin");
         GraphicsAPI::s_Instance->Finalize();
         LogTrace("GraphicsAPI::Finalize: End");
+    }
+
+    if(m_ErrorDisplayServer == Result::Success){
+        LogTrace("DisplayServer::Finalize: Begin");
+        m_ErrorDisplayServer = m_DisplayServer.Finalize();
+        Log("DisplayServer::Finalize", m_ErrorDisplayServer);
     }
 
     if(m_ErrorWindowSystem == Result::Success){
