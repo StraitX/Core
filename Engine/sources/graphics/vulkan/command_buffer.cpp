@@ -1,37 +1,39 @@
 #include "platform/memory.hpp"
+#include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/command_buffer.hpp"
 
 namespace StraitX{
 namespace Vk{
 
-void CommandBuffer::New(VkDevice owner, Vk::Queue queue){
-    Owner = owner;
-    Queue = queue;
+CommandBuffer::CommandBuffer(QueueFamily::Type target_queue_type):
+    m_TargetQueueType(target_queue_type),
+    m_TargetQueue(GPU::Get().Queue(m_TargetQueueType))
+{
 
     VkCommandPoolCreateInfo pool_info;
     pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     pool_info.pNext = nullptr;
     pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-    pool_info.queueFamilyIndex = queue.FamilyIndex;
+    pool_info.queueFamilyIndex = GPU::Get().QueueIndex(m_TargetQueueType);
 
-    CoreFunctionAssert(vkCreateCommandPool(Owner, &pool_info, nullptr, &Pool), VK_SUCCESS, "Vk: CommandBuffer: Failed to create command pool");
+    CoreFunctionAssert(vkCreateCommandPool(GPU::Get().Handle(), &pool_info, nullptr, &m_Pool), VK_SUCCESS, "Vk: CommandBuffer: Failed to create command pool");
 
     VkCommandBufferAllocateInfo buffer_info;
     buffer_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     buffer_info.pNext = nullptr;
     buffer_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    buffer_info.commandPool = Pool;
+    buffer_info.commandPool = m_Pool;
     buffer_info.commandBufferCount = 1;
 
-    CoreFunctionAssert(vkAllocateCommandBuffers(Owner, &buffer_info, &Handle), VK_SUCCESS, "Vk: CommandBuffer: Failed to allocate");
+    CoreFunctionAssert(vkAllocateCommandBuffers(GPU::Get().Handle(), &buffer_info, &m_Handle), VK_SUCCESS, "Vk: CommandBuffer: Failed to allocate");
 }
 
-void CommandBuffer::Delete(){
-    vkQueueWaitIdle(Queue.Handle);
+CommandBuffer::~CommandBuffer(){
+    vkQueueWaitIdle(m_TargetQueue);
 
-    vkFreeCommandBuffers(Owner, Pool, 1, &Handle);
+    vkFreeCommandBuffers(GPU::Get().Handle(), m_Pool, 1, &m_Handle);
 
-    vkDestroyCommandPool(Owner, Pool, nullptr);
+    vkDestroyCommandPool(GPU::Get().Handle(), m_Pool, nullptr);
 }
 
 void CommandBuffer::Begin()const{
@@ -41,11 +43,11 @@ void CommandBuffer::Begin()const{
     begin_info.flags = 0;
     begin_info.pInheritanceInfo = nullptr;
 
-    CoreFunctionAssert(vkBeginCommandBuffer(Handle, &begin_info), VK_SUCCESS, "Vk: CommandBuffer: Failed to begin");
+    CoreFunctionAssert(vkBeginCommandBuffer(m_Handle, &begin_info), VK_SUCCESS, "Vk: CommandBuffer: Failed to begin");
 }
 
 void CommandBuffer::End()const{
-    CoreFunctionAssert(vkEndCommandBuffer(Handle),VK_SUCCESS, "Vk: CommandBuffer: Failed to end");
+    CoreFunctionAssert(vkEndCommandBuffer(m_Handle),VK_SUCCESS, "Vk: CommandBuffer: Failed to end");
 }
 
 void CommandBuffer::Submit(const ArrayPtr<const VkSemaphore> &wait_semaphores, const ArrayPtr<const VkSemaphore> &signal_semaphores, VkFence signal_fence)const{
@@ -59,18 +61,18 @@ void CommandBuffer::Submit(const ArrayPtr<const VkSemaphore> &wait_semaphores, c
     info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     info.pNext = nullptr;
     info.commandBufferCount = 1;
-    info.pCommandBuffers = &Handle;
+    info.pCommandBuffers = &m_Handle;
     info.waitSemaphoreCount = wait_semaphores.Size();
     info.pWaitSemaphores = wait_semaphores.Pointer();
     info.signalSemaphoreCount = signal_semaphores.Size();
     info.pSignalSemaphores = signal_semaphores.Pointer();
     info.pWaitDstStageMask = stages;
 
-    CoreFunctionAssert(vkQueueSubmit(Queue.Handle, 1, &info, signal_fence), VK_SUCCESS, "Vk: CommandBuffer: Failed to submit");
+    CoreFunctionAssert(vkQueueSubmit(m_TargetQueue, 1, &info, signal_fence), VK_SUCCESS, "Vk: CommandBuffer: Failed to submit");
 }
 
 void CommandBuffer::CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst)const{
-    vkCmdPipelineBarrier(Handle, src, dst, 0, 0, nullptr, 0, nullptr, 0, nullptr);
+    vkCmdPipelineBarrier(m_Handle, src, dst, 0, 0, nullptr, 0, nullptr, 0, nullptr);
 }
 
 void CommandBuffer::CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_access, VkAccessFlags dst_access)const{
@@ -80,7 +82,7 @@ void CommandBuffer::CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFl
     barrier.srcAccessMask = src_access;
     barrier.dstAccessMask = dst_access;
 
-    vkCmdPipelineBarrier(Handle, src, dst, 0, 1, &barrier, 0, nullptr, 0, nullptr);
+    vkCmdPipelineBarrier(m_Handle, src, dst, 0, 1, &barrier, 0, nullptr, 0, nullptr);
 }
 
 void CommandBuffer::CmdImageBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, 
@@ -103,11 +105,11 @@ void CommandBuffer::CmdImageBarrier(VkPipelineStageFlags src, VkPipelineStageFla
     barrier.subresourceRange.levelCount = 1;
     barrier.subresourceRange.layerCount = 1;
 
-    vkCmdPipelineBarrier(Handle, src, dst, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+    vkCmdPipelineBarrier(m_Handle, src, dst, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 }
 
 CommandBuffer::operator VkCommandBuffer()const{
-    return Handle;
+    return m_Handle;
 }
 
 }//namespace Vk::

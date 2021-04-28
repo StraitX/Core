@@ -8,15 +8,16 @@
 namespace StraitX{
 namespace Vk{
 
-struct CommandBuffer{
-    VkDevice Owner = VK_NULL_HANDLE;
-    Vk::Queue Queue; 
-    VkCommandPool Pool = VK_NULL_HANDLE;
-    VkCommandBuffer Handle = VK_NULL_HANDLE;
+class CommandBuffer{
+private:
+    QueueFamily::Type m_TargetQueueType;
+    VkQueue m_TargetQueue = VK_NULL_HANDLE;
+    VkCommandPool m_Pool = VK_NULL_HANDLE;
+    VkCommandBuffer m_Handle = VK_NULL_HANDLE;
+public: 
+    CommandBuffer(QueueFamily::Type target_queue_type);
 
-    void New(VkDevice owner, Vk::Queue queue);
-
-    void Delete();
+    ~CommandBuffer();
 
     void Begin()const;
 
@@ -29,7 +30,7 @@ struct CommandBuffer{
         copy.srcOffset = src_offset;
         copy.dstOffset = dst_offset;
         copy.size = size;
-        vkCmdCopyBuffer(Handle, src, dst, 1, &copy);
+        vkCmdCopyBuffer(m_Handle, src, dst, 1, &copy);
     }
 
     void CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst)const;
