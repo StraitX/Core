@@ -7,7 +7,6 @@
 #include "graphics/api/gpu_configuration.hpp"
 #include "graphics/api/format.hpp"
 #include "graphics/api/cpu_buffer.hpp"
-#include "graphics/api/logical_gpu.hpp"
 
 namespace StraitX{
 
@@ -56,7 +55,7 @@ public:
         DepthStencilOptimal     = 0x00000020,
     };
     struct VTable{
-        using NewProc    = void (*)(GPUTexture &texture, LogicalGPU &owner, TextureFormat format, Usage usage, u32 width, u32 height);
+        using NewProc    = void (*)(GPUTexture &texture, TextureFormat format, Usage usage, u32 width, u32 height);
         using DeleteProc = void (*)(GPUTexture &texture);
 
         NewProc    New    = nullptr;
@@ -65,7 +64,6 @@ public:
 private:
     static VTable s_VTable;
 
-    LogicalGPU * m_Owner = nullptr;
     GPUResourceHandle m_Handle = {};
     GPUResourceHandle m_ViewHandle = {};
     GPUResourceHandle m_BackingMemory = {};
@@ -92,8 +90,6 @@ public:
 
     sx_inline void Delete();
 
-    constexpr LogicalGPU *Owner()const;
-
     constexpr GPUResourceHandle Handle()const;
 
     constexpr GPUResourceHandle ViewHandle()const;
@@ -113,16 +109,12 @@ sx_inline GPUTexture::~GPUTexture(){
 }
 #endif
 sx_inline void GPUTexture::New(TextureFormat format, Usage usage, u32 width, u32 height){
-    s_VTable.New(*this, LogicalGPU::Instance(), format, usage, width, height);
+    s_VTable.New(*this, format, usage, width, height);
 }
 
 sx_inline void GPUTexture::Delete(){
     s_VTable.Delete(*this);
     m_Handle.U64 = 0;
-}
-
-constexpr LogicalGPU *GPUTexture::Owner()const{
-    return m_Owner;
 }
 
 constexpr GPUResourceHandle GPUTexture::Handle()const{ 

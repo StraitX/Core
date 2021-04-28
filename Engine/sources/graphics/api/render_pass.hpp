@@ -5,7 +5,6 @@
 #include "core/push_array.hpp"
 #include "core/math/vector4.hpp"
 #include "core/noncopyable.hpp"
-#include "graphics/api/logical_gpu.hpp"
 #include "graphics/api/gpu_texture.hpp"
 
 namespace StraitX{
@@ -30,7 +29,7 @@ constexpr size_t MaxAttachmentsCount = 8;
 class RenderPass: NonCopyable{
 public:
     struct VTable{
-        using NewProc    = RenderPass *(*)(const LogicalGPU &owner, const RenderPassProperties &props);
+        using NewProc    = RenderPass *(*)(const RenderPassProperties &props);
         using DeleteProc = void (*)(RenderPass *pass);
 
         NewProc    New    = nullptr;
@@ -50,7 +49,7 @@ public:
 };
 
 sx_inline RenderPass *RenderPass::New(const RenderPassProperties &properties){
-    return s_VTable.New(LogicalGPU::Instance(), properties);
+    return s_VTable.New(properties);
 }
 
 sx_inline void RenderPass::Delete(RenderPass *pass){

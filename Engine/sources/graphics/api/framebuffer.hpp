@@ -21,7 +21,7 @@ class GraphicsAPILoader;
 class Framebuffer: NonCopyable{
 public:
     struct VTable{
-        using NewProc    = Framebuffer *(*)(LogicalGPU &owner, const RenderPass *const pass, const FramebufferProperties &props);
+        using NewProc    = Framebuffer *(*)(const RenderPass *const pass, const FramebufferProperties &props);
         using DeleteProc = void (*)(Framebuffer *framebuffer);
 
         NewProc    New    = nullptr;
@@ -45,7 +45,7 @@ public:
 
 
 sx_inline Framebuffer *Framebuffer::New(const RenderPass *const pass,const FramebufferProperties &props){
-    return s_VTable.New(LogicalGPU::Instance(), pass, props);
+    return s_VTable.New(pass, props);
 }
 
 sx_inline void Framebuffer::Delete(Framebuffer *framebuffer){

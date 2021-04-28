@@ -2,7 +2,6 @@
 #define STRAITX_GRAPHICS_API_VTABLE_HPP
 
 #include "graphics/api/graphics_api.hpp"
-#include "graphics/api/logical_gpu.hpp"
 #include "graphics/api/gpu_context.hpp"
 #include "graphics/api/swapchain.hpp"
 #include "graphics/api/gpu_buffer.hpp"
@@ -19,8 +18,6 @@ namespace StraitX{
 
 struct GraphicsAPIVtable{
     GraphicsAPI *GraphicsAPIPtr = {};
-
-    LogicalGPU *LogicalGPUPtr = {};
 
     GPUContext::VTable GPUContextVTable = {};
 

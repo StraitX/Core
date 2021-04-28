@@ -3,7 +3,6 @@
 
 #include "platform/compiler.hpp"
 #include "core/noncopyable.hpp"
-#include "graphics/api/logical_gpu.hpp"
 #include "graphics/api/cpu_buffer.hpp"
 #include "graphics/api/gpu_buffer.hpp"
 #include "graphics/api/cpu_texture.hpp"
@@ -25,7 +24,7 @@ class GraphicsAPILoader;
 class GPUContext: public NonCopyable{
 public:
     struct VTable{
-        using NewProc    = GPUContext* (*)(LogicalGPU &owner);
+        using NewProc    = GPUContext* (*)();
         using DeleteProc = void (*)(GPUContext *);
 
         NewProc    New    = nullptr;
@@ -111,7 +110,7 @@ protected:
 
     virtual void SwapFramebuffersImpl(Swapchain *swapchain) = 0;
 public:
-    sx_inline static GPUContext *New(){ return s_VTable.New(LogicalGPU::Instance()); }
+    sx_inline static GPUContext *New(){ return s_VTable.New(); }
 
     sx_inline static void Delete(GPUContext *context){ s_VTable.Delete(context); }
 };

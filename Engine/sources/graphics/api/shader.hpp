@@ -7,7 +7,6 @@
 #include "core/noncopyable.hpp"
 #include "core/validable.hpp"
 #include "core/array_ptr.hpp"
-#include "graphics/api/logical_gpu.hpp"
 
 namespace StraitX{
 
@@ -34,7 +33,7 @@ public:
     };
 
     struct VTable{
-        using NewProc    = Shader *(*)(LogicalGPU &owner, Shader::Type type, Shader::Lang lang, const u8 *sources, u32 length);
+        using NewProc    = Shader *(*)(Shader::Type type, Shader::Lang lang, const u8 *sources, u32 length);
         using DeleteProc = void (*)(Shader *shader);
 
         NewProc    New    = nullptr;
@@ -77,7 +76,7 @@ constexpr Shader::Lang Shader::GetLang()const{
 }
 
 sx_inline Shader *Shader::New(Shader::Type type, Shader::Lang lang, const u8 *sources, u32 length){
-    return s_VTable.New(LogicalGPU::Instance(), type, lang, sources, length);
+    return s_VTable.New(type, lang, sources, length);
 }
 
 sx_inline void Shader::Delete(Shader *shader){

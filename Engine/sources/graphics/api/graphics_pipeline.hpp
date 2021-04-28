@@ -6,7 +6,6 @@
 #include "core/validable.hpp"
 #include "graphics/api/shader.hpp"
 #include "graphics/api/gpu_buffer.hpp"
-#include "graphics/api/logical_gpu.hpp"
 #include "graphics/api/render_pass.hpp"
 #include "graphics/api/gpu_texture.hpp"
 #include "graphics/api/sampler.hpp"
@@ -107,7 +106,7 @@ class GraphicsAPILoader;
 class GraphicsPipeline: public Validable, public NonCopyable{
 public:
     struct VTable{
-        using NewProc    = GraphicsPipeline * (*)(LogicalGPU &owner, const GraphicsPipelineProperties &props);
+        using NewProc    = GraphicsPipeline * (*)(const GraphicsPipelineProperties &props);
         using DeleteProc = void (*)(GraphicsPipeline *);
 
         NewProc    New    = nullptr;
@@ -137,7 +136,7 @@ public:
 };
 
 sx_inline GraphicsPipeline *GraphicsPipeline::New(const GraphicsPipelineProperties &props){
-    return s_VTable.New(LogicalGPU::Instance(), props);
+    return s_VTable.New(props);
 }
 
 sx_inline void GraphicsPipeline::Delete(GraphicsPipeline *pipeline){

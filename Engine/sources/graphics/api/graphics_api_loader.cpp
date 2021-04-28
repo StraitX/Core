@@ -32,15 +32,13 @@ GraphicsAPIVtable *GetVTable(GraphicsAPI::API api){
 Result GraphicsAPILoader::Load(GraphicsAPI::API api){
     GraphicsAPIVtable *api_vtable = GetVTable(api);
     if(!api_vtable){
-        LogError("GraphicsAPILoader::Load: Unsupported API: %",GraphicsAPI::GetName(api));
+        LogError("GraphicsAPILoader::Load: Unsupported API: %",GraphicsAPI::Name(api));
         return Result::Unsupported;
     }
 
     GraphicsAPI::s_CurrentAPI = api;
 
     GraphicsAPI::s_Instance = api_vtable->GraphicsAPIPtr;
-
-    LogicalGPU::s_Instance = api_vtable->LogicalGPUPtr;
 
     GPUContext::s_VTable = api_vtable->GPUContextVTable;
 

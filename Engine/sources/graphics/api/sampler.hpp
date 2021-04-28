@@ -3,8 +3,8 @@
 
 #include "platform/types.hpp"
 #include "platform/compiler.hpp"
+#include "core/assert.hpp"
 #include "graphics/api/gpu_configuration.hpp"
-#include "graphics/api/logical_gpu.hpp"
 
 namespace StraitX{
 
@@ -41,14 +41,13 @@ class GraphicsAPILoader;
 class Sampler{
 public:
     struct VTable{
-        using NewProc    = void (*)(Sampler &sampler, LogicalGPU &owner, SamplerProperties props);
+        using NewProc    = void (*)(Sampler &sampler, SamplerProperties props);
         using DeleteProc = void (*)(Sampler &sampler);
 
         NewProc    New    = nullptr;
         DeleteProc Delete = nullptr;
     };
 private:
-    LogicalGPU *m_Owner;
     GPUResourceHandle m_Handle;
 
     static VTable s_VTable;
@@ -74,7 +73,7 @@ sx_inline Sampler::~Sampler(){
 #endif
 
 sx_inline void Sampler::New(SamplerProperties props){
-    s_VTable.New(*this, LogicalGPU::Instance(), props);
+    s_VTable.New(*this, props);
 }
 
 sx_inline void Sampler::Delete(){

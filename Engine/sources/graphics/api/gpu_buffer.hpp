@@ -4,8 +4,8 @@
 #include "platform/compiler.hpp"
 #include "core/noncopyable.hpp"
 #include "core/algorithm.hpp"
+#include "core/assert.hpp"
 #include "graphics/api/gpu_configuration.hpp"
-#include "graphics/api/logical_gpu.hpp"
 
 namespace StraitX{
 
@@ -34,7 +34,7 @@ public:
     using UsageType = u8;
 
     struct VTable{
-        using NewProc    = void (*)(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, UsageType usage);
+        using NewProc    = void (*)(GPUBuffer &buffer, u32 size, GPUMemoryType mem_type, UsageType usage);
         using DeleteProc = void (*)(GPUBuffer &buffer);
 
         NewProc    New    = nullptr;
@@ -43,7 +43,6 @@ public:
 private:
     static VTable s_VTable;
 
-    LogicalGPU *m_Owner = nullptr;
     u32 m_Size = 0;
     GPUResourceHandle m_Handle = {};
     GPUResourceHandle m_BackingMemory = {};
@@ -61,8 +60,6 @@ public:
     sx_inline void New(u32 size, GPUMemoryType mem_type, UsageType usage);
 
     sx_inline void Delete();
-
-    constexpr LogicalGPU *Owner()const;
 
     constexpr GPUResourceHandle Handle()const;
 
@@ -84,16 +81,12 @@ GPUBuffer::~GPUBuffer(){
 
 sx_inline void GPUBuffer::New(u32 size, GPUMemoryType mem_type, UsageType usage){
     CoreAssert(m_Handle.U64 == 0, "GPUBuffer: New() should be called on empty object");
-    s_VTable.New(*this, LogicalGPU::Instance(), size, mem_type, usage);
+    s_VTable.New(*this, size, mem_type, usage);
 }
 
 sx_inline void GPUBuffer::Delete(){
     s_VTable.Delete(*this);
     m_Handle.U64 = 0;
-}
-
-constexpr LogicalGPU *GPUBuffer::Owner()const{
-    return m_Owner;
 }
 
 constexpr GPUResourceHandle GPUBuffer::Handle()const{

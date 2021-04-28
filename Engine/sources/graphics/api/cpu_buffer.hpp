@@ -7,7 +7,6 @@
 #include "core/assert.hpp"
 #include "core/noncopyable.hpp"
 #include "graphics/api/gpu_configuration.hpp"
-#include "graphics/api/logical_gpu.hpp"
 
 namespace StraitX{
 
@@ -24,7 +23,7 @@ class GraphicsAPILoader;
 class CPUBuffer: public NonCopyable{
 public:
     struct VTable{
-        using NewProc    = void (*)(CPUBuffer &buffer, LogicalGPU &owner, u32 size);
+        using NewProc    = void (*)(CPUBuffer &buffer, u32 size);
         using DeleteProc = void (*)(CPUBuffer &buffer);
 
         NewProc    New    = nullptr;
@@ -33,7 +32,6 @@ public:
 private:
     static VTable s_VTable;
 
-    LogicalGPU *m_Owner = nullptr;
     GPUResourceHandle m_Handle = {};
     GPUResourceHandle m_BackingMemory = {};
     void *m_Pointer = nullptr;
@@ -72,7 +70,7 @@ CPUBuffer::~CPUBuffer(){
 
 sx_inline void CPUBuffer::New(u32 size){
     CoreAssert(m_Pointer == nullptr, "CPUBuffer: New() should be called on empty object");
-    s_VTable.New(*this, LogicalGPU::Instance(), size);
+    s_VTable.New(*this, size);
 }
 
 sx_inline void CPUBuffer::New(u32 size, const void *data){
