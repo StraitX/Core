@@ -17,53 +17,23 @@ enum class MemoryLayout{
     Uniform
 };
 
-
-
-struct MemoryTypes{
-    enum Type: u8{
-        VRAM        = 0,
+struct MemoryType{
+    enum Type{
+        VRAM = 0,
         DynamicVRAM = 1,
-        RAM         = 2,
+        RAM = 2,
         UncachedRAM = 3
     };
 
-    MemoryLayout Layout = MemoryLayout::Unknown;
-    u32 Index[4] = {};
-    u64 Size[4]  = {};
-
-    MemoryTypes();
-
-    void Query(VkPhysicalDevice owner);
-
-    sx_inline static bool IsMappable(Type type);
-
-    sx_inline static Type ToSupported(GPUMemoryType type, MemoryLayout layout);
-
+    u32 Index = InvalidIndex;
 };
 
-sx_inline bool MemoryTypes::IsMappable(MemoryTypes::Type type){
-    switch (type) {
-    case VRAM:
-        return false;
-    case DynamicVRAM:
-    case RAM:
-    case UncachedRAM:
-        return true;
-    }
-    return false;
-}
+struct MemoryProperties{
+    MemoryLayout Layout;
+    MemoryType Memory[4];
 
-sx_inline MemoryTypes::Type MemoryTypes::ToSupported(GPUMemoryType type, MemoryLayout layout){
-    CoreAssert(layout != MemoryLayout::Unknown, "Vk: Memory: can't convert to supported type, memory layout is unknown");
-
-    if(layout==MemoryLayout::DedicatedWithDynamic){
-        return (MemoryTypes::Type)type;
-    }else if(layout == MemoryLayout::Dedicated){
-        return MemoryTypes::VRAM;
-    }else{// MemoryLayout::Uniform
-        return MemoryTypes::RAM;
-    }
-}
+    static MemoryProperties Get(VkPhysicalDevice device);
+};
 
 }//namespace Vk::
 }//namespace StraitX::

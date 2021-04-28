@@ -4,31 +4,33 @@
 #include "platform/vulkan.hpp"
 #include "platform/result.hpp"
 #include "platform/types.hpp"
+#include "platform/defs.hpp"
 
 namespace StraitX{
 namespace Vk{
 
-struct Queue{
-    VkQueue Handle = VK_NULL_HANDLE;
-    u32 FamilyIndex = -1;
+struct QueueFamily{
+    enum Type{
+        Graphics = 0,
+        Compute  = 1,
+        Transfer = 2,
+        FamilyCount = 3
+    };
 
-    Queue() = default;
+    u32 Index;
+    u32 Count;
 
-    sx_inline Queue(VkQueue queue, u32 family_index):
-        Handle(queue),
-        FamilyIndex(family_index)
+    QueueFamily(u32 index = InvalidIndex, u32 count = 0):
+        Index(index),
+        Count(count)
     {}
-
-    sx_inline void Obtain(VkDevice owner, u32 family_index, u32 index){
-        FamilyIndex = family_index;
-        vkGetDeviceQueue(owner, FamilyIndex, index, &Handle);
-    }
-
-    sx_inline bool IsInitialized(){
-        return Handle != VK_NULL_HANDLE;
-    }
 };
 
+struct QueueProperties{
+    QueueFamily Family[QueueFamily::FamilyCount];
+
+    static QueueProperties Get(VkPhysicalDevice device);
+};
 
 };//namespace Vk::
 };//namespace StraitX::
