@@ -4,6 +4,7 @@
 #include "graphics/vulkan/shader_impl.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
 #include "graphics/vulkan/gpu_texture_impl.hpp"
+#include "graphics/vulkan/gpu.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -57,9 +58,8 @@ VkDescriptorType GraphicsPipelineImpl::s_DescriptorTypeTable[] = {
     VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
 };
 
-GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props):
+GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &props):
     GraphicsPipeline(props),
-    Owner(static_cast<Vk::LogicalGPUImpl*>(&owner)),
     Pass(static_cast<const Vk::RenderPassImpl*>(props.Pass)),
     Scissors({{props.FramebufferViewport.x, props.FramebufferViewport.y}, {props.FramebufferViewport.Width, props.FramebufferViewport.Height}})
 {
@@ -80,7 +80,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     pool_info.poolSizeCount = descriptors.Size();
     pool_info.pPoolSizes = descriptors.Pointer();
 
-    CoreFunctionAssert(vkCreateDescriptorPool(Owner->Handle, &pool_info, nullptr, &Pool), VK_SUCCESS, "Vk: GraphicsPipelineImpl: Can't create VkDescriptorPool");
+    CoreFunctionAssert(vkCreateDescriptorPool(GPU::Get().Handle(), &pool_info, nullptr, &Pool), VK_SUCCESS, "Vk: GraphicsPipelineImpl: Can't create VkDescriptorPool");
 
     ArrayPtr<VkDescriptorSetLayoutBinding> bindings((VkDescriptorSetLayoutBinding*)alloca(props.ShaderBindings.Size() * sizeof(VkDescriptorSetLayoutBinding)), props.ShaderBindings.Size());
 
@@ -99,7 +99,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     set_layout_info.bindingCount = bindings.Size();
     set_layout_info.pBindings = bindings.Pointer();
 
-    vkCreateDescriptorSetLayout(Owner->Handle, &set_layout_info, nullptr, &SetLayout);
+    vkCreateDescriptorSetLayout(GPU::Get().Handle(), &set_layout_info, nullptr, &SetLayout);
 
     VkPipelineLayoutCreateInfo layout_info;
     layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -110,7 +110,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     layout_info.pushConstantRangeCount = 0;
     layout_info.pPushConstantRanges = nullptr;
 
-    CoreFunctionAssert(vkCreatePipelineLayout(Owner->Handle, &layout_info, nullptr, &Layout), VK_SUCCESS, "Vk: GraphicsPipelineImpl: Can't create Pipeline Layout");
+    CoreFunctionAssert(vkCreatePipelineLayout(GPU::Get().Handle(), &layout_info, nullptr, &Layout), VK_SUCCESS, "Vk: GraphicsPipelineImpl: Can't create Pipeline Layout");
 
     VkDescriptorSetAllocateInfo set_info;
     set_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -119,7 +119,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     set_info.descriptorSetCount = 1;
     set_info.pSetLayouts = &SetLayout;
 
-    vkAllocateDescriptorSets(Owner->Handle, &set_info, &Set);
+    vkAllocateDescriptorSets(GPU::Get().Handle(), &set_info, &Set);
 
     //===Shader Stages===
     ArrayPtr<VkPipelineShaderStageCreateInfo> stages((VkPipelineShaderStageCreateInfo *)alloca(props.Shaders.Size() * sizeof(VkPipelineShaderStageCreateInfo)), props.Shaders.Size());
@@ -232,7 +232,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     depth_stencil_info.maxDepthBounds = 1.0;
 
     //===ColorBlendState===
-    size_t states_count = Pass->Attachments.Size() - Pass->HasDepth();
+    size_t states_count = Pass->Attachments().Size() - Pass->HasDepth();
 
     ArrayPtr<VkPipelineColorBlendAttachmentState> blend_states((VkPipelineColorBlendAttachmentState*)alloca(states_count * sizeof(VkPipelineColorBlendAttachmentState)), states_count);
     for(size_t i = 0; i<states_count; ++i){
@@ -287,20 +287,20 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipe
     info.pColorBlendState = &blend_info;
     info.pDynamicState = &dynamic_info;
     info.layout = Layout;
-    info.renderPass = Pass->Handle;
+    info.renderPass = Pass->Handle();
     info.subpass = 0;
     info.basePipelineHandle = VK_NULL_HANDLE;
     info.basePipelineIndex = InvalidIndex;
 
-    Status = vkCreateGraphicsPipelines(Owner->Handle, VK_NULL_HANDLE, 1, &info, nullptr, &Handle);
+    Status = vkCreateGraphicsPipelines(GPU::Get().Handle(), VK_NULL_HANDLE, 1, &info, nullptr, &Handle);
 
 }
 
 GraphicsPipelineImpl::~GraphicsPipelineImpl(){
-    vkDestroyDescriptorSetLayout(Owner->Handle, SetLayout, nullptr);
-    vkDestroyDescriptorPool(Owner->Handle, Pool, nullptr);
-    vkDestroyPipelineLayout(Owner->Handle, Layout, nullptr);
-    vkDestroyPipeline(Owner->Handle, Handle, nullptr);
+    vkDestroyDescriptorSetLayout(GPU::Get().Handle(), SetLayout, nullptr);
+    vkDestroyDescriptorPool(GPU::Get().Handle(), Pool, nullptr);
+    vkDestroyPipelineLayout(GPU::Get().Handle(), Layout, nullptr);
+    vkDestroyPipeline(GPU::Get().Handle(), Handle, nullptr);
 }
 
 bool GraphicsPipelineImpl::IsValid(){
@@ -325,7 +325,7 @@ void GraphicsPipelineImpl::Bind(size_t binding, size_t index, const GPUBuffer &u
     write.pBufferInfo = &buffer;
     write.pTexelBufferView = nullptr;
 
-    vkUpdateDescriptorSets(Owner->Handle, 1, &write, 0, nullptr);
+    vkUpdateDescriptorSets(GPU::Get().Handle(), 1, &write, 0, nullptr);
 }
 
 void GraphicsPipelineImpl::Bind(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler){
@@ -346,11 +346,11 @@ void GraphicsPipelineImpl::Bind(size_t binding, size_t index, const GPUTexture &
     write.pBufferInfo = nullptr;
     write.pTexelBufferView = nullptr;
 
-    vkUpdateDescriptorSets(Owner->Handle, 1, &write, 0, nullptr);
+    vkUpdateDescriptorSets(GPU::Get().Handle(), 1, &write, 0, nullptr);
 }
 
-GraphicsPipeline * GraphicsPipelineImpl::NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props){
-    return new(Memory::Alloc(sizeof(GraphicsPipelineImpl))) GraphicsPipelineImpl(owner, props);
+GraphicsPipeline * GraphicsPipelineImpl::NewImpl(const GraphicsPipelineProperties &props){
+    return new(Memory::Alloc(sizeof(GraphicsPipelineImpl))) GraphicsPipelineImpl(props);
 }
 
 void GraphicsPipelineImpl::DeleteImpl(GraphicsPipeline *pipeline){

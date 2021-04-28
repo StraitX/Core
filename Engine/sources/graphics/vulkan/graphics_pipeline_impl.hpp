@@ -3,7 +3,6 @@
 
 #include "platform/vulkan.hpp"
 #include "graphics/api/graphics_pipeline.hpp"
-#include "graphics/vulkan/logical_gpu_impl.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
 
 namespace StraitX{
@@ -17,7 +16,6 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     static VkBlendOp s_BlendFunctionTable[];
     static VkDescriptorType s_DescriptorTypeTable[];
 
-    Vk::LogicalGPUImpl *Owner = nullptr;
     VkPipeline Handle = VK_NULL_HANDLE;
     const Vk::RenderPassImpl *Pass;
     VkResult Status = VK_INCOMPLETE;
@@ -29,7 +27,7 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     VkDescriptorSetLayout SetLayout = VK_NULL_HANDLE;
     VkDescriptorSet Set = VK_NULL_HANDLE;
 
-    GraphicsPipelineImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props);
+    GraphicsPipelineImpl(const GraphicsPipelineProperties &props);
 
     virtual ~GraphicsPipelineImpl();
 
@@ -39,7 +37,7 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
 
     virtual void Bind(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler)override;
 
-    static GraphicsPipeline * NewImpl(LogicalGPU &owner, const GraphicsPipelineProperties &props);
+    static GraphicsPipeline * NewImpl(const GraphicsPipelineProperties &props);
 
     static void DeleteImpl(GraphicsPipeline *pipeline);
 
