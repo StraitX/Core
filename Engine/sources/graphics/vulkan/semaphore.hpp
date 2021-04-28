@@ -3,33 +3,31 @@
 
 #include "platform/vulkan.hpp"
 #include "core/assert.hpp"
-#include "graphics/vulkan/logical_gpu_impl.hpp"
+#include "graphics/vulkan/gpu.hpp"
 
 namespace StraitX{
 namespace Vk{
 
 struct Semaphore{
-    const LogicalGPUImpl *const Owner = nullptr;
     VkSemaphore Handle = VK_NULL_HANDLE;
 
-    sx_inline Semaphore(const LogicalGPUImpl *owner);
+    sx_inline Semaphore();
 
     sx_inline ~Semaphore();
 };
 
-sx_inline Semaphore::Semaphore(const LogicalGPUImpl *owner):
-    Owner(owner)
+sx_inline Semaphore::Semaphore()
 {
     VkSemaphoreCreateInfo info;
     info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
     info.pNext = nullptr;
     info.flags = 0;
 
-    CoreFunctionAssert(vkCreateSemaphore(Owner->Handle, &info, nullptr, &Handle),VK_SUCCESS, "Vk: Can't create semaphore");
+    CoreFunctionAssert(vkCreateSemaphore(GPU::Get().Handle(), &info, nullptr, &Handle),VK_SUCCESS, "Vk: Can't create semaphore");
 }
 
 sx_inline Semaphore::~Semaphore(){
-    vkDestroySemaphore(Owner->Handle, Handle, nullptr);
+    vkDestroySemaphore(GPU::Get().Handle(), Handle, nullptr);
 }
 
 }//Vk::
