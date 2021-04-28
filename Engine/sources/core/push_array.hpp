@@ -56,6 +56,10 @@ public:
 
     constexpr size_t Capacity()const;
 
+    constexpr T_Type *Data();
+
+    constexpr const T_Type *Data()const;
+
     constexpr iterator begin();
 
     constexpr iterator end();
@@ -177,8 +181,18 @@ constexpr size_t PushArray<T_Type, T_Capacity>::Capacity()const{
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr typename PushArray<T_Type, T_Capacity>::iterator PushArray<T_Type, T_Capacity>::begin(){
+constexpr T_Type *PushArray<T_Type, T_Capacity>::Data(){
     return reinterpret_cast<T_Type*>(m_Memory);
+}
+
+template<typename T_Type, size_t T_Capacity>
+constexpr const T_Type *PushArray<T_Type, T_Capacity>::Data()const{
+    return reinterpret_cast<const T_Type*>(m_Memory);
+}
+
+template<typename T_Type, size_t T_Capacity>
+constexpr typename PushArray<T_Type, T_Capacity>::iterator PushArray<T_Type, T_Capacity>::begin(){
+    return Data();
 }
 
 template<typename T_Type, size_t T_Capacity>
@@ -188,7 +202,7 @@ constexpr typename PushArray<T_Type, T_Capacity>::iterator PushArray<T_Type, T_C
 
 template<typename T_Type, size_t T_Capacity>
 constexpr typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capacity>::begin()const{
-    return reinterpret_cast<const T_Type*>(m_Memory);
+    return Data();
 }
 
 template<typename T_Type, size_t T_Capacity>
