@@ -4,6 +4,7 @@
 #include "graphics/api/gpu_configuration.hpp"
 #include "graphics/vulkan/graphics_api_impl.hpp"
 #include "graphics/vulkan/debug.hpp"
+#include "graphics/vulkan/gpu.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -67,10 +68,12 @@ Result GraphicsAPIImpl::Initialize(){
     if(CreateDebugUtilsMessengerEXT(m_Handle, &debug_info, nullptr, &m_Messenger) != VK_SUCCESS)
         return Result::Failure;
     //TODO Init GPU and DMA
-    return Result::Success;
+    return GPU::Get().Initialize(PickBestPhysicalDevice());
 }
 
 void GraphicsAPIImpl::Finalize(){
+    GPU::Get().Finalize();
+    
     DestroyDebugUtilsMessengerEXT(m_Handle, m_Messenger, nullptr);
     vkDestroyInstance(m_Handle, nullptr);
 }
