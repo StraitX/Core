@@ -19,7 +19,6 @@ public:
     Time GetElapsedTime();
 
     void Restart();
-private:
     // platform specific implementation
     static Time GetMonotonicTime();
 };
