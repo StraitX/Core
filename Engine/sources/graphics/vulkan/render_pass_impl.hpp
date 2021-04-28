@@ -22,6 +22,8 @@ public:
 
     VkRenderPass Handle()const;
 
+    const PushArray<AttachmentDescription, MaxAttachmentsCount> &Attachments()const;
+
     static RenderPass *NewImpl(const RenderPassProperties &props);
     
     static void DeleteImpl(RenderPass *pass);
@@ -34,6 +36,11 @@ sx_inline bool RenderPassImpl::HasDepth()const{
 sx_inline VkRenderPass RenderPassImpl::Handle()const{
     return m_Handle;
 }
+
+sx_inline const PushArray<AttachmentDescription, MaxAttachmentsCount> &RenderPassImpl::Attachments()const{
+    return m_Attachments;
+}
+
 
 }//namespace Vk::
 }//namespace StraitX::
