@@ -40,6 +40,10 @@ public:
     void CmdImageBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_acces, VkAccessFlags dst_access, VkImageLayout old, VkImageLayout next, VkImage img)const;
 
     operator VkCommandBuffer()const;
+
+    VkQueue TargetQueue()const{
+        return m_TargetQueue;
+    }
 };
 
 }//namespace Vk::
