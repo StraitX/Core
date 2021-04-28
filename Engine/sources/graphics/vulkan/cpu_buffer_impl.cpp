@@ -1,13 +1,12 @@
 #include "graphics/vulkan/cpu_buffer_impl.hpp"
-#include "graphics/vulkan/logical_gpu_impl.hpp"
+#include "graphics/vulkan/gpu.hpp"
+#include "graphics/vulkan/memory_allocator.hpp"
+
 namespace StraitX{
 namespace Vk{
 
-void CPUBufferImpl::Create(LogicalGPU *owner, u32 size){
+void CPUBufferImpl::Create(u32 size){
     Size = size;
-    Owner = owner;
-
-    auto device = static_cast<Vk::LogicalGPUImpl *>(Owner);
 
     VkBufferCreateInfo info;
     info.sType                  = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -19,31 +18,28 @@ void CPUBufferImpl::Create(LogicalGPU *owner, u32 size){
     info.size                   = Size;
     info.usage                  = VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
-    CoreFunctionAssert(vkCreateBuffer(device->Handle, &info, nullptr, &Handle), VK_SUCCESS, "Vk: CPUBufferImpl: Can't create buffer");
+    CoreFunctionAssert(vkCreateBuffer(GPU::Get().Handle(), &info, nullptr, &Handle), VK_SUCCESS, "Vk: CPUBufferImpl: Can't create buffer");
 
     VkMemoryRequirements req;
-    vkGetBufferMemoryRequirements(device->Handle, Handle, &req);
+    vkGetBufferMemoryRequirements(GPU::Get().Handle(), Handle, &req);
 
+    Memory = MemoryAllocator::Alloc(req.size, MemoryType::RAM);
 
-    Memory = device->Alloc(req.size, MemoryTypes::RAM);
-    vkMapMemory(device->Handle, Memory, 0, req.size, 0, &Pointer);
+    vkMapMemory(GPU::Get().Handle(), Memory, 0, req.size, 0, &Pointer);
 
-    CoreAssert(Memory, "Vk: GPUBuffer: Can't allocate memory");
-
-    CoreFunctionAssert(vkBindBufferMemory(device->Handle, Handle, Memory, 0),VK_SUCCESS, "GPUBuffer: can't bind buffer's memory");
+    CoreFunctionAssert(vkBindBufferMemory(GPU::Get().Handle(), Handle, Memory, 0),VK_SUCCESS, "GPUBuffer: can't bind buffer's memory");
 }
 
 void CPUBufferImpl::Destroy(){
-    auto device = static_cast<Vk::LogicalGPUImpl *>(Owner);
+    vkDestroyBuffer(GPU::Get().Handle(), Handle, nullptr);
 
-    vkDestroyBuffer(device->Handle, Handle, nullptr);
-
-    vkUnmapMemory(device->Handle, Memory);
-    device->Free(Memory);
+    vkUnmapMemory(GPU::Get().Handle(), Memory);
+    
+    MemoryAllocator::Free(Memory);
 }
 
-void CPUBufferImpl::NewImpl(CPUBuffer &buffer, LogicalGPU &owner, u32 size){
-    CPUBufferImpl(buffer).Create(&owner, size);
+void CPUBufferImpl::NewImpl(CPUBuffer &buffer, u32 size){
+    CPUBufferImpl(buffer).Create(size);
 }
 
 void CPUBufferImpl::DeleteImpl(CPUBuffer &buffer){
