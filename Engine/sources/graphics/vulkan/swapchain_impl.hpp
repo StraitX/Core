@@ -6,17 +6,16 @@
 #include "core/math/vector2.hpp"
 #include "core/push_array.hpp"
 #include "graphics/api/swapchain.hpp"
-#include "graphics/vulkan/logical_gpu_impl.hpp"
 #include "graphics/vulkan/fence.hpp"
 #include "graphics/vulkan/framebuffer_impl.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
+#include "graphics/vulkan/queue.hpp"
 
 namespace StraitX{
 namespace Vk{
 
 class SwapchainImpl: public Swapchain{
 private:
-    Vk::LogicalGPUImpl *m_Owner = nullptr;
     VulkanSurface m_Surface;
     Vector2u m_Size = {0, 0}; 
 
@@ -32,8 +31,12 @@ private:
     Vk::RenderPassImpl m_FramebufferPass;
     PushArray<GPUTexture, MaxFramebuffers> m_Images;
     PushArray<Vk::FramebufferImpl, MaxFramebuffers> m_Framebuffers;
+
+    QueueFamily::Type m_TargetQueueFamily;
+    VkQueue m_TargetQueue = VK_NULL_HANDLE;
+    u32 m_TargetQueueIndex = InvalidIndex;
 public:
-    SwapchainImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props);
+    SwapchainImpl(const Window &window, const SwapchainProperties &props);
 
     ~SwapchainImpl();
 
@@ -41,7 +44,7 @@ public:
 
     virtual const Framebuffer *CurrentFramebuffer()override;
 
-    static Swapchain *NewImpl(LogicalGPU &gpu, const Window &window, const SwapchainProperties &props);
+    static Swapchain *NewImpl(const Window &window, const SwapchainProperties &props);
 
     static void DeleteImpl(Swapchain *swapchain);
 private:
