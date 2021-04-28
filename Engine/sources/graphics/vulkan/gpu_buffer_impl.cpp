@@ -1,22 +1,16 @@
 #include "platform/vulkan.hpp"
 #include "graphics/vulkan/gpu_buffer_impl.hpp"
-#include "graphics/vulkan/logical_gpu_impl.hpp"
+#include "graphics/vulkan/memory_allocator.hpp"
+#include "graphics/vulkan/gpu.hpp"
 
 namespace StraitX{
 namespace Vk{
 
-u32 GetBufferMemoryRequirements(VkDevice owner, VkBuffer buffer){
-    VkMemoryRequirements req;
-    vkGetBufferMemoryRequirements(owner, buffer, &req);
-    return req.size;
-}
-
 constexpr GPUBufferImpl::GPUBufferImpl(GPUBuffer &buffer):
-    GPUBufferImpl(buffer.m_Owner, reinterpret_cast<VkBuffer&>(buffer.m_Handle.U64), reinterpret_cast<VkDeviceMemory&>(buffer.m_BackingMemory.U64), buffer.m_Size, buffer.m_Usage, buffer.m_MemoryType)
+    GPUBufferImpl(reinterpret_cast<VkBuffer&>(buffer.m_Handle.U64), reinterpret_cast<VkDeviceMemory&>(buffer.m_BackingMemory.U64), buffer.m_Size, buffer.m_Usage, buffer.m_MemoryType)
 {}
 
-constexpr GPUBufferImpl::GPUBufferImpl(LogicalGPU *&owner, VkBuffer &handle, VkDeviceMemory &memory, u32 &size, GPUBuffer::UsageType &usage, GPUMemoryType &mem_type):
-    Owner(owner),
+constexpr GPUBufferImpl::GPUBufferImpl(VkBuffer &handle, VkDeviceMemory &memory, u32 &size, GPUBuffer::UsageType &usage, GPUMemoryType &mem_type):
     Handle(handle),
     Memory(memory),
     Size(size),
@@ -24,13 +18,10 @@ constexpr GPUBufferImpl::GPUBufferImpl(LogicalGPU *&owner, VkBuffer &handle, VkD
     MemoryType(mem_type)
 {}
 
-void GPUBufferImpl::Create(LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
-    Owner = &owner;
+void GPUBufferImpl::Create(u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
     Size = size;
     Usage = usage;
     MemoryType = mem_type;
-
-    auto device = static_cast<Vk::LogicalGPUImpl *>(Owner);
 
     VkBufferCreateInfo info;
     info.sType                  = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -42,24 +33,25 @@ void GPUBufferImpl::Create(LogicalGPU &owner, u32 size, GPUMemoryType mem_type, 
     info.size                   = Size;
     info.usage                  = usage;
 
-    CoreFunctionAssert(vkCreateBuffer(device->Handle, &info, nullptr, &Handle), VK_SUCCESS, "Vk: GPUBufferImpl: Can't create buffer");
+    CoreFunctionAssert(vkCreateBuffer(GPU::Get().Handle(), &info, nullptr, &Handle), VK_SUCCESS, "Vk: GPUBufferImpl: Can't create buffer");
 
-    Memory = device->Alloc(GetBufferMemoryRequirements(device->Handle, Handle), MemoryTypes::ToSupported(MemoryType, device->Memory.Layout));
+    VkMemoryRequirements req;
+    vkGetBufferMemoryRequirements(GPU::Get().Handle(), Handle, &req);
 
-    CoreFunctionAssert(vkBindBufferMemory(device->Handle, Handle, Memory, 0),VK_SUCCESS, "GPUBuffer: can't bind buffer's memory");
+    Memory = MemoryAllocator::Alloc(req.size, ToVkMemoryType(mem_type));
+
+    CoreFunctionAssert(vkBindBufferMemory(GPU::Get().Handle(), Handle, Memory, 0),VK_SUCCESS, "GPUBuffer: can't bind buffer's memory");
 }
 
 void GPUBufferImpl::Destroy(){
-    auto device = static_cast<Vk::LogicalGPUImpl *>(Owner);
+    vkDestroyBuffer(GPU::Get().Handle(), Handle, nullptr);
 
-    vkDestroyBuffer(device->Handle, Handle, nullptr);
-
-    device->Free(Memory);
+    MemoryAllocator::Free(Memory);
 }
 
 // buffer got his owner in constructor
-void GPUBufferImpl::NewImpl(GPUBuffer &buffer, LogicalGPU &owner, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
-    GPUBufferImpl(buffer).Create(owner, size, mem_type, usage);
+void GPUBufferImpl::NewImpl(GPUBuffer &buffer, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
+    GPUBufferImpl(buffer).Create(size, mem_type, usage);
 }
 
 void GPUBufferImpl::DeleteImpl(GPUBuffer &buffer){
