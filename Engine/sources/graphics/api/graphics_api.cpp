@@ -6,6 +6,7 @@
 namespace StraitX{
 
 GraphicsAPI *GraphicsAPI::s_Instance = nullptr;
+GraphicsAPI::API GraphicsAPI::s_CurrentAPI;
 
 const char *GraphicsAPI::Name(GraphicsAPI::API api){
     switch (api){
