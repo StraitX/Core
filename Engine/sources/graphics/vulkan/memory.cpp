@@ -91,5 +91,28 @@ MemoryProperties MemoryProperties::Get(VkPhysicalDevice device){
     return result;
 }
 
+bool MemoryProperties::IsMappable(MemoryType::Type type)const{
+    Assert(Layout != MemoryLayout::Unknown);
+
+    if(Layout == MemoryLayout::Uniform)
+        return true;
+
+    if(Layout == MemoryLayout::DedicatedWithDynamic){
+        if(type == MemoryType::VRAM)
+            return false;
+        else
+            return true;
+    }
+
+    if(Layout == MemoryLayout::Dedicated){
+        if(type == MemoryType::VRAM || type == MemoryType::DynamicVRAM)
+            return false;
+        else
+            return true;
+    }
+
+    return false;
+}
+
 }//namespace Vk::
 }//namespace StraitX::

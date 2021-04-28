@@ -95,28 +95,5 @@ void GPU::Finalize(){
     vkDestroyDevice(m_Handle,nullptr);
 }
 
-bool GPU::IsMappable(MemoryType::Type type)const{
-    Assert(m_MemoryProperties.Layout != MemoryLayout::Unknown);
-
-    if(m_MemoryProperties.Layout == MemoryLayout::Uniform)
-        return true;
-
-    if(m_MemoryProperties.Layout == MemoryLayout::DedicatedWithDynamic){
-        if(type == MemoryType::VRAM)
-            return false;
-        else
-            return true;
-    }
-
-    if(m_MemoryProperties.Layout == MemoryLayout::Dedicated){
-        if(type == MemoryType::VRAM || type == MemoryType::DynamicVRAM)
-            return false;
-        else
-            return true;
-    }
-
-    return false;
-}
-
 }//namespace Vk::
 }//namespace StraitX::

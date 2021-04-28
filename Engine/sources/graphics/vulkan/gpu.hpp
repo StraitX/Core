@@ -49,7 +49,9 @@ public:
         return m_MemoryProperties.Memory[type].Index;
     }
 
-    bool IsMappable(MemoryType::Type type)const;
+    bool IsMappable(MemoryType::Type type)const{
+        return m_MemoryProperties.IsMappable(type); 
+    }
 
     static GPU &Get(){
         return s_Instance;

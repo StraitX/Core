@@ -34,6 +34,8 @@ struct MemoryProperties{
     MemoryLayout Layout;
     MemoryType Memory[4];
 
+    bool IsMappable(MemoryType::Type type)const;
+
     static MemoryProperties Get(VkPhysicalDevice device);
 };
 
