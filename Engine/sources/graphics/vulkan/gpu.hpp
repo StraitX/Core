@@ -22,7 +22,7 @@ private:
 
     VkQueue m_Queues[QueueFamily::FamilyCount] = {VK_NULL_HANDLE};
 private:
-    static GPU Instance;
+    static GPU s_Instance;
 public:
 
     Result Initialize(VkPhysicalDevice device);
@@ -31,6 +31,10 @@ public:
 
     VkDevice Handle()const{
         return m_Handle;
+    }
+
+    VkPhysicalDevice PhysicalHandle()const{
+        return m_PhysicalHandle;
     }
 
     VkQueue Queue(QueueFamily::Type type)const{
@@ -45,8 +49,10 @@ public:
         return m_MemoryProperties.Memory[type].Index;
     }
 
+    bool IsMappable(MemoryType::Type type)const;
+
     static GPU &Get(){
-        return Instance;
+        return s_Instance;
     }
 };
 

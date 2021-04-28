@@ -5,6 +5,10 @@
 namespace StraitX{
 namespace Vk{
 
+MemoryType::Type ToVkMemoryType(GPUMemoryType type){
+    return (MemoryType::Type)type;
+}
+
 static bool IsVRAM(VkMemoryPropertyFlags flags){
     return  (flags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
         && !(flags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);

@@ -1,28 +1,38 @@
 #include "platform/memory.hpp"
 #include "graphics/vulkan/dma_impl.hpp"
 #include "graphics/vulkan/fence.hpp"
-#include "graphics/vulkan/logical_gpu_impl.hpp"
+#include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/gpu_texture_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
 
-void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
-    auto gpu = static_cast<const Vk::LogicalGPUImpl*>(dst.Owner());
+u8 DMAImpl::s_Instance[sizeof(DMAImpl)];
 
-    if(MemoryTypes::IsMappable(MemoryTypes::ToSupported(dst.MemoryType(), gpu->Memory.Layout))){
+void DMAImpl::Initialize(){
+    new(s_Instance) DMAImpl();
+    DMAImpl::Get().m_OpFence.New(GPU::Get().Handle());
+}
+
+void DMAImpl::Finalize(){
+    DMAImpl::Get().m_OpFence.Delete();
+    DMAImpl::Get().~DMAImpl();
+}
+
+void DMAImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
+    if(GPU::Get().IsMappable(ToVkMemoryType(dst.MemoryType()))){
         auto memory = reinterpret_cast<VkDeviceMemory>(dst.Memory().U64);
 
         void *pointer;
-        vkMapMemory(gpu->Handle, memory, 0, dst.Size(), 0, &pointer);
+        vkMapMemory(GPU::Get().Handle(), memory, 0, dst.Size(), 0, &pointer);
         {
             Memory::Copy((u8*)src.Pointer() + src_offset, (u8*)pointer + dst_offset, size);
         }
-        vkUnmapMemory(gpu->Handle, memory);
+        vkUnmapMemory(GPU::Get().Handle(), memory);
     }else{
-        gpu->TransferCmdBuffer.Begin();
+        m_CmdBuffer.Begin();
         {
-            gpu->TransferCmdBuffer.CmdBufferCopy(
+            m_CmdBuffer.CmdBufferCopy(
                 (VkBuffer)src.Handle().U64, 
                 (VkBuffer)dst.Handle().U64, 
                 size, 
@@ -30,17 +40,15 @@ void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, 
                 dst_offset
             );
         }
-        gpu->TransferCmdBuffer.End();
+        m_CmdBuffer.End();
 
-        gpu->TransferCmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, gpu->TransferFence.Handle);
-        gpu->TransferFence.WaitFor();
+        m_CmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, m_OpFence.Handle);
+        m_OpFence.WaitFor();
     }
 }
 
-void DMAImpl::CopyCPU2GPUTextureImpl(const CPUTexture &src, const GPUTexture &dst){
-    auto gpu = static_cast<const Vk::LogicalGPUImpl*>(dst.Owner());
-
-    gpu->TransferCmdBuffer.Begin();
+void DMAImpl::Copy(const CPUTexture &src, const GPUTexture &dst){
+    m_CmdBuffer.Begin();
     {
         VkBufferImageCopy copy;
         copy.bufferImageHeight = src.Size().y;
@@ -54,35 +62,47 @@ void DMAImpl::CopyCPU2GPUTextureImpl(const CPUTexture &src, const GPUTexture &ds
         copy.imageSubresource.baseArrayLayer = 0;
         copy.imageSubresource.layerCount = 1;
         copy.imageSubresource.mipLevel = 0;
-        vkCmdCopyBufferToImage(gpu->TransferCmdBuffer, (VkBuffer)src.Handle().U64, (VkImage)dst.Handle().U64, GPUTextureImpl::s_LayoutTable[(size_t)dst.GetLayout()], 1, &copy);
+        vkCmdCopyBufferToImage(m_CmdBuffer, (VkBuffer)src.Handle().U64, (VkImage)dst.Handle().U64, GPUTextureImpl::s_LayoutTable[(size_t)dst.GetLayout()], 1, &copy);
     }
-    gpu->TransferCmdBuffer.End();
+    m_CmdBuffer.End();
 
-    gpu->TransferCmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, gpu->TransferFence.Handle);
-    gpu->TransferFence.WaitFor();
+    m_CmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, m_OpFence.Handle);
+    m_OpFence.WaitFor();
 }
 
-void DMAImpl::ChangeGPUTextureLayoutImpl(GPUTexture &src, GPUTexture::Layout layout){
-    auto gpu = static_cast<const Vk::LogicalGPUImpl*>(src.Owner());
+void DMAImpl::ChangeLayout(GPUTexture &texture, GPUTexture::Layout layout){
 
-    gpu->TransferCmdBuffer.Begin();
+    m_CmdBuffer.Begin();
     {
-        gpu->TransferCmdBuffer.CmdImageBarrier(
+        m_CmdBuffer.CmdImageBarrier(
             VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
             VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
             VK_ACCESS_MEMORY_WRITE_BIT, 
             VK_ACCESS_MEMORY_READ_BIT, 
-            GPUTextureImpl::s_LayoutTable[(size_t)src.GetLayout()], 
+            GPUTextureImpl::s_LayoutTable[(size_t)texture.GetLayout()], 
             GPUTextureImpl::s_LayoutTable[(size_t)layout], 
-            (VkImage)src.Handle().U64
+            (VkImage)texture.Handle().U64
         );
     }
-    gpu->TransferCmdBuffer.End();
+    m_CmdBuffer.End();
 
-    gpu->TransferCmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, gpu->TransferFence.Handle);
-    gpu->TransferFence.WaitFor();
+    m_CmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, m_OpFence.Handle);
+    m_OpFence.WaitFor();
 
-    src.m_Layout = layout;
+    texture.m_Layout = layout;
+}
+
+
+void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
+    DMAImpl::Get().Copy(src, dst, size, src_offset, dst_offset);
+}
+
+void DMAImpl::CopyCPU2GPUTextureImpl(const CPUTexture &src, const GPUTexture &dst){
+    DMAImpl::Get().Copy(src, dst);
+}
+
+void DMAImpl::ChangeGPUTextureLayoutImpl(GPUTexture &src, GPUTexture::Layout layout){
+    DMAImpl::Get().ChangeLayout(src, layout);
 }
 
 }//namespace Vk::

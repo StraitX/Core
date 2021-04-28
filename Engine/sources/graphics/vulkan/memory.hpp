@@ -28,6 +28,8 @@ struct MemoryType{
     u32 Index = InvalidIndex;
 };
 
+MemoryType::Type ToVkMemoryType(GPUMemoryType type);
+
 struct MemoryProperties{
     MemoryLayout Layout;
     MemoryType Memory[4];

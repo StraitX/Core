@@ -20,9 +20,9 @@ public:
     virtual Result Initialize()override;
 
     virtual void Finalize()override;
-private:
-
+    
     VkInstance Handle()const;
+private:
 
     VkPhysicalDevice PickBestPhysicalDevice()const;
 

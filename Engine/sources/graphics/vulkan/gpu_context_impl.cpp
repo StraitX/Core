@@ -8,6 +8,7 @@
 #include "graphics/vulkan/gpu_texture_impl.hpp"
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
 #include "graphics/vulkan/swapchain_impl.hpp"
+#include "graphics/vulkan/gpu.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -18,24 +19,14 @@ VkIndexType GPUContextImpl::s_IndexTypeTable[]={
 
 constexpr size_t GPUContextImpl::SemaphoreRingSize;
 
-GPUContextImpl::GPUContextImpl(Vk::LogicalGPUImpl *owner):
-    m_Owner(owner),
-    m_SemaphoreRing{m_Owner, m_Owner}
-{
-
-    m_CmdBuffer.New(m_Owner->Handle, m_Owner->GeneralQueue);
+GPUContextImpl::GPUContextImpl(){
 
     { // XXX: Signal first semaphore to avoid lock
         m_CmdBuffer.Begin();
         m_CmdBuffer.End();
         m_CmdBuffer.Submit(ArrayPtr<const VkSemaphore>(), ArrayPtr<const VkSemaphore>(&m_SemaphoreRing[0].Handle, 1), VK_NULL_HANDLE);
-        vkQueueWaitIdle(m_CmdBuffer.Queue.Handle);
+        vkQueueWaitIdle(m_CmdBuffer.TargetQueue());
     }
-}
-
-
-GPUContextImpl::~GPUContextImpl(){
-    m_CmdBuffer.Delete();
 }
 
 void GPUContextImpl::BeginImpl(){
@@ -51,7 +42,7 @@ void GPUContextImpl::SubmitImpl(){
 
     m_CmdBuffer.Submit(ArrayPtr<const VkSemaphore>(&semaphores.First, 1), ArrayPtr<const VkSemaphore>(&semaphores.Second, 1), VK_NULL_HANDLE);
 
-    vkQueueWaitIdle(m_CmdBuffer.Queue.Handle); // TODO Get rid of this // Context is Immediate mode for now :'-
+    vkQueueWaitIdle(m_CmdBuffer.TargetQueue()); // TODO Get rid of this // Context is Immediate mode for now :'-
 }
 
 void GPUContextImpl::CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){  
@@ -126,8 +117,8 @@ void GPUContextImpl::BeginRenderPassImpl(const RenderPass *pass, const Framebuff
     info.pNext = nullptr;
     info.clearValueCount = 0;
     info.pClearValues = nullptr;
-    info.framebuffer = m_Framebuffer->Handle;
-    info.renderPass = m_RenderPass->Handle;
+    info.framebuffer = m_Framebuffer->Handle();
+    info.renderPass = m_RenderPass->Handle();
     info.renderArea.offset = {0, 0};
     info.renderArea.extent.width = framebuffer->Size().x;
     info.renderArea.extent.height = framebuffer->Size().y;
@@ -179,7 +170,7 @@ void GPUContextImpl::ClearFramebufferColorAttachmentsImpl(const Framebuffer *fb,
     issr.levelCount = 1;
     issr.layerCount = 1;
 
-    for(auto att: fb_impl->Attachments){
+    for(auto &att: fb_impl->Attachments()){
         if(IsColorFormat(att->GetFormat())){
 
             auto layout = GPUTextureImpl::s_LayoutTable[(size_t)att->GetLayout()];
@@ -202,8 +193,8 @@ void GPUContextImpl::SwapFramebuffersImpl(Swapchain *swapchain){
     swapchain_impl->AcquireNext(semaphores.Second);
 }
 
-GPUContext *GPUContextImpl::NewImpl(LogicalGPU &owner){
-    return new(Memory::Alloc(sizeof(GPUContextImpl))) GPUContextImpl(static_cast<Vk::LogicalGPUImpl*>(&owner));
+GPUContext *GPUContextImpl::NewImpl(){
+    return new(Memory::Alloc(sizeof(GPUContextImpl))) GPUContextImpl();
 }
 
 void GPUContextImpl::DeleteImpl(GPUContext *context){

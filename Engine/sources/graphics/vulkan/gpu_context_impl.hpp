@@ -3,7 +3,6 @@
 
 #include "core/pair.hpp"
 #include "graphics/api/gpu_context.hpp"
-#include "graphics/vulkan/logical_gpu_impl.hpp"
 #include "graphics/vulkan/command_buffer.hpp"
 #include "graphics/vulkan/semaphore.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
@@ -15,9 +14,7 @@ namespace Vk{
 class GPUContextImpl: public GPUContext{
 private:
     static VkIndexType s_IndexTypeTable[];
-    Vk::LogicalGPUImpl *m_Owner = nullptr;
-
-    Vk::CommandBuffer m_CmdBuffer;
+    Vk::CommandBuffer m_CmdBuffer{QueueFamily::Graphics};
 
     static constexpr size_t SemaphoreRingSize = 2;
     Vk::Semaphore m_SemaphoreRing[SemaphoreRingSize];
@@ -27,9 +24,7 @@ private:
     const Vk::RenderPassImpl *m_RenderPass = nullptr;
     const Vk::FramebufferImpl *m_Framebuffer = nullptr;
 public:
-    GPUContextImpl(Vk::LogicalGPUImpl *owner);
-
-    ~GPUContextImpl();
+    GPUContextImpl();
 
     virtual void BeginImpl()override;
 
@@ -61,7 +56,7 @@ public:
 
     Pair<VkSemaphore, VkSemaphore> NextPair();
 
-    static GPUContext *NewImpl(LogicalGPU &owner);
+    static GPUContext *NewImpl();
 
     static void DeleteImpl(GPUContext *context);
 

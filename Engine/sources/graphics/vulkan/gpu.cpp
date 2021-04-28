@@ -10,7 +10,7 @@
 namespace StraitX{
 namespace Vk{
 
-GPU GPU::Instance;
+GPU GPU::s_Instance;
 
 Result GPU::Initialize(VkPhysicalDevice device){
     m_PhysicalHandle = device;
@@ -41,6 +41,8 @@ Result GPU::Initialize(VkPhysicalDevice device){
             qinfo.queueFamilyIndex = m_QueueProperties.Family[i].Index;
             qinfo.queueCount = 1;
             qinfo.pQueuePriorities = &priority;
+
+            queues.Push(qinfo);
         }
     }
 
@@ -78,6 +80,11 @@ Result GPU::Initialize(VkPhysicalDevice device){
     Assert(m_Queues[QueueFamily::Graphics] != VK_NULL_HANDLE);
     Assert(m_Queues[QueueFamily::Compute] != VK_NULL_HANDLE);
     Assert(m_Queues[QueueFamily::Transfer] != VK_NULL_HANDLE);
+
+    Assert(m_MemoryProperties.Memory[MemoryType::VRAM].Index != InvalidIndex);
+    Assert(m_MemoryProperties.Memory[MemoryType::DynamicVRAM].Index != InvalidIndex);
+    Assert(m_MemoryProperties.Memory[MemoryType::RAM].Index != InvalidIndex);
+    Assert(m_MemoryProperties.Memory[MemoryType::UncachedRAM].Index != InvalidIndex);
     
     return Result::Success;
 }
@@ -86,6 +93,29 @@ void GPU::Finalize(){
     vkDeviceWaitIdle(m_Handle);
     
     vkDestroyDevice(m_Handle,nullptr);
+}
+
+bool GPU::IsMappable(MemoryType::Type type)const{
+    Assert(m_MemoryProperties.Layout != MemoryLayout::Unknown);
+
+    if(m_MemoryProperties.Layout == MemoryLayout::Uniform)
+        return true;
+
+    if(m_MemoryProperties.Layout == MemoryLayout::DedicatedWithDynamic){
+        if(type == MemoryType::VRAM)
+            return false;
+        else
+            return true;
+    }
+
+    if(m_MemoryProperties.Layout == MemoryLayout::Dedicated){
+        if(type == MemoryType::VRAM || type == MemoryType::DynamicVRAM)
+            return false;
+        else
+            return true;
+    }
+
+    return false;
 }
 
 }//namespace Vk::
