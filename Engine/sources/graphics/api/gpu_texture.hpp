@@ -83,9 +83,13 @@ private:
 public:
 
     GPUTexture() = default;
+
+    GPUTexture(GPUTexture &&other);
 #ifdef SX_DEBUG
     ~GPUTexture();
 #endif
+    GPUTexture &operator=(GPUTexture &&other);
+
     void New(TextureFormat format, Usage usage, u32 width, u32 height);
 
     void Delete();
@@ -102,20 +106,41 @@ public:
 
     Usage GetUsage()const;
 
+    bool IsEmpty()const;
+private:
+    void SetZero();
 };
+
+sx_inline GPUTexture::GPUTexture(GPUTexture &&other){
+    *this = Move(other);
+}
 
 #ifdef SX_DEBUG
 sx_inline GPUTexture::~GPUTexture(){
-    CoreAssert(m_Handle.U64 == 0, "GPUTexture: Delete() should be called before destruction");
+    CoreAssert(IsEmpty(), "GPUTexture: Delete() should be called before destruction");
 }
 #endif
+sx_inline GPUTexture &GPUTexture::operator=(GPUTexture &&other){
+    CoreAssert(IsEmpty(), "GPUTexture: Can't move into non-empty object");
+    m_Handle = other.m_Handle;
+    m_ViewHandle = other.m_ViewHandle;
+    m_BackingMemory = other.m_BackingMemory;
+    m_Width  = other.m_Width ;
+    m_Height = other.m_Height;
+    m_Layout = other.m_Layout;
+    m_Format = other.m_Format;
+    m_Usage = other.m_Usage;
+    other.SetZero();
+    return *this;
+}
+
 sx_inline void GPUTexture::New(TextureFormat format, Usage usage, u32 width, u32 height){
     s_VTable.New(*this, format, usage, width, height);
 }
 
 sx_inline void GPUTexture::Delete(){
     s_VTable.Delete(*this);
-    m_Handle.U64 = 0;
+    SetZero();
 }
 
 sx_inline GPUResourceHandle GPUTexture::Handle()const{ 
@@ -140,6 +165,21 @@ sx_inline GPUTexture::Layout GPUTexture::GetLayout()const{
 
 sx_inline GPUTexture::Usage GPUTexture::GetUsage()const{
     return m_Usage;
+}
+
+sx_inline bool GPUTexture::IsEmpty()const{
+    return m_Handle.U64 == 0;
+}
+
+sx_inline void GPUTexture::SetZero(){
+    m_Handle = {};
+    m_ViewHandle = {};
+    m_BackingMemory = {};
+    m_Width  = 0;
+    m_Height = 0;
+    m_Layout = Layout::Undefined;
+    m_Format = TextureFormat::Unknown;
+    m_Usage = {};
 }
 
 }//namespace StraitX::
