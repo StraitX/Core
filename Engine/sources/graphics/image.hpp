@@ -21,6 +21,8 @@ private:
 public:   
     Image() = default;
 
+    Image(u32 width, u32 height, const Color &color = Color::Black);
+
     Image(Image &&other);
 
     ~Image();
@@ -46,6 +48,8 @@ public:
     Vector2u Size()const;
 
     PixelFormat Format()const;
+
+    bool IsEmpty()const;
 };
 
 sx_inline u8 *Image::Data()const{
@@ -66,6 +70,10 @@ sx_inline Vector2u Image::Size()const{
 
 sx_inline PixelFormat Image::Format()const{
     return m_Format;
+}
+
+sx_inline bool Image::IsEmpty()const{
+    return m_Data == nullptr;
 }
 
 };//namespace StraitX::
