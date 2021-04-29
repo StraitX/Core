@@ -9,7 +9,7 @@ namespace Vk{
 ShaderImpl::ShaderImpl(Type type, Lang lang, const u8 *sources, u32 length):
     Shader(type, lang)
 {
-    if(lang != Shader::Lang::SPIRV)return;
+    if(lang != Shader::Lang::SPIRV || !sources || !length)return;
     
     VkShaderModuleCreateInfo info;
     info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -26,7 +26,7 @@ ShaderImpl::~ShaderImpl(){
         vkDestroyShaderModule(GPU::Get().Handle(), Handle, nullptr);
 }
 
-bool ShaderImpl::IsValid(){
+bool ShaderImpl::IsValid()const{
     return Status == VK_SUCCESS;
 }
 

@@ -10,8 +10,8 @@ namespace GL{
 
 
 struct ShaderImpl: public Shader{
-    char *Sources;
-    u32 Length;
+    char *Sources = nullptr;
+    u32 Length = 0;
     Type ShaderType;
     Lang ShaderLang;
 
@@ -19,7 +19,7 @@ struct ShaderImpl: public Shader{
 
     ~ShaderImpl();
 
-    bool IsValid()override;
+    bool IsValid()const override;
 
     static GLenum GetStage(Type type);
 

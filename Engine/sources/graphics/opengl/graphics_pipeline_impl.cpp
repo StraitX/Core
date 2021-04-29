@@ -265,6 +265,11 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     SrcBlendFactor(s_BlendFactorTable[(size_t)props.SrcBlendFactor]),
     DstBlendFactor(s_BlendFactorTable[(size_t)props.DstBlendFactor])
 {
+    for(auto &shader: props.Shaders){
+        if(!(Valid = shader->IsValid()))
+            return;
+    }
+
     glGenVertexArrays(1, &VertexArray);
     glBindVertexArray(VertexArray);
 
@@ -453,7 +458,7 @@ GraphicsPipelineImpl::~GraphicsPipelineImpl(){
     glDeleteProgram(Program);
 }
 
-bool GraphicsPipelineImpl::IsValid(){
+bool GraphicsPipelineImpl::IsValid()const{
     return Valid;
 }
 

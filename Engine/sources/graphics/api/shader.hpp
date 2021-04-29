@@ -58,6 +58,8 @@ public:
 
     static Shader *New(Shader::Type type, Shader::Lang lang, const u8 *sources, u32 length);
 
+    static Shader *New(Shader::Type type, Shader::Lang lang, const char *filename);
+
     static void Delete(Shader *shader);
 
 };

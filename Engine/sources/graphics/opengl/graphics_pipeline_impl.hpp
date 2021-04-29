@@ -55,7 +55,7 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
 
     virtual ~GraphicsPipelineImpl();
 
-    virtual bool IsValid()override;
+    virtual bool IsValid()const override;
 
     void Bind()const;
 

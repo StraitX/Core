@@ -4,7 +4,7 @@
 namespace StraitX{
 
 struct Validable{
-    virtual bool IsValid() = 0;
+    virtual bool IsValid()const = 0;
 };
 
 }//namespace StraitX::

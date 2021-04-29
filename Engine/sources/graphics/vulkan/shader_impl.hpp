@@ -15,7 +15,7 @@ struct ShaderImpl: public Shader{
 
     ~ShaderImpl();
 
-    bool IsValid()override;
+    bool IsValid()const override;
 
     static VkShaderStageFlagBits GetStage(Shader::Type type);
 

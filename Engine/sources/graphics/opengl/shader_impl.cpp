@@ -17,8 +17,9 @@ ShaderImpl::ShaderImpl(Type type, Lang lang, const u8* src, u32 length) :
     ShaderType(type),
     ShaderLang(lang)
 {
-    // XXX: i assume that shader source code is totally valid now
+    if(!src || !Length)return;
 
+    // XXX: i assume that shader source code is totally valid now
     Sources = (char *)Memory::Alloc(Length + 1);
     Memory::Copy(src, Sources, Length);
     Sources[Length] = 0;
@@ -28,8 +29,8 @@ ShaderImpl::~ShaderImpl(){
     Memory::Free(Sources);
 }
 
-bool ShaderImpl::IsValid(){
-    return ShaderLang == Shader::Lang::GLSL;
+bool ShaderImpl::IsValid()const{
+    return ShaderLang == Shader::Lang::GLSL && Sources && Length;
 }
 
 GLenum ShaderImpl::GetStage(Type type) {

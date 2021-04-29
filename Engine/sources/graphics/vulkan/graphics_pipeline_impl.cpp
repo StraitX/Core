@@ -65,6 +65,11 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
 {
     CoreAssert(props.ShaderBindings.Size() <= MaxShaderBindings, "Vk: GraphicsPipelineImpl: shader bindings overflow");
     
+    for(auto &shader: props.Shaders){
+        if(!shader->IsValid())
+            return;
+    }
+
     ArrayPtr<VkDescriptorPoolSize> descriptors((VkDescriptorPoolSize*)alloca(props.ShaderBindings.Size() * sizeof(VkDescriptorPoolSize)), props.ShaderBindings.Size());
 
     for(size_t i = 0; i<descriptors.Size(); ++i){
@@ -303,7 +308,7 @@ GraphicsPipelineImpl::~GraphicsPipelineImpl(){
     vkDestroyPipeline(GPU::Get().Handle(), Handle, nullptr);
 }
 
-bool GraphicsPipelineImpl::IsValid(){
+bool GraphicsPipelineImpl::IsValid()const{
     return Status == VK_SUCCESS;
 }
 
