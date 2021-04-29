@@ -54,9 +54,13 @@ private:
     friend class Vk::GPUBufferImpl;
 public:
     GPUBuffer() = default;
+
+    GPUBuffer(GPUBuffer &&other);
 #ifdef SX_DEBUG
     ~GPUBuffer();
 #endif
+    GPUBuffer &operator=(GPUBuffer &&other);
+
     void New(u32 size, GPUMemoryType mem_type, UsageType usage);
 
     void Delete();
@@ -71,22 +75,41 @@ public:
 
     GPUMemoryType MemoryType()const;
 
+    bool IsEmpty()const;
+private:
+    void SetZero();
 };
+
+sx_inline GPUBuffer::GPUBuffer(GPUBuffer &&other){
+    *this = Move(other);
+}
+
 // Use destructor to avoid Buffer leaks
 #ifdef SX_DEBUG
 sx_inline GPUBuffer::~GPUBuffer(){
-    CoreAssert(m_Handle.U64 == 0, "GPUBuffer: Delete() should be called before destruction");
+    CoreAssert(IsEmpty(), "GPUBuffer: Delete() should be called before destruction");
 }
 #endif
 
+sx_inline GPUBuffer &GPUBuffer::operator=(GPUBuffer &&other){
+    CoreAssert(IsEmpty(), "GPUBuffer: Can't move into non-empty object");
+    m_Size = other.m_Size;
+    m_Handle = other.m_Handle;
+    m_BackingMemory = other.m_BackingMemory;
+    m_Usage = other.m_Usage;
+    m_MemoryType = other.m_MemoryType;
+    other.SetZero();
+    return *this;
+}
+
 sx_inline void GPUBuffer::New(u32 size, GPUMemoryType mem_type, UsageType usage){
-    CoreAssert(m_Handle.U64 == 0, "GPUBuffer: New() should be called on empty object");
+    CoreAssert(IsEmpty(), "GPUBuffer: New() should be called on empty object");
     s_VTable.New(*this, size, mem_type, usage);
 }
 
 sx_inline void GPUBuffer::Delete(){
     s_VTable.Delete(*this);
-    m_Handle.U64 = 0;
+    SetZero();
 }
 
 sx_inline GPUResourceHandle GPUBuffer::Handle()const{
@@ -107,6 +130,18 @@ sx_inline GPUBuffer::UsageType GPUBuffer::Usage()const{
 
 sx_inline GPUMemoryType GPUBuffer::MemoryType()const{
     return m_MemoryType;
+}
+
+sx_inline bool GPUBuffer::IsEmpty()const{
+    return m_Handle.U64 == 0;
+}
+
+sx_inline void GPUBuffer::SetZero(){
+    m_Size = 0;
+    m_Handle = {};
+    m_BackingMemory = {};
+    m_Usage = {};
+    m_MemoryType = {};
 }
 
 }//namespace StraitX::
