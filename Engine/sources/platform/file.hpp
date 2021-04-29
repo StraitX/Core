@@ -28,16 +28,13 @@ private:
 public:
     File() = default;
 
-    //You should close file manually
-    sx_inline File(const char *filename, Mode mode, bool create = true){
-        (void)Open(filename, mode, create);
-    }
+    ~File();
+
+    File(const char *filename, Mode mode, bool create = true);
 
     Result Open(const char *filename, Mode mode, bool create = true);
 
-    sx_inline bool IsOpen(){
-        return m_FD != InvalidFD;
-    }
+    bool IsOpen();
 
     void Close();
 
@@ -45,13 +42,11 @@ public:
 
     size_t Write(const void *buffer, size_t size);
 
-    size_t Seek(SeekPos position, size_t offset);
+    s64 Seek(SeekPos position, s64 offset);
 
-    size_t Tell();
+    s64 Tell();
 
-    size_t Size();
-
-    //Result Delete();
+    u64 Size();
 
     static Result Delete(const char *filename);
 
@@ -59,6 +54,18 @@ public:
 
 };
 
+sx_inline File::~File(){
+    if(IsOpen())
+        Close();
+}
+
+sx_inline File::File(const char *filename, Mode mode, bool create){
+    (void)Open(filename, mode, create);
+}
+
+sx_inline bool File::IsOpen(){
+    return m_FD != InvalidFD;
+}
 
 }; // namespace StraitX:
 #endif // STRAITX_FILE_HPP
