@@ -28,9 +28,13 @@ private:
 public:
     File() = default;
 
-    ~File();
+    File(File &&other);
 
     File(const char *filename, Mode mode, bool create = true);
+
+    ~File();
+
+    File &operator=(File &&other);
 
     Result Open(const char *filename, Mode mode, bool create = true);
 
@@ -54,9 +58,21 @@ public:
 
 };
 
+sx_inline File::File(File &&other){
+    *this = (File&&)other;
+}
+
 sx_inline File::~File(){
     if(IsOpen())
         Close();
+}
+
+sx_inline File &File::operator=(File &&other){
+    m_FD = other.m_FD;
+    m_Mode = other.m_Mode;
+    other.m_FD = InvalidFD;
+    other.m_Mode = Mode::Read;
+    return *this;
 }
 
 sx_inline File::File(const char *filename, Mode mode, bool create){
