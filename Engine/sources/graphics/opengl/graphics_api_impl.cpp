@@ -35,16 +35,24 @@ GPUVendor ExtractGPUVendor(const char *string){
 }
 
 Result GraphicsAPIImpl::Initialize(){
+    if (!m_Context.CreateDummy()) {
+        LogError("OpenGLLoader: Can't create dummy OpenGL context");
+        return Result::Unsupported;
+    }
+    if(!m_Context.MakeCurrent() || !OpenGLLoader::Load()){
+        LogError("OpenGLLoader: Can't load OpenGL Procedures");
+        m_Context.DestroyDummy();
+        return Result::Unsupported;
+    }
+    m_Context.DestroyDummy();
+
     if(m_Context.Create(DisplayServer::Instance().GetWindow(), OpenGLVersion) != Result::Success)
         return Result::Failure;
     if(m_Context.MakeCurrent() != Result::Success)
         return Result::Unavailable;
 
 
-    if(!OpenGLLoader::Load()){
-        LogError("OpenGLLoader: Can't load OpenGL Procedures");
-        return Result::Unsupported;
-    }
+
     m_LoadedOpenGLVersion = OpenGLLoader::OpenGLVersion();
     m_VendorString = (const char*)glGetString(GL_VENDOR);
     m_RendererString = (const char *)glGetString(GL_RENDERER);
