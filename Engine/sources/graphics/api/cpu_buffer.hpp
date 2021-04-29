@@ -6,6 +6,7 @@
 #include "platform/compiler.hpp"
 #include "core/assert.hpp"
 #include "core/noncopyable.hpp"
+#include "core/move.hpp"
 #include "graphics/api/gpu_configuration.hpp"
 
 namespace StraitX{
@@ -42,9 +43,13 @@ private:
     friend class GraphicsAPILoader;
 public:
     CPUBuffer() = default;
+
+    CPUBuffer(CPUBuffer &&other);
 #ifdef SX_DEBUG
     ~CPUBuffer();
 #endif
+    CPUBuffer &operator=(CPUBuffer &&other);
+
     void New(u32 size);
 
     void New(u32 size, const void *data);
@@ -58,18 +63,37 @@ public:
     GPUResourceHandle Handle()const;
 
     u32 Size()const;
-    
+
+    bool IsEmpty()const;
+private:
+    void SetZero();
 };
 
+
+sx_inline CPUBuffer::CPUBuffer(CPUBuffer &&other){
+    *this = Move(other);
+}
 // Use destructor to avoid Buffer leaks
 #ifdef SX_DEBUG
 sx_inline CPUBuffer::~CPUBuffer(){
-    CoreAssert(m_Handle.U64 == 0, "CPUBuffer: Delete should be called before destruction");
+    CoreAssert(IsEmpty(), "CPUBuffer: Delete should be called before destruction");
 }
 #endif
 
+sx_inline CPUBuffer &CPUBuffer::operator=(CPUBuffer &&other){
+    CoreAssert(IsEmpty(), "CPUBuffer: Can't move into non-empty object");
+    m_Handle = other.m_Handle;
+    m_BackingMemory = other.m_BackingMemory;
+    m_Pointer = other.m_Pointer;
+    m_Size = other.m_Size;
+
+    other.SetZero();
+    return *this;
+}
+
+
 sx_inline void CPUBuffer::New(u32 size){
-    CoreAssert(m_Pointer == nullptr, "CPUBuffer: New() should be called on empty object");
+    CoreAssert(IsEmpty(), "CPUBuffer: New() should be called on empty object");
     s_VTable.New(*this, size);
 }
 
@@ -80,8 +104,7 @@ sx_inline void CPUBuffer::New(u32 size, const void *data){
 
 sx_inline void CPUBuffer::Delete(){
     s_VTable.Delete(*this);
-    m_Handle.U64 = 0;
-    m_Pointer = nullptr;
+    SetZero();
 }
 
 sx_inline void *CPUBuffer::Pointer()const{
@@ -95,6 +118,17 @@ sx_inline GPUResourceHandle CPUBuffer::Handle()const{
 
 sx_inline u32 CPUBuffer::Size()const{
     return m_Size;
+}
+
+sx_inline bool CPUBuffer::IsEmpty()const{
+    return m_Handle.U64 == 0;
+}
+
+sx_inline void CPUBuffer::SetZero(){
+    m_Handle = {};
+    m_BackingMemory = {};
+    m_Pointer = nullptr;
+    m_Size = 0;
 }
 
 }//namespace StraitX::
