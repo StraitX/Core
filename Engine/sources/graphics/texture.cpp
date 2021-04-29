@@ -4,6 +4,36 @@
 
 namespace StraitX{
 
+Texture::Texture(const char *filename){
+    CoreFunctionAssert(
+        LoadFromFile(filename), Result::Success, 
+        "Texture: Can't load texture from file"
+    );
+}
+
+Texture::Texture(const Image &image){
+    CoreFunctionAssert(
+        LoadFromImage(image), Result::Success, 
+        "Texture: Can't load texture from image"
+    );
+}
+
+Texture::Texture(Texture &&other){
+    *this = Move(other);
+}
+
+Texture::~Texture(){
+    if(!GPUTexture.IsEmpty())
+        Delete();
+}
+
+Texture &Texture::operator=(Texture &&other){
+    CoreAssert(IsEmpty(), "Texture: Can't move into non-empty object");
+    GPUTexture = Move(other.GPUTexture);
+    Sampler = Move(other.Sampler);
+    return *this;
+}
+
 Result Texture::LoadFromFile(const char *filename, const SamplerProperties &props){
     Image image;
 
@@ -17,23 +47,27 @@ Result Texture::LoadFromFile(const char *filename, const SamplerProperties &prop
 Result Texture::LoadFromImage(const Image &image, const SamplerProperties &props){
     if(image.Width() == 0 || image.Height() == 0)return Result::NullObject;
 
-    m_GPUTexture.New(ToTextureFormat(image.Format()), GPUTexture::UsageBits::Sampled | GPUTexture::UsageBits::TransferDst, image.Width(), image.Height());
+    GPUTexture.New(ToTextureFormat(image.Format()), GPUTexture::UsageBits::Sampled | GPUTexture::UsageBits::TransferDst, image.Width(), image.Height());
 
     CPUTexture staging;
     staging.New(image.Width(), image.Height(), ToTextureFormat(image.Format()), image.Data());
-        DMA::ChangeLayout(m_GPUTexture, GPUTexture::Layout::TransferDstOptimal);
-        DMA::Copy(staging, m_GPUTexture);
-        DMA::ChangeLayout(m_GPUTexture, GPUTexture::Layout::ShaderReadOnlyOptimal);
+        DMA::ChangeLayout(GPUTexture, GPUTexture::Layout::TransferDstOptimal);
+        DMA::Copy(staging, GPUTexture);
+        DMA::ChangeLayout(GPUTexture, GPUTexture::Layout::ShaderReadOnlyOptimal);
     staging.Delete();
 
-    m_Sampler.New(props);
+    Sampler.New(props);
     
     return Result::Success;
 }
 
 void Texture::Delete(){
-    m_Sampler.Delete();
-    m_GPUTexture.Delete();
+    Sampler.Delete();
+    GPUTexture.Delete();
+}
+
+bool Texture::IsEmpty()const{
+    return GPUTexture.IsEmpty() && Sampler.IsEmpty();
 }
 
 }//namespace StraitX::

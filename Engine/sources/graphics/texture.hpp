@@ -8,22 +8,21 @@
 
 namespace StraitX{
 
-class Texture: public NonCopyable{
-private:
-    GPUTexture m_GPUTexture;
-    Sampler m_Sampler;
-public:
+struct Texture: public NonCopyable{
+    class GPUTexture GPUTexture;
+    class Sampler Sampler;
+
     Texture() = default;
+
+    Texture(const char *filename);
+
+    Texture(const Image &image);
+
+    Texture(Texture &&other);
 
     ~Texture();
 
-    constexpr const GPUTexture &GetGPUTexture()const;
-
-    constexpr const Sampler &GetSampler()const;
-
-    constexpr GPUTexture &GetGPUTexture();
-
-    constexpr Sampler &GetSampler();
+    Texture &operator=(Texture &&other);
 
     Result LoadFromFile(const char *filename, const SamplerProperties &props = {});
 
@@ -31,28 +30,8 @@ public:
 
     void Delete();
 
+    bool IsEmpty()const;
 };
-
-sx_inline Texture::~Texture(){
-    if(m_GPUTexture.Handle().U64)
-        Delete();
-}
-
-constexpr const GPUTexture &Texture::GetGPUTexture()const{
-    return m_GPUTexture;
-}
-
-constexpr const Sampler &Texture::GetSampler()const{
-    return m_Sampler;
-}
-
-constexpr GPUTexture &Texture::GetGPUTexture(){
-    return m_GPUTexture;
-}
-
-constexpr Sampler &Texture::GetSampler(){
-    return m_Sampler;
-}
 
 }//namespace StraitX::
 
