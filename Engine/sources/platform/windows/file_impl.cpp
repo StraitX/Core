@@ -48,16 +48,32 @@ size_t File::Write(const void* buffer, size_t size) {
 	return write;
 }
 
-size_t File::Seek(SeekPos position, size_t offset) {
-	return SetFilePointer(reinterpret_cast<HANDLE>(m_FD), offset, 0, (DWORD)position);
+s64 File::Seek(SeekPos position, s64 offset) {
+	union {
+		s64 Offset;
+		struct {
+			long Low;
+			long High;
+		};
+	}off;
+	off.Offset = offset;
+	return SetFilePointer(reinterpret_cast<HANDLE>(m_FD), off.Low, &off.High, (DWORD)position);
 }
 
-size_t File::Tell() {
+s64 File::Tell() {
 	return Seek(SeekPos::Current, 0);
 }
 
-size_t File::Size() {
-	return GetFileSize(reinterpret_cast<HANDLE>(m_FD), nullptr);
+u64 File::Size() {
+	union {
+		u64 U64;
+		struct {
+			unsigned long Low;
+			unsigned long High;
+		};
+	}size = {};
+	size.Low = GetFileSize(reinterpret_cast<HANDLE>(m_FD), &size.High);
+	return size.U64;
 }
 
 Result File::Delete(const char* filename) {
