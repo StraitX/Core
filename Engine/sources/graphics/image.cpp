@@ -57,22 +57,18 @@ Result Image::LoadFromFile(const char *filename, PixelFormat format){
     if(!File::Exist(filename))return Result::NotFound;
 
     File file;
-    if(file.Open(filename, File::Mode::Read)){
-        auto res = LoadFromFile(file, format);
-        file.Close();
-        return res;
-    }
-    return Result::Failure;
+    if(!file.Open(filename, File::Mode::Read))return Result::Failure;
+
+    return LoadFromFile(file, format);
 }
 
 Result Image::LoadFromFile(File &file, PixelFormat format){
     CoreAssert(IsEmpty(), "Image::Load: object is not empty");
 
-    if(ImageLoader::LoadImage(file, m_Width, m_Height, format, m_Data)){
-        m_Format = format;
-        return Result::Success;
-    }
-    return Result::Failure;
+    if(!ImageLoader::LoadImage(file, m_Width, m_Height, format, m_Data))return Result::Failure;
+
+    m_Format = format;
+    return Result::Success;
 }
 
 Result Image::SaveToFile(File &file, ImageFormat save_format){
