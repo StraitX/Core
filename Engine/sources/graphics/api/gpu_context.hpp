@@ -61,6 +61,8 @@ public:
 
     void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset = 0, u32 dst_offset = 0);
 
+    void Copy(const CPUBuffer &src, const GPUBuffer &dst);
+
     void Copy(const CPUTexture &src, const GPUTexture &dst);
 
     void ChangeLayout(GPUTexture &texture, GPUTexture::Layout new_layout);
@@ -143,6 +145,11 @@ sx_inline void GPUContext::Submit(){
     m_State = State::Recordable;
 #endif
     SubmitImpl();
+}
+
+sx_inline void GPUContext::Copy(const CPUBuffer &src, const GPUBuffer &dst){
+    CoreAssert(src.Size() == dst.Size(), "GPUContext::Copy, buffers should be the same size");
+    Copy(src, dst, dst.Size());
 }
 
 sx_inline void GPUContext::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
