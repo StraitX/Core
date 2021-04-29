@@ -4,6 +4,7 @@
 #include "platform/types.hpp"
 #include "platform/compiler.hpp"
 #include "core/assert.hpp"
+#include "core/move.hpp"
 #include "graphics/api/gpu_configuration.hpp"
 
 namespace StraitX{
@@ -56,21 +57,37 @@ private:
     friend class GL::SamplerImpl;
 public:
     Sampler() = default;
+
+    Sampler(Sampler &&other);
 #ifdef SX_DEBUG
     ~Sampler();
 #endif
+    Sampler &operator=(Sampler &&other);
+
     void New(SamplerProperties props);
 
     void Delete();
 
-    constexpr GPUResourceHandle Handle()const;
+    GPUResourceHandle Handle()const;
+
+    bool IsEmpty()const;
 };
+
+sx_inline Sampler::Sampler(Sampler &&other){
+    *this = Move(other);
+}
 
 #ifdef SX_DEBUG
 sx_inline Sampler::~Sampler(){
-    CoreAssert(m_Handle.U64 == 0, "Sampler: Delete() should be called before destruction");
+    CoreAssert(IsEmpty(), "Sampler: Delete() should be called before destruction");
 }
 #endif
+sx_inline Sampler &Sampler::operator=(Sampler &&other){
+    CoreAssert(IsEmpty(), "Sampler: Can't move into non-empty object");
+    m_Handle = other.m_Handle;
+    other.m_Handle = {};
+    return *this;
+}
 
 sx_inline void Sampler::New(SamplerProperties props){
     s_VTable.New(*this, props);
@@ -81,10 +98,13 @@ sx_inline void Sampler::Delete(){
     m_Handle.U64 = 0;
 }
 
-constexpr GPUResourceHandle Sampler::Handle()const{
+sx_inline GPUResourceHandle Sampler::Handle()const{
     return m_Handle;
 }
 
+sx_inline bool Sampler::IsEmpty()const{
+    return m_Handle.U64 == 0;
+}
 };
 
 #endif//STRAITX_SAMPLER_HPP
