@@ -56,9 +56,9 @@ public:
     GPUBuffer() = default;
 
     GPUBuffer(GPUBuffer &&other);
-#ifdef SX_DEBUG
+
     ~GPUBuffer();
-#endif
+
     GPUBuffer &operator=(GPUBuffer &&other);
 
     void New(u32 size, GPUMemoryType mem_type, UsageType usage);
@@ -84,12 +84,10 @@ sx_inline GPUBuffer::GPUBuffer(GPUBuffer &&other){
     *this = Move(other);
 }
 
-// Use destructor to avoid Buffer leaks
-#ifdef SX_DEBUG
 sx_inline GPUBuffer::~GPUBuffer(){
-    CoreAssert(IsEmpty(), "GPUBuffer: Delete() should be called before destruction");
+    if(!IsEmpty())
+        Delete();
 }
-#endif
 
 sx_inline GPUBuffer &GPUBuffer::operator=(GPUBuffer &&other){
     CoreAssert(IsEmpty(), "GPUBuffer: Can't move into non-empty object");

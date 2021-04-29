@@ -85,9 +85,9 @@ public:
     GPUTexture() = default;
 
     GPUTexture(GPUTexture &&other);
-#ifdef SX_DEBUG
+
     ~GPUTexture();
-#endif
+
     GPUTexture &operator=(GPUTexture &&other);
 
     void New(TextureFormat format, Usage usage, u32 width, u32 height);
@@ -115,11 +115,11 @@ sx_inline GPUTexture::GPUTexture(GPUTexture &&other){
     *this = Move(other);
 }
 
-#ifdef SX_DEBUG
 sx_inline GPUTexture::~GPUTexture(){
-    CoreAssert(IsEmpty(), "GPUTexture: Delete() should be called before destruction");
+    if(!IsEmpty())
+        Delete();
 }
-#endif
+
 sx_inline GPUTexture &GPUTexture::operator=(GPUTexture &&other){
     CoreAssert(IsEmpty(), "GPUTexture: Can't move into non-empty object");
     m_Handle = other.m_Handle;

@@ -59,9 +59,9 @@ public:
     Sampler() = default;
 
     Sampler(Sampler &&other);
-#ifdef SX_DEBUG
+
     ~Sampler();
-#endif
+
     Sampler &operator=(Sampler &&other);
 
     void New(SamplerProperties props);
@@ -77,11 +77,11 @@ sx_inline Sampler::Sampler(Sampler &&other){
     *this = Move(other);
 }
 
-#ifdef SX_DEBUG
 sx_inline Sampler::~Sampler(){
-    CoreAssert(IsEmpty(), "Sampler: Delete() should be called before destruction");
+    if(!IsEmpty())
+        Delete();
 }
-#endif
+
 sx_inline Sampler &Sampler::operator=(Sampler &&other){
     CoreAssert(IsEmpty(), "Sampler: Can't move into non-empty object");
     m_Handle = other.m_Handle;

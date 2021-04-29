@@ -20,8 +20,6 @@ struct Texture: public NonCopyable{
 
     Texture(Texture &&other);
 
-    ~Texture();
-
     Texture &operator=(Texture &&other);
 
     Result LoadFromFile(const char *filename, const SamplerProperties &props = {});

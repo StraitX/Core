@@ -45,9 +45,9 @@ public:
     CPUBuffer() = default;
 
     CPUBuffer(CPUBuffer &&other);
-#ifdef SX_DEBUG
+
     ~CPUBuffer();
-#endif
+
     CPUBuffer &operator=(CPUBuffer &&other);
 
     void New(u32 size);
@@ -73,12 +73,11 @@ private:
 sx_inline CPUBuffer::CPUBuffer(CPUBuffer &&other){
     *this = Move(other);
 }
-// Use destructor to avoid Buffer leaks
-#ifdef SX_DEBUG
+
 sx_inline CPUBuffer::~CPUBuffer(){
-    CoreAssert(IsEmpty(), "CPUBuffer: Delete should be called before destruction");
+    if(!IsEmpty())
+        Delete();
 }
-#endif
 
 sx_inline CPUBuffer &CPUBuffer::operator=(CPUBuffer &&other){
     CoreAssert(IsEmpty(), "CPUBuffer: Can't move into non-empty object");

@@ -22,11 +22,6 @@ Texture::Texture(Texture &&other){
     *this = Move(other);
 }
 
-Texture::~Texture(){
-    if(!GPUTexture.IsEmpty())
-        Delete();
-}
-
 Texture &Texture::operator=(Texture &&other){
     CoreAssert(IsEmpty(), "Texture: Can't move into non-empty object");
     GPUTexture = Move(other.GPUTexture);
