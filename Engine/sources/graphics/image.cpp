@@ -1,13 +1,30 @@
 #include <cstdlib>
 #include "platform/memory.hpp"
 #include "core/string.hpp"
+#include "core/move.hpp"
 #include "graphics/image.hpp"
 #include "graphics/image_loader.hpp"
 
 namespace StraitX{
 
+Image::Image(Image &&other){
+    *this = Move(other);
+}
+
 Image::~Image(){
     std::free(m_Data); 
+}
+
+Image &Image::operator=(Image &&other){
+    m_Data = other.m_Data;
+    m_Width = other.m_Width;
+    m_Height = other.m_Height;
+    m_Format = other.m_Format;
+    other.m_Data = nullptr;
+    other.m_Width = 0;
+    other.m_Height = 0;
+    other.m_Format = {};
+    return *this;
 }
 
 void Image::Create(u32 width, u32 height, const Color &color){

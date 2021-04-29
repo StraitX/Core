@@ -21,7 +21,11 @@ private:
 public:   
     Image() = default;
 
+    Image(Image &&other);
+
     ~Image();
+
+    Image &operator=(Image &&other);
 
     void Create(u32 width, u32 height, const Color &color = Color::Black);
 
@@ -33,34 +37,34 @@ public:
 
     Result SaveToFile(const char *filename);
 
-    constexpr u8 *Data()const;
+    u8 *Data()const;
 
-    constexpr u32 Width()const;
+    u32 Width()const;
 
-    constexpr u32 Height()const;
+    u32 Height()const;
 
-    constexpr Vector2u Size()const;
+    Vector2u Size()const;
 
-    constexpr PixelFormat Format()const;
+    PixelFormat Format()const;
 };
 
-constexpr u8 *Image::Data()const{
+sx_inline u8 *Image::Data()const{
     return m_Data;
 }
 
-constexpr u32 Image::Width()const{
+sx_inline u32 Image::Width()const{
     return m_Width;
 }
 
-constexpr u32 Image::Height()const{
+sx_inline u32 Image::Height()const{
     return m_Height;
 }
 
-constexpr Vector2u Image::Size()const{
+sx_inline Vector2u Image::Size()const{
     return {Width(), Height()};
 }
 
-constexpr PixelFormat Image::Format()const{
+sx_inline PixelFormat Image::Format()const{
     return m_Format;
 }
 
