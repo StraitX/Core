@@ -11,7 +11,7 @@ namespace StraitX{
 class Engine;
 class GraphicsAPILoader;
 
-class GraphicsAPI: NonCopyable{
+class GraphicsAPI: public NonCopyable{
 public:
     enum API{
         None = 0,

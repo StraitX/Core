@@ -19,8 +19,6 @@ enum class IndicesType{
     Uint32
 };
 
-class GraphicsAPILoader;
-
 class GPUContext: public NonCopyable{
 public:
     struct VTable{
@@ -45,8 +43,11 @@ private:
     bool m_VertexBufferIsBound = false;
 #endif
     static VTable s_VTable;
+    static GPUContext *s_Instance;
 
     friend class GraphicsAPILoader;
+    // XXX just for now
+    friend class Engine;
 public:
 
     GPUContext() = default;
@@ -112,6 +113,8 @@ protected:
 
     virtual void SwapFramebuffersImpl(Swapchain *swapchain) = 0;
 public:
+    static GPUContext *Get(){ return s_Instance; }
+private:
     static GPUContext *New(){ return s_VTable.New(); }
 
     static void Delete(GPUContext *context){ s_VTable.Delete(context); }

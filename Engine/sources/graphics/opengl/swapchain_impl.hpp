@@ -14,7 +14,9 @@ struct SwapchainImpl: public Swapchain{
 
     SwapchainImpl(const Window &window, const SwapchainProperties &props);
 
-    virtual const Framebuffer *CurrentFramebuffer()override;
+    virtual const Framebuffer *CurrentFramebuffer()const override;
+
+    virtual const RenderPass *FramebufferPass()const override;
 
     static Swapchain *NewImpl(const Window &window, const SwapchainProperties &props);
 

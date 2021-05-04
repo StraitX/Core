@@ -34,7 +34,9 @@ public:
 
     virtual ~Swapchain() = default;
 
-    virtual const Framebuffer *CurrentFramebuffer() = 0;
+    virtual const Framebuffer *CurrentFramebuffer()const = 0;
+
+    virtual const RenderPass *FramebufferPass()const = 0;
 
     static Swapchain *New(const Window &window, const SwapchainProperties &props);
 

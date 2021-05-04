@@ -4,6 +4,7 @@
 #include "platform/clock.hpp"
 #include "core/log.hpp"
 #include "graphics/api/graphics_api.hpp"
+#include "graphics/api/gpu_context.hpp"
 #include "graphics/api/graphics_api_loader.hpp"
 #include "main/application.hpp"
 #include "main/engine.hpp"
@@ -83,6 +84,7 @@ Result Engine::Initialize(){
     LogTrace("GraphicsAPI::Initialize: Begin");
     {
         m_ErrorGraphicsAPI = GraphicsAPI::s_Instance->Initialize();
+        GPUContext::s_Instance = GPUContext::New();
     }
     InitAssert("GraphicsAPI::Initialize",m_ErrorGraphicsAPI);
 
@@ -123,6 +125,7 @@ Result Engine::Finalize(){
 
     if(m_ErrorGraphicsAPI == Result::Success){
         LogTrace("GraphicsAPI::Finalize: Begin");
+        GPUContext::Delete(GPUContext::s_Instance);
         GraphicsAPI::s_Instance->Finalize();
         LogTrace("GraphicsAPI::Finalize: End");
     }

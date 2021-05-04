@@ -125,8 +125,12 @@ SwapchainImpl::~SwapchainImpl(){
     m_Surface.Destroy();
 }
 
-const Framebuffer *SwapchainImpl::CurrentFramebuffer(){
+const Framebuffer *SwapchainImpl::CurrentFramebuffer()const{
     return &m_Framebuffers[m_CurrentImage];
+}
+
+const RenderPass *SwapchainImpl::FramebufferPass()const{
+    return &m_FramebufferPass;
 }
 
 Swapchain *SwapchainImpl::NewImpl(const Window &window, const SwapchainProperties &props){

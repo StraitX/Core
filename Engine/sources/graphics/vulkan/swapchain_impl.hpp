@@ -40,7 +40,9 @@ public:
 
     ~SwapchainImpl();
 
-    virtual const Framebuffer *CurrentFramebuffer()override;
+    virtual const Framebuffer *CurrentFramebuffer()const override;
+
+    virtual const RenderPass *FramebufferPass()const override;
 
     static Swapchain *NewImpl(const Window &window, const SwapchainProperties &props);
 
