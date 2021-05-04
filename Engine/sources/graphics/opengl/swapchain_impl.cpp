@@ -31,10 +31,6 @@ SwapchainImpl::SwapchainImpl(const Window &window, const SwapchainProperties &pr
     (void)props;
 }
 
-const RenderPass *SwapchainImpl::FramebufferPass(){
-    return &m_FramebufferPass;
-}
-
 const Framebuffer *SwapchainImpl::CurrentFramebuffer(){
     return &m_DefaultFramebuffer;
 }

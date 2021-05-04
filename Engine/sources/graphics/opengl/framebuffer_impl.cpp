@@ -7,12 +7,12 @@ namespace StraitX{
 namespace GL{
 
 FramebufferImpl::FramebufferImpl(u32 handle, const RenderPass *const pass, const FramebufferProperties &props):
-    m_Handle(handle),
-    m_Size(props.Size)
+    Framebuffer(pass, props.Size),
+    m_Handle(handle)
 {}
 
 FramebufferImpl::FramebufferImpl(const RenderPass *const pass, const FramebufferProperties &props):
-    m_Size(props.Size)
+    Framebuffer(pass, props.Size)
 {
     glGenFramebuffers(1, &m_Handle);
     glBindFramebuffer(GL_FRAMEBUFFER, m_Handle);
@@ -26,10 +26,6 @@ FramebufferImpl::FramebufferImpl(const RenderPass *const pass, const Framebuffer
 
 FramebufferImpl::~FramebufferImpl(){
     glDeleteFramebuffers(1, &m_Handle);
-}
-
-Vector2u FramebufferImpl::Size()const{
-    return m_Size;
 }
 
 void FramebufferImpl::Bind()const{

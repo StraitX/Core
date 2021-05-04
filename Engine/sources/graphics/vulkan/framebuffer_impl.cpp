@@ -10,7 +10,7 @@ namespace StraitX{
 namespace Vk{
 
 FramebufferImpl::FramebufferImpl(const RenderPass *const pass, const FramebufferProperties &props):
-    m_FramebufferSize(props.Size)
+    Framebuffer(pass, props.Size)
 {
     auto *attachments = (VkImageView *)alloca(props.Attachments.Size() * sizeof(VkImageView));
 
@@ -28,8 +28,8 @@ FramebufferImpl::FramebufferImpl(const RenderPass *const pass, const Framebuffer
     info.renderPass = static_cast<const Vk::RenderPassImpl* const>(pass)->Handle();
     info.attachmentCount = props.Attachments.Size();
     info.pAttachments = attachments; 
-    info.width = Size().x;
-    info.height = Size().y;
+    info.width = props.Size.x;
+    info.height = props.Size.y;
     info.layers = 1;
 
     CoreFunctionAssert(vkCreateFramebuffer(GPU::Get().Handle(), &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: FramebufferImpl: Can't create Framebuffer");
@@ -37,10 +37,6 @@ FramebufferImpl::FramebufferImpl(const RenderPass *const pass, const Framebuffer
 
 FramebufferImpl::~FramebufferImpl(){
     vkDestroyFramebuffer(GPU::Get().Handle(), m_Handle, nullptr);
-}
-
-Vector2u FramebufferImpl::Size()const{
-    return m_FramebufferSize;
 }
 
 Framebuffer *FramebufferImpl::NewImpl(const RenderPass *const pass, const FramebufferProperties &props){

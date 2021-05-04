@@ -9,7 +9,6 @@ namespace GL{
 class FramebufferImpl: public Framebuffer{
 private:
     u32 m_Handle;
-    Vector2u m_Size;
 public:
 
     FramebufferImpl(u32 handle, const RenderPass *const pass, const FramebufferProperties &props);
@@ -17,9 +16,7 @@ public:
     FramebufferImpl(const RenderPass *const pass, const FramebufferProperties &props);
 
     ~FramebufferImpl();
-
-    virtual Vector2u Size()const override;
-
+    
     void Bind()const;
 
     static Framebuffer *NewImpl(const RenderPass *const pass, const FramebufferProperties &props);

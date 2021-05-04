@@ -11,7 +11,6 @@ namespace Vk{
 class FramebufferImpl: public Framebuffer{
 private:
     VkFramebuffer m_Handle = VK_NULL_HANDLE;
-    Vector2u m_FramebufferSize;
     PushArray<const GPUTexture *, MaxAttachmentsCount> m_Attachments;
 public:
     FramebufferImpl(const RenderPass *const pass, const FramebufferProperties &props);
@@ -25,8 +24,6 @@ public:
     const PushArray<const GPUTexture *, MaxAttachmentsCount> &Attachments()const{
         return m_Attachments;
     }
-
-    virtual Vector2u Size()const override;
 
     static Framebuffer *NewImpl(const RenderPass *const pass, const FramebufferProperties &props);
 

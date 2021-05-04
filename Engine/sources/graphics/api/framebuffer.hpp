@@ -30,12 +30,18 @@ public:
 private:
     static VTable s_VTable;
 
+    const RenderPass *m_Pass;
+    Vector2u m_Size;
+
     friend class GraphicsAPILoader;
 public:
+    Framebuffer(const RenderPass *pass, Vector2u size);
 
     virtual ~Framebuffer() = default;
 
-    virtual Vector2u Size()const = 0;
+    Vector2u Size()const;
+
+    const RenderPass *Pass()const;
 
     static Framebuffer *New(const RenderPass *const pass, const FramebufferProperties &props);
 
@@ -43,6 +49,18 @@ public:
 
 };
 
+sx_inline Framebuffer::Framebuffer(const RenderPass *pass, Vector2u size):
+    m_Pass(pass),
+    m_Size(size)
+{}
+
+sx_inline Vector2u Framebuffer::Size()const{
+    return m_Size;
+}
+
+sx_inline const RenderPass *Framebuffer::Pass()const{
+    return m_Pass;
+}
 
 sx_inline Framebuffer *Framebuffer::New(const RenderPass *const pass,const FramebufferProperties &props){
     return s_VTable.New(pass, props);
