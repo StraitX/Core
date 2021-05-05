@@ -68,27 +68,15 @@ Result Engine::Initialize(){
     }
     InitAssert("WindowSystem::Initialize", m_ErrorWindowSystem);
 
-    LogTrace("DisplayServer::Initialize: Begin");
+    LogTrace("Window::Open: Begin");
     {
-        m_ErrorDisplayServer = m_DisplayServer.Initialize();
-        m_DisplayServer.m_Window.SetTitle(m_ApplicationConfig.ApplicationName);
+        m_Window = DisplayServer::Window.Open(WindowSystem::MainScreen(), 1280, 720, m_ApplicationConfig.DesiredAPI, m_ApplicationConfig.SwapchainProps);
     }
-    InitAssert("DisplayServer::Initialize", m_ErrorDisplayServer);
+    InitAssert("Window::Open", m_Window);
+
+    DisplayServer::Window.SetTitle(m_ApplicationConfig.ApplicationName);
 
     LogTrace("========= Second stage init =========");
-
-    auto res = GraphicsAPILoader::Load(m_ApplicationConfig.DesiredAPI);
-
-    InitAssert("GraphicsAPILoader::Load", res);
-
-    LogTrace("GraphicsAPI::Initialize: Begin");
-    {
-        m_ErrorGraphicsAPI = GraphicsAPI::s_Instance->Initialize();
-        GPUContext::s_Instance = GPUContext::New();
-    }
-    InitAssert("GraphicsAPI::Initialize",m_ErrorGraphicsAPI);
-
-    LogTrace("========= Third stage init =========");
 
     //Engine should be completely initialized at this moment
     LogTrace("StraitXMain: Begin");
@@ -123,17 +111,10 @@ Result Engine::Finalize(){
         Log("StraitXExit",m_ErrorMX);
     }
 
-    if(m_ErrorGraphicsAPI == Result::Success){
-        LogTrace("GraphicsAPI::Finalize: Begin");
-        GPUContext::Delete(GPUContext::s_Instance);
-        GraphicsAPI::s_Instance->Finalize();
-        LogTrace("GraphicsAPI::Finalize: End");
-    }
-
-    if(m_ErrorDisplayServer == Result::Success){
+    if(m_Window == Result::Success){
         LogTrace("DisplayServer::Finalize: Begin");
-        m_ErrorDisplayServer = m_DisplayServer.Finalize();
-        Log("DisplayServer::Finalize", m_ErrorDisplayServer);
+        DisplayServer::Window.Close();
+        LogTrace("DisplayServer::Finalize: End");
     }
 
     if(m_ErrorWindowSystem == Result::Success){
@@ -150,7 +131,7 @@ void Engine::MainLoop(){
     Clock frametime;
     while(m_Running){
         Event e;
-        while(m_DisplayServer.m_Window.PollEvent(e)){
+        while(DisplayServer::Window.PollEvent(e)){
             if(e.Type == EventType::WindowClose)
                 Stop();
             else

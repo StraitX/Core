@@ -4,6 +4,7 @@
 #include "platform/events.hpp"
 #include "core/math/vector2.hpp"
 #include "graphics/api/graphics_api.hpp"
+#include "graphics/api/swapchain.hpp"
 
 namespace StraitX{
 
@@ -12,6 +13,7 @@ class Engine;
 struct ApplicationConfig{
     const char *ApplicationName = "StraitX Game";
     GraphicsAPI::API DesiredAPI = GraphicsAPI::API::OpenGL;
+    SwapchainProperties SwapchainProps = {};
 };
 
 class Application{

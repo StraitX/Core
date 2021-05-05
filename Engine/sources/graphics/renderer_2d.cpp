@@ -48,7 +48,7 @@ void main(){
 Renderer2D::Renderer2D(const RenderPass *pass):
     m_Pass(pass)
 {
-    auto size = DisplayServer::Instance().GetWindow().Size();
+    auto size = DisplayServer::Window.Size();
     m_WindowSize = {size.width, size.height};
     
     m_VertexShader = Shader::New(Shader::Type::Vertex, Shader::Lang::GLSL, (const u8*)s_VertexShaderSources, String::Length(s_VertexShaderSources));
@@ -75,8 +75,8 @@ Renderer2D::Renderer2D(const RenderPass *pass):
     gp_props.Shaders          = {shaders, lengthof(shaders)};
     gp_props.VertexAttributes = {attributes, lengthof(attributes)}; 
     gp_props.Topology         = PrimitivesTopology::Triangles;
-    gp_props.FramebufferViewport.Width = DisplayServer::Instance().GetWindow().Size().width;
-    gp_props.FramebufferViewport.Height = DisplayServer::Instance().GetWindow().Size().height;
+    gp_props.FramebufferViewport.Width = DisplayServer::Window.Size().width;
+    gp_props.FramebufferViewport.Height = DisplayServer::Window.Size().height;
     gp_props.Rasterization  = RasterizationMode::Fill;
     gp_props.BlendFunc      = BlendFunction::Add;
     gp_props.SrcBlendFactor = BlendFactor::SrcAlpha;

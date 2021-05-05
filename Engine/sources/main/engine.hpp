@@ -14,10 +14,9 @@ private:
     Application *m_Application = nullptr;
     ApplicationConfig m_ApplicationConfig = {};
     bool m_Running = true;
-    DisplayServer m_DisplayServer;
-    Result m_ErrorGraphicsAPI = Result::None;
     Result m_ErrorWindowSystem = Result::None;
-    Result m_ErrorDisplayServer = Result::None, m_ErrorApplication = Result::None, m_ErrorMX = Result::None;
+    Result m_Window = Result::None;
+    Result m_ErrorApplication = Result::None, m_ErrorMX = Result::None;
 public:
     Engine() = default;
     ~Engine() = default;

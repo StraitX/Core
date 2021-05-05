@@ -46,7 +46,7 @@ Result GraphicsAPIImpl::Initialize(){
     }
     m_Context.DestroyDummy();
 
-    if(m_Context.Create(DisplayServer::Instance().GetWindow(), OpenGLVersion) != Result::Success)
+    if(m_Context.Create(DisplayServer::Window, OpenGLVersion) != Result::Success)
         return Result::Failure;
     if(m_Context.MakeCurrent() != Result::Success)
         return Result::Unavailable;

@@ -47,7 +47,7 @@ private:
 
     friend class GraphicsAPILoader;
     // XXX just for now
-    friend class Engine;
+    friend class RenderWindow;
 public:
 
     GPUContext() = default;

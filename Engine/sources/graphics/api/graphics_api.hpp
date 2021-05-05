@@ -8,9 +8,6 @@
 
 namespace StraitX{
 
-class Engine;
-class GraphicsAPILoader;
-
 class GraphicsAPI: public NonCopyable{
 public:
     enum API{
@@ -22,7 +19,7 @@ private:
     static GraphicsAPI *s_Instance;
     static API s_CurrentAPI;
 
-    friend class Engine;
+    friend class RenderWindow;
     friend class GraphicsAPILoader;
 private:
     virtual Result Initialize() = 0;
