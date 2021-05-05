@@ -44,6 +44,10 @@ private:
 public:
     CPUBuffer() = default;
 
+    CPUBuffer(u32 size);
+
+    CPUBuffer(u32 size, const void *data);
+
     CPUBuffer(CPUBuffer &&other);
 
     ~CPUBuffer();
@@ -69,6 +73,13 @@ private:
     void SetZero();
 };
 
+sx_inline CPUBuffer::CPUBuffer(u32 size){
+    New(size);
+}
+
+sx_inline CPUBuffer::CPUBuffer(u32 size, const void *data){
+    New(size, data);
+}
 
 sx_inline CPUBuffer::CPUBuffer(CPUBuffer &&other){
     *this = Move(other);

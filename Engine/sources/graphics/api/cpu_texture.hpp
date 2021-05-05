@@ -13,6 +13,12 @@ private:
     u32 m_Width = 0;
     u32 m_Height = 0;
 public:
+    CPUTexture() = default;
+
+    CPUTexture(u32 width, u32 height, TextureFormat format);
+
+    CPUTexture(u32 width, u32 height, TextureFormat format, const void *pixels);
+
     void New(u32 width, u32 height, TextureFormat format);
 
     void New(u32 width, u32 height, TextureFormat format, const void *pixels);
@@ -29,6 +35,14 @@ public:
 
     TextureFormat Format()const;
 };
+
+sx_inline CPUTexture::CPUTexture(u32 width, u32 height, TextureFormat format){
+    New(width, height, format);
+}
+
+sx_inline CPUTexture::CPUTexture(u32 width, u32 height, TextureFormat format, const void *pixels){
+    New(width, height, format, pixels);
+}
 
 sx_inline void CPUTexture::New(u32 width, u32 height, TextureFormat format){
     CPUBuffer::New(width * height * GetPixelSize(format));
