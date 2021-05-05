@@ -121,10 +121,11 @@ SwapchainImpl::SwapchainImpl(const Window &window, const SwapchainProperties &pr
 
     CoreFunctionAssert(vkCreateSwapchainKHR(GPU::Get().Handle(), &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: SwapchainImpl: Can't create a swapchain");
 
-    if(IsDepthFormat(props.DepthFormat))
+    if(IsDepthFormat(props.DepthFormat)){
         m_DepthAttachment.New(props.DepthFormat, GPUTexture::DepthStencilOptimal | GPUTexture::TransferDst, m_Size.x, m_Size.y);
 
-    DMAImpl::ChangeGPUTextureLayoutImpl(m_DepthAttachment, GPUTexture::Layout::DepthStencilAttachmentOptimal);
+        DMAImpl::ChangeGPUTextureLayoutImpl(m_DepthAttachment, GPUTexture::Layout::DepthStencilAttachmentOptimal);
+    }
 
     InitializeFramebuffers(m_Format);
 
