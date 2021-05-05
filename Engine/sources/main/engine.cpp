@@ -16,7 +16,7 @@
 
 // should be defined at client side
 extern StraitX::Application *StraitXMain();
-extern StraitX::Result StraitXExit(StraitX::Application *);
+extern void StraitXExit(StraitX::Application *);
 
 namespace StraitX{
 
@@ -101,14 +101,14 @@ Result Engine::Finalize(){
 
     if(m_ErrorApplication==Result::Success){
         LogTrace("Application::OnFinalize: Begin");
-        m_ErrorApplication = m_Application->OnFinalize();
-        Log("Application::OnFinalize",m_ErrorApplication);
+        m_Application->OnFinalize();
+        LogTrace("Application::OnFinalize: End");
     }
 
     if(m_ErrorMX == Result::Success){
         LogTrace("StraitXExit: Begin");
-        m_ErrorMX = StraitXExit(m_Application);
-        Log("StraitXExit",m_ErrorMX);
+        StraitXExit(m_Application);
+        LogTrace("StraitXExit: End");
     }
 
     if(m_Window == Result::Success){

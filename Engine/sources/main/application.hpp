@@ -25,13 +25,13 @@ public:
 
     virtual ~Application() = default;
 
-    virtual Result OnInitialize(){return Result::Success;};
+    virtual Result OnInitialize();
     // return true if event was handled
-    virtual bool OnEvent(const Event &event){return false;};
+    virtual bool OnEvent(const Event &event);
 
-    virtual Result OnFinalize(){return Result::Success;};
+    virtual void OnFinalize();
 
-    virtual void OnUpdate(float dt){};
+    virtual void OnUpdate(float dt);
 
     void Stop();
 
