@@ -13,7 +13,7 @@ constexpr size_t MaxFramebuffers = 3;
 struct SwapchainProperties{
     u32 FramebuffersCount = 2;
     SamplePoints FramebufferSamples = SamplePoints::Samples_1;
-    TextureFormat DepthFormat = TextureFormat::Depth32;
+    TextureFormat DepthFormat = TextureFormat::Unknown;
 };
 
 class GraphicsAPILoader;
