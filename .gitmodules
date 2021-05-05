@@ -7,3 +7,6 @@
 [submodule "Engine/thirdparty/stb_image"]
 	path = Engine/thirdparty/stb_image
 	url = https://github.com/E1Hephaestus/stb_image
+[submodule "Engine/thirdparty/glsl2spv"]
+	path = Engine/thirdparty/glsl2spv
+	url = https://github.com/E1Hephaestus/glsl2spv

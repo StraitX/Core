@@ -1,3 +1,4 @@
+#include "glsl2spv.hpp"
 #include "core/assert.hpp"
 #include "platform/memory.hpp"
 #include "graphics/vulkan/shader_impl.hpp"
@@ -6,11 +7,34 @@
 namespace StraitX{
 namespace Vk{
 
+static glsl2spv::ShaderType GetGLSL2SPVShaderType(Shader::Type type){
+    switch (type) {
+
+    case Shader::Type::Vertex: return glsl2spv::ShaderType::Vertex;
+    case Shader::Type::Geometry: return glsl2spv::ShaderType::Geometry;
+    case Shader::Type::TessellationControl: return glsl2spv::ShaderType::TesselationControl;
+    case Shader::Type::TessellationEvaluation: return glsl2spv::ShaderType::TesselationEvaluation;
+    case Shader::Type::Fragment: return glsl2spv::ShaderType::Fragment;
+    case Shader::Type::Compute: return glsl2spv::ShaderType::Compute;
+    }
+    Assert(false);
+    return glsl2spv::ShaderType(0);
+}
+
 ShaderImpl::ShaderImpl(Type type, Lang lang, const u8 *sources, u32 length):
     Shader(type, lang)
 {
-    if(lang != Shader::Lang::SPIRV || !sources || !length)return;
-    
+    if(!sources || !length)return;
+    if(lang != Shader::Lang::SPIRV && lang != Shader::Lang::GLSL)return;
+
+    std::vector<std::uint32_t> binary;
+    if(lang == Shader::Lang::GLSL){
+        if(!glsl2spv::CompileGLSL2SPV((const char *)sources, length, GetGLSL2SPVShaderType(type), binary))return;
+
+        sources = (u8*)binary.data();
+        length = binary.size() * sizeof(u32);
+    }
+
     VkShaderModuleCreateInfo info;
     info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     info.pNext = nullptr;

@@ -220,17 +220,20 @@ endif()
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/glad)
 add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/stb_image)
+add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/glsl2spv)
 
 set(INCLUDES
     ${SOURCES_DIR}
     ${THIRDPARTY_DIR}/glad/include
     ${THIRDPARTY_DIR}/vulkan-sdk/include
     ${THIRDPARTY_DIR}/stb_image
+    ${THIRDPARTY_DIR}/glsl2spv
 )
 
 set(LIBS_ENGINE
     glad
     stb_image
+    glsl2spv
 )
 
 add_library(StraitX STATIC 
