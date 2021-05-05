@@ -120,7 +120,7 @@ Renderer2D::~Renderer2D(){
     GraphicsPipeline::Delete(m_Pipeline);
 }
 
-void Renderer2D::BeginScene(const Framebuffer *framebuffer, Vector2i cam_pos){
+void Renderer2D::BeginScene(const Framebuffer *framebuffer, Vector2i camera_position){
     m_CurrentFramebuffer = framebuffer;
     m_CameraPosition = cam_pos;
 

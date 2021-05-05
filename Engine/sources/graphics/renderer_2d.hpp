@@ -69,7 +69,7 @@ public:
 
     ~Renderer2D();
 
-    void BeginScene(const Framebuffer *framebuffer, Vector2i cam_position);
+    void BeginScene(const Framebuffer *framebuffer, Vector2i camera_position = {});
 
     void EndScene();
 
