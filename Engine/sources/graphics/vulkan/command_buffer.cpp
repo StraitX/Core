@@ -87,7 +87,7 @@ void CommandBuffer::CmdMemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFl
 
 void CommandBuffer::CmdImageBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, 
                                      VkAccessFlags src_acces, VkAccessFlags dst_access, 
-                                     VkImageLayout old, VkImageLayout next, VkImage img)const
+                                     VkImageLayout old, VkImageLayout next, VkImage img, VkImageAspectFlags aspect)const
 {
     VkImageMemoryBarrier barrier;
     barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -99,7 +99,7 @@ void CommandBuffer::CmdImageBarrier(VkPipelineStageFlags src, VkPipelineStageFla
     barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     barrier.image = img;
-    barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    barrier.subresourceRange.aspectMask = aspect;
     barrier.subresourceRange.baseArrayLayer = 0;
     barrier.subresourceRange.baseMipLevel = 0;
     barrier.subresourceRange.levelCount = 1;

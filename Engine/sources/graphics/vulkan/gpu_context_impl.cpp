@@ -185,6 +185,36 @@ void GPUContextImpl::ClearFramebufferColorAttachmentsImpl(const Framebuffer *fb,
     }
 }
 
+void GPUContextImpl::ClearFramebufferDepthAttachmentsImpl(const Framebuffer *fb, float value){
+    auto fb_impl = static_cast<const Vk::FramebufferImpl*>(fb);
+    CoreAssert(m_Framebuffer != fb_impl, "Vk: GPUContextImpl: can't clear framebuffer which is being used in current render pass");
+
+    VkClearDepthStencilValue depth_value;
+    depth_value.depth = value;
+    depth_value.stencil = 0;
+
+    VkImageSubresourceRange issr;
+    issr.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+    issr.baseArrayLayer = 0;
+    issr.baseMipLevel = 0;
+    issr.levelCount = 1;
+    issr.layerCount = 1;
+
+    for(auto &att: fb_impl->Attachments()){
+        if(IsDepthFormat(att->GetFormat())){
+
+            auto layout = GPUTextureImpl::s_LayoutTable[(size_t)att->GetLayout()];
+            constexpr auto clear_layout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+
+            m_CmdBuffer.CmdImageBarrier(VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, layout, clear_layout, (VkImage)att->Handle().U64, VK_IMAGE_ASPECT_DEPTH_BIT);
+
+            vkCmdClearDepthStencilImage(m_CmdBuffer, (VkImage)att->Handle().U64, clear_layout, &depth_value, 1, &issr);
+
+            m_CmdBuffer.CmdImageBarrier(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_READ_BIT, clear_layout, layout, (VkImage)att->Handle().U64, VK_IMAGE_ASPECT_DEPTH_BIT);
+        }
+    }
+}
+
 void GPUContextImpl::SwapFramebuffersImpl(Swapchain *swapchain){
     auto *swapchain_impl = static_cast<Vk::SwapchainImpl*>(swapchain);
     auto semaphores = NextPair();

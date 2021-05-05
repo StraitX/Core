@@ -221,14 +221,13 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     multisampling_state.alphaToOneEnable = VK_FALSE; 
 
     //===DepthStencilState===
-    // TODO disabled for now
     VkPipelineDepthStencilStateCreateInfo depth_stencil_info;
     depth_stencil_info.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
     depth_stencil_info.pNext = nullptr;
     depth_stencil_info.flags = 0;
     depth_stencil_info.depthTestEnable = VK_TRUE;
     depth_stencil_info.depthWriteEnable = VK_TRUE;
-    depth_stencil_info.depthCompareOp = VK_COMPARE_OP_LESS;
+    depth_stencil_info.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
     depth_stencil_info.stencilTestEnable = VK_FALSE;
     depth_stencil_info.front = {};
     depth_stencil_info.back = {};

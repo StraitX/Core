@@ -29,6 +29,7 @@ private:
     u32 m_ImagesCount = 0;
 
     Vk::RenderPassImpl m_FramebufferPass;
+    GPUTexture m_DepthAttachment;
     PushArray<GPUTexture, MaxFramebuffers> m_Images;
     PushArray<Vk::FramebufferImpl, MaxFramebuffers> m_Framebuffers;
 

@@ -1,5 +1,6 @@
 #include <new>
 #include "platform/memory.hpp"
+#include "platform/opengl.hpp"
 #include "graphics/opengl/swapchain_impl.hpp"
 
 namespace StraitX{
@@ -7,25 +8,42 @@ namespace GL{
 
 static GPUTexture *FakeFramebufferTexturePtr = nullptr;
 
-static AttachmentDescription TempAttachment = {
-    GPUTexture::Layout::PresentSrcOptimal,
-    GPUTexture::Layout::PresentSrcOptimal,
-    GPUTexture::Layout::ColorAttachmentOptimal,
-    TextureFormat::Unknown,
-    SamplePoints::Samples_1
+static AttachmentDescription SwapchainAttachments[] = {
+    {
+        GPUTexture::Layout::PresentSrcOptimal,
+        GPUTexture::Layout::PresentSrcOptimal,
+        GPUTexture::Layout::ColorAttachmentOptimal,
+        TextureFormat::Unknown,
+        SamplePoints::Samples_1,
+    },
+    {
+        GPUTexture::Layout::DepthStencilAttachmentOptimal,
+        GPUTexture::Layout::DepthStencilAttachmentOptimal,
+        GPUTexture::Layout::DepthStencilAttachmentOptimal,
+        TextureFormat::Unknown,
+        SamplePoints::Samples_1,
+    }
 };
 
 static RenderPassProperties ToFramebufferProperties(const SwapchainProperties &props){
     //XXX not thread-safe
-    TempAttachment.Format = TextureFormat::RGBA8;
-    TempAttachment.Samples = props.FramebufferSamples; 
-    return {{&TempAttachment, 1}};
+    SwapchainAttachments[0].Format = TextureFormat::BGRA8;
+    SwapchainAttachments[0].Samples = props.FramebufferSamples; 
+
+    SwapchainAttachments[1].Format = props.DepthFormat;
+    return {{SwapchainAttachments, size_t(1 + IsDepthFormat(props.DepthFormat))}};
 }
 
 SwapchainImpl::SwapchainImpl(const Window &window, const SwapchainProperties &props):
+    Swapchain(props),
     m_FramebufferPass(ToFramebufferProperties(props)),
     m_DefaultFramebuffer(0, &m_FramebufferPass, { {window.Size().width, window.Size().height}, {&FakeFramebufferTexturePtr, 1} })
 {
+    if(IsDepthFormat(props.DepthFormat)){
+        glEnable(GL_DEPTH_TEST); 
+        glDepthFunc(GL_LEQUAL);
+    }
+
     // Yes, OpenGL, Here we go
     (void)window;
     (void)props;

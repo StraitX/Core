@@ -72,11 +72,19 @@ void GPUContextImpl::DrawIndexedImpl(u32 indices_count){
 }
 
 void GPUContextImpl::ClearFramebufferColorAttachmentsImpl(const Framebuffer *framebuffer, const Vector4f &color){
-    CoreAssert(m_Framebuffer != framebuffer, "GL: GPUContextImpl: can't clear framebuffer which is being used in current render pass");
     static_cast<const GL::FramebufferImpl*>(framebuffer)->Bind();
     {
         glClearColor(color.x, color.y, color.z, color.w);
         glClear(GL_COLOR_BUFFER_BIT);
+    }
+    if (m_Framebuffer)m_Framebuffer->Bind();
+}
+
+void GPUContextImpl::ClearFramebufferDepthAttachmentsImpl(const Framebuffer *framebuffer, float value){
+    static_cast<const GL::FramebufferImpl*>(framebuffer)->Bind();
+    {
+        glClearDepth(value);
+        glClear(GL_DEPTH_BUFFER_BIT);
     }
     if (m_Framebuffer)m_Framebuffer->Bind();
 }

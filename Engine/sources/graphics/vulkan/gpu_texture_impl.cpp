@@ -11,7 +11,8 @@ VkFormat GPUTextureImpl::s_FormatTable[] = {
     VK_FORMAT_UNDEFINED,
     VK_FORMAT_R8G8B8A8_UNORM,
     VK_FORMAT_D24_UNORM_S8_UINT,
-    VK_FORMAT_B8G8R8A8_UNORM
+    VK_FORMAT_B8G8R8A8_UNORM,
+    VK_FORMAT_D32_SFLOAT
 };
 
 VkImageLayout GPUTextureImpl::s_LayoutTable[] = {

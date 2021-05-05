@@ -13,6 +13,7 @@ constexpr size_t MaxFramebuffers = 3;
 struct SwapchainProperties{
     u32 FramebuffersCount = 2;
     SamplePoints FramebufferSamples = SamplePoints::Samples_1;
+    TextureFormat DepthFormat = TextureFormat::Depth32;
 };
 
 class GraphicsAPILoader;
@@ -31,6 +32,8 @@ private:
 
     static VTable s_VTable; 
 public:
+
+    Swapchain(const SwapchainProperties &props);
 
     virtual ~Swapchain() = default;
 

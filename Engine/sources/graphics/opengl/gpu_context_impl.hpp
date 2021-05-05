@@ -41,6 +41,8 @@ public:
 
     virtual void ClearFramebufferColorAttachmentsImpl(const Framebuffer *framebuffer, const Vector4f &color)override;
 
+    virtual void ClearFramebufferDepthAttachmentsImpl(const Framebuffer *fb, float value)override;
+
     virtual void SwapFramebuffersImpl(Swapchain *swapchain)override;
 
     static GPUContext *NewImpl();

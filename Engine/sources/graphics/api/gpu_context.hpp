@@ -82,6 +82,8 @@ public:
 
     void ClearFramebufferColorAttachments(const Framebuffer *framebuffer, const Vector4f &color = Vector4f(0, 0, 0, 1.f));
 
+    void ClearFramebufferDepthAttachments(const Framebuffer *framebuffer, float value = 1.f);
+
     void SwapFramebuffers(Swapchain *swapchain);
 
 protected:
@@ -110,6 +112,8 @@ protected:
     virtual void DrawIndexedImpl(u32 indices_count) = 0;
 
     virtual void ClearFramebufferColorAttachmentsImpl(const Framebuffer *framebuffer, const Vector4f &color) = 0;
+
+    virtual void ClearFramebufferDepthAttachmentsImpl(const Framebuffer *framebuffer, float value) = 0;
 
     virtual void SwapFramebuffersImpl(Swapchain *swapchain) = 0;
 public:
@@ -242,6 +246,14 @@ sx_inline void GPUContext::ClearFramebufferColorAttachments(const Framebuffer *f
     CoreAssert(framebuffer, "Framebuffer* should not be nullptr");
 #endif
     ClearFramebufferColorAttachmentsImpl(framebuffer, color);
+}
+
+sx_inline void GPUContext::ClearFramebufferDepthAttachments(const Framebuffer *framebuffer, float value){
+#ifdef SX_DEBUG
+    CoreAssert(m_State != State::InPass, "you can't clear framebuffer attachments inside of the render pass");
+    CoreAssert(framebuffer, "Framebuffer* should not be nullptr");
+#endif
+    ClearFramebufferDepthAttachmentsImpl(framebuffer, value);
 }
 
 sx_inline void GPUContext::SwapFramebuffers(Swapchain *swapchain){

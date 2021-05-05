@@ -7,6 +7,7 @@
 #include "graphics/vulkan/gpu_texture_impl.hpp"
 #include "graphics/vulkan/gpu_context_impl.hpp"
 #include "graphics/vulkan/gpu.hpp"
+#include "graphics/vulkan/dma_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -32,23 +33,35 @@ static bool IsSupported(VkPhysicalDevice dev, VkSurfaceKHR surface, VkFormat for
     return support;
 }
 
-static AttachmentDescription TempAttachment = {
-    GPUTexture::Layout::PresentSrcOptimal,
-    GPUTexture::Layout::PresentSrcOptimal,
-    GPUTexture::Layout::ColorAttachmentOptimal,
-    TextureFormat::Unknown,
-    SamplePoints::Samples_1
+static AttachmentDescription SwapchainAttachments[] = {
+    {
+        GPUTexture::Layout::PresentSrcOptimal,
+        GPUTexture::Layout::PresentSrcOptimal,
+        GPUTexture::Layout::ColorAttachmentOptimal,
+        TextureFormat::Unknown,
+        SamplePoints::Samples_1,
+    },
+    {
+        GPUTexture::Layout::DepthStencilAttachmentOptimal,
+        GPUTexture::Layout::DepthStencilAttachmentOptimal,
+        GPUTexture::Layout::DepthStencilAttachmentOptimal,
+        TextureFormat::Unknown,
+        SamplePoints::Samples_1,
+    }
 };
 
 static RenderPassProperties ToFramebufferProperties(const SwapchainProperties &props){
     //XXX not thread-safe
-    TempAttachment.Format = TextureFormat::BGRA8;
-    TempAttachment.Samples = props.FramebufferSamples; 
-    return {{&TempAttachment, 1}};
+    SwapchainAttachments[0].Format = TextureFormat::BGRA8;
+    SwapchainAttachments[0].Samples = props.FramebufferSamples; 
+
+    SwapchainAttachments[1].Format = props.DepthFormat;
+    return {{SwapchainAttachments, size_t(1 + IsDepthFormat(props.DepthFormat))}};
 }
 
 
 SwapchainImpl::SwapchainImpl(const Window &window, const SwapchainProperties &props):
+    Swapchain(props),
     m_Colorspace(DesiredColorSpace),
     m_ImagesCount(props.FramebuffersCount),
     m_FramebufferPass(ToFramebufferProperties(props)),
@@ -108,6 +121,11 @@ SwapchainImpl::SwapchainImpl(const Window &window, const SwapchainProperties &pr
 
     CoreFunctionAssert(vkCreateSwapchainKHR(GPU::Get().Handle(), &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: SwapchainImpl: Can't create a swapchain");
 
+    if(IsDepthFormat(props.DepthFormat))
+        m_DepthAttachment.New(props.DepthFormat, GPUTexture::DepthStencilOptimal | GPUTexture::TransferDst, m_Size.x, m_Size.y);
+
+    DMAImpl::ChangeGPUTextureLayoutImpl(m_DepthAttachment, GPUTexture::Layout::DepthStencilAttachmentOptimal);
+
     InitializeFramebuffers(m_Format);
 
     // First Acquire is synched
@@ -154,11 +172,12 @@ void SwapchainImpl::InitializeFramebuffers(VkFormat format){
         GPUTextureImpl(m_Images.Emplace()).CreateWithImage(images[i], GPUTexture::Layout::PresentSrcOptimal, TextureFormat::BGRA8, GPUTexture::UsageBits::Sampled, m_Size.x, m_Size.y);
 
         const GPUTexture *attachments[] = {
-            &m_Images[i]
+            &m_Images[i],
+            &m_DepthAttachment
         };
         FramebufferProperties props;
         props.Size        = m_Size;
-        props.Attachments = {attachments, lengthof(attachments)};
+        props.Attachments = {attachments, size_t(1 + !m_DepthAttachment.IsEmpty())};
 
         m_Framebuffers.Emplace(&m_FramebufferPass, props);
     }

@@ -13,7 +13,8 @@ enum class TextureFormat : u8{
     Unknown = 0,
     RGBA8,
     Depth24Stencil8,
-    BGRA8
+    BGRA8,
+    Depth32
 };
 
 size_t GetPixelSize(PixelFormat format);

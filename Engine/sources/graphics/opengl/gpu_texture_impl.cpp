@@ -10,18 +10,21 @@ GLint InternalFormatTable[]={
     0,
     GL_RGBA8,
     GL_DEPTH_STENCIL,
-    GL_BGRA
+    GL_BGRA,
+    GL_DEPTH_STENCIL
 };
 
 GLenum GPUTextureImpl::s_FormatTable[] = {
     0,
     GL_RGBA,
     GL_DEPTH_STENCIL,
-    GL_BGRA
+    GL_BGRA,
+    GL_DEPTH_STENCIL // XXX wrong
 };
 
 GLenum GPUTextureImpl::s_TypeTable[] = {
     0,
+    GL_UNSIGNED_BYTE,
     GL_UNSIGNED_BYTE,
     GL_UNSIGNED_BYTE,
     GL_UNSIGNED_BYTE

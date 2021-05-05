@@ -79,7 +79,8 @@ void DMAImpl::ChangeLayout(GPUTexture &texture, GPUTexture::Layout layout){
             VK_ACCESS_MEMORY_READ_BIT, 
             GPUTextureImpl::s_LayoutTable[(size_t)texture.GetLayout()], 
             GPUTextureImpl::s_LayoutTable[(size_t)layout], 
-            (VkImage)texture.Handle().U64
+            (VkImage)texture.Handle().U64,
+            (IsColorFormat(texture.GetFormat()) ? VK_IMAGE_ASPECT_COLOR_BIT : VK_IMAGE_ASPECT_DEPTH_BIT)
         );
     }
     m_CmdBuffer.End();

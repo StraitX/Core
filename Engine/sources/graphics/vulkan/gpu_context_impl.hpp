@@ -52,6 +52,8 @@ public:
 
     virtual void ClearFramebufferColorAttachmentsImpl(const Framebuffer *fb, const Vector4f &color)override;
 
+    virtual void ClearFramebufferDepthAttachmentsImpl(const Framebuffer *fb, float value)override;
+
     virtual void SwapFramebuffersImpl(Swapchain *swapchain)override;
 
     Pair<VkSemaphore, VkSemaphore> NextPair();

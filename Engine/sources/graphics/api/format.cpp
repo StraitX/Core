@@ -23,13 +23,15 @@ size_t GetPixelSize(TextureFormat format){
 }
 
 bool IsDepthFormat(TextureFormat format){
-    if(format == TextureFormat::Depth24Stencil8)
+    if(format == TextureFormat::Depth24Stencil8 || format == TextureFormat::Depth32)
         return true;
     return false;
 }
 
 bool IsColorFormat(TextureFormat format){
-    return !IsDepthFormat(format);
+    if(format == TextureFormat::RGBA8 || format == TextureFormat::BGRA8)
+        return true;
+    return false;
 }
 
 TextureFormat ToTextureFormat(PixelFormat format){
