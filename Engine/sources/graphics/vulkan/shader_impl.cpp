@@ -12,8 +12,8 @@ static glsl2spv::ShaderType GetGLSL2SPVShaderType(Shader::Type type){
 
     case Shader::Type::Vertex: return glsl2spv::ShaderType::Vertex;
     case Shader::Type::Geometry: return glsl2spv::ShaderType::Geometry;
-    case Shader::Type::TessellationControl: return glsl2spv::ShaderType::TesselationControl;
-    case Shader::Type::TessellationEvaluation: return glsl2spv::ShaderType::TesselationEvaluation;
+    case Shader::Type::TessellationControl: return glsl2spv::ShaderType::TessellationControl;
+    case Shader::Type::TessellationEvaluation: return glsl2spv::ShaderType::TessellationEvaluation;
     case Shader::Type::Fragment: return glsl2spv::ShaderType::Fragment;
     case Shader::Type::Compute: return glsl2spv::ShaderType::Compute;
     }
