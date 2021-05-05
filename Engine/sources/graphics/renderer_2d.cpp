@@ -122,7 +122,7 @@ Renderer2D::~Renderer2D(){
 
 void Renderer2D::BeginScene(const Framebuffer *framebuffer, Vector2i camera_position){
     m_CurrentFramebuffer = framebuffer;
-    m_CameraPosition = cam_pos;
+    m_CameraPosition = camera_position;
 
     m_DrawCallsCount = 0;
     m_QuadsCount = 0;
