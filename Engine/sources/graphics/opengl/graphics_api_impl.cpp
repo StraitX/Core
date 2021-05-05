@@ -16,7 +16,7 @@ constexpr Version OpenGLVersion = {4, 6, 0};
 
 
 GPUVendor ExtractGPUVendor(const char *string){
-    auto length = String::Length(string);
+    auto length = String::Length(string) + 1;
     char *str = (char*)alloca(sizeof(char)*length);
     Memory::Copy(string, str, length);
 

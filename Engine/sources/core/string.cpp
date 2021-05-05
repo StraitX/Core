@@ -17,7 +17,7 @@ void String::ToLowerCase(char *string){
 }
 
 size_t String::Length(const char *string){
-    size_t length = 1;
+    size_t length = 0;
     while(*string++){
         ++length;
     }
