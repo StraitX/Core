@@ -65,7 +65,7 @@ constexpr Matrix4<T> Matrix4<T>::GetTransposed(){
 
 template <typename T>
 constexpr Matrix4<T> operator*(const Matrix4<T> &l, const Matrix4<T> &r){
-    Matrix4<T> res;
+    Matrix4<T> res{T{}};
     for(size_t i = 0; i<4; i++)
         for(size_t j = 0; j<4; j++)
             res[i][j] = l[i][0] * r[0][j] + l[i][1] * r[1][j] + l[i][2] * r[2][j] + l[i][3] * r[3][j];    
