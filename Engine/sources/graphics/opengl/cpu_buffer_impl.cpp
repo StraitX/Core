@@ -5,9 +5,12 @@
 namespace StraitX{
 namespace GL{
 
+static u64 s_CPUBufferId = 0;
+
 void CPUBufferImpl::NewImpl(CPUBuffer &buffer, u32 size){
     buffer.m_Size = size;
     buffer.m_Pointer = Memory::Alloc(size);
+    buffer.m_Handle.U64 = ++s_CPUBufferId;
     CoreAssert(buffer.m_Pointer, "GL: CPUBufferImpl: can't allocate memory");
 }
 
