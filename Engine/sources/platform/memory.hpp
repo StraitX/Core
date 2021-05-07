@@ -1,6 +1,7 @@
 #ifndef STRAITX_MEMORY_HPP
 #define STRAITX_MEMORY_HPP
 
+#include <new>
 #include "platform/types.hpp"
 #include "platform/platform_detection.hpp"
 
@@ -25,6 +26,16 @@ public:
     static void Set(void *memory, u8 byte, size_t size);
 
     static void Copy(const void *source, void *destination, size_t size);
+
+    static u64 Allocated();
+
+    static u64 Freed();
+
+    static u64 InUse();
+
+    static u64 AllocCalls();
+
+    static u64 FreeCalls();
 
 };
 

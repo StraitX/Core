@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 02)
-set(VERSION_PATCH 00)
+set(VERSION_PATCH 01)
 
 project(
     StraitXEngine 
