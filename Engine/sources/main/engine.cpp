@@ -20,6 +20,20 @@ extern void StraitXExit(StraitX::Application *);
 
 namespace StraitX{
 
+Engine *Engine::s_Instance = nullptr;
+
+Engine::Engine(){
+    if(!s_Instance)
+        s_Instance = this;
+#ifdef SX_DEBUG
+    else CoreAssert(false, "Engine: created twice");
+#endif
+}
+
+Engine::~Engine(){
+    if(s_Instance == this)
+        s_Instance = nullptr;
+}
 
 int Engine::Run(){
     LogTrace("Engine::Initialize: Begin");
@@ -141,6 +155,14 @@ void Engine::MainLoop(){
         frametime.Restart();
 
         m_Application->OnUpdate(dt);
+
+        m_AllocCalls = Memory::AllocCalls();
+        m_FrameAllocCalls = m_AllocCalls - m_PrevAllocCalls;
+        m_PrevAllocCalls = m_AllocCalls;
+
+        m_FreeCalls = Memory::FreeCalls();
+        m_FrameFreeCalls = m_FreeCalls - m_PrevFreeCalls;
+        m_PrevFreeCalls = m_FreeCalls;
 
     }
 }
