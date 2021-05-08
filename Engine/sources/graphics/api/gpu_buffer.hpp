@@ -43,9 +43,9 @@ public:
 private:
     static VTable s_VTable;
 
-    u32 m_Size = 0;
     GPUResourceHandle m_Handle = {};
     GPUResourceHandle m_BackingMemory = {};
+    u32 m_Size = 0;
     UsageType m_Usage = {};
     GPUMemoryType m_MemoryType = {};
 

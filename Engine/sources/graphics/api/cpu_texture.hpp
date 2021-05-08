@@ -9,9 +9,9 @@ namespace StraitX{
 
 class CPUTexture: private CPUBuffer{
 private:
-    TextureFormat m_Format = {};
     u32 m_Width = 0;
     u32 m_Height = 0;
+    TextureFormat m_Format = {};
 public:
     CPUTexture() = default;
 
