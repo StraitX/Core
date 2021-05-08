@@ -27,7 +27,7 @@ GraphicsAPIVtable OpenGLVTable = {
     {&GL::RenderPassImpl::NewImpl, &GL::RenderPassImpl::DeleteImpl},
     {&GL::GraphicsPipelineImpl::NewImpl, &GL::GraphicsPipelineImpl::DeleteImpl},
     {&GL::FramebufferImpl::NewImpl, &GL::FramebufferImpl::DeleteImpl},
-    {&GL::DMAImpl::CopyCPU2GPUBufferImpl, &GL::DMAImpl::CopyCPU2GPUTextureImpl, &GL::DMAImpl::ChangeGPUTextureLayoutImpl}
+    {&GL::DMAImpl::CopyMem2GPUBufferImpl, &GL::DMAImpl::CopyCPU2GPUBufferImpl, &GL::DMAImpl::CopyCPU2GPUTextureImpl, &GL::DMAImpl::ChangeGPUTextureLayoutImpl}
 };
 
 }//namespace StraitX::

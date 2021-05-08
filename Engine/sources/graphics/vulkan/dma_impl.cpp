@@ -17,32 +17,47 @@ void DMAImpl::Finalize(){
     DMAImpl::Get().~DMAImpl();
 }
 
-void DMAImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
-    if(GPU::Get().IsMappable(ToVkMemoryType(dst.MemoryType()))){
-        auto memory = reinterpret_cast<VkDeviceMemory>(dst.Memory().U64);
+void DMAImpl::MemoryMapCopy(const void *src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
+    auto memory = reinterpret_cast<VkDeviceMemory>(dst.Memory().U64);
 
-        void *pointer;
-        vkMapMemory(GPU::Get().Handle(), memory, 0, dst.Size(), 0, &pointer);
-        {
-            Memory::Copy((u8*)src.Pointer() + src_offset, (u8*)pointer + dst_offset, size);
-        }
-        vkUnmapMemory(GPU::Get().Handle(), memory);
-    }else{
-        m_CmdBuffer.Begin();
-        {
-            m_CmdBuffer.CmdBufferCopy(
-                (VkBuffer)src.Handle().U64, 
-                (VkBuffer)dst.Handle().U64, 
-                size, 
-                src_offset, 
-                dst_offset
-            );
-        }
-        m_CmdBuffer.End();
-
-        m_CmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, m_OpFence.Handle);
-        m_OpFence.WaitFor();
+    void *pointer;
+    vkMapMemory(GPU::Get().Handle(), memory, 0, dst.Size(), 0, &pointer);
+    {
+        Memory::Copy((u8*)src + src_offset, (u8*)pointer + dst_offset, size);
     }
+    vkUnmapMemory(GPU::Get().Handle(), memory);
+}
+
+void DMAImpl::CmdCopy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
+    m_CmdBuffer.Begin();
+    {
+        m_CmdBuffer.CmdBufferCopy(
+            (VkBuffer)src.Handle().U64, 
+            (VkBuffer)dst.Handle().U64, 
+            size, 
+            src_offset, 
+            dst_offset
+        );
+    }
+    m_CmdBuffer.End();
+
+    m_CmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, m_OpFence.Handle);
+    m_OpFence.WaitFor();
+}
+
+void DMAImpl::Copy(const void *src, const GPUBuffer &dst, u32 size, u32 dst_offset){
+    if(GPU::Get().IsMappable(ToVkMemoryType(dst.MemoryType())))
+        MemoryMapCopy(src, dst, size, 0, dst_offset);
+    else
+        CmdCopy(CPUBuffer(size, src), dst, size, 0, dst_offset);
+}
+
+
+void DMAImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
+    if(GPU::Get().IsMappable(ToVkMemoryType(dst.MemoryType())))
+        MemoryMapCopy(src.Pointer(), dst, size, src_offset, dst_offset);
+    else
+        CmdCopy(src, dst, size, src_offset, dst_offset);
 }
 
 void DMAImpl::Copy(const CPUTexture &src, const GPUTexture &dst){
@@ -91,6 +106,9 @@ void DMAImpl::ChangeLayout(GPUTexture &texture, GPUTexture::Layout layout){
     texture.m_Layout = layout;
 }
 
+void DMAImpl::CopyMem2GPUBufferImpl(const void *src, const GPUBuffer &dst, u32 size, u32 dst_offset){
+    DMAImpl::Get().Copy(src, dst, size, dst_offset);
+}
 
 void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
     DMAImpl::Get().Copy(src, dst, size, src_offset, dst_offset);

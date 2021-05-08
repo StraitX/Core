@@ -14,7 +14,13 @@ private:
     Vk::Fence m_OpFence;
 
     static u8 s_Instance[];
+private:
+    void MemoryMapCopy(const void *src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset);
+
+    void CmdCopy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset);
 public:
+    void Copy(const void *src, const GPUBuffer &dst, u32 size, u32 dst_offset);
+
     void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset);
 
     void Copy(const CPUTexture &src, const GPUTexture &dst);
@@ -28,6 +34,8 @@ public:
     static void Initialize();
 
     static void Finalize();
+
+    static void CopyMem2GPUBufferImpl(const void *src, const GPUBuffer &dst, u32 size, u32 dst_offset);
 
     static void CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset);
 

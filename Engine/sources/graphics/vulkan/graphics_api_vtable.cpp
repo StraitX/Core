@@ -27,7 +27,7 @@ GraphicsAPIVtable VulkanVTable = {
     {&Vk::RenderPassImpl::NewImpl, &Vk::RenderPassImpl::DeleteImpl},
     {&Vk::GraphicsPipelineImpl::NewImpl, &Vk::GraphicsPipelineImpl::DeleteImpl},
     {&Vk::FramebufferImpl::NewImpl, &Vk::FramebufferImpl::DeleteImpl},
-    {&Vk::DMAImpl::CopyCPU2GPUBufferImpl, &Vk::DMAImpl::CopyCPU2GPUTextureImpl, &Vk::DMAImpl::ChangeGPUTextureLayoutImpl}
+    {Vk::DMAImpl::CopyMem2GPUBufferImpl, &Vk::DMAImpl::CopyCPU2GPUBufferImpl, &Vk::DMAImpl::CopyCPU2GPUTextureImpl, &Vk::DMAImpl::ChangeGPUTextureLayoutImpl}
 };
 
 }//namespace StraitX::
