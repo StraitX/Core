@@ -30,7 +30,6 @@ static u64 s_FreeCalls = 0;
 constexpr size_t s_DebugSizeSpace = max(sizeof(size_t), __STDCPP_DEFAULT_NEW_ALIGNMENT__);
 
 void *Memory::Alloc(size_t size){
-    static_assert(__STDCPP_DEFAULT_NEW_ALIGNMENT__ >= sizeof(size_t), "");
 #ifdef SX_DEBUG
     s_Allocated += size;
     ++s_AllocCalls;
