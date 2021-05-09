@@ -15,7 +15,7 @@ void *operator new[](size_t size){
     return ::operator new(size);
 }
 void operator delete[](void *ptr)noexcept{
-    return operator delete(ptr);
+    return ::operator delete(ptr);
 }
 
 
@@ -34,8 +34,8 @@ void *Memory::Alloc(size_t size){
     s_Allocated += size;
     ++s_AllocCalls;
 
-    auto *memory = std::malloc(size + s_DebugSizeSpace);
-    auto sized = (size_t*)memory;
+    void *memory = std::malloc(size + s_DebugSizeSpace);
+    size_t *sized = (size_t*)memory;
     *sized = size;
 
     return (u8*)sized + s_DebugSizeSpace;
@@ -56,7 +56,23 @@ void Memory::Free(void *pointer){
 #endif
 }
 void *Memory::Realloc(void *pointer, size_t size){
+#ifdef SX_DEBUG
+    size_t *sized_to_free = (size_t*)((u8*)pointer - s_DebugSizeSpace);
+    s_Freed += *sized_to_free;
+    ++s_FreeCalls;
+
+    s_Allocated += size;
+    ++s_AllocCalls;
+
+    void *memory = std::realloc(sized_to_free, size + s_DebugSizeSpace);
+
+    size_t* sized_allocated = (size_t*)memory;
+    *sized_allocated = size;
+
+    return (u8*)sized_allocated + s_DebugSizeSpace;
+#else
     return std::realloc(pointer,size);
+#endif
 }
 
 void Memory::Set(void *memory, u8 byte, size_t size){
