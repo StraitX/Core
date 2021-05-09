@@ -12,11 +12,12 @@ void operator delete(void *ptr)noexcept{
     StraitX::Memory::Free(ptr);
 }
 void *operator new[](size_t size){
-    return StraitX::Memory::Alloc(size);
+    return ::operator new(size);
 }
 void operator delete[](void *ptr)noexcept{
-    StraitX::Memory::Free(ptr);
+    return operator delete(ptr);
 }
+
 
 namespace StraitX{
 
@@ -25,29 +26,30 @@ static u64 s_Freed = 0;
 static u64 s_AllocCalls = 0;
 static u64 s_FreeCalls = 0;
 
+#define max(a, b) (a > b ? a : b)
+constexpr size_t s_DebugSizeSpace = max(sizeof(size_t), __STDCPP_DEFAULT_NEW_ALIGNMENT__);
+
 void *Memory::Alloc(size_t size){
+    static_assert(__STDCPP_DEFAULT_NEW_ALIGNMENT__ >= sizeof(size_t), "");
 #ifdef SX_DEBUG
     s_Allocated += size;
     ++s_AllocCalls;
 
-    //Println("Allocated: %, InUse: %", size, InUse());
-    auto *memory = std::malloc(size + sizeof(size_t));
+    auto *memory = std::malloc(size + s_DebugSizeSpace);
     auto sized = (size_t*)memory;
     *sized = size;
 
-    return sized + 1;
+    return (u8*)sized + s_DebugSizeSpace;
 #else
     return std::malloc(size);
 #endif
 }
 void Memory::Free(void *pointer){
 #ifdef SX_DEBUG
-    size_t *sized = (size_t*)pointer - 1;
+    size_t *sized = (size_t*)((u8*)pointer - s_DebugSizeSpace);
 
     s_Freed += *sized;
     ++s_FreeCalls;
-
-    //Println("Freed: %, InUse: %", *sized, InUse());
 
     std::free(sized);
 #else
