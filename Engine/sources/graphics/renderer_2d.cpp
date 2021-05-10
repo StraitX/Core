@@ -185,6 +185,8 @@ void Renderer2D::BeginBatch(){
 }
 
 void Renderer2D::EndBatch(){
+    if(!m_VerticesCount || !m_IndicesCount)return;
+
     GPUContext::Get()->Begin();
     {
         GPUContext::Get()->Bind(m_Pipeline);
