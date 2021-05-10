@@ -14,6 +14,7 @@ struct ApplicationConfig{
     const char *ApplicationName = "StraitX Game";
     GraphicsAPI::API DesiredAPI = GraphicsAPI::API::OpenGL;
     SwapchainProperties SwapchainProps = {};
+    Vector2u WindowSize{1280, 720};
 };
 
 class Application{

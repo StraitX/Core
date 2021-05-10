@@ -84,7 +84,7 @@ Result Engine::Initialize(){
 
     LogTrace("Window::Open: Begin");
     {
-        m_Window = DisplayServer::Window.Open(WindowSystem::MainScreen(), 1280, 720, m_ApplicationConfig.DesiredAPI, m_ApplicationConfig.SwapchainProps);
+        m_Window = DisplayServer::Window.Open(WindowSystem::MainScreen(), m_ApplicationConfig.WindowSize.x, m_ApplicationConfig.WindowSize.y, m_ApplicationConfig.DesiredAPI, m_ApplicationConfig.SwapchainProps);
     }
     InitAssert("Window::Open", m_Window);
 
