@@ -4,6 +4,35 @@
 #include <cstdlib>
 #include <cstring>
 
+#define max(a, b) (a > b ? a : b)
+
+constexpr size_t s_DefaultAlignment =
+max(
+    max(
+        max(
+            max(alignof(char), alignof(wchar_t)),
+            max(alignof(short), alignof(int))
+        ),
+        max(
+            max(alignof(long), alignof(long long)),
+            max(alignof(void*), alignof(ptrdiff_t))
+        )
+    ),
+    max(
+        max(
+            max(alignof(clock_t), alignof(time_t)),
+            max(alignof(size_t), alignof(long double))
+        ),
+        max(
+            max(alignof(float), alignof(double)),
+            0
+        )
+    )
+);
+
+#ifndef __STDCPP_DEFAULT_NEW_ALIGNMENT__
+#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ s_DefaultAlignment
+#endif
 
 void *operator new(size_t size){
     return StraitX::Memory::Alloc(size);
@@ -26,7 +55,6 @@ static u64 s_Freed = 0;
 static u64 s_AllocCalls = 0;
 static u64 s_FreeCalls = 0;
 
-#define max(a, b) (a > b ? a : b)
 constexpr size_t s_DebugSizeSpace = max(sizeof(size_t), __STDCPP_DEFAULT_NEW_ALIGNMENT__);
 
 void *Memory::Alloc(size_t size){
