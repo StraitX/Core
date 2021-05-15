@@ -19,6 +19,9 @@ public:
 
     constexpr ArrayPtr(T_Type *pointer, T_Size size);
 
+    template<size_t T_ArraySize>
+    constexpr ArrayPtr(T_Type (&array)[T_ArraySize]);
+
     constexpr ArrayPtr(const ArrayPtr &other);
 
     template <size_t T_Capacity>
@@ -53,6 +56,14 @@ template <typename T_Type, typename T_Size>
 constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(T_Type *pointer, T_Size size):
     m_Pointer(pointer),
     m_Size(size)
+{}
+
+
+template <typename T_Type, typename T_Size>
+template<size_t T_ArraySize>
+constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(T_Type (&array)[T_ArraySize]):
+    m_Pointer(&array[0]),
+    m_Size(T_ArraySize)
 {}
 
 template <typename T_Type, typename T_Size>
