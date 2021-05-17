@@ -45,6 +45,13 @@ void main(){
     f_Color = v_Color * texture(u_Textures[int(v_TexIndex)], v_TexCoord);
 })";
 
+Vector2f Renderer2D::s_DefaultTextureCoords[4] = {
+    {0, 1},
+    {0, 0},
+    {1, 0},
+    {1, 1}
+};
+
 Renderer2D::Renderer2D(const RenderPass *pass):
     m_Pass(pass)
 {
@@ -135,7 +142,7 @@ void Renderer2D::EndScene(){
     //LogInfo("DrawCalls: %, QuadsCount: %",DrawCallsCount, QuadsCount);
 }
 
-void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color, const Texture &texture){
+void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color, const Texture &texture, Vector2f (&texture_coords)[4]){
     m_QuadsCount++;
     
     if(m_VerticesCount + 4 > MaxVerticesCount || m_IndicesCount + 6 > MaxIndicesCount || m_Textures.Size() == m_Textures.Capacity()){
@@ -155,10 +162,10 @@ void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color, 
     position.x -= m_CameraPosition.x;
     position.y -= m_CameraPosition.y;
 
-    m_Vertices[m_VerticesCount + 0] = {{position.x,          position.y,          },{0, 1},float(index),color};
-    m_Vertices[m_VerticesCount + 1] = {{position.x,          position.y + size.y, },{0, 0},float(index),color};
-    m_Vertices[m_VerticesCount + 2] = {{position.x + size.x, position.y + size.y, },{1, 0},float(index),color};
-    m_Vertices[m_VerticesCount + 3] = {{position.x + size.x, position.y,          },{1, 1},float(index),color};
+    m_Vertices[m_VerticesCount + 0] = {{position.x,          position.y,          },texture_coords[0],float(index),color};
+    m_Vertices[m_VerticesCount + 1] = {{position.x,          position.y + size.y, },texture_coords[1],float(index),color};
+    m_Vertices[m_VerticesCount + 2] = {{position.x + size.x, position.y + size.y, },texture_coords[2],float(index),color};
+    m_Vertices[m_VerticesCount + 3] = {{position.x + size.x, position.y,          },texture_coords[3],float(index),color};
 
     m_Indices[m_IndicesCount + 0] = m_VerticesCount + 0;
     m_Indices[m_IndicesCount + 1] = m_VerticesCount + 1;
@@ -175,8 +182,8 @@ void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color){
     DrawRect(position,size, color, m_WhiteTexture);
 }
 
-void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Texture &texture){
-    DrawRect(position,size, Color::White, texture);
+void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Texture &texture, Vector2f (&texture_coords)[4]){
+    DrawRect(position,size, Color::White, texture, texture_coords);
 }
 
 void Renderer2D::BeginBatch(){
