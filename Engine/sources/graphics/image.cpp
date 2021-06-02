@@ -20,7 +20,7 @@ Image::~Image(){
 }
 
 Image &Image::operator=(Image &&other){
-    CoreAssert(IsEmpty(), "Image: can't move into non-empty object");
+    SX_CORE_ASSERT(IsEmpty(), "Image: can't move into non-empty object");
     m_Data = other.m_Data;
     m_Width = other.m_Width;
     m_Height = other.m_Height;
@@ -33,7 +33,7 @@ Image &Image::operator=(Image &&other){
 }
 
 void Image::Create(u32 width, u32 height, const Color &color){
-    CoreAssert(IsEmpty(), "Image::Create: object is not empty");
+    SX_CORE_ASSERT(IsEmpty(), "Image::Create: object is not empty");
 
     m_Width = width;
     m_Height = height;
@@ -63,7 +63,7 @@ Result Image::LoadFromFile(const char *filename, PixelFormat format){
 }
 
 Result Image::LoadFromFile(File &file, PixelFormat format){
-    CoreAssert(IsEmpty(), "Image::Load: object is not empty");
+    SX_CORE_ASSERT(IsEmpty(), "Image::Load: object is not empty");
 
     if(!ImageLoader::LoadImage(file, m_Width, m_Height, format, m_Data))return Result::Failure;
 

@@ -77,14 +77,14 @@ Result GPU::Initialize(VkPhysicalDevice device){
         if(m_Queues[i] == VK_NULL_HANDLE)
             m_Queues[i] = m_Queues[i - 1];
     
-    Assert(m_Queues[QueueFamily::Graphics] != VK_NULL_HANDLE);
-    Assert(m_Queues[QueueFamily::Compute] != VK_NULL_HANDLE);
-    Assert(m_Queues[QueueFamily::Transfer] != VK_NULL_HANDLE);
+    SX_ASSERT(m_Queues[QueueFamily::Graphics] != VK_NULL_HANDLE);
+    SX_ASSERT(m_Queues[QueueFamily::Compute] != VK_NULL_HANDLE);
+    SX_ASSERT(m_Queues[QueueFamily::Transfer] != VK_NULL_HANDLE);
 
-    Assert(m_MemoryProperties.Memory[MemoryType::VRAM].Index != InvalidIndex);
-    Assert(m_MemoryProperties.Memory[MemoryType::DynamicVRAM].Index != InvalidIndex);
-    Assert(m_MemoryProperties.Memory[MemoryType::RAM].Index != InvalidIndex);
-    Assert(m_MemoryProperties.Memory[MemoryType::UncachedRAM].Index != InvalidIndex);
+    SX_ASSERT(m_MemoryProperties.Memory[MemoryType::VRAM].Index != InvalidIndex);
+    SX_ASSERT(m_MemoryProperties.Memory[MemoryType::DynamicVRAM].Index != InvalidIndex);
+    SX_ASSERT(m_MemoryProperties.Memory[MemoryType::RAM].Index != InvalidIndex);
+    SX_ASSERT(m_MemoryProperties.Memory[MemoryType::UncachedRAM].Index != InvalidIndex);
     
     return Result::Success;
 }

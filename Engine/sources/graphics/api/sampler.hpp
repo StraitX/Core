@@ -83,7 +83,7 @@ sx_inline Sampler::~Sampler(){
 }
 
 sx_inline Sampler &Sampler::operator=(Sampler &&other){
-    CoreAssert(IsEmpty(), "Sampler: Can't move into non-empty object");
+    SX_CORE_ASSERT(IsEmpty(), "Sampler: Can't move into non-empty object");
     m_Handle = other.m_Handle;
     other.m_Handle = {};
     return *this;

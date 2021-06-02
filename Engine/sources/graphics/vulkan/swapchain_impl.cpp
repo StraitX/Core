@@ -89,7 +89,7 @@ SwapchainImpl::SwapchainImpl(const Window &window, const SwapchainProperties &pr
         m_ImagesCount = capabilities.minImageCount;
     }
 
-    CoreAssert((!capabilities.maxImageCount || m_ImagesCount <= capabilities.maxImageCount), "Vk: SwapchainImpl: current system does not support this amount of framebuffers");
+    SX_CORE_ASSERT((!capabilities.maxImageCount || m_ImagesCount <= capabilities.maxImageCount), "Vk: SwapchainImpl: current system does not support this amount of framebuffers");
     
     if(!IsSupported(GPU::Get().PhysicalHandle(), m_Surface.Handle, m_Format, m_Colorspace)){
         LogError("Vk: SwapchainImpl: ColorSpace and Format are not supported");
@@ -167,7 +167,7 @@ void SwapchainImpl::InitializeFramebuffers(VkFormat format){
     auto *images = (VkImage*)alloca(images_count * sizeof(VkImage));
     vkGetSwapchainImagesKHR(GPU::Get().Handle(), m_Handle, &images_count, images);
 
-    CoreAssert(images_count <= MaxFramebuffers, "Vk: Swapchain: unsupported amount of Images");
+    SX_CORE_ASSERT(images_count <= MaxFramebuffers, "Vk: Swapchain: unsupported amount of Images");
 
     for(u32 i = 0; i<images_count; ++i){
         GPUTextureImpl(m_Images.Emplace()).CreateWithImage(images[i], GPUTexture::Layout::PresentSrcOptimal, TextureFormat::BGRA8, GPUTexture::UsageBits::Sampled, m_Size.x, m_Size.y);

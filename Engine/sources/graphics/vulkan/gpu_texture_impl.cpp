@@ -38,7 +38,7 @@ GPUTextureImpl::GPUTextureImpl(GPUTexture &texture):
 {}
 
 void GPUTextureImpl::Create(TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
-    CoreAssert(format != TextureFormat::Unknown,"GPUTexture: Can't be created with Format::Unknown");
+    SX_CORE_ASSERT(format != TextureFormat::Unknown,"GPUTexture: Can't be created with Format::Unknown");
 
     VkImageCreateInfo info;
     info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;

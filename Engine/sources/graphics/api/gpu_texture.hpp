@@ -121,7 +121,7 @@ sx_inline GPUTexture::~GPUTexture(){
 }
 
 sx_inline GPUTexture &GPUTexture::operator=(GPUTexture &&other){
-    CoreAssert(IsEmpty(), "GPUTexture: Can't move into non-empty object");
+    SX_CORE_ASSERT(IsEmpty(), "GPUTexture: Can't move into non-empty object");
     m_Handle = other.m_Handle;
     m_ViewHandle = other.m_ViewHandle;
     m_BackingMemory = other.m_BackingMemory;

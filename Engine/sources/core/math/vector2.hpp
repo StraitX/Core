@@ -75,7 +75,7 @@ constexpr Vector2<T> &Vector2<T>::operator=(Vector2<T> &&other){
 
 template <typename T>
 constexpr T &Vector2<T>::operator[](size_t index){
-    CoreAssert(index < 2,"Vector2 can not index more than 2 elements");
+    SX_CORE_ASSERT(index < 2,"Vector2 can not index more than 2 elements");
     return Data[index];
 }
 

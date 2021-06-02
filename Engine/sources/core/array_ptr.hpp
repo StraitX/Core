@@ -81,13 +81,13 @@ constexpr ArrayPtr<T_Type, T_Size>::ArrayPtr(const PushArray<T_Type,T_Capacity> 
 
 template <typename T_Type, typename T_Size>
 constexpr T_Type &ArrayPtr<T_Type, T_Size>::operator[](T_Size index){
-    CoreAssert(index < m_Size, "ArrayPtr: can't index more that ArrayPtr::Size elements");
+    SX_CORE_ASSERT(index < m_Size, "ArrayPtr: can't index more that ArrayPtr::Size elements");
     return m_Pointer[index]; 
 }
 
 template <typename T_Type, typename T_Size>
 constexpr const T_Type &ArrayPtr<T_Type, T_Size>::operator[](T_Size index)const{
-    CoreAssert(index < m_Size, "ArrayPtr: can't index more that ArrayPtr::Size elements");
+    SX_CORE_ASSERT(index < m_Size, "ArrayPtr: can't index more that ArrayPtr::Size elements");
     return m_Pointer[index]; 
 }
 

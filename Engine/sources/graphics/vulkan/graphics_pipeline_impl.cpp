@@ -63,7 +63,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     Pass(static_cast<const Vk::RenderPassImpl*>(props.Pass)),
     Scissors({{props.FramebufferViewport.x, props.FramebufferViewport.y}, {props.FramebufferViewport.Width, props.FramebufferViewport.Height}})
 {
-    CoreAssert(props.ShaderBindings.Size() <= MaxShaderBindings, "Vk: GraphicsPipelineImpl: shader bindings overflow");
+    SX_CORE_ASSERT(props.ShaderBindings.Size() <= MaxShaderBindings, "Vk: GraphicsPipelineImpl: shader bindings overflow");
     
     for(auto &shader: props.Shaders){
         if(!shader->IsValid())
@@ -141,7 +141,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
         stages[i].pName = "main";
         stages[i].stage = Vk::ShaderImpl::GetStage(shader->GetType());
 
-        CoreAssert(shader->GetType() != Shader::TessellationControl && shader->GetType() != Shader::TessellationEvaluation,"Vk: GraphicsPipelineImpl: Tessellation shaders are not supported");
+        SX_CORE_ASSERT(shader->GetType() != Shader::TessellationControl && shader->GetType() != Shader::TessellationEvaluation,"Vk: GraphicsPipelineImpl: Tessellation shaders are not supported");
     }
     //===VertexInputState===
     ArrayPtr<VkVertexInputAttributeDescription> attributes((VkVertexInputAttributeDescription*)alloca(props.VertexAttributes.Size() * sizeof(VkVertexInputAttributeDescription)),props.VertexAttributes.Size());

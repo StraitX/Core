@@ -91,7 +91,7 @@ sx_inline CPUBuffer::~CPUBuffer(){
 }
 
 sx_inline CPUBuffer &CPUBuffer::operator=(CPUBuffer &&other){
-    CoreAssert(IsEmpty(), "CPUBuffer: Can't move into non-empty object");
+    SX_CORE_ASSERT(IsEmpty(), "CPUBuffer: Can't move into non-empty object");
     m_Handle = other.m_Handle;
     m_BackingMemory = other.m_BackingMemory;
     m_Pointer = other.m_Pointer;
@@ -103,7 +103,7 @@ sx_inline CPUBuffer &CPUBuffer::operator=(CPUBuffer &&other){
 
 
 sx_inline void CPUBuffer::New(u32 size){
-    CoreAssert(IsEmpty(), "CPUBuffer: New() should be called on empty object");
+    SX_CORE_ASSERT(IsEmpty(), "CPUBuffer: New() should be called on empty object");
     s_VTable.New(*this, size);
 }
 
@@ -118,7 +118,7 @@ sx_inline void CPUBuffer::Delete(){
 }
 
 sx_inline void *CPUBuffer::Pointer()const{
-    CoreAssert(m_Pointer, "CPUBuffer: For some reason Pointer is null");
+    SX_CORE_ASSERT(m_Pointer, "CPUBuffer: For some reason Pointer is null");
     return m_Pointer;
 }
 

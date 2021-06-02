@@ -46,7 +46,7 @@ void GPUContextImpl::SubmitImpl(){
 }
 
 void GPUContextImpl::CopyImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){  
-    CoreAssert(size + dst_offset <= dst.Size(), "Vk: GPUContext: Copy: Dst Buffer overflow");
+    SX_CORE_ASSERT(size + dst_offset <= dst.Size(), "Vk: GPUContext: Copy: Dst Buffer overflow");
 
     m_CmdBuffer.CmdBufferCopy(
         (VkBuffer)src.Handle().U64, 
@@ -155,7 +155,7 @@ Pair<VkSemaphore, VkSemaphore> GPUContextImpl::NextPair(){
 
 void GPUContextImpl::ClearFramebufferColorAttachmentsImpl(const Framebuffer *fb, const Vector4f &color){
     auto fb_impl = static_cast<const Vk::FramebufferImpl*>(fb);
-    CoreAssert(m_Framebuffer != fb_impl, "Vk: GPUContextImpl: can't clear framebuffer which is being used in current render pass");
+    SX_CORE_ASSERT(m_Framebuffer != fb_impl, "Vk: GPUContextImpl: can't clear framebuffer which is being used in current render pass");
 
     VkClearColorValue value;
     value.float32[0] = color[0];
@@ -187,7 +187,7 @@ void GPUContextImpl::ClearFramebufferColorAttachmentsImpl(const Framebuffer *fb,
 
 void GPUContextImpl::ClearFramebufferDepthAttachmentsImpl(const Framebuffer *fb, float value){
     auto fb_impl = static_cast<const Vk::FramebufferImpl*>(fb);
-    CoreAssert(m_Framebuffer != fb_impl, "Vk: GPUContextImpl: can't clear framebuffer which is being used in current render pass");
+    SX_CORE_ASSERT(m_Framebuffer != fb_impl, "Vk: GPUContextImpl: can't clear framebuffer which is being used in current render pass");
 
     VkClearDepthStencilValue depth_value;
     depth_value.depth = value;

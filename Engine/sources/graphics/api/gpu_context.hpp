@@ -128,7 +128,7 @@ private:
 
 sx_inline void GPUContext::Begin(){
 #ifdef SX_DEBUG
-    Assert(m_State == State::Recordable);
+    SX_ASSERT(m_State == State::Recordable);
     m_PipelineIsBound = false;
     m_VertexBufferIsBound = false;
     m_IndexBufferIsBound = false;
@@ -139,8 +139,8 @@ sx_inline void GPUContext::Begin(){
 
 sx_inline void GPUContext::End(){
 #ifdef SX_DEBUG
-    CoreAssert(m_State != State::InPass,"You should EndRenderPass() before End() of GPUContext");
-    Assert(m_State == State::Recording);
+    SX_CORE_ASSERT(m_State != State::InPass,"You should EndRenderPass() before End() of GPUContext");
+    SX_ASSERT(m_State == State::Recording);
     m_State = State::Submitable;
 #endif
     EndImpl(); 
@@ -148,45 +148,45 @@ sx_inline void GPUContext::End(){
 
 sx_inline void GPUContext::Submit(){
 #ifdef SX_DEBUG
-    CoreAssert(m_State == State::Submitable, "Context should be in submitable state before Submit()");
+    SX_CORE_ASSERT(m_State == State::Submitable, "Context should be in submitable state before Submit()");
     m_State = State::Recordable;
 #endif
     SubmitImpl();
 }
 
 sx_inline void GPUContext::Copy(const CPUBuffer &src, const GPUBuffer &dst){
-    CoreAssert(src.Size() == dst.Size(), "GPUContext::Copy, buffers should be the same size");
+    SX_CORE_ASSERT(src.Size() == dst.Size(), "GPUContext::Copy, buffers should be the same size");
     Copy(src, dst, dst.Size());
 }
 
 sx_inline void GPUContext::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
 #ifdef SX_DEBUG
-    CoreAssert(m_State != State::InPass,"You can't Copy() inside render pass");
+    SX_CORE_ASSERT(m_State != State::InPass,"You can't Copy() inside render pass");
 
-    CoreAssert(m_State == State::Recording,"Context should be in recording state before Copy()");
-    CoreAssert(dst.Usage() & GPUBuffer::TransferDestination,"copy destination buffer should be created with GPUBuffer::TransferDestination usage flag");
+    SX_CORE_ASSERT(m_State == State::Recording,"Context should be in recording state before Copy()");
+    SX_CORE_ASSERT(dst.Usage() & GPUBuffer::TransferDestination,"copy destination buffer should be created with GPUBuffer::TransferDestination usage flag");
 #endif
     CopyImpl(src, dst, size, src_offset, dst_offset);
 }
 
 sx_inline void GPUContext::Copy(const CPUTexture &src, const GPUTexture &dst){
 #ifdef SX_DEBUG
-    CoreAssert(src.Size() == dst.Size(), "Source texture size and destination size should match");
-    CoreAssert(src.Format() == dst.GetFormat(),"src and dst should have same format");
-    CoreAssert(dst.GetUsage() & GPUTexture::TransferDst, "Texture should be created with TransferDst usage flag");
-    CoreAssert(dst.GetLayout() == GPUTexture::Layout::TransferDstOptimal || dst.GetLayout() == GPUTexture::Layout::General, "Destination texture should be in TransferDstOptimal or General layout");
+    SX_CORE_ASSERT(src.Size() == dst.Size(), "Source texture size and destination size should match");
+    SX_CORE_ASSERT(src.Format() == dst.GetFormat(),"src and dst should have same format");
+    SX_CORE_ASSERT(dst.GetUsage() & GPUTexture::TransferDst, "Texture should be created with TransferDst usage flag");
+    SX_CORE_ASSERT(dst.GetLayout() == GPUTexture::Layout::TransferDstOptimal || dst.GetLayout() == GPUTexture::Layout::General, "Destination texture should be in TransferDstOptimal or General layout");
 #endif
     CopyImpl(src,dst);
 }
 
 sx_inline void GPUContext::ChangeLayout(GPUTexture &texture, GPUTexture::Layout new_layout){
-    CoreAssert(texture.GetLayout() != new_layout, "Texture is already in new_layout");
+    SX_CORE_ASSERT(texture.GetLayout() != new_layout, "Texture is already in new_layout");
     ChangeLayoutImpl(texture, new_layout);
 }
 
 sx_inline void GPUContext::Bind(const GraphicsPipeline *pipeline){
 #ifdef SX_DEBUG
-    CoreAssert(pipeline, "GraphicsPipeline* should not be nullptr");
+    SX_CORE_ASSERT(pipeline, "GraphicsPipeline* should not be nullptr");
     m_PipelineIsBound = true;
 #endif
     BindImpl(pipeline);
@@ -194,10 +194,10 @@ sx_inline void GPUContext::Bind(const GraphicsPipeline *pipeline){
 
 sx_inline void GPUContext::BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer){
 #ifdef SX_DEBUG
-    CoreAssert(pass, "RenderPass* should not be nullptr");
-    CoreAssert(framebuffer, "Framebuffer* should not be nullptr");
+    SX_CORE_ASSERT(pass, "RenderPass* should not be nullptr");
+    SX_CORE_ASSERT(framebuffer, "Framebuffer* should not be nullptr");
 
-    CoreAssert(m_State == State::Recording, "Context should be in recording state before BeginRenderPass()");
+    SX_CORE_ASSERT(m_State == State::Recording, "Context should be in recording state before BeginRenderPass()");
     m_State = State::InPass;
 #endif
     BeginRenderPassImpl(pass, framebuffer);
@@ -205,7 +205,7 @@ sx_inline void GPUContext::BeginRenderPass(const RenderPass *pass, const Framebu
 
 sx_inline void GPUContext::EndRenderPass(){
 #ifdef SX_DEBUG
-    CoreAssert(m_State == State::InPass, "Context should be in InPass state before EndRenderPass()");
+    SX_CORE_ASSERT(m_State == State::InPass, "Context should be in InPass state before EndRenderPass()");
     m_State = State::Recording;
 #endif
     EndRenderPassImpl(); 
@@ -213,8 +213,8 @@ sx_inline void GPUContext::EndRenderPass(){
 
 sx_inline void GPUContext::BindVertexBuffer(const GPUBuffer &buffer){
 #ifdef SX_DEBUG
-    CoreAssert(m_PipelineIsBound, "You can't bind vertex buffer without GraphicsPipeline being binded");
-    CoreAssert(buffer.Usage() & GPUBuffer::VertexBuffer, "you can bind as vertex buffer only GPUBuffers created with VertexBuffer usage flag");
+    SX_CORE_ASSERT(m_PipelineIsBound, "You can't bind vertex buffer without GraphicsPipeline being binded");
+    SX_CORE_ASSERT(buffer.Usage() & GPUBuffer::VertexBuffer, "you can bind as vertex buffer only GPUBuffers created with VertexBuffer usage flag");
     m_VertexBufferIsBound = true;
 #endif
     BindVertexBufferImpl(buffer); 
@@ -222,8 +222,8 @@ sx_inline void GPUContext::BindVertexBuffer(const GPUBuffer &buffer){
 
 sx_inline void GPUContext::BindIndexBuffer(const GPUBuffer &buffer, IndicesType indices_type){
 #ifdef SX_DEBUG
-    CoreAssert(m_PipelineIsBound, "You can't bind index buffer without GraphicsPipeline being binded");
-    CoreAssert(buffer.Usage() & GPUBuffer::IndexBuffer, "you can bind as index buffer only GPUBuffers created with IndexBuffer usage flag");
+    SX_CORE_ASSERT(m_PipelineIsBound, "You can't bind index buffer without GraphicsPipeline being binded");
+    SX_CORE_ASSERT(buffer.Usage() & GPUBuffer::IndexBuffer, "you can bind as index buffer only GPUBuffers created with IndexBuffer usage flag");
     m_IndexBufferIsBound = true;
 #endif
     BindIndexBufferImpl(buffer, indices_type);
@@ -231,35 +231,35 @@ sx_inline void GPUContext::BindIndexBuffer(const GPUBuffer &buffer, IndicesType 
 
 sx_inline void GPUContext::DrawIndexed(u32 indices_count){
 #ifdef SX_DEBUG
-    CoreAssert(m_State == State::InPass, "you can't issue draw call outside of the render pass");
-    CoreAssert(indices_count, "can't draw zero indices");
+    SX_CORE_ASSERT(m_State == State::InPass, "you can't issue draw call outside of the render pass");
+    SX_CORE_ASSERT(indices_count, "can't draw zero indices");
 
-    CoreAssert(m_VertexBufferIsBound,"you can't DrawIndexed without VertexBuffer being binded");
-    CoreAssert(m_IndexBufferIsBound,"you can't DrawIndexed without IndexBuffer being binded");
+    SX_CORE_ASSERT(m_VertexBufferIsBound,"you can't DrawIndexed without VertexBuffer being binded");
+    SX_CORE_ASSERT(m_IndexBufferIsBound,"you can't DrawIndexed without IndexBuffer being binded");
 #endif
     DrawIndexedImpl(indices_count); 
 }
 
 sx_inline void GPUContext::ClearFramebufferColorAttachments(const Framebuffer *framebuffer, const Vector4f &color){
 #ifdef SX_DEBUG
-    CoreAssert(m_State != State::InPass, "you can't clear framebuffer attachments inside of the render pass");
-    CoreAssert(framebuffer, "Framebuffer* should not be nullptr");
+    SX_CORE_ASSERT(m_State != State::InPass, "you can't clear framebuffer attachments inside of the render pass");
+    SX_CORE_ASSERT(framebuffer, "Framebuffer* should not be nullptr");
 #endif
     ClearFramebufferColorAttachmentsImpl(framebuffer, color);
 }
 
 sx_inline void GPUContext::ClearFramebufferDepthAttachments(const Framebuffer *framebuffer, float value){
 #ifdef SX_DEBUG
-    CoreAssert(m_State != State::InPass, "you can't clear framebuffer attachments inside of the render pass");
-    CoreAssert(framebuffer, "Framebuffer* should not be nullptr");
+    SX_CORE_ASSERT(m_State != State::InPass, "you can't clear framebuffer attachments inside of the render pass");
+    SX_CORE_ASSERT(framebuffer, "Framebuffer* should not be nullptr");
 #endif
     ClearFramebufferDepthAttachmentsImpl(framebuffer, value);
 }
 
 sx_inline void GPUContext::SwapFramebuffers(Swapchain *swapchain){
 #ifdef SX_DEBUG
-    CoreAssert(m_State == State::Recordable, "You can't SwapBuffers during recording");
-    CoreAssert(swapchain, "Swapchain* should not be nullptr");
+    SX_CORE_ASSERT(m_State == State::Recordable, "You can't SwapBuffers during recording");
+    SX_CORE_ASSERT(swapchain, "Swapchain* should not be nullptr");
 #endif
     SwapFramebuffersImpl(swapchain); 
 }

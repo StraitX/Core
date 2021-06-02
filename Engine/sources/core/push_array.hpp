@@ -83,7 +83,7 @@ template<typename T_Type, size_t T_Capacity>
 constexpr PushArray<T_Type, T_Capacity>::PushArray(std::initializer_list<T_Type> initializer_list):
     m_Size(initializer_list.size())
 {
-    CoreAssert(initializer_list.size() <= T_Capacity, "Initializer list is bigger than PushArray capacity");
+    SX_CORE_ASSERT(initializer_list.size() <= T_Capacity, "Initializer list is bigger than PushArray capacity");
 
     size_t i = 0;
     for(auto &e: initializer_list){
@@ -136,7 +136,7 @@ typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capac
 template<typename T_Type, size_t T_Capacity>
 template<typename ...T_Args>
 constexpr T_Type &PushArray<T_Type, T_Capacity>::Emplace(T_Args&&...args){
-    CoreAssert(m_Size < T_Capacity, "PushArray: Can't add an element, array is full");
+    SX_CORE_ASSERT(m_Size < T_Capacity, "PushArray: Can't add an element, array is full");
 
     return *new(&begin()[m_Size++])T_Type(Forward<T_Args>(args)...);
 }
@@ -148,7 +148,7 @@ constexpr T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index){
 
 template<typename T_Type, size_t T_Capacity>
 constexpr const T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index)const{
-    CoreAssert(index < m_Size, "PushArray: Can't index more than PushArray::Size() elements");
+    SX_CORE_ASSERT(index < m_Size, "PushArray: Can't index more than PushArray::Size() elements");
 
     return begin()[index];
 }

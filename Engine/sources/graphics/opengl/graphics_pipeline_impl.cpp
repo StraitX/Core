@@ -69,7 +69,7 @@ static u32 ElementsCount(VertexAttribute attribute){
     case VertexAttribute::Float4:
         return 4;
     }
-    CoreAssert(false, "GL: GraphicsPipeline: Unknown Elements Count");
+    SX_CORE_ASSERT(false, "GL: GraphicsPipeline: Unknown Elements Count");
     return 0;
 }
 
@@ -91,7 +91,7 @@ static GLenum ElementType(VertexAttribute attribute){
     case VertexAttribute::Float4:
         return GL_FLOAT;
     }
-    CoreAssert(false, "GL: GraphicsPipeline: Unknown Element Type");
+    SX_CORE_ASSERT(false, "GL: GraphicsPipeline: Unknown Element Type");
     return 0;
 }
 
@@ -137,10 +137,10 @@ ArrayPtr<const char> FindUniformBindingStatement(u32 binding_index, const char *
         if(uniform){
             auto binding = String::Find(sources, statement_size, "binding");
 
-            //CoreAssert(binding, "GL: GraphicsPipeline: uniform should have an explicit binding");
+            //SX_CORE_ASSERT(binding, "GL: GraphicsPipeline: uniform should have an explicit binding");
 
             auto index = String::Ignore(binding + 7, ' ');
-            //CoreAssert(*index == '=', "GL: GraphicsPipeline: binding doesn't have index assigned");
+            //SX_CORE_ASSERT(*index == '=', "GL: GraphicsPipeline: binding doesn't have index assigned");
             index = String::Ignore(index + 1, ' ');
 
             u32 found_index = -1;
@@ -155,21 +155,21 @@ ArrayPtr<const char> FindUniformBindingStatement(u32 binding_index, const char *
 }
 
 u32 ReadArraySize(ArrayPtr<const char> statement){
-    CoreAssert(*statement.Pointer() == '[',"ReadArraySize: statement should point on array's opening bracket");
+    SX_CORE_ASSERT(*statement.Pointer() == '[',"ReadArraySize: statement should point on array's opening bracket");
 
     auto size = String::Ignore(statement.Pointer() + 1, ' ');
 
     u32 array_size = 0;
     std::sscanf(size, "%u", &array_size);
 
-    CoreAssert(String::Find(statement.Pointer(), statement.Size(), "]"), "ReadArraySize: array does not have a closing bracket");
+    SX_CORE_ASSERT(String::Find(statement.Pointer(), statement.Size(), "]"), "ReadArraySize: array does not have a closing bracket");
 
     return array_size;
 }
 
 u32 GetUniformBufferStatementArraySize(ArrayPtr<const char> statement){
-    //CoreAssert(String::Find(statement.Pointer(), statement.Size(), "{"),"GL: GraphicsPipeline: Shader Uniform Buffer block is incomplete");
-    //CoreAssert(String::Find(statement.Pointer(), statement.Size(), "}"),"GL: GraphicsPipeline: Shader Uniform Buffer block is incomplete");
+    //SX_CORE_ASSERT(String::Find(statement.Pointer(), statement.Size(), "{"),"GL: GraphicsPipeline: Shader Uniform Buffer block is incomplete");
+    //SX_CORE_ASSERT(String::Find(statement.Pointer(), statement.Size(), "}"),"GL: GraphicsPipeline: Shader Uniform Buffer block is incomplete");
 
     auto buffer_end = String::Find(statement.Pointer(), statement.Size(), "}");
 

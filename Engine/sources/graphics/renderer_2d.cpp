@@ -61,7 +61,7 @@ Renderer2D::Renderer2D(const RenderPass *pass):
     m_VertexShader = Shader::New(Shader::Type::Vertex, Shader::Lang::GLSL, (const u8*)s_VertexShaderSources, String::Length(s_VertexShaderSources));
     m_FragmentShader = Shader::New(Shader::Type::Fragment, Shader::Lang::GLSL, (const u8*)s_FragmentShaderSources, String::Length(s_FragmentShaderSources));
 
-    CoreAssert(m_VertexShader->IsValid() && m_FragmentShader->IsValid(), "Shaders are not valid");
+    SX_CORE_ASSERT(m_VertexShader->IsValid() && m_FragmentShader->IsValid(), "Shaders are not valid");
 
     Shader *shaders[2]={
         m_VertexShader,
@@ -92,7 +92,7 @@ Renderer2D::Renderer2D(const RenderPass *pass):
     gp_props.ShaderBindings = {bindings, lengthof(bindings)};
 
     m_Pipeline = GraphicsPipeline::New(gp_props);
-    CoreAssert(m_Pipeline->IsValid(), "GraphicsPipeline is not valid");
+    SX_CORE_ASSERT(m_Pipeline->IsValid(), "GraphicsPipeline is not valid");
     
     m_StagingVertex.New(sizeof(Vertex2D) * MaxVerticesCount);
     m_Vertices = (Vertex2D*)m_StagingVertex.Pointer();

@@ -90,7 +90,7 @@ sx_inline GPUBuffer::~GPUBuffer(){
 }
 
 sx_inline GPUBuffer &GPUBuffer::operator=(GPUBuffer &&other){
-    CoreAssert(IsEmpty(), "GPUBuffer: Can't move into non-empty object");
+    SX_CORE_ASSERT(IsEmpty(), "GPUBuffer: Can't move into non-empty object");
     m_Size = other.m_Size;
     m_Handle = other.m_Handle;
     m_BackingMemory = other.m_BackingMemory;
@@ -101,7 +101,7 @@ sx_inline GPUBuffer &GPUBuffer::operator=(GPUBuffer &&other){
 }
 
 sx_inline void GPUBuffer::New(u32 size, GPUMemoryType mem_type, UsageType usage){
-    CoreAssert(IsEmpty(), "GPUBuffer: New() should be called on empty object");
+    SX_CORE_ASSERT(IsEmpty(), "GPUBuffer: New() should be called on empty object");
     s_VTable.New(*this, size, mem_type, usage);
 }
 

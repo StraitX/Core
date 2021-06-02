@@ -51,7 +51,7 @@ sx_inline void DMA::Copy(const void *src, const GPUBuffer &dst){
 }
 
 sx_inline void DMA::Copy(const CPUBuffer &src, const GPUBuffer &dst){
-    CoreAssert(src.Size() == dst.Size(), "DMA::Copy, buffers should be the same size");
+    SX_CORE_ASSERT(src.Size() == dst.Size(), "DMA::Copy, buffers should be the same size");
     Copy(src, dst, dst.Size());
 }
 

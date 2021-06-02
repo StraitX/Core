@@ -33,7 +33,7 @@ GraphicsPipeline::GraphicsPipeline(const GraphicsPipelineProperties &props){
         if(shader->GetType() == Shader::Fragment)
             has_fragment = true;
     }
-    CoreAssert(has_vertex && has_fragment, "GraphicsPipeline: Is not complete");
+    SX_CORE_ASSERT(has_vertex && has_fragment, "GraphicsPipeline: Is not complete");
 #else
     (void)props;
 #endif

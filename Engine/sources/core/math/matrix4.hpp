@@ -50,7 +50,7 @@ constexpr Vector4<T> &Matrix4<T>::operator[](size_t index){
 
 template <typename T>
 constexpr const Vector4<T> &Matrix4<T>::operator[](size_t index)const{
-    CoreAssert(index < 4 && index >= 0, "Matrix4: Can't address move than 4 rows"); 
+    SX_CORE_ASSERT(index < 4 && index >= 0, "Matrix4: Can't address move than 4 rows"); 
     return Rows[index];
 }
 template <typename T>

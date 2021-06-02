@@ -17,7 +17,7 @@ static glsl2spv::ShaderType GetGLSL2SPVShaderType(Shader::Type type){
     case Shader::Type::Fragment: return glsl2spv::ShaderType::Fragment;
     case Shader::Type::Compute: return glsl2spv::ShaderType::Compute;
     }
-    Assert(false);
+    SX_ASSERT(false);
     return glsl2spv::ShaderType(0);
 }
 

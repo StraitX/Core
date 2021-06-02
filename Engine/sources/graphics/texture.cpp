@@ -23,7 +23,7 @@ Texture::Texture(Texture &&other){
 }
 
 Texture &Texture::operator=(Texture &&other){
-    CoreAssert(IsEmpty(), "Texture: Can't move into non-empty object");
+    SX_CORE_ASSERT(IsEmpty(), "Texture: Can't move into non-empty object");
     GPUTexture = Move(other.GPUTexture);
     Sampler = Move(other.Sampler);
     return *this;

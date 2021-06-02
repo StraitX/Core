@@ -31,7 +31,7 @@ GLenum GPUTextureImpl::s_TypeTable[] = {
 };
 
 void GPUTextureImpl::NewImpl(GPUTexture &texture, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
-    CoreAssert(format != TextureFormat::Unknown,"GPUTexture: Can't be created with Format::Unknown");
+    SX_CORE_ASSERT(format != TextureFormat::Unknown,"GPUTexture: Can't be created with Format::Unknown");
 
     texture.m_Width = width;
     texture.m_Height = height;

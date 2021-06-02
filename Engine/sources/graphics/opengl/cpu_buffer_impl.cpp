@@ -11,7 +11,7 @@ void CPUBufferImpl::NewImpl(CPUBuffer &buffer, u32 size){
     buffer.m_Size = size;
     buffer.m_Pointer = Memory::Alloc(size);
     buffer.m_Handle.U64 = ++s_CPUBufferId;
-    CoreAssert(buffer.m_Pointer, "GL: CPUBufferImpl: can't allocate memory");
+    SX_CORE_ASSERT(buffer.m_Pointer, "GL: CPUBufferImpl: can't allocate memory");
 }
 
 void CPUBufferImpl::DeleteImpl(CPUBuffer &buffer){

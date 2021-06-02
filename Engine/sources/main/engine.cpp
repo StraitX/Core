@@ -26,7 +26,7 @@ Engine::Engine(){
     if(!s_Instance)
         s_Instance = this;
 #ifdef SX_DEBUG
-    else CoreAssert(false, "Engine: created twice");
+    else SX_CORE_ASSERT(false, "Engine: created twice");
 #endif
 }
 
@@ -72,7 +72,7 @@ void Engine::Stop(){
 
 Result Engine::Initialize(){
     m_ApplicationConfig = GetApplicationConfig();
-    CoreAssert(m_ApplicationConfig.ApplicationName, "ApplicationConfig::ApplicationName should be valid string pointer");
+    SX_CORE_ASSERT(m_ApplicationConfig.ApplicationName, "ApplicationConfig::ApplicationName should be valid string pointer");
 
     LogTrace("========= First stage init =========");
 

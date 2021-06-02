@@ -92,7 +92,7 @@ MemoryProperties MemoryProperties::Get(VkPhysicalDevice device){
 }
 
 bool MemoryProperties::IsMappable(MemoryType::Type type)const{
-    Assert(Layout != MemoryLayout::Unknown);
+    SX_ASSERT(Layout != MemoryLayout::Unknown);
 
     if(Layout == MemoryLayout::Uniform)
         return true;
