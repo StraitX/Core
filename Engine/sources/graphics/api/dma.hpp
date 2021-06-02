@@ -42,28 +42,28 @@ public:
     static void ChangeLayout(GPUTexture &texture, GPUTexture::Layout layout);
 };
 
-sx_inline void DMA::Copy(const void *src, const GPUBuffer &dst, u32 size, u32 dst_offset){
+SX_INLINE void DMA::Copy(const void *src, const GPUBuffer &dst, u32 size, u32 dst_offset){
     s_VTable.CopyMem2GPUBuffer(src, dst, size, dst_offset);
 }
 
-sx_inline void DMA::Copy(const void *src, const GPUBuffer &dst){
+SX_INLINE void DMA::Copy(const void *src, const GPUBuffer &dst){
     Copy(src, dst, dst.Size(), 0);
 }
 
-sx_inline void DMA::Copy(const CPUBuffer &src, const GPUBuffer &dst){
+SX_INLINE void DMA::Copy(const CPUBuffer &src, const GPUBuffer &dst){
     SX_CORE_ASSERT(src.Size() == dst.Size(), "DMA::Copy, buffers should be the same size");
     Copy(src, dst, dst.Size());
 }
 
-sx_inline void DMA::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
+SX_INLINE void DMA::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset){
     s_VTable.CopyCPU2GPUBuffer(src, dst, size, src_offset, dst_offset);
 }
 
-sx_inline void DMA::Copy(const CPUTexture &src, const GPUTexture &dst){
+SX_INLINE void DMA::Copy(const CPUTexture &src, const GPUTexture &dst){
     s_VTable.CopyCPU2GPUTexture(src, dst);
 }
 
-sx_inline void DMA::ChangeLayout(GPUTexture &texture, GPUTexture::Layout layout){
+SX_INLINE void DMA::ChangeLayout(GPUTexture &texture, GPUTexture::Layout layout){
     s_VTable.ChangeGPUTextureLayout(texture, layout);
 }
 

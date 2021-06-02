@@ -44,18 +44,18 @@
     #define SX_BUILD_TYPE_NAME "Debug"
 #endif
 
-// sx_inline will force inline in release mode
+// SX_INLINE will force inline in release mode
 #ifdef SX_RELEASE
     #if defined(SX_COMPILER_GCC) || defined (SX_COMPILER_CLANG)
-        #define sx_inline __attribute__((always_inline)) inline
+        #define SX_INLINE __attribute__((always_inline)) inline
     #elif defined(SX_COMPILER_MSVC)
-        #define sx_inline __forceinline
+        #define SX_INLINE __forceinline
     #else
-        #warning "Your compiler does not support sx_inline"
-        #define sx_inline inline
+        #warning "Your compiler does not support SX_INLINE"
+        #define SX_INLINE inline
     #endif
 #else
-   #define sx_inline inline 
+   #define SX_INLINE inline 
 #endif
 
 #endif // STRAITX_COMPILER_HPP

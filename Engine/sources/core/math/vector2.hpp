@@ -221,7 +221,7 @@ namespace StraitX{
     char *BufferPrint(char *buffer, const double &arg);
 
     template<typename T>
-    sx_inline char *BufferPrint(char *buffer, const Vector2<T> &vector){
+    SX_INLINE char *BufferPrint(char *buffer, const Vector2<T> &vector){
         return BufferPrint(BufferPrint(BufferPrint(BufferPrint(BufferPrint(buffer,'('),vector.x),','),vector.y),')');
     }
 }; // namespace StraitX::

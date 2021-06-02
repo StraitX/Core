@@ -37,13 +37,13 @@ public:
 
     void OnResize(int width, int height);
 
-    sx_inline HWND__ *Handle()const;
+    SX_INLINE HWND__ *Handle()const;
 private:
 
     bool FetchInternalEvents(Event &event);
 };
 
-sx_inline HWND__ *WindowImpl::Handle() const {
+SX_INLINE HWND__ *WindowImpl::Handle() const {
     return m_Handle;
 }
 

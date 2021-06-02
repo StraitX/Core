@@ -39,23 +39,23 @@ public:
 
 };
 
-sx_inline Screen::Screen(const PlatformScreenImpl &impl):
+SX_INLINE Screen::Screen(const PlatformScreenImpl &impl):
     m_Impl(impl)
 {}
 
-sx_inline const Size2i &Screen::Size()const{
+SX_INLINE const Size2i &Screen::Size()const{
     return m_Impl.Size();
 }
 
-sx_inline const Size2f &Screen::DPI()const{
+SX_INLINE const Size2f &Screen::DPI()const{
     return m_Impl.DPI();
 }
 
-sx_inline PlatformScreenImpl &Screen::Impl(){
+SX_INLINE PlatformScreenImpl &Screen::Impl(){
     return m_Impl;
 }
 
-sx_inline const PlatformScreenImpl &Screen::Impl()const{
+SX_INLINE const PlatformScreenImpl &Screen::Impl()const{
     return m_Impl;
 }
 

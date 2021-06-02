@@ -31,7 +31,7 @@ private:
     static bool CheckExtensions(const ArrayPtr<const char *> &extensions);
 };
 
-sx_inline VkInstance GraphicsAPIImpl::Handle()const{
+SX_INLINE VkInstance GraphicsAPIImpl::Handle()const{
     return m_Handle;
 }
 

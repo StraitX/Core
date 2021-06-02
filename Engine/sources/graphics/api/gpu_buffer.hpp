@@ -80,16 +80,16 @@ private:
     void SetZero();
 };
 
-sx_inline GPUBuffer::GPUBuffer(GPUBuffer &&other){
+SX_INLINE GPUBuffer::GPUBuffer(GPUBuffer &&other){
     *this = Move(other);
 }
 
-sx_inline GPUBuffer::~GPUBuffer(){
+SX_INLINE GPUBuffer::~GPUBuffer(){
     if(!IsEmpty())
         Delete();
 }
 
-sx_inline GPUBuffer &GPUBuffer::operator=(GPUBuffer &&other){
+SX_INLINE GPUBuffer &GPUBuffer::operator=(GPUBuffer &&other){
     SX_CORE_ASSERT(IsEmpty(), "GPUBuffer: Can't move into non-empty object");
     m_Size = other.m_Size;
     m_Handle = other.m_Handle;
@@ -100,41 +100,41 @@ sx_inline GPUBuffer &GPUBuffer::operator=(GPUBuffer &&other){
     return *this;
 }
 
-sx_inline void GPUBuffer::New(u32 size, GPUMemoryType mem_type, UsageType usage){
+SX_INLINE void GPUBuffer::New(u32 size, GPUMemoryType mem_type, UsageType usage){
     SX_CORE_ASSERT(IsEmpty(), "GPUBuffer: New() should be called on empty object");
     s_VTable.New(*this, size, mem_type, usage);
 }
 
-sx_inline void GPUBuffer::Delete(){
+SX_INLINE void GPUBuffer::Delete(){
     s_VTable.Delete(*this);
     SetZero();
 }
 
-sx_inline GPUResourceHandle GPUBuffer::Handle()const{
+SX_INLINE GPUResourceHandle GPUBuffer::Handle()const{
     return m_Handle;
 }
 
-sx_inline GPUResourceHandle GPUBuffer::Memory()const{
+SX_INLINE GPUResourceHandle GPUBuffer::Memory()const{
     return m_BackingMemory;
 }
 
-sx_inline u32 GPUBuffer::Size()const{
+SX_INLINE u32 GPUBuffer::Size()const{
     return m_Size;
 }
 
-sx_inline GPUBuffer::UsageType GPUBuffer::Usage()const{
+SX_INLINE GPUBuffer::UsageType GPUBuffer::Usage()const{
     return m_Usage;
 }
 
-sx_inline GPUMemoryType GPUBuffer::MemoryType()const{
+SX_INLINE GPUMemoryType GPUBuffer::MemoryType()const{
     return m_MemoryType;
 }
 
-sx_inline bool GPUBuffer::IsEmpty()const{
+SX_INLINE bool GPUBuffer::IsEmpty()const{
     return m_Handle.U64 == 0;
 }
 
-sx_inline void GPUBuffer::SetZero(){
+SX_INLINE void GPUBuffer::SetZero(){
     m_Size = 0;
     m_Handle = {};
     m_BackingMemory = {};

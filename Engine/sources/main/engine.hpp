@@ -51,7 +51,7 @@ private:
     void MainLoop();
 };
 
-sx_inline Engine &Engine::Get(){
+SX_INLINE Engine &Engine::Get(){
     SX_CORE_ASSERT(s_Instance, "for some reason Engine was not created");
     return *s_Instance;
 }

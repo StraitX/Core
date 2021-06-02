@@ -111,16 +111,16 @@ private:
     void SetZero();
 };
 
-sx_inline GPUTexture::GPUTexture(GPUTexture &&other){
+SX_INLINE GPUTexture::GPUTexture(GPUTexture &&other){
     *this = Move(other);
 }
 
-sx_inline GPUTexture::~GPUTexture(){
+SX_INLINE GPUTexture::~GPUTexture(){
     if(!IsEmpty())
         Delete();
 }
 
-sx_inline GPUTexture &GPUTexture::operator=(GPUTexture &&other){
+SX_INLINE GPUTexture &GPUTexture::operator=(GPUTexture &&other){
     SX_CORE_ASSERT(IsEmpty(), "GPUTexture: Can't move into non-empty object");
     m_Handle = other.m_Handle;
     m_ViewHandle = other.m_ViewHandle;
@@ -134,44 +134,44 @@ sx_inline GPUTexture &GPUTexture::operator=(GPUTexture &&other){
     return *this;
 }
 
-sx_inline void GPUTexture::New(TextureFormat format, Usage usage, u32 width, u32 height){
+SX_INLINE void GPUTexture::New(TextureFormat format, Usage usage, u32 width, u32 height){
     s_VTable.New(*this, format, usage, width, height);
 }
 
-sx_inline void GPUTexture::Delete(){
+SX_INLINE void GPUTexture::Delete(){
     s_VTable.Delete(*this);
     SetZero();
 }
 
-sx_inline GPUResourceHandle GPUTexture::Handle()const{ 
+SX_INLINE GPUResourceHandle GPUTexture::Handle()const{ 
     return m_Handle; 
 }
 
-sx_inline GPUResourceHandle GPUTexture::ViewHandle()const{ 
+SX_INLINE GPUResourceHandle GPUTexture::ViewHandle()const{ 
     return m_ViewHandle; 
 }
 
-sx_inline Vector2u GPUTexture::Size()const{ 
+SX_INLINE Vector2u GPUTexture::Size()const{ 
     return {m_Width, m_Height}; 
 }
 
-sx_inline TextureFormat GPUTexture::GetFormat()const{ 
+SX_INLINE TextureFormat GPUTexture::GetFormat()const{ 
     return m_Format;
 }
 
-sx_inline GPUTexture::Layout GPUTexture::GetLayout()const{
+SX_INLINE GPUTexture::Layout GPUTexture::GetLayout()const{
     return m_Layout;
 }
 
-sx_inline GPUTexture::Usage GPUTexture::GetUsage()const{
+SX_INLINE GPUTexture::Usage GPUTexture::GetUsage()const{
     return m_Usage;
 }
 
-sx_inline bool GPUTexture::IsEmpty()const{
+SX_INLINE bool GPUTexture::IsEmpty()const{
     return m_Handle.U64 == 0;
 }
 
-sx_inline void GPUTexture::SetZero(){
+SX_INLINE void GPUTexture::SetZero(){
     m_Handle = {};
     m_ViewHandle = {};
     m_BackingMemory = {};

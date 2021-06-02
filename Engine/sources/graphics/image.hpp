@@ -52,27 +52,27 @@ public:
     bool IsEmpty()const;
 };
 
-sx_inline u8 *Image::Data()const{
+SX_INLINE u8 *Image::Data()const{
     return m_Data;
 }
 
-sx_inline u32 Image::Width()const{
+SX_INLINE u32 Image::Width()const{
     return m_Width;
 }
 
-sx_inline u32 Image::Height()const{
+SX_INLINE u32 Image::Height()const{
     return m_Height;
 }
 
-sx_inline Vector2u Image::Size()const{
+SX_INLINE Vector2u Image::Size()const{
     return {Width(), Height()};
 }
 
-sx_inline PixelFormat Image::Format()const{
+SX_INLINE PixelFormat Image::Format()const{
     return m_Format;
 }
 
-sx_inline bool Image::IsEmpty()const{
+SX_INLINE bool Image::IsEmpty()const{
     return m_Data == nullptr;
 }
 

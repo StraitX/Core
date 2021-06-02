@@ -36,47 +36,47 @@ public:
     TextureFormat Format()const;
 };
 
-sx_inline CPUTexture::CPUTexture(u32 width, u32 height, TextureFormat format){
+SX_INLINE CPUTexture::CPUTexture(u32 width, u32 height, TextureFormat format){
     New(width, height, format);
 }
 
-sx_inline CPUTexture::CPUTexture(u32 width, u32 height, TextureFormat format, const void *pixels){
+SX_INLINE CPUTexture::CPUTexture(u32 width, u32 height, TextureFormat format, const void *pixels){
     New(width, height, format, pixels);
 }
 
-sx_inline void CPUTexture::New(u32 width, u32 height, TextureFormat format){
+SX_INLINE void CPUTexture::New(u32 width, u32 height, TextureFormat format){
     CPUBuffer::New(width * height * GetPixelSize(format));
     m_Format = format;
     m_Width = width;
     m_Height = height;
 }
 
-sx_inline void CPUTexture::New(u32 width, u32 height, TextureFormat format, const void *pixels){
+SX_INLINE void CPUTexture::New(u32 width, u32 height, TextureFormat format, const void *pixels){
     New(width, height, format);
     CopyData(pixels);
 }
 
-sx_inline void CPUTexture::Delete(){
+SX_INLINE void CPUTexture::Delete(){
     CPUBuffer::Delete();
 }
 
-sx_inline void *CPUTexture::Pointer()const{
+SX_INLINE void *CPUTexture::Pointer()const{
     return CPUBuffer::Pointer();
 }
 
-sx_inline void CPUTexture::CopyData(const void *source){
+SX_INLINE void CPUTexture::CopyData(const void *source){
     CPUBuffer::CopyData(source, m_Width * m_Height * GetPixelSize(m_Format));
 }
 
-sx_inline GPUResourceHandle CPUTexture::Handle()const{
+SX_INLINE GPUResourceHandle CPUTexture::Handle()const{
     return CPUBuffer::Handle();
 }
 
-sx_inline Vector2u CPUTexture::Size()const{
+SX_INLINE Vector2u CPUTexture::Size()const{
     return {m_Width, m_Height};
 }
 
-sx_inline TextureFormat CPUTexture::Format()const{
+SX_INLINE TextureFormat CPUTexture::Format()const{
     return m_Format;
 }
 

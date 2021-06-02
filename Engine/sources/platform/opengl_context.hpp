@@ -40,27 +40,27 @@ public:
     void SwapBuffers();
 };
 
-sx_inline Result OpenGLContext::Create(Window &window, const Version &version){
+SX_INLINE Result OpenGLContext::Create(Window &window, const Version &version){
     return m_Impl.Create(window.Impl(), version);
 }
 
-sx_inline Result OpenGLContext::CreateDummy(){
+SX_INLINE Result OpenGLContext::CreateDummy(){
     return m_Impl.CreateDummy();
 }
 
-sx_inline void OpenGLContext::DestroyDummy(){
+SX_INLINE void OpenGLContext::DestroyDummy(){
     m_Impl.DestroyDummy();
 }
 
-sx_inline void OpenGLContext::Destroy(){
+SX_INLINE void OpenGLContext::Destroy(){
     m_Impl.Destroy();
 }
 
-sx_inline Result OpenGLContext::MakeCurrent(){
+SX_INLINE Result OpenGLContext::MakeCurrent(){
     return m_Impl.MakeCurrent();
 }
 
-sx_inline void OpenGLContext::SwapBuffers(){
+SX_INLINE void OpenGLContext::SwapBuffers(){
     m_Impl.SwapBuffers();
 }
 

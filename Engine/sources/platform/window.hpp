@@ -46,39 +46,39 @@ public:
     Size2u Size()const;
 };
 
-sx_inline Window::Window(Window &&other):
+SX_INLINE Window::Window(Window &&other):
     m_Impl((PlatformWindowImpl&&)other.Impl())
 {}
 
-sx_inline Result Window::Open(const Screen &screen, int width, int height){
+SX_INLINE Result Window::Open(const Screen &screen, int width, int height){
     return m_Impl.Open(screen.Impl(), width, height);
 }
 
-sx_inline Result Window::Close(){
+SX_INLINE Result Window::Close(){
     return m_Impl.Close();
 }
 
-sx_inline PlatformWindowImpl &Window::Impl(){
+SX_INLINE PlatformWindowImpl &Window::Impl(){
     return m_Impl;
 }
 
-sx_inline const PlatformWindowImpl &Window::Impl()const{
+SX_INLINE const PlatformWindowImpl &Window::Impl()const{
     return m_Impl;
 }
 
-sx_inline bool Window::IsOpen()const{
+SX_INLINE bool Window::IsOpen()const{
     return m_Impl.IsOpen();
 }
 
-sx_inline void Window::SetTitle(const char *title){
+SX_INLINE void Window::SetTitle(const char *title){
     m_Impl.SetTitle(title);
 }
 
-sx_inline bool Window::PollEvent(Event &event){
+SX_INLINE bool Window::PollEvent(Event &event){
     return m_Impl.PollEvent(event);
 }
 
-sx_inline Size2u Window::Size()const{
+SX_INLINE Size2u Window::Size()const{
     return m_Impl.Size();
 }
 

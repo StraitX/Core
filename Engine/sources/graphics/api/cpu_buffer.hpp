@@ -73,24 +73,24 @@ private:
     void SetZero();
 };
 
-sx_inline CPUBuffer::CPUBuffer(u32 size){
+SX_INLINE CPUBuffer::CPUBuffer(u32 size){
     New(size);
 }
 
-sx_inline CPUBuffer::CPUBuffer(u32 size, const void *data){
+SX_INLINE CPUBuffer::CPUBuffer(u32 size, const void *data){
     New(size, data);
 }
 
-sx_inline CPUBuffer::CPUBuffer(CPUBuffer &&other){
+SX_INLINE CPUBuffer::CPUBuffer(CPUBuffer &&other){
     *this = Move(other);
 }
 
-sx_inline CPUBuffer::~CPUBuffer(){
+SX_INLINE CPUBuffer::~CPUBuffer(){
     if(!IsEmpty())
         Delete();
 }
 
-sx_inline CPUBuffer &CPUBuffer::operator=(CPUBuffer &&other){
+SX_INLINE CPUBuffer &CPUBuffer::operator=(CPUBuffer &&other){
     SX_CORE_ASSERT(IsEmpty(), "CPUBuffer: Can't move into non-empty object");
     m_Handle = other.m_Handle;
     m_BackingMemory = other.m_BackingMemory;
@@ -102,39 +102,39 @@ sx_inline CPUBuffer &CPUBuffer::operator=(CPUBuffer &&other){
 }
 
 
-sx_inline void CPUBuffer::New(u32 size){
+SX_INLINE void CPUBuffer::New(u32 size){
     SX_CORE_ASSERT(IsEmpty(), "CPUBuffer: New() should be called on empty object");
     s_VTable.New(*this, size);
 }
 
-sx_inline void CPUBuffer::New(u32 size, const void *data){
+SX_INLINE void CPUBuffer::New(u32 size, const void *data){
     New(size);
     CopyData(data, size);
 }
 
-sx_inline void CPUBuffer::Delete(){
+SX_INLINE void CPUBuffer::Delete(){
     s_VTable.Delete(*this);
     SetZero();
 }
 
-sx_inline void *CPUBuffer::Pointer()const{
+SX_INLINE void *CPUBuffer::Pointer()const{
     SX_CORE_ASSERT(m_Pointer, "CPUBuffer: For some reason Pointer is null");
     return m_Pointer;
 }
 
-sx_inline GPUResourceHandle CPUBuffer::Handle()const{
+SX_INLINE GPUResourceHandle CPUBuffer::Handle()const{
     return m_Handle;
 }
 
-sx_inline u32 CPUBuffer::Size()const{
+SX_INLINE u32 CPUBuffer::Size()const{
     return m_Size;
 }
 
-sx_inline bool CPUBuffer::IsEmpty()const{
+SX_INLINE bool CPUBuffer::IsEmpty()const{
     return m_Handle.U64 == 0;
 }
 
-sx_inline void CPUBuffer::SetZero(){
+SX_INLINE void CPUBuffer::SetZero(){
     m_Handle = {};
     m_BackingMemory = {};
     m_Pointer = nullptr;

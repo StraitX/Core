@@ -46,11 +46,11 @@ public:
     static void Delete(Swapchain *swapchain);
 };
 
-sx_inline Swapchain *Swapchain::New(const Window &window, const SwapchainProperties &props){
+SX_INLINE Swapchain *Swapchain::New(const Window &window, const SwapchainProperties &props){
     return s_VTable.New(window, props);
 }
 
-sx_inline void Swapchain::Delete(Swapchain *swapchain){
+SX_INLINE void Swapchain::Delete(Swapchain *swapchain){
     s_VTable.Delete(swapchain);
 }
 

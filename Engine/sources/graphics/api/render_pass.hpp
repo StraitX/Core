@@ -48,11 +48,11 @@ public:
     static void Delete(RenderPass *pass);
 };
 
-sx_inline RenderPass *RenderPass::New(const RenderPassProperties &properties){
+SX_INLINE RenderPass *RenderPass::New(const RenderPassProperties &properties){
     return s_VTable.New(properties);
 }
 
-sx_inline void RenderPass::Delete(RenderPass *pass){
+SX_INLINE void RenderPass::Delete(RenderPass *pass){
     s_VTable.Delete(pass);
 }
 

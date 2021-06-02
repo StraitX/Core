@@ -68,7 +68,7 @@ constexpr bool operator!=(Result l, Result r){
     return !(l == r);
 }
 
-sx_inline const char *Result::Name()const{
+SX_INLINE const char *Result::Name()const{
     return s_ResultNamesTable[m_Value];
 }
 

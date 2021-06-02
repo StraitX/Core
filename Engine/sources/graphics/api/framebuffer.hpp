@@ -49,24 +49,24 @@ public:
 
 };
 
-sx_inline Framebuffer::Framebuffer(const RenderPass *pass, Vector2u size):
+SX_INLINE Framebuffer::Framebuffer(const RenderPass *pass, Vector2u size):
     m_Pass(pass),
     m_Size(size)
 {}
 
-sx_inline Vector2u Framebuffer::Size()const{
+SX_INLINE Vector2u Framebuffer::Size()const{
     return m_Size;
 }
 
-sx_inline const RenderPass *Framebuffer::Pass()const{
+SX_INLINE const RenderPass *Framebuffer::Pass()const{
     return m_Pass;
 }
 
-sx_inline Framebuffer *Framebuffer::New(const RenderPass *const pass,const FramebufferProperties &props){
+SX_INLINE Framebuffer *Framebuffer::New(const RenderPass *const pass,const FramebufferProperties &props){
     return s_VTable.New(pass, props);
 }
 
-sx_inline void Framebuffer::Delete(Framebuffer *framebuffer){
+SX_INLINE void Framebuffer::Delete(Framebuffer *framebuffer){
     s_VTable.Delete(framebuffer);
 }
 

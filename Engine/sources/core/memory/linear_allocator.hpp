@@ -29,7 +29,7 @@ public:
 
     void Free(size_t size);
 
-    sx_inline void *Break(){
+    SX_INLINE void *Break(){
         return m_Memory+m_Size;
     }
     // Adds few unused offset bytes to align the allocation

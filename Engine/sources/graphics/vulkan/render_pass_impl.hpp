@@ -29,15 +29,15 @@ public:
     static void DeleteImpl(RenderPass *pass);
 };
 
-sx_inline bool RenderPassImpl::HasDepth()const{
+SX_INLINE bool RenderPassImpl::HasDepth()const{
     return m_DepthIndex != InvalidIndex;
 }
 
-sx_inline VkRenderPass RenderPassImpl::Handle()const{
+SX_INLINE VkRenderPass RenderPassImpl::Handle()const{
     return m_Handle;
 }
 
-sx_inline const PushArray<AttachmentDescription, MaxAttachmentsCount> &RenderPassImpl::Attachments()const{
+SX_INLINE const PushArray<AttachmentDescription, MaxAttachmentsCount> &RenderPassImpl::Attachments()const{
     return m_Attachments;
 }
 

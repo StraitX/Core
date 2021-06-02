@@ -73,36 +73,36 @@ public:
     bool IsEmpty()const;
 };
 
-sx_inline Sampler::Sampler(Sampler &&other){
+SX_INLINE Sampler::Sampler(Sampler &&other){
     *this = Move(other);
 }
 
-sx_inline Sampler::~Sampler(){
+SX_INLINE Sampler::~Sampler(){
     if(!IsEmpty())
         Delete();
 }
 
-sx_inline Sampler &Sampler::operator=(Sampler &&other){
+SX_INLINE Sampler &Sampler::operator=(Sampler &&other){
     SX_CORE_ASSERT(IsEmpty(), "Sampler: Can't move into non-empty object");
     m_Handle = other.m_Handle;
     other.m_Handle = {};
     return *this;
 }
 
-sx_inline void Sampler::New(SamplerProperties props){
+SX_INLINE void Sampler::New(SamplerProperties props){
     s_VTable.New(*this, props);
 }
 
-sx_inline void Sampler::Delete(){
+SX_INLINE void Sampler::Delete(){
     s_VTable.Delete(*this);
     m_Handle.U64 = 0;
 }
 
-sx_inline GPUResourceHandle Sampler::Handle()const{
+SX_INLINE GPUResourceHandle Sampler::Handle()const{
     return m_Handle;
 }
 
-sx_inline bool Sampler::IsEmpty()const{
+SX_INLINE bool Sampler::IsEmpty()const{
     return m_Handle.U64 == 0;
 }
 };

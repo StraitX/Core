@@ -36,18 +36,18 @@ public:
     OpenGLContext &Context();
 };
 
-sx_inline s32 GraphicsAPIImpl::MaxTextureUnits()const{
+SX_INLINE s32 GraphicsAPIImpl::MaxTextureUnits()const{
     return m_MaxTextureUnits;
 }
-sx_inline s32 GraphicsAPIImpl::MaxUniformBufferBindings()const{
+SX_INLINE s32 GraphicsAPIImpl::MaxUniformBufferBindings()const{
     return m_MaxUniformBufferBindings;
 }
 
-sx_inline Version GraphicsAPIImpl::LoadedVersion()const{
+SX_INLINE Version GraphicsAPIImpl::LoadedVersion()const{
     return m_LoadedOpenGLVersion;
 }
 
-sx_inline OpenGLContext &GraphicsAPIImpl::Context(){
+SX_INLINE OpenGLContext &GraphicsAPIImpl::Context(){
     return m_Context;
 }
 

@@ -58,16 +58,16 @@ public:
 
 };
 
-sx_inline File::File(File &&other){
+SX_INLINE File::File(File &&other){
     *this = (File&&)other;
 }
 
-sx_inline File::~File(){
+SX_INLINE File::~File(){
     if(IsOpen())
         Close();
 }
 
-sx_inline File &File::operator=(File &&other){
+SX_INLINE File &File::operator=(File &&other){
     m_FD = other.m_FD;
     m_Mode = other.m_Mode;
     other.m_FD = InvalidFD;
@@ -75,11 +75,11 @@ sx_inline File &File::operator=(File &&other){
     return *this;
 }
 
-sx_inline File::File(const char *filename, Mode mode, bool create){
+SX_INLINE File::File(const char *filename, Mode mode, bool create){
     (void)Open(filename, mode, create);
 }
 
-sx_inline bool File::IsOpen(){
+SX_INLINE bool File::IsOpen(){
     return m_FD != InvalidFD;
 }
 

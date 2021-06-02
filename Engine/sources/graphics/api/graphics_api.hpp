@@ -31,7 +31,7 @@ public:
     static const char *Name(GraphicsAPI::API api);
 };
 
-sx_inline GraphicsAPI::API GraphicsAPI::CurrentAPI(){
+SX_INLINE GraphicsAPI::API GraphicsAPI::CurrentAPI(){
     return s_CurrentAPI;
 }
 

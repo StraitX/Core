@@ -40,7 +40,7 @@ public:
     }
 };
 
-sx_inline void CommandBuffer::CmdBufferCopy(VkBuffer src, VkBuffer dst, VkDeviceSize size, VkDeviceSize src_offset, VkDeviceSize dst_offset)const{
+SX_INLINE void CommandBuffer::CmdBufferCopy(VkBuffer src, VkBuffer dst, VkDeviceSize size, VkDeviceSize src_offset, VkDeviceSize dst_offset)const{
     VkBufferCopy copy;
     copy.srcOffset = src_offset;
     copy.dstOffset = dst_offset;

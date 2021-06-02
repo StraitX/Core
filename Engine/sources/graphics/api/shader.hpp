@@ -64,24 +64,24 @@ public:
 
 };
 
-sx_inline Shader::Shader(Shader::Type type, Shader::Lang lang):
+SX_INLINE Shader::Shader(Shader::Type type, Shader::Lang lang):
     m_Type(type),
     m_Lang(lang)
 {}
 
-sx_inline Shader::Type Shader::GetType()const{
+SX_INLINE Shader::Type Shader::GetType()const{
     return m_Type;
 }
 
-sx_inline Shader::Lang Shader::GetLang()const{
+SX_INLINE Shader::Lang Shader::GetLang()const{
     return m_Lang;
 }
 
-sx_inline Shader *Shader::New(Shader::Type type, Shader::Lang lang, const u8 *sources, u32 length){
+SX_INLINE Shader *Shader::New(Shader::Type type, Shader::Lang lang, const u8 *sources, u32 length){
     return s_VTable.New(type, lang, sources, length);
 }
 
-sx_inline void Shader::Delete(Shader *shader){
+SX_INLINE void Shader::Delete(Shader *shader){
     s_VTable.Delete(shader);
 }
 

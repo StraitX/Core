@@ -135,11 +135,11 @@ public:
 
 };
 
-sx_inline GraphicsPipeline *GraphicsPipeline::New(const GraphicsPipelineProperties &props){
+SX_INLINE GraphicsPipeline *GraphicsPipeline::New(const GraphicsPipelineProperties &props){
     return s_VTable.New(props);
 }
 
-sx_inline void GraphicsPipeline::Delete(GraphicsPipeline *pipeline){
+SX_INLINE void GraphicsPipeline::Delete(GraphicsPipeline *pipeline){
     s_VTable.Delete(pipeline);
 }
 

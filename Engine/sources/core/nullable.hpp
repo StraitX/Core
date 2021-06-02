@@ -10,11 +10,11 @@ class Nullable{
 public:
     virtual bool operator==(nullptr_t ptr) = 0;
 
-    sx_inline bool operator!=(nullptr_t ptr){
+    SX_INLINE bool operator!=(nullptr_t ptr){
         return !(*this==ptr);
     }
 
-    sx_inline bool IsNull(){
+    SX_INLINE bool IsNull(){
         return *this==nullptr;
     }
 };

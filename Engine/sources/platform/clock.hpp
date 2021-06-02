@@ -24,15 +24,15 @@ public:
 };
 
 
-sx_inline Clock::Clock(){
+SX_INLINE Clock::Clock(){
     Restart();
 }
 
-sx_inline Time Clock::GetElapsedTime(){
+SX_INLINE Time Clock::GetElapsedTime(){
     return GetMonotonicTime() - m_Epoch;
 }
 
-sx_inline void Clock::Restart(){
+SX_INLINE void Clock::Restart(){
     m_Epoch = GetMonotonicTime();
 }
 
