@@ -63,3 +63,11 @@ enum KeyCodes{
     ...  
 };
 ```
+
+- implementation functions that should exist for some reason in global scope should have underscore in the beginning 
+
+```c++
+extern void _AssertImpl(...);
+
+#define _SX_MACRO_IMPL(...)
+```
