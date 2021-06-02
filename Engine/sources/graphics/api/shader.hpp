@@ -6,7 +6,7 @@
 #include "platform/file.hpp"
 #include "core/noncopyable.hpp"
 #include "core/validable.hpp"
-#include "core/array_ptr.hpp"
+#include "core/span.hpp"
 
 namespace StraitX{
 

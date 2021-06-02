@@ -39,7 +39,7 @@ GraphicsPipeline::GraphicsPipeline(const GraphicsPipelineProperties &props){
 #endif
 }
 
-size_t GraphicsPipeline::CalculateStride(const ArrayPtr<const VertexAttribute> &attributes){
+size_t GraphicsPipeline::CalculateStride(Span<VertexAttribute> attributes){
     size_t stride = 0;
     for(auto &attr: attributes){
         stride += s_VertexAttributeSizeTable[(size_t)attr];

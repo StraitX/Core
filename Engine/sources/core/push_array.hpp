@@ -6,6 +6,7 @@
 #include "platform/types.hpp"
 #include "core/assert.hpp"
 #include "core/move.hpp"
+#include "core/span.hpp"
 
 namespace StraitX{
 
@@ -19,68 +20,72 @@ private:
     size_t m_Size = 0;
     u8 m_Memory[T_Capacity * sizeof(T_Type)];
 public:
-    constexpr PushArray() = default;
+    static_assert(!IsConst<T_Type>() && !IsVolatile<T_Type>(), "T_Type can't be cv-qualified");
 
-    constexpr PushArray(const PushArray &other);
+    PushArray() = default;
 
-    constexpr PushArray(PushArray &&other);
+    PushArray(const PushArray &other);
 
-    constexpr PushArray(std::initializer_list<T_Type> initializer_list);
+    PushArray(PushArray &&other);
+
+    PushArray(std::initializer_list<T_Type> initializer_list);
 
     ~PushArray();
 
-    constexpr void Push(const T_Type &element);
+    void Push(const T_Type &element);
 
-    constexpr void Push(T_Type &&element);
+    void Push(T_Type &&element);
 
-    constexpr void Pop();
+    void Pop();
 
-    constexpr void Clear();
+    void Clear();
 
     iterator Find(const T_Type &element);
 
     const_iterator Find(const T_Type &element)const;
 
     template<typename ...T_Args>
-    constexpr T_Type &Emplace(T_Args&&...args);
+    T_Type &Emplace(T_Args&&...args);
 
-    constexpr T_Type &operator[](size_t index);
+    T_Type &operator[](size_t index);
 
-    constexpr const T_Type &operator[](size_t index)const;
+    const T_Type &operator[](size_t index)const;
 
-    constexpr PushArray &operator=(const PushArray &other);
+    PushArray &operator=(const PushArray &other);
 
-    constexpr PushArray &operator=(PushArray &&other);
+    PushArray &operator=(PushArray &&other);
 
-    constexpr size_t Size()const;
+    operator Span<T_Type>();
 
-    constexpr size_t Capacity()const;
+    size_t Size()const;
 
-    constexpr T_Type *Data();
+    size_t Capacity()const;
 
-    constexpr const T_Type *Data()const;
+    T_Type *Data();
 
-    constexpr iterator begin();
+    const T_Type *Data()const;
 
-    constexpr iterator end();
+    iterator begin();
 
-    constexpr const_iterator begin()const;
+    iterator end();
 
-    constexpr const_iterator end()const;
+    const_iterator begin()const;
+
+    const_iterator end()const;
 };
 
 template<typename T_Type, size_t T_Capacity>
-constexpr PushArray<T_Type, T_Capacity>::PushArray(const PushArray &other){
+PushArray<T_Type, T_Capacity>::PushArray(const PushArray &other){
     *this = other;
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr PushArray<T_Type, T_Capacity>::PushArray(PushArray &&other){
+PushArray<T_Type, T_Capacity>::PushArray(PushArray &&other){
     *this = Move(other);
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr PushArray<T_Type, T_Capacity>::PushArray(std::initializer_list<T_Type> initializer_list):
+PushArray<T_Type, T_Capacity>::PushArray(std::initializer_list<T_Type> initializer_list):
     m_Size(initializer_list.size())
 {
     SX_CORE_ASSERT(initializer_list.size() <= T_Capacity, "Initializer list is bigger than PushArray capacity");
@@ -98,22 +103,22 @@ PushArray<T_Type, T_Capacity>::~PushArray(){
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr void PushArray<T_Type, T_Capacity>::Push(const T_Type &element){
+void PushArray<T_Type, T_Capacity>::Push(const T_Type &element){
     Emplace(element);
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr void PushArray<T_Type, T_Capacity>::Push(T_Type &&element){
+void PushArray<T_Type, T_Capacity>::Push(T_Type &&element){
     Emplace(Move(element));
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr void PushArray<T_Type, T_Capacity>::Pop(){
+void PushArray<T_Type, T_Capacity>::Pop(){
     begin()[--m_Size].~T_Type();
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr void PushArray<T_Type, T_Capacity>::Clear(){
+void PushArray<T_Type, T_Capacity>::Clear(){
     while(Size())
         Pop();
 }
@@ -135,26 +140,26 @@ typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capac
 
 template<typename T_Type, size_t T_Capacity>
 template<typename ...T_Args>
-constexpr T_Type &PushArray<T_Type, T_Capacity>::Emplace(T_Args&&...args){
+T_Type &PushArray<T_Type, T_Capacity>::Emplace(T_Args&&...args){
     SX_CORE_ASSERT(m_Size < T_Capacity, "PushArray: Can't add an element, array is full");
 
     return *new(&begin()[m_Size++])T_Type(Forward<T_Args>(args)...);
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index){
+T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index){
     return const_cast<T_Type &>(const_cast<const PushArray<T_Type, T_Capacity>*>(this)->operator[](index));
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr const T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index)const{
+const T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index)const{
     SX_CORE_ASSERT(index < m_Size, "PushArray: Can't index more than PushArray::Size() elements");
 
     return begin()[index];
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr PushArray<T_Type, T_Capacity> &PushArray<T_Type, T_Capacity>::operator=(const PushArray &other){
+PushArray<T_Type, T_Capacity> &PushArray<T_Type, T_Capacity>::operator=(const PushArray &other){
     Clear();
     for(auto &e: other)
         Push(e);
@@ -162,7 +167,7 @@ constexpr PushArray<T_Type, T_Capacity> &PushArray<T_Type, T_Capacity>::operator
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr PushArray<T_Type, T_Capacity> &PushArray<T_Type, T_Capacity>::operator=(PushArray &&other){
+PushArray<T_Type, T_Capacity> &PushArray<T_Type, T_Capacity>::operator=(PushArray &&other){
     Clear();
     for(auto &e: other)
         Emplace(Move(e)); // We assume that moved stuff does not required to be destroyed
@@ -171,42 +176,47 @@ constexpr PushArray<T_Type, T_Capacity> &PushArray<T_Type, T_Capacity>::operator
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr size_t PushArray<T_Type, T_Capacity>::Size()const{
+PushArray<T_Type, T_Capacity>::operator Span<T_Type>(){
+    return Span<T_Type>(reinterpret_cast<T_Type*>(m_Memory), Size());
+}
+
+template<typename T_Type, size_t T_Capacity>
+size_t PushArray<T_Type, T_Capacity>::Size()const{
     return m_Size;
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr size_t PushArray<T_Type, T_Capacity>::Capacity()const{
+size_t PushArray<T_Type, T_Capacity>::Capacity()const{
     return T_Capacity;
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr T_Type *PushArray<T_Type, T_Capacity>::Data(){
+T_Type *PushArray<T_Type, T_Capacity>::Data(){
     return reinterpret_cast<T_Type*>(m_Memory);
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr const T_Type *PushArray<T_Type, T_Capacity>::Data()const{
+const T_Type *PushArray<T_Type, T_Capacity>::Data()const{
     return reinterpret_cast<const T_Type*>(m_Memory);
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr typename PushArray<T_Type, T_Capacity>::iterator PushArray<T_Type, T_Capacity>::begin(){
+typename PushArray<T_Type, T_Capacity>::iterator PushArray<T_Type, T_Capacity>::begin(){
     return Data();
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr typename PushArray<T_Type, T_Capacity>::iterator PushArray<T_Type, T_Capacity>::end(){
+typename PushArray<T_Type, T_Capacity>::iterator PushArray<T_Type, T_Capacity>::end(){
     return begin()+Size();
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capacity>::begin()const{
+typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capacity>::begin()const{
     return Data();
 }
 
 template<typename T_Type, size_t T_Capacity>
-constexpr typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capacity>::end()const{
+typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capacity>::end()const{
     return begin()+Size();
 }
 

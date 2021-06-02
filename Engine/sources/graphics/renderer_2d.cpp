@@ -63,7 +63,7 @@ Renderer2D::Renderer2D(const RenderPass *pass):
 
     SX_CORE_ASSERT(m_VertexShader->IsValid() && m_FragmentShader->IsValid(), "Shaders are not valid");
 
-    Shader *shaders[2]={
+    const Shader *shaders[2]={
         m_VertexShader,
         m_FragmentShader
     };
@@ -79,8 +79,8 @@ Renderer2D::Renderer2D(const RenderPass *pass):
     };
 
     GraphicsPipelineProperties gp_props = {};
-    gp_props.Shaders          = {shaders, lengthof(shaders)};
-    gp_props.VertexAttributes = {attributes, lengthof(attributes)}; 
+    gp_props.Shaders          = shaders;
+    gp_props.VertexAttributes = attributes; 
     gp_props.Topology         = PrimitivesTopology::Triangles;
     gp_props.FramebufferViewport.Width = DisplayServer::Window.Size().width;
     gp_props.FramebufferViewport.Height = DisplayServer::Window.Size().height;
@@ -89,7 +89,7 @@ Renderer2D::Renderer2D(const RenderPass *pass):
     gp_props.SrcBlendFactor = BlendFactor::SrcAlpha;
     gp_props.DstBlendFactor = BlendFactor::OneMinusSrcAlpha;
     gp_props.Pass           = m_Pass;
-    gp_props.ShaderBindings = {bindings, lengthof(bindings)};
+    gp_props.ShaderBindings = bindings;
 
     m_Pipeline = GraphicsPipeline::New(gp_props);
     SX_CORE_ASSERT(m_Pipeline->IsValid(), "GraphicsPipeline is not valid");

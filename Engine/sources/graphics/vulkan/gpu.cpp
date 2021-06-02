@@ -1,7 +1,7 @@
 #include "platform/memory.hpp"
 #include "core/log.hpp"
 #include "core/assert.hpp"
-#include "core/array_ptr.hpp"
+#include "core/span.hpp"
 #include "core/string.hpp"
 #include "core/push_array.hpp"
 #include "graphics/vulkan/gpu.hpp"

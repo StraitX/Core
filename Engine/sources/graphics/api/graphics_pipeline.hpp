@@ -1,7 +1,7 @@
 #ifndef STRAITX_GRAPHICS_PIPELINE_HPP
 #define STRAITX_GRAPHICS_PIPELINE_HPP
 
-#include "core/array_ptr.hpp"
+#include "core/span.hpp"
 #include "core/noncopyable.hpp"
 #include "core/validable.hpp"
 #include "graphics/api/shader.hpp"
@@ -87,8 +87,8 @@ struct Viewport{
 };
 
 struct GraphicsPipelineProperties{
-    ArrayPtr<const Shader* const> Shaders;
-    ArrayPtr<const VertexAttribute> VertexAttributes;
+    Span<const Shader*> Shaders;
+    Span<VertexAttribute> VertexAttributes;
     PrimitivesTopology Topology;
     Viewport FramebufferViewport;
     RasterizationMode Rasterization;
@@ -96,7 +96,7 @@ struct GraphicsPipelineProperties{
     BlendFactor SrcBlendFactor;
     BlendFactor DstBlendFactor;
     const RenderPass *Pass;
-    ArrayPtr<const ShaderBinding> ShaderBindings;
+    Span<ShaderBinding> ShaderBindings;
 };
 //OpenGL said that
 constexpr size_t MaxVertexAttributes = 8;
@@ -127,7 +127,7 @@ public:
 
     virtual void Bind(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler) = 0;
 
-    static size_t CalculateStride(const ArrayPtr<const VertexAttribute> &attributes);
+    static size_t CalculateStride(Span<VertexAttribute> attributes);
     
     static GraphicsPipeline *New(const GraphicsPipelineProperties &props);
 

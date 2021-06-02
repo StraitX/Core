@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_LOGICAL_GPU_IMPL_HPP
 
 #include "platform/vulkan.hpp"
-#include "core/array_ptr.hpp"
+#include "core/span.hpp"
 #include "graphics/vulkan/queue.hpp"
 #include "graphics/vulkan/memory.hpp"
 #include "graphics/vulkan/command_buffer.hpp"

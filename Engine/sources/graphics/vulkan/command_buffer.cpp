@@ -50,7 +50,7 @@ void CommandBuffer::End()const{
     CoreFunctionAssert(vkEndCommandBuffer(m_Handle),VK_SUCCESS, "Vk: CommandBuffer: Failed to end");
 }
 
-void CommandBuffer::Submit(const ArrayPtr<const VkSemaphore> &wait_semaphores, const ArrayPtr<const VkSemaphore> &signal_semaphores, VkFence signal_fence)const{
+void CommandBuffer::Submit(const Span<VkSemaphore> &wait_semaphores, const Span<VkSemaphore> &signal_semaphores, VkFence signal_fence)const{
     auto *stages = (VkPipelineStageFlags*)alloca(wait_semaphores.Size() * sizeof(VkPipelineStageFlags));
 
     for(size_t i = 0; i<wait_semaphores.Size(); ++i){

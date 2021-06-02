@@ -27,8 +27,8 @@ GPUType VkTypeToGPUType(u32 type){
 
 Result GraphicsAPIImpl::Initialize(){
     Version version = VulkanVersion;
-    ArrayPtr<const char *>extensions = {RequiredPlatformExtensions, RequiredPlatformExtensionsCount};
-    ArrayPtr<const char *>layers     = {RequiredPlatformLayers, RequiredPlatformLayersCount};
+    Span<const char *>extensions = {RequiredPlatformExtensions, RequiredPlatformExtensionsCount};
+    Span<const char *>layers     = {RequiredPlatformLayers, RequiredPlatformLayersCount};
 
 
     if(!CheckExtensions(extensions))
@@ -125,7 +125,7 @@ VkPhysicalDevice GraphicsAPIImpl::PickBestPhysicalDevice()const{
     return best;
 }
 
-bool GraphicsAPIImpl::CheckLayers(const ArrayPtr<const char *> &layers){
+bool GraphicsAPIImpl::CheckLayers(const Span<const char *> &layers){
     u32 count = 0;
     vkEnumerateInstanceLayerProperties(&count, nullptr);
     VkLayerProperties *props = (VkLayerProperties*)alloca(count * sizeof(VkLayerProperties));
@@ -146,7 +146,7 @@ bool GraphicsAPIImpl::CheckLayers(const ArrayPtr<const char *> &layers){
     return true;
 }
 
-bool GraphicsAPIImpl::CheckExtensions(const ArrayPtr<const char *> &extensions){
+bool GraphicsAPIImpl::CheckExtensions(const Span<const char *> &extensions){
     u32 count = 0;
     vkEnumerateInstanceExtensionProperties(nullptr, &count, nullptr);
     VkExtensionProperties *props = (VkExtensionProperties *)alloca(count * sizeof(VkExtensionProperties));

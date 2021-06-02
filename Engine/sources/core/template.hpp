@@ -33,6 +33,12 @@ template <typename T>
 struct IsConst<const T>: IntegralConstant<bool, true>{};
 
 template <typename T>
+struct IsVolatile: IntegralConstant<bool, false>{};
+
+template <typename T>
+struct IsVolatile<volatile T>: IntegralConstant<bool, true>{};
+
+template <typename T>
 struct RemoveReference{
     typedef T Type;
 };

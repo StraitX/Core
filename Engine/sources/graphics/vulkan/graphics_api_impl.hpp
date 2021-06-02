@@ -4,7 +4,7 @@
 #include "platform/vulkan.hpp"
 #include "platform/result.hpp"
 #include "platform/types.hpp"
-#include "core/array_ptr.hpp"
+#include "core/span.hpp"
 #include "graphics/api/graphics_api.hpp"
 
 namespace StraitX{
@@ -26,9 +26,9 @@ private:
 
     VkPhysicalDevice PickBestPhysicalDevice()const;
 
-    static bool CheckLayers(const ArrayPtr<const char *> &layers);
+    static bool CheckLayers(const Span<const char *> &layers);
 
-    static bool CheckExtensions(const ArrayPtr<const char *> &extensions);
+    static bool CheckExtensions(const Span<const char *> &extensions);
 };
 
 SX_INLINE VkInstance GraphicsAPIImpl::Handle()const{

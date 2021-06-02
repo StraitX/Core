@@ -101,7 +101,7 @@ struct ShaderBindingInfo{
     u32 ArraySize; 
 };
 
-ArrayPtr<const char> FindFirstUniformBindingStatement(const char *sources){
+Span<const char> FindFirstUniformBindingStatement(const char *sources){
     while((sources = String::Find(sources, "layout"))){
         auto test_brack_open = String::Find(sources, "{");
         auto test_brack_close = String::Find(sources, "}");
@@ -120,7 +120,7 @@ ArrayPtr<const char> FindFirstUniformBindingStatement(const char *sources){
     return {nullptr, 0};
 }
 
-ArrayPtr<const char> FindUniformBindingStatement(u32 binding_index, const char *sources){
+Span<const char> FindUniformBindingStatement(u32 binding_index, const char *sources){
     while((sources = String::Find(sources, "layout"))){
         auto test_brack_open = String::Find(sources, "{");
         auto test_brack_close = String::Find(sources, "}");
@@ -154,7 +154,7 @@ ArrayPtr<const char> FindUniformBindingStatement(u32 binding_index, const char *
     return {nullptr, 0};
 }
 
-u32 ReadArraySize(ArrayPtr<const char> statement){
+u32 ReadArraySize(Span<const char> statement){
     SX_CORE_ASSERT(*statement.Pointer() == '[',"ReadArraySize: statement should point on array's opening bracket");
 
     auto size = String::Ignore(statement.Pointer() + 1, ' ');
@@ -167,7 +167,7 @@ u32 ReadArraySize(ArrayPtr<const char> statement){
     return array_size;
 }
 
-u32 GetUniformBufferStatementArraySize(ArrayPtr<const char> statement){
+u32 GetUniformBufferStatementArraySize(Span<const char> statement){
     //SX_CORE_ASSERT(String::Find(statement.Pointer(), statement.Size(), "{"),"GL: GraphicsPipeline: Shader Uniform Buffer block is incomplete");
     //SX_CORE_ASSERT(String::Find(statement.Pointer(), statement.Size(), "}"),"GL: GraphicsPipeline: Shader Uniform Buffer block is incomplete");
 
@@ -180,7 +180,7 @@ u32 GetUniformBufferStatementArraySize(ArrayPtr<const char> statement){
     return ReadArraySize({bracket, statement.Size() - (bracket - statement.Pointer())});
 }
 
-u32 GetUniformSamplerStatementArraySize(ArrayPtr<const char> statement){
+u32 GetUniformSamplerStatementArraySize(Span<const char> statement){
     auto name = String::Ignore(String::Find(statement.Pointer(),statement.Size(), "sampler2D") + 9, ' ');
 
     auto bracket = String::Find(name, statement.Size() - (name - statement.Pointer()), "[");
@@ -190,7 +190,7 @@ u32 GetUniformSamplerStatementArraySize(ArrayPtr<const char> statement){
     return ReadArraySize({bracket, statement.Size() - (bracket - statement.Pointer())});
 }
 
-ShaderBindingType GetUniformStatementType(ArrayPtr<const char> statement){
+ShaderBindingType GetUniformStatementType(Span<const char> statement){
     if(String::Contains(statement.Pointer(), statement.Size(), "sampler2D"))
         return ShaderBindingType::Sampler;
     return ShaderBindingType::UniformBuffer;
@@ -211,14 +211,14 @@ void Copy(const char *end, const char *&in_sources, char *&out_sources){
     out_sources += offset;
 }
 
-void TranslateStatementWithoutLayoutQualifiers(const ArrayPtr<const char> &statement,const char *&in_sources, char *&out_sources){
+void TranslateStatementWithoutLayoutQualifiers(const Span<const char> &statement,const char *&in_sources, char *&out_sources){
     const char *uniform = String::Find(statement.Pointer(), statement.Size(), "uniform");
     in_sources = uniform;
 
     Copy(statement.Pointer() + statement.Size(), in_sources, out_sources);
 }
 
-void TranslateStatementWithoutBindingQualifier(const ArrayPtr<const char> &statement,const char *&in_sources, char *&out_sources){
+void TranslateStatementWithoutBindingQualifier(const Span<const char> &statement,const char *&in_sources, char *&out_sources){
     const char *binding = String::Find(statement.Pointer(), statement.Size(), "binding");
     do{
         *out_sources++ = *in_sources++;
@@ -235,14 +235,14 @@ void TranslateStatementWithoutBindingQualifier(const ArrayPtr<const char> &state
     Copy(statement.Pointer() + statement.Size(), in_sources, out_sources);
 }
 
-u32 GetStatementBindingIndex(const ArrayPtr<const char> &statement){
+u32 GetStatementBindingIndex(const Span<const char> &statement){
     const char *binding = String::Ignore(String::IgnoreUntil(String::Find(statement.Pointer(), statement.Size(), "binding") + 7, '=') + 1, ' ');
     u32 binding_index = 0;
     std::sscanf(binding, "%u",&binding_index);
     return binding_index;
 }
 
-void TranslateStatementToBindingIndex(const ArrayPtr<const char> &statement,const char *&in_sources, char *&out_sources, u32 binding_index){
+void TranslateStatementToBindingIndex(const Span<const char> &statement,const char *&in_sources, char *&out_sources, u32 binding_index){
 
     const char *binding = String::Ignore(String::IgnoreUntil(String::Find(statement.Pointer(), statement.Size(), "binding") + 7, '=') + 1, ' ');
 
@@ -321,7 +321,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
 
     Program = glCreateProgram();
 
-    ArrayPtr<u32> shaders((u32*)alloca(sizeof(u32)*props.Shaders.Size()),props.Shaders.Size());
+    Span<u32> shaders((u32*)alloca(sizeof(u32)*props.Shaders.Size()),props.Shaders.Size());
 
     for(size_t i = 0; i<props.Shaders.Size(); ++i){
         auto impl = static_cast<const GL::ShaderImpl*>(props.Shaders[i]);
@@ -335,7 +335,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
 
         if(!SupportsUniformBindings())ReplaceVersionTo(in_sources, out_sources, 410);
 
-        ArrayPtr<const char> statement;
+        Span<const char> statement;
 
         while((statement = FindFirstUniformBindingStatement(in_sources)).Pointer()){
             Copy(statement.Pointer(), in_sources, out_sources);
@@ -403,7 +403,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     for(auto shader: props.Shaders){
         auto impl = static_cast<const GL::ShaderImpl*>(shader);
 
-        ArrayPtr<const char> statement;
+        Span<const char> statement;
         const char *search = impl->Sources;
         while((statement = FindFirstUniformBindingStatement(search + statement.Size())).Pointer()){
             search = statement.Pointer();

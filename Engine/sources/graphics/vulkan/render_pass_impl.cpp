@@ -10,8 +10,8 @@ namespace StraitX{
 namespace Vk{
 
 RenderPassImpl::RenderPassImpl(const RenderPassProperties &props){
-    ArrayPtr<VkAttachmentDescription> attachments((VkAttachmentDescription*)alloca(props.Attachments.Size() * sizeof(VkAttachmentDescription)),props.Attachments.Size());
-    ArrayPtr<VkAttachmentReference> references((VkAttachmentReference *)alloca(props.Attachments.Size() * sizeof(VkAttachmentReference)), props.Attachments.Size());
+    Span<VkAttachmentDescription> attachments((VkAttachmentDescription*)alloca(props.Attachments.Size() * sizeof(VkAttachmentDescription)),props.Attachments.Size());
+    Span<VkAttachmentReference> references((VkAttachmentReference *)alloca(props.Attachments.Size() * sizeof(VkAttachmentReference)), props.Attachments.Size());
 
     for(size_t i = 0; i<attachments.Size(); i++){
         //also fill attachment desctiptions array

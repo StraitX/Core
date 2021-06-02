@@ -70,7 +70,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
             return;
     }
 
-    ArrayPtr<VkDescriptorPoolSize> descriptors((VkDescriptorPoolSize*)alloca(props.ShaderBindings.Size() * sizeof(VkDescriptorPoolSize)), props.ShaderBindings.Size());
+    Span<VkDescriptorPoolSize> descriptors((VkDescriptorPoolSize*)alloca(props.ShaderBindings.Size() * sizeof(VkDescriptorPoolSize)), props.ShaderBindings.Size());
 
     for(size_t i = 0; i<descriptors.Size(); ++i){
         descriptors[i].type = s_DescriptorTypeTable[(size_t)props.ShaderBindings[i].Type];
@@ -87,7 +87,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
 
     CoreFunctionAssert(vkCreateDescriptorPool(GPU::Get().Handle(), &pool_info, nullptr, &Pool), VK_SUCCESS, "Vk: GraphicsPipelineImpl: Can't create VkDescriptorPool");
 
-    ArrayPtr<VkDescriptorSetLayoutBinding> bindings((VkDescriptorSetLayoutBinding*)alloca(props.ShaderBindings.Size() * sizeof(VkDescriptorSetLayoutBinding)), props.ShaderBindings.Size());
+    Span<VkDescriptorSetLayoutBinding> bindings((VkDescriptorSetLayoutBinding*)alloca(props.ShaderBindings.Size() * sizeof(VkDescriptorSetLayoutBinding)), props.ShaderBindings.Size());
 
     for(size_t i = 0; i<descriptors.Size(); ++i){
         bindings[i].binding = props.ShaderBindings[i].Binding;
@@ -127,7 +127,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     vkAllocateDescriptorSets(GPU::Get().Handle(), &set_info, &Set);
 
     //===Shader Stages===
-    ArrayPtr<VkPipelineShaderStageCreateInfo> stages((VkPipelineShaderStageCreateInfo *)alloca(props.Shaders.Size() * sizeof(VkPipelineShaderStageCreateInfo)), props.Shaders.Size());
+    Span<VkPipelineShaderStageCreateInfo> stages((VkPipelineShaderStageCreateInfo *)alloca(props.Shaders.Size() * sizeof(VkPipelineShaderStageCreateInfo)), props.Shaders.Size());
 
     for(size_t i = 0; i<stages.Size(); i++){
         const Vk::ShaderImpl* shader = static_cast<const Vk::ShaderImpl*>(props.Shaders[i]);
@@ -144,7 +144,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
         SX_CORE_ASSERT(shader->GetType() != Shader::TessellationControl && shader->GetType() != Shader::TessellationEvaluation,"Vk: GraphicsPipelineImpl: Tessellation shaders are not supported");
     }
     //===VertexInputState===
-    ArrayPtr<VkVertexInputAttributeDescription> attributes((VkVertexInputAttributeDescription*)alloca(props.VertexAttributes.Size() * sizeof(VkVertexInputAttributeDescription)),props.VertexAttributes.Size());
+    Span<VkVertexInputAttributeDescription> attributes((VkVertexInputAttributeDescription*)alloca(props.VertexAttributes.Size() * sizeof(VkVertexInputAttributeDescription)),props.VertexAttributes.Size());
 
     u32 offset = 0;
     for(size_t i = 0; i<attributes.Size(); i++){
@@ -238,7 +238,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     //===ColorBlendState===
     size_t states_count = Pass->Attachments().Size() - Pass->HasDepth();
 
-    ArrayPtr<VkPipelineColorBlendAttachmentState> blend_states((VkPipelineColorBlendAttachmentState*)alloca(states_count * sizeof(VkPipelineColorBlendAttachmentState)), states_count);
+    Span<VkPipelineColorBlendAttachmentState> blend_states((VkPipelineColorBlendAttachmentState*)alloca(states_count * sizeof(VkPipelineColorBlendAttachmentState)), states_count);
     for(size_t i = 0; i<states_count; ++i){
 
         //TODO separate blending for color and alpha

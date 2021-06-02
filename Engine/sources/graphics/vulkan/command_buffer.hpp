@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_COMMAND_BUFFER_HPP
 
 #include "platform/vulkan.hpp"
-#include "core/array_ptr.hpp"
+#include "core/span.hpp"
 #include "graphics/vulkan/queue.hpp"
 
 namespace StraitX{
@@ -23,7 +23,7 @@ public:
 
     void End()const;
 
-    void Submit(const ArrayPtr<const VkSemaphore> &wait_semaphores, const ArrayPtr<const VkSemaphore> &signal_semaphores, VkFence signal_fence)const;
+    void Submit(const Span<VkSemaphore> &wait_semaphores, const Span<VkSemaphore> &signal_semaphores, VkFence signal_fence)const;
 
     void CmdBufferCopy(VkBuffer src, VkBuffer dst, VkDeviceSize size, VkDeviceSize src_offset, VkDeviceSize dst_offset)const;
 

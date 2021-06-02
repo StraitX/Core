@@ -1,7 +1,7 @@
 #ifndef STRAITX_RENDER_PASS_HPP
 #define STRAITX_RENDER_PASS_HPP
 
-#include "core/array_ptr.hpp"
+#include "core/span.hpp"
 #include "core/push_array.hpp"
 #include "core/math/vector4.hpp"
 #include "core/noncopyable.hpp"
@@ -18,7 +18,7 @@ struct AttachmentDescription{
 };
 
 struct RenderPassProperties{
-    ArrayPtr<const AttachmentDescription> Attachments;
+    Span<AttachmentDescription> Attachments;
 };
 
 class GraphicsAPILoader;

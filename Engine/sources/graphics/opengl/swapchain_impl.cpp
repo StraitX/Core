@@ -6,7 +6,7 @@
 namespace StraitX{
 namespace GL{
 
-static GPUTexture *FakeFramebufferTexturePtr = nullptr;
+static const GPUTexture *FakeFramebufferTexturePtr = nullptr;
 
 static AttachmentDescription SwapchainAttachments[] = {
     {

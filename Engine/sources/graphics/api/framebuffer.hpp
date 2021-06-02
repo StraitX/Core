@@ -1,7 +1,7 @@
 #ifndef STRAITX_FRAMEBUFFER_HPP
 #define STRAITX_FRAMEBUFFER_HPP
 
-#include "core/array_ptr.hpp"
+#include "core/span.hpp"
 #include "core/push_array.hpp"
 #include "core/noncopyable.hpp"
 #include "core/math/vector2.hpp"
@@ -13,7 +13,7 @@ namespace StraitX{
 
 struct FramebufferProperties{
     Vector2u Size = {0, 0};
-    ArrayPtr<const GPUTexture* const> Attachments = {};
+    Span<const GPUTexture* const> Attachments = {};
 };
 
 class GraphicsAPILoader;

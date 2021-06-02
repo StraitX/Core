@@ -24,7 +24,7 @@ GPUContextImpl::GPUContextImpl(){
     { // XXX: Signal first semaphore to avoid lock
         m_CmdBuffer.Begin();
         m_CmdBuffer.End();
-        m_CmdBuffer.Submit(ArrayPtr<const VkSemaphore>(), ArrayPtr<const VkSemaphore>(&m_SemaphoreRing[0].Handle, 1), VK_NULL_HANDLE);
+        m_CmdBuffer.Submit(Span<VkSemaphore>(), Span<VkSemaphore>(&m_SemaphoreRing[0].Handle, 1), VK_NULL_HANDLE);
         vkQueueWaitIdle(m_CmdBuffer.TargetQueue());
     }
 }
@@ -40,7 +40,7 @@ void GPUContextImpl::EndImpl(){
 void GPUContextImpl::SubmitImpl(){
     auto semaphores = NextPair();
 
-    m_CmdBuffer.Submit(ArrayPtr<const VkSemaphore>(&semaphores.First, 1), ArrayPtr<const VkSemaphore>(&semaphores.Second, 1), VK_NULL_HANDLE);
+    m_CmdBuffer.Submit(Span<VkSemaphore>(&semaphores.First, 1), Span<VkSemaphore>(&semaphores.Second, 1), VK_NULL_HANDLE);
 
     vkQueueWaitIdle(m_CmdBuffer.TargetQueue()); // TODO Get rid of this // Context is Immediate mode for now :'-
 }
