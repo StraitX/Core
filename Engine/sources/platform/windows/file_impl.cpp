@@ -24,6 +24,7 @@ Result File::Open(const char* filename, Mode mode, bool create) {
 
 void File::Close() {
 	(void)CloseHandle(reinterpret_cast<HANDLE>(m_FD));
+	m_FD = InvalidFD;
 }
 
 size_t File::Read(void* buffer, size_t size) {
