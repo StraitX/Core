@@ -45,11 +45,11 @@ void main(){
     f_Color = v_Color * texture(u_Textures[int(v_TexIndex)], v_TexCoord);
 })";
 
-Vector2f Renderer2D::s_DefaultTextureCoords[4] = {
-    {0, 1},
-    {0, 0},
-    {1, 0},
-    {1, 1}
+const Vector2f Renderer2D::s_DefaultTextureCoords[4] = {
+    {0.f, 1.f},
+    {0.f, 0.f},
+    {1.f, 0.f},
+    {1.f, 1.f}
 };
 
 Renderer2D::Renderer2D(const RenderPass *pass):
@@ -108,10 +108,10 @@ Renderer2D::Renderer2D(const RenderPass *pass):
     m_UniformBuffer.New(m_StagingUniform.Size(), GPUMemoryType::DynamicVRAM, GPUBuffer::UniformBuffer | GPUBuffer::TransferDestination);
 
     m_Uniform->u_Projection = {
-        {2.f/size.width,    0,                 0, 0},
-        {0,                 2.f/size.height,   0, 0},
-        {0,                 0,                 1, 0},
-        {0,                 0,                 0, 1}
+        {2.f/size.width, 0.f,             0.f, 0.f},
+        {0.f,            2.f/size.height, 0.f, 0.f},
+        {0.f,            0.f,             1.f, 0.f},
+        {0.f,            0.f,             0.f, 1.f}
     };
 
     DMA::Copy(m_StagingUniform, m_UniformBuffer);
@@ -142,7 +142,7 @@ void Renderer2D::EndScene(){
     //LogInfo("DrawCalls: %, QuadsCount: %",DrawCallsCount, QuadsCount);
 }
 
-void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color, const Texture &texture, Vector2f (&texture_coords)[4]){
+void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color, const Texture &texture, const Vector2f (&texture_coords)[4]){
     m_QuadsCount++;
     
     if(m_VerticesCount + 4 > MaxVerticesCount || m_IndicesCount + 6 > MaxIndicesCount || m_Textures.Size() == m_Textures.Capacity()){
@@ -182,7 +182,7 @@ void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color){
     DrawRect(position,size, color, m_WhiteTexture);
 }
 
-void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Texture &texture, Vector2f (&texture_coords)[4]){
+void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Texture &texture, const Vector2f (&texture_coords)[4]){
     DrawRect(position,size, Color::White, texture, texture_coords);
 }
 

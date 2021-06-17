@@ -18,7 +18,7 @@
 namespace StraitX{
 
 class Renderer2D: public NonCopyable{
-public:
+private:
     struct Vertex2D{
         Vector2f a_Position;
         Vector2f a_TexCoords;
@@ -29,8 +29,9 @@ public:
     struct UniformData{
         Matrix4f u_Projection;
     };
-    static Vector2f s_DefaultTextureCoords[4];
 private:
+    static const Vector2f s_DefaultTextureCoords[4];
+
     static constexpr s32 MaxTextures = 8;
     static constexpr size_t MaxVerticesCount = 400000;
     static constexpr size_t MaxIndicesCount  = 600000;
@@ -75,11 +76,11 @@ public:
 
     void EndScene();
 
-    void DrawRect(Vector2i position, Vector2i size, const Color &color, const Texture &texture, Vector2f (&texture_coords)[4] = s_DefaultTextureCoords);
+    void DrawRect(Vector2i position, Vector2i size, const Color &color, const Texture &texture, const Vector2f (&texture_coords)[4] = s_DefaultTextureCoords);
 
     void DrawRect(Vector2i position, Vector2i size, const Color &color);
 
-    void DrawRect(Vector2i position, Vector2i size, const Texture &texture, Vector2f (&texture_coords)[4] = s_DefaultTextureCoords);
+    void DrawRect(Vector2i position, Vector2i size, const Texture &texture, const Vector2f (&texture_coords)[4] = s_DefaultTextureCoords);
 
 private:
     void BeginBatch();
