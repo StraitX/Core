@@ -131,6 +131,7 @@ if(STRAITX_PLATFORM_LINUX)
         ${SOURCES_DIR}/platform/linux/vulkan_surface_impl.cpp
         ${SOURCES_DIR}/platform/linux/clock_impl.cpp
         ${SOURCES_DIR}/platform/unix/sleep_impl.cpp
+		${SOURCES_DIR}/platform/unix/memory_impl.cpp
         ${SOURCES_DIR}/platform/unix/file_impl.cpp
     )
 
