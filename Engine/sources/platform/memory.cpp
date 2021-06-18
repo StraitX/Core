@@ -119,15 +119,17 @@ void Memory::Free(void *pointer){
 
 void *Memory::Realloc(void *pointer, size_t size){
 #ifdef SX_DEBUG
-    pointer = (u8*)pointer - s_AllocationInfoSize;
+	if(pointer){
+		s_Freed += ((size_t*)pointer)[-1];
+		++s_FreeCalls;
+
+		pointer = (u8*)pointer - s_AllocationInfoSize;
+	}
 
     void *new_pointer = std::realloc(pointer, size + s_AllocationInfoSize);
 
 	if(!new_pointer)
 		return nullptr;
-
-    s_Freed += ((size_t*)pointer)[-1];
-    ++s_FreeCalls;
 
     s_Allocated += size;
     ++s_AllocCalls;
