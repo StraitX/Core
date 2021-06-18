@@ -3,8 +3,10 @@
 #include "platform/io.hpp"
 #include <cstdlib>
 #include <cstring>
+#include <ctime>
+#include <assert.h>
 
-#define max(a, b) (a > b ? a : b)
+#define max(a, b) ((a) > (b) ? (a) : (b))
 
 constexpr size_t s_DefaultAlignment =
 max(
@@ -34,19 +36,43 @@ max(
 #define __STDCPP_DEFAULT_NEW_ALIGNMENT__ s_DefaultAlignment
 #endif
 
-void *operator new(size_t size){
-    return StraitX::Memory::Alloc(size);
-}
-void operator delete(void *ptr)noexcept{
-    StraitX::Memory::Free(ptr);
-}
-void *operator new[](size_t size){
-    return ::operator new(size);
-}
-void operator delete[](void *ptr)noexcept{
-    return ::operator delete(ptr);
+void *operator new(size_t size, const std::nothrow_t&)noexcept{
+	return StraitX::Memory::Alloc(size);
 }
 
+void operator delete(void* ptr, const std::nothrow_t&)noexcept{
+	StraitX::Memory::Free(ptr);
+}
+
+void *operator new[](size_t size, const std::nothrow_t&)noexcept{
+	return StraitX::Memory::Alloc(size);
+}
+
+void operator delete[](void* ptr, const std::nothrow_t&)noexcept{
+	StraitX::Memory::Free(ptr);
+}
+
+void *operator new(size_t size){
+	void *memory = ::operator new(size, std::nothrow);
+	if(!memory)
+		throw std::bad_alloc();
+    return memory;
+}
+
+void operator delete(void *ptr)noexcept{
+    ::operator delete(ptr, std::nothrow);
+}
+
+void *operator new[](size_t size){
+    void *memory = ::operator new[](size, std::nothrow);
+	if(!memory)
+		throw std::bad_alloc();
+    return memory;
+}
+
+void operator delete[](void *ptr)noexcept{
+    return ::operator delete[](ptr, std::nothrow);
+}
 
 namespace StraitX{
 
@@ -55,49 +81,62 @@ static u64 s_Freed = 0;
 static u64 s_AllocCalls = 0;
 static u64 s_FreeCalls = 0;
 
-constexpr size_t s_DebugSizeSpace = max(sizeof(size_t), __STDCPP_DEFAULT_NEW_ALIGNMENT__);
+static constexpr size_t s_AllocationInfoSize = max(sizeof(size_t), __STDCPP_DEFAULT_NEW_ALIGNMENT__);
 
 void *Memory::Alloc(size_t size){
 #ifdef SX_DEBUG
+
+    void *pointer = std::malloc(size + s_AllocationInfoSize);
+
+	if(!pointer)
+		return nullptr;
+	
     s_Allocated += size;
     ++s_AllocCalls;
 
-    void *memory = std::malloc(size + s_DebugSizeSpace);
-    size_t *sized = (size_t*)memory;
-    *sized = size;
+	pointer = (u8*)pointer + s_AllocationInfoSize;
 
-    return (u8*)sized + s_DebugSizeSpace;
+	((size_t*)pointer)[-1] = size;
+
+    return pointer;
 #else
     return std::malloc(size);
 #endif
 }
+
 void Memory::Free(void *pointer){
 #ifdef SX_DEBUG
-    size_t *sized = (size_t*)((u8*)pointer - s_DebugSizeSpace);
+	if(!pointer)return;
 
-    s_Freed += *sized;
+    s_Freed += ((size_t*)pointer)[-1];
     ++s_FreeCalls;
 
-    std::free(sized);
+    std::free((u8*)pointer - s_AllocationInfoSize);
 #else
     std::free(pointer);
 #endif
 }
+
 void *Memory::Realloc(void *pointer, size_t size){
 #ifdef SX_DEBUG
-    size_t *sized_to_free = (size_t*)((u8*)pointer - s_DebugSizeSpace);
-    s_Freed += *sized_to_free;
+    pointer = (u8*)pointer - s_AllocationInfoSize;
+
+    void *new_pointer = std::realloc(pointer, size + s_AllocationInfoSize);
+
+	if(!new_pointer)
+		return nullptr;
+
+    s_Freed += ((size_t*)pointer)[-1];
     ++s_FreeCalls;
 
     s_Allocated += size;
     ++s_AllocCalls;
 
-    void *memory = std::realloc(sized_to_free, size + s_DebugSizeSpace);
+	new_pointer = (u8*)new_pointer + s_AllocationInfoSize;
 
-    size_t* sized_allocated = (size_t*)memory;
-    *sized_allocated = size;
+	((size_t*)new_pointer)[-1] = size;
 
-    return (u8*)sized_allocated + s_DebugSizeSpace;
+    return new_pointer;
 #else
     return std::realloc(pointer,size);
 #endif

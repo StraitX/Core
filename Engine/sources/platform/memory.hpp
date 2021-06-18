@@ -20,7 +20,7 @@ public:
     static void *Alloc(size_t size);
 
     static void Free(void *pointer);
-
+	
     static void *Realloc(void *pointer, size_t size);
 
     static void Set(void *memory, u8 byte, size_t size);
