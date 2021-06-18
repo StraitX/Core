@@ -7,18 +7,19 @@
 #include "core/assert.hpp"
 #include "core/move.hpp"
 #include "core/span.hpp"
+#include "core/algorithm.hpp"
 
 namespace StraitX{
 
 template<typename T_Type, size_t T_Capacity>
-class PushArray{
+class alignas(Max(alignof(T_Type), alignof(size_t))) PushArray{
 public:
     typedef T_Type * iterator;
     typedef const T_Type * const_iterator;
 private:
     // we don't want c++ to construct objects for us
-    size_t m_Size = 0;
     u8 m_Memory[T_Capacity * sizeof(T_Type)];
+    size_t m_Size = 0;
 public:
     static_assert(!IsConst<T_Type>() && !IsVolatile<T_Type>(), "T_Type can't be cv-qualified");
 
