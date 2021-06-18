@@ -12,6 +12,20 @@ constexpr void Swap(T& f, T& s){
     s = Move(tmp);
 }
 
+template<typename T>
+constexpr const T &Min(const T &a, const T &b){
+	if(a < b)
+		return a;
+	return b;
+}
+
+template<typename T>
+constexpr const T &Max(const T &a, const T &b){
+	if(a > b)
+		return a;
+	return b;
+}
+
 } // namespace StraitX::
 
 #endif // STRAITX_ALGORITHM_HPP
