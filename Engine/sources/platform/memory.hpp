@@ -23,6 +23,11 @@ public:
 	
     static void *Realloc(void *pointer, size_t size);
 
+	//alignment should be power of 2
+	static void *AlignedAlloc(size_t size, size_t alignment);
+
+	static void AlignedFree(void *pointer);
+
     static void Set(void *memory, u8 byte, size_t size);
 
     static void Copy(const void *source, void *destination, size_t size);
@@ -36,7 +41,11 @@ public:
     static u64 AllocCalls();
 
     static u64 FreeCalls();
+private:
+	// Implemented per platform
+	static void *AlignedAllocImpl(size_t size, size_t alignment);
 
+	static void AlignedFreeImpl(void *pointer);
 };
 
 }; // namespace StraitX::

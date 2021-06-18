@@ -142,6 +142,48 @@ void *Memory::Realloc(void *pointer, size_t size){
 #endif
 }
 
+void *Memory::AlignedAlloc(size_t size, size_t alignment){
+	if(alignment < __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+		alignment = __STDCPP_DEFAULT_NEW_ALIGNMENT__;
+
+	if(alignment != 0 && (alignment & (alignment - 1)) != 0)
+		return nullptr;
+	
+#ifdef SX_DEBUG
+
+	size_t aligned_info_size = max(sizeof(size) + sizeof(aligned_info_size), alignment);
+
+	void *pointer = AlignedAllocImpl(size + aligned_info_size, alignment);
+
+	if(!pointer)
+		return nullptr;
+
+	pointer = ((u8*)pointer + aligned_info_size);
+
+	((size_t*)pointer)[-1] = aligned_info_size;
+	((size_t*)pointer)[-2] = size;
+	
+	return pointer;
+#else
+	return AlignedAllocImpl(size, alignment);
+#endif
+}
+
+void Memory::AlignedFree(void *pointer){
+#ifdef SX_DEBUG
+	if(!pointer)return;
+
+	size_t aligned_info_size = ((size_t*)pointer)[-1];
+	size_t size = ((size_t*)pointer)[-2];
+
+	pointer = (u8*)pointer - aligned_info_size;
+
+	AlignedFreeImpl(pointer);
+#else
+	AlignedFreeImpl(pointer);
+#endif	
+}
+
 void Memory::Set(void *memory, u8 byte, size_t size){
     memset(memory,byte,size);
 }
