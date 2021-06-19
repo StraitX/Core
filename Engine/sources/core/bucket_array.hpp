@@ -31,8 +31,13 @@ private:
 		Bucket() = default;
 
 		~Bucket(){
+			Clear();
+		}
+
+		void Clear(){
 			for(size_t i = 0; i<Size; i++)
 				Array[i].~Type();
+			Size = 0;
 		}
 	};
 private:
@@ -72,22 +77,20 @@ private:
 			return m_CurrentBucket->Array[m_CurrentIndex];
 		}
 	};
-public:
-	typedef IteratorBase<Type> iterator;
-	typedef IteratorBase<const Type> const_iterator;
+
+	typedef IteratorBase<Type> Iterator;
+	typedef IteratorBase<const Type> ConstIterator;
 private:
-	Bucket *m_Begin;
-	Bucket **m_End;
+	Bucket *m_Begin = nullptr;
+	Bucket **m_End = &m_Begin;
 	size_t m_Size = 0;
 public:
 	BucketArray():
-		PoolAllocator(sizeof(Bucket), alignof(Bucket)),
-		m_Begin(nullptr),
-		m_End(&m_Begin)
+		PoolAllocator(sizeof(Bucket), alignof(Bucket))
 	{}
 
 	~BucketArray(){
-		Clear();
+		Clear(true);
 	}
 
 	template<typename...Args>
@@ -129,20 +132,20 @@ public:
 		return m_Size;
 	}
 
-	iterator begin(){
-		return iterator(m_Begin, 0);
+	Iterator begin(){
+		return Iterator(m_Begin, 0);
 	}
 
-	iterator end(){
-		return iterator(nullptr, 0);
+	Iterator end(){
+		return Iterator(nullptr, 0);
 	}
 
-	const_iterator begin()const{
-		return const_iterator(m_Begin, 0);
+	ConstIterator begin()const{
+		return ConstIterator(m_Begin, 0);
 	}
 
-	const_iterator end()const{
-		return const_iterator(nullptr, 0);
+	ConstIterator end()const{
+		return ConstIterator(nullptr, 0);
 	}
 private:
 	Bucket *AllocBucket(){
