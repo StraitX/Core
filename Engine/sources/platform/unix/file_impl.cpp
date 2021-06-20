@@ -4,7 +4,6 @@
 #include <errno.h>
 #include <assert.h>
 #include "platform/file.hpp"
-#include "platform/io.hpp"
 
 namespace StraitX{
 

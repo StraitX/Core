@@ -1,6 +1,5 @@
 #include "platform/memory.hpp"
 #include "platform/compiler.hpp"
-#include "platform/io.hpp"
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
