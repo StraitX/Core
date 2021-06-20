@@ -21,7 +21,6 @@ set(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/thirdparty)
 include(Config)
 
 set(SOURCES_PLATFORM_I
-    ${SOURCES_DIR}/platform/io.cpp
     ${SOURCES_DIR}/platform/memory.cpp
     ${SOURCES_DIR}/platform/result.cpp
     ${SOURCES_DIR}/platform/glloader.cpp
@@ -32,6 +31,8 @@ set(SOURCES_CORE
     ${SOURCES_DIR}/core/assert.cpp
     ${SOURCES_DIR}/core/memory/linear_allocator.cpp
     ${SOURCES_DIR}/core/string.cpp
+	${SOURCES_DIR}/core/print.cpp
+	${SOURCES_DIR}/core/basic_types_printer.cpp
 )
 
 set(SOURCES_GRAPHICS_VULKAN
