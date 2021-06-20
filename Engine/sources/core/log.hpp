@@ -2,7 +2,7 @@
 #define STRAITX_LOG_HPP
 
 #include "platform/result.hpp"
-#include "platform/io.hpp"
+#include "core/print.hpp"
 #include "platform/compiler.hpp"
 
 
