@@ -91,15 +91,4 @@ constexpr Color operator*(const Color &lvalue, const Color &rvalue){
 
 }//namespace StraitX::
 
-namespace StraitX{
-
-char *BufferPrint(char *buffer, const char &arg);
-char *BufferPrint(char *buffer, const float &arg);
-
-SX_INLINE char *BufferPrint(char *buffer, const Color &color){
-    return BufferPrint(BufferPrint(BufferPrint(BufferPrint(BufferPrint(BufferPrint(BufferPrint(BufferPrint(BufferPrint(buffer,'('),color.R),','),color.G),','),color.B),','),color.A),')');
-}
-
-}//namespace StraitX::
-
 #endif//STRAITX_COLOR_HPP

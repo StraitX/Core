@@ -1,4 +1,5 @@
 #include "graphics/color.hpp"
+#include "core/printer.hpp"
 
 namespace StraitX{
 
@@ -13,5 +14,22 @@ const Color Color::Mint       = {0, 1.f, 0.5f, 1.f};
 const Color Color::LightBlue  = {0.2, 0.8f, 1.f, 1.f};
 const Color Color::Black      = {0, 0, 0, 1.f};
 const Color Color::White      = {1.f, 1.f, 1.f, 1.f};
+
+template<>
+struct Printer<Color>{
+	static void Print(const Color &value, void (*writer)(char, void*), void *writer_data);
+};
+
+void Printer<Color>::Print(const Color &value, void (*writer)(char, void*), void *writer_data){
+	Printer<char>::Print('(', writer, writer_data);
+	Printer<float>::Print(value.R, writer, writer_data);
+	Printer<char>::Print(',', writer, writer_data);
+	Printer<float>::Print(value.G, writer, writer_data);
+	Printer<char>::Print(',', writer, writer_data);
+	Printer<float>::Print(value.B, writer, writer_data);
+	Printer<char>::Print(',', writer, writer_data);
+	Printer<float>::Print(value.A, writer, writer_data);
+	Printer<char>::Print(')', writer, writer_data);
+}
 
 }//namespace StraitX::
