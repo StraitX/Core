@@ -90,7 +90,7 @@ public:
 	{}
 
 	~BucketArray(){
-		Clear(true);
+		Clear();
 	}
 
 	template<typename...Args>
