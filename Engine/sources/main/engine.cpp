@@ -1,5 +1,5 @@
 #include "platform/window_system.hpp"
-#include "platform/io.hpp"
+#include "core/print.hpp"
 #include "platform/memory.hpp"
 #include "platform/clock.hpp"
 #include "core/log.hpp"
