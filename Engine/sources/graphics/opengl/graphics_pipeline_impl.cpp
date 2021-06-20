@@ -201,7 +201,7 @@ void ReplaceVersionTo(const char *&in_sources, char *&out_sources, s32 version_n
     Memory::Copy(in_sources, out_sources, version - in_sources);
     out_sources += version - in_sources;
     in_sources = String::IgnoreUntil(version, ' ');
-    out_sources = BufferPrint(out_sources, version_number);
+    out_sources = out_sources + BufferPrinter<s32>::Print(version_number, out_sources);
 }
 
 void Copy(const char *end, const char *&in_sources, char *&out_sources){
@@ -248,7 +248,7 @@ void TranslateStatementToBindingIndex(const Span<const char> &statement,const ch
 
     Copy(binding, in_sources, out_sources);
 
-    out_sources = BufferPrint(out_sources, binding_index);
+    out_sources = out_sources + BufferPrinter<u32>::Print(binding_index, out_sources);
 
     while(*in_sources >= '0' && *in_sources <= '9')++in_sources;
 
