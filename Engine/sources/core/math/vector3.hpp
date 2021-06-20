@@ -3,6 +3,7 @@
 
 #include "platform/types.hpp"
 #include "core/assert.hpp"
+#include "core/printer.hpp"
 
 namespace StraitX{
 
@@ -229,16 +230,19 @@ typedef Vector3<double> Vector3d;
 
 namespace StraitX{
 
-    char *BufferPrint(char *buffer, const char &arg);
-    char *BufferPrint(char *buffer, const int &arg);
-    char *BufferPrint(char *buffer, const unsigned int &arg);
-    char *BufferPrint(char *buffer, const float &arg);
-    char *BufferPrint(char *buffer, const double &arg);
+template<typename T>
+struct Printer<Vector3<T>>{
+	static void Print(const Vector3<T> &value, void (*writer)(char, void*), void *writer_data){
+		Printer<char>::Print('(', writer, writer_data);
+		Printer<T>::Print(value.x, writer, writer_data);
+		Printer<char>::Print(',', writer, writer_data);
+		Printer<T>::Print(value.y, writer, writer_data);
+		Printer<char>::Print(',', writer, writer_data);
+		Printer<T>::Print(value.z, writer, writer_data);
+		Printer<char>::Print(')', writer, writer_data);
+	}
+};
 
-    template<typename T>
-    constexpr char *BufferPrint(char *buffer, const Vector3<T> &vector){
-        return BufferPrint(BufferPrint(BufferPrint(BufferPrint(BufferPrint(BufferPrint(BufferPrint(buffer,'('),vector.x),','),vector.y),','),vector.z),')');
-    }
 }; // namespace StraitX::
 
 #endif // STRAITX_VECTOR3_HPP

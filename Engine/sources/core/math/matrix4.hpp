@@ -3,6 +3,7 @@
 
 #include "core/math/vector4.hpp"
 #include "core/assert.hpp"
+#include "core/printer.hpp"
 
 namespace StraitX{
 
@@ -90,18 +91,19 @@ typedef Matrix4<u32> Matrix4u;
 
 namespace StraitX{
 
-template <typename T>
-inline char *BufferPrint(char *buffer, const Matrix4<T> &matrix){
-    buffer = BufferPrint(buffer, '\n');
-    buffer = BufferPrint(buffer, matrix[0]);
-    buffer = BufferPrint(buffer, '\n');
-    buffer = BufferPrint(buffer, matrix[1]);
-    buffer = BufferPrint(buffer, '\n');
-    buffer = BufferPrint(buffer, matrix[2]);
-    buffer = BufferPrint(buffer, '\n');
-    buffer = BufferPrint(buffer, matrix[3]);
-    return buffer;
-}
+template<typename T>
+struct Printer<Matrix4<T>>{
+	static void Print(const Matrix4<T> &value, void (*writer)(char, void*), void *writer_data){
+		Printer<char>::Print('\n', writer, writer_data);
+		Printer<Vector4<T>>::Print(value[0], writer, writer_data);
+		Printer<char>::Print('\n', writer, writer_data);
+		Printer<Vector4<T>>::Print(value[1], writer, writer_data);
+		Printer<char>::Print('\n', writer, writer_data);
+		Printer<Vector4<T>>::Print(value[2], writer, writer_data);
+		Printer<char>::Print('\n', writer, writer_data);
+		Printer<Vector4<T>>::Print(value[3], writer, writer_data);
+	}
+};
 
 }// namespace StraitX::
 
