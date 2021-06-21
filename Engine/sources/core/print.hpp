@@ -25,14 +25,10 @@ void WriterPrint(void (*writer)(char, void*), void *writer_data, const char *fmt
 	writer('\0', writer_data);
 }
 
-void Print(const char *fmt);
-
 template<typename...Args>
 void Print(const char *fmt, const Args&...args){
 	WriterPrint(STDOutWriter, nullptr, fmt, args...);
 }
-
-void Println(const char *fmt);
 
 template<typename...Args>
 void Println(const char *fmt, const Args&...args){
