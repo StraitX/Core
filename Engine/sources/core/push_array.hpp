@@ -7,19 +7,29 @@
 #include "core/assert.hpp"
 #include "core/move.hpp"
 #include "core/span.hpp"
-#include "core/algorithm.hpp"
 
 namespace StraitX{
 
 template<typename T_Type, size_t T_Capacity>
-class alignas(Max(alignof(T_Type), alignof(size_t))) PushArray{
+class PushArray{
 public:
     typedef T_Type * iterator;
     typedef const T_Type * const_iterator;
 private:
     // we don't want c++ to construct objects for us
-    u8 m_Memory[T_Capacity * sizeof(T_Type)];
     size_t m_Size = 0;
+	class alignas(T_Type){
+	private:
+    	u8 m_Memory[T_Capacity * sizeof(T_Type)];
+	public:
+		T_Type *Data(){
+			return reinterpret_cast<T_Type*>(m_Memory);
+		}
+
+		const T_Type *Data()const{
+			return reinterpret_cast<const T_Type*>(m_Memory);
+		}
+	}m_Array;
 public:
     static_assert(!IsConst<T_Type>() && !IsVolatile<T_Type>(), "T_Type can't be cv-qualified");
 
@@ -178,7 +188,7 @@ PushArray<T_Type, T_Capacity> &PushArray<T_Type, T_Capacity>::operator=(PushArra
 
 template<typename T_Type, size_t T_Capacity>
 PushArray<T_Type, T_Capacity>::operator Span<T_Type>(){
-    return Span<T_Type>(reinterpret_cast<T_Type*>(m_Memory), Size());
+    return Span<T_Type>(m_Array.Data(), Size());
 }
 
 template<typename T_Type, size_t T_Capacity>
@@ -193,12 +203,12 @@ size_t PushArray<T_Type, T_Capacity>::Capacity()const{
 
 template<typename T_Type, size_t T_Capacity>
 T_Type *PushArray<T_Type, T_Capacity>::Data(){
-    return reinterpret_cast<T_Type*>(m_Memory);
+    return m_Array.Data();
 }
 
 template<typename T_Type, size_t T_Capacity>
 const T_Type *PushArray<T_Type, T_Capacity>::Data()const{
-    return reinterpret_cast<const T_Type*>(m_Memory);
+    return m_Array.Data();
 }
 
 template<typename T_Type, size_t T_Capacity>
