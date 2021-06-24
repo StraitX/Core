@@ -1,6 +1,6 @@
 #include "graphics/api/graphics_api_vtable.hpp"
 
-#include "graphics/vulkan/graphics_api_impl.hpp"
+#include "graphics/vulkan/graphics_context_impl.hpp"
 #include "graphics/vulkan/gpu_context_impl.hpp"
 #include "graphics/vulkan/swapchain_impl.hpp"
 #include "graphics/vulkan/gpu_buffer_impl.hpp"
@@ -16,8 +16,8 @@
 
 namespace StraitX{
 
-GraphicsAPIVtable VulkanVTable = {
-    &Vk::GraphicsAPIImpl::Instance,
+GraphicsAPIVTable VulkanVTable = {
+     &Vk::GraphicsContextImpl::s_Instance,
     {&Vk::GPUContextImpl::NewImpl, &Vk::GPUContextImpl::DeleteImpl},
     {&Vk::SwapchainImpl::NewImpl, &Vk::SwapchainImpl::DeleteImpl},
     {&Vk::GPUBufferImpl::NewImpl, &Vk::GPUBufferImpl::DeleteImpl},

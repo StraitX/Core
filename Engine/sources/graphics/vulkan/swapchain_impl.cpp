@@ -2,7 +2,7 @@
 #include "platform/memory.hpp"
 #include "core/assert.hpp"
 #include "core/log.hpp"
-#include "graphics/vulkan/graphics_api_impl.hpp"
+#include "graphics/vulkan/graphics_context_impl.hpp"
 #include "graphics/vulkan/swapchain_impl.hpp"
 #include "graphics/vulkan/gpu_texture_impl.hpp"
 #include "graphics/vulkan/gpu_context_impl.hpp"
@@ -70,7 +70,7 @@ SwapchainImpl::SwapchainImpl(const Window &window, const SwapchainProperties &pr
     m_TargetQueueIndex(GPU::Get().QueueIndex(m_TargetQueueFamily))
 {
     
-    CoreFunctionAssert(m_Surface.Create(Vk::GraphicsAPIImpl::Instance.Handle(), window),Result::Success, "Vk: SwapchainImpl: Can't obtain surface");
+    CoreFunctionAssert(m_Surface.Create(Vk::GraphicsContextImpl::s_Instance.Instance(), window),Result::Success, "Vk: SwapchainImpl: Can't obtain surface");
     
     {
         VkBool32 supported;
