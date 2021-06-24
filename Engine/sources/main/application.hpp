@@ -18,9 +18,6 @@ struct ApplicationConfig{
 };
 
 class Application{
-private:
-    Engine *m_Engine = nullptr;
-    friend class Engine;
 public:
     Application() = default;
 
@@ -35,10 +32,6 @@ public:
     virtual void OnUpdate(float dt);
 
     void Stop();
-
-private:
-    void SetEngine(Engine *engine);
-
 };
 
 }; // namespace StraitX::

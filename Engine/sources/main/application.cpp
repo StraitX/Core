@@ -22,12 +22,7 @@ void Application::OnUpdate(float dt){
 }
 
 void Application::Stop(){
-    m_Engine->Stop();
-}
-
-void Application::SetEngine(Engine *engine){
-    LogInfo("Application: Engine was bound");
-    m_Engine = engine;
+    Engine::Get().Stop();
 }
 
 }; // namespace StraitX::

@@ -99,8 +99,6 @@ Result Engine::Initialize(){
         m_ErrorMX = (m_Application == nullptr ? Result::NullObject : Result::Success);
     }
     InitAssert("StraitXMain",m_ErrorMX);
-    
-    m_Application->SetEngine(this);
 
     LogTrace("Application::OnInitialize: Begin");
     {
