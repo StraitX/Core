@@ -38,7 +38,7 @@ set(SOURCES_CORE
 set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/debug.cpp
 
-	${SOURCES_DIR}/graphics/vulkan/graphics_api_impl.cpp
+	${SOURCES_DIR}/graphics/vulkan/graphics_context_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/queue.cpp
     ${SOURCES_DIR}/graphics/vulkan/gpu.cpp
     ${SOURCES_DIR}/graphics/vulkan/memory.cpp

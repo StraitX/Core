@@ -15,7 +15,7 @@
 
 namespace StraitX{
 
-GraphicsAPIVtable OpenGLVTable = {
+GraphicsAPIVTable OpenGLVTable = {
     &GL::GraphicsAPIImpl::Instance,
     {&GL::GPUContextImpl::NewImpl, &GL::GPUContextImpl::DeleteImpl},
     {&GL::SwapchainImpl::NewImpl, &GL::SwapchainImpl::DeleteImpl},
