@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 02)
-set(VERSION_PATCH 01)
+set(VERSION_PATCH 02)
 
 project(
     StraitXEngine 
@@ -54,6 +54,7 @@ set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/sampler_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/shader_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/render_pass_impl.cpp
+	${SOURCES_DIR}/graphics/vulkan/descriptor_set_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/graphics_pipeline_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/framebuffer_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/dma_impl.cpp
@@ -91,6 +92,7 @@ set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/sampler.cpp
     ${SOURCES_DIR}/graphics/api/shader.cpp
     ${SOURCES_DIR}/graphics/api/render_pass.cpp
+    ${SOURCES_DIR}/graphics/api/descriptor_set.cpp
     ${SOURCES_DIR}/graphics/api/graphics_pipeline.cpp
     ${SOURCES_DIR}/graphics/api/framebuffer.cpp
     ${SOURCES_DIR}/graphics/api/dma.cpp

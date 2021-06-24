@@ -9,6 +9,7 @@
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
 #include "graphics/vulkan/swapchain_impl.hpp"
 #include "graphics/vulkan/gpu.hpp"
+#include "graphics/vulkan/descriptor_set_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -35,6 +36,8 @@ void GPUContextImpl::BeginImpl(){
 
 void GPUContextImpl::EndImpl(){
     m_CmdBuffer.End();
+
+	m_Pipeline = nullptr;
 }
 
 void GPUContextImpl::SubmitImpl(){
@@ -105,7 +108,13 @@ void GPUContextImpl::BindImpl(const GraphicsPipeline *pipeline){
     viewport.height = -(float)pipeline_impl->Scissors.extent.height;
     vkCmdSetViewport(m_CmdBuffer, 0, 1, &viewport);
 
-    vkCmdBindDescriptorSets(m_CmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_impl->Layout, 0, 1, &pipeline_impl->Set, 0, nullptr);
+	m_Pipeline = pipeline_impl;
+}
+
+void GPUContextImpl::BindDescriptorSetImpl(const DescriptorSet *set){
+	VkDescriptorSet set_handle = ((const DescriptorSetImpl *)set)->Handle();
+
+    vkCmdBindDescriptorSets(m_CmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline->Layout, 0, 1, &set_handle, 0, nullptr);
 }
 
 void GPUContextImpl::BeginRenderPassImpl(const RenderPass *pass, const Framebuffer *framebuffer){

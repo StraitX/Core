@@ -14,7 +14,6 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     static VkPolygonMode s_RasterizationModeTable[];
     static VkBlendFactor s_BlendFactorTable[];
     static VkBlendOp s_BlendFunctionTable[];
-    static VkDescriptorType s_DescriptorTypeTable[];
 
     VkPipeline Handle = VK_NULL_HANDLE;
     const Vk::RenderPassImpl *Pass;
@@ -23,19 +22,11 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
 
     VkPipelineLayout Layout = VK_NULL_HANDLE;
 
-    VkDescriptorPool Pool = VK_NULL_HANDLE;
-    VkDescriptorSetLayout SetLayout = VK_NULL_HANDLE;
-    VkDescriptorSet Set = VK_NULL_HANDLE;
-
     GraphicsPipelineImpl(const GraphicsPipelineProperties &props);
 
     virtual ~GraphicsPipelineImpl();
 
     virtual bool IsValid()const override;
-
-    virtual void Bind(size_t binding, size_t index, const GPUBuffer &uniform_buffer)override;
-
-    virtual void Bind(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler)override;
 
     static GraphicsPipeline * NewImpl(const GraphicsPipelineProperties &props);
 

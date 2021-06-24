@@ -5,6 +5,7 @@
 #include "graphics/vulkan/render_pass_impl.hpp"
 #include "graphics/vulkan/gpu_texture_impl.hpp"
 #include "graphics/vulkan/gpu.hpp"
+#include "graphics/vulkan/descriptor_set_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -53,78 +54,27 @@ VkBlendOp GraphicsPipelineImpl::s_BlendFunctionTable[] = {
     VK_BLEND_OP_ADD
 };
 
-VkDescriptorType GraphicsPipelineImpl::s_DescriptorTypeTable[] = {
-    VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-    VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
-};
-
 GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &props):
     GraphicsPipeline(props),
     Pass(static_cast<const Vk::RenderPassImpl*>(props.Pass)),
     Scissors({{props.FramebufferViewport.x, props.FramebufferViewport.y}, {props.FramebufferViewport.Width, props.FramebufferViewport.Height}})
-{
-    SX_CORE_ASSERT(props.ShaderBindings.Size() <= MaxShaderBindings, "Vk: GraphicsPipelineImpl: shader bindings overflow");
-    
+{    
     for(auto &shader: props.Shaders){
         if(!shader->IsValid())
             return;
     }
-
-    Span<VkDescriptorPoolSize> descriptors((VkDescriptorPoolSize*)alloca(props.ShaderBindings.Size() * sizeof(VkDescriptorPoolSize)), props.ShaderBindings.Size());
-
-    for(size_t i = 0; i<descriptors.Size(); ++i){
-        descriptors[i].type = s_DescriptorTypeTable[(size_t)props.ShaderBindings[i].Type];
-        descriptors[i].descriptorCount = props.ShaderBindings[i].Size;
-    }
-
-    VkDescriptorPoolCreateInfo pool_info;
-    pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-    pool_info.pNext = nullptr;
-    pool_info.flags = 0;
-    pool_info.maxSets = 1;
-    pool_info.poolSizeCount = descriptors.Size();
-    pool_info.pPoolSizes = descriptors.Pointer();
-
-    CoreFunctionAssert(vkCreateDescriptorPool(GPU::Get().Handle(), &pool_info, nullptr, &Pool), VK_SUCCESS, "Vk: GraphicsPipelineImpl: Can't create VkDescriptorPool");
-
-    Span<VkDescriptorSetLayoutBinding> bindings((VkDescriptorSetLayoutBinding*)alloca(props.ShaderBindings.Size() * sizeof(VkDescriptorSetLayoutBinding)), props.ShaderBindings.Size());
-
-    for(size_t i = 0; i<descriptors.Size(); ++i){
-        bindings[i].binding = props.ShaderBindings[i].Binding;
-        bindings[i].stageFlags = props.ShaderBindings[i].VisibleShaders;
-        bindings[i].descriptorType = s_DescriptorTypeTable[(size_t)props.ShaderBindings[i].Type];
-        bindings[i].descriptorCount = props.ShaderBindings[i].Size;
-        bindings[i].pImmutableSamplers = nullptr;
-    }
-
-    VkDescriptorSetLayoutCreateInfo set_layout_info;
-    set_layout_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    set_layout_info.pNext = nullptr;
-    set_layout_info.flags = 0;
-    set_layout_info.bindingCount = bindings.Size();
-    set_layout_info.pBindings = bindings.Pointer();
-
-    vkCreateDescriptorSetLayout(GPU::Get().Handle(), &set_layout_info, nullptr, &SetLayout);
+	auto set_layout = VkDescriptorSetLayout(props.DescriptorSetLayout->Handle().U64);
 
     VkPipelineLayoutCreateInfo layout_info;
     layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     layout_info.pNext = nullptr;
     layout_info.flags = 0;
     layout_info.setLayoutCount = 1;
-    layout_info.pSetLayouts = &SetLayout;
+    layout_info.pSetLayouts = &set_layout;
     layout_info.pushConstantRangeCount = 0;
     layout_info.pPushConstantRanges = nullptr;
 
     CoreFunctionAssert(vkCreatePipelineLayout(GPU::Get().Handle(), &layout_info, nullptr, &Layout), VK_SUCCESS, "Vk: GraphicsPipelineImpl: Can't create Pipeline Layout");
-
-    VkDescriptorSetAllocateInfo set_info;
-    set_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-    set_info.pNext = nullptr;
-    set_info.descriptorPool = Pool;
-    set_info.descriptorSetCount = 1;
-    set_info.pSetLayouts = &SetLayout;
-
-    vkAllocateDescriptorSets(GPU::Get().Handle(), &set_info, &Set);
 
     //===Shader Stages===
     Span<VkPipelineShaderStageCreateInfo> stages((VkPipelineShaderStageCreateInfo *)alloca(props.Shaders.Size() * sizeof(VkPipelineShaderStageCreateInfo)), props.Shaders.Size());
@@ -301,56 +251,12 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
 }
 
 GraphicsPipelineImpl::~GraphicsPipelineImpl(){
-    vkDestroyDescriptorSetLayout(GPU::Get().Handle(), SetLayout, nullptr);
-    vkDestroyDescriptorPool(GPU::Get().Handle(), Pool, nullptr);
     vkDestroyPipelineLayout(GPU::Get().Handle(), Layout, nullptr);
     vkDestroyPipeline(GPU::Get().Handle(), Handle, nullptr);
 }
 
 bool GraphicsPipelineImpl::IsValid()const{
     return Status == VK_SUCCESS;
-}
-
-void GraphicsPipelineImpl::Bind(size_t binding, size_t index, const GPUBuffer &uniform_buffer){
-    VkDescriptorBufferInfo buffer;
-    buffer.buffer = reinterpret_cast<VkBuffer>(uniform_buffer.Handle().U64);
-    buffer.offset = 0;
-    buffer.range = VK_WHOLE_SIZE;
-
-    VkWriteDescriptorSet write;
-    write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    write.pNext = nullptr;
-    write.dstSet = Set;
-    write.dstBinding = binding;
-    write.dstArrayElement = index;
-    write.descriptorCount = 1;
-    write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    write.pImageInfo = nullptr;
-    write.pBufferInfo = &buffer;
-    write.pTexelBufferView = nullptr;
-
-    vkUpdateDescriptorSets(GPU::Get().Handle(), 1, &write, 0, nullptr);
-}
-
-void GraphicsPipelineImpl::Bind(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler){
-    VkDescriptorImageInfo image;
-    image.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;//GPUTextureImpl::s_LayoutTable[(size_t)texture.GetLayout()];
-    image.imageView = reinterpret_cast<VkImageView>(texture.ViewHandle().U64);
-    image.sampler = reinterpret_cast<VkSampler>(sampler.Handle().U64);
-
-    VkWriteDescriptorSet write;
-    write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    write.pNext = nullptr;
-    write.dstSet = Set;
-    write.dstBinding = binding;
-    write.dstArrayElement = index;
-    write.descriptorCount = 1;
-    write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    write.pImageInfo = &image;
-    write.pBufferInfo = nullptr;
-    write.pTexelBufferView = nullptr;
-
-    vkUpdateDescriptorSets(GPU::Get().Handle(), 1, &write, 0, nullptr);
 }
 
 GraphicsPipeline * GraphicsPipelineImpl::NewImpl(const GraphicsPipelineProperties &props){

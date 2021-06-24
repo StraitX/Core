@@ -13,6 +13,7 @@ namespace Vk{
 GraphicsAPIImpl GraphicsAPIImpl::Instance;
 
 static_assert(sizeof(GPUHandle) == sizeof(VkPhysicalDevice), "GPUHandle is not the same size as VkPhysicalDevice");
+static_assert(sizeof(GPUResourceHandle) == sizeof(VkBuffer), "Vulkan handle is not the same size as GPUResourceHandle");
 
 GPUType VkTypeToGPUType(u32 type){
     switch (type) {

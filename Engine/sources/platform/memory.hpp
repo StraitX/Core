@@ -13,6 +13,10 @@
     #error "Alloca.h on your platform is not supported yet"
 #endif
 
+
+#define SX_STACK_ALLOC(size) alloca(size)
+#define SX_STACK_ARRAY_ALLOC(type, count) (type*)SX_STACK_ALLOC(sizeof(type)*count)
+
 namespace StraitX{
 
 class Memory{

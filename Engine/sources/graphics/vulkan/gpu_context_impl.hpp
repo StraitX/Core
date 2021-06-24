@@ -7,6 +7,7 @@
 #include "graphics/vulkan/semaphore.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
 #include "graphics/vulkan/framebuffer_impl.hpp"
+#include "graphics/vulkan/graphics_pipeline_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -20,6 +21,8 @@ private:
     Vk::Semaphore m_SemaphoreRing[SemaphoreRingSize];
     VkCommandBuffer m_CmdBufferRing[SemaphoreRingSize];
     u8 m_SemaphoreRingCounter = 0;
+
+	const Vk::GraphicsPipelineImpl *m_Pipeline = nullptr;
 
     const Vk::RenderPassImpl *m_RenderPass = nullptr;
     const Vk::FramebufferImpl *m_Framebuffer = nullptr;
@@ -39,6 +42,8 @@ public:
     virtual void ChangeLayoutImpl(GPUTexture &texture, GPUTexture::Layout new_layout)override;
 
     virtual void BindImpl(const GraphicsPipeline *pipeline)override;
+
+	virtual void BindDescriptorSetImpl(const DescriptorSet *set)override;
 
     virtual void BeginRenderPassImpl(const RenderPass *pass, const Framebuffer *framebuffer)override;
 
