@@ -52,7 +52,13 @@ const Vector2f Renderer2D::s_DefaultTextureCoords[4] = {
     {1.f, 1.f}
 };
 
+ShaderBinding Renderer2D::s_Bindings[] = {
+	{0, 1,           ShaderBindingType::UniformBuffer, Shader::Vertex},
+	{1, MaxTextures, ShaderBindingType::Sampler,       Shader::Fragment}
+};
+
 Renderer2D::Renderer2D(const RenderPass *pass):
+	m_SetLayout(s_Bindings),
     m_Pass(pass)
 {
     auto size = DisplayServer::Window.Size();
@@ -73,10 +79,6 @@ Renderer2D::Renderer2D(const RenderPass *pass):
         VertexAttribute::Float,
         VertexAttribute::Float4
     };
-    ShaderBinding bindings[] = {
-        {0, 1,           ShaderBindingType::UniformBuffer, Shader::Vertex},
-        {1, MaxTextures, ShaderBindingType::Sampler,       Shader::Fragment}
-    };
 
     GraphicsPipelineProperties gp_props = {};
     gp_props.Shaders          = shaders;
@@ -89,7 +91,8 @@ Renderer2D::Renderer2D(const RenderPass *pass):
     gp_props.SrcBlendFactor = BlendFactor::SrcAlpha;
     gp_props.DstBlendFactor = BlendFactor::OneMinusSrcAlpha;
     gp_props.Pass           = m_Pass;
-    gp_props.ShaderBindings = bindings;
+    //gp_props.ShaderBindings = s_Bindings;
+	gp_props.DescriptorSetLayout = &m_SetLayout;
 
     m_Pipeline = GraphicsPipeline::New(gp_props);
     SX_CORE_ASSERT(m_Pipeline->IsValid(), "GraphicsPipeline is not valid");
@@ -116,7 +119,12 @@ Renderer2D::Renderer2D(const RenderPass *pass):
 
     DMA::Copy(m_StagingUniform, m_UniformBuffer);
 
-    m_Pipeline->Bind(0, 0, m_UniformBuffer);
+	m_SetPool = DescriptorSetPool::New(&m_SetLayout, 1);
+
+	m_Set = m_SetPool->AllocateSet();
+
+    //m_Pipeline->Bind(0, 0, m_UniformBuffer);
+    m_Set->UpdateUniformBinding(0, 0, m_UniformBuffer);
 
 }
 
@@ -125,6 +133,9 @@ Renderer2D::~Renderer2D(){
     Shader::Delete(m_FragmentShader);
 
     GraphicsPipeline::Delete(m_Pipeline);
+
+	m_SetPool->FreeSet(m_Set);
+	DescriptorSetPool::Delete(m_SetPool);
 }
 
 void Renderer2D::BeginScene(const Framebuffer *framebuffer, Vector2i camera_position){
@@ -153,7 +164,8 @@ void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color, 
     auto index = tex - m_Textures.begin();
     if(tex == m_Textures.end()){
         m_Textures.Emplace(&texture);
-        m_Pipeline->Bind(1, index, (**tex).GPUTexture, (**tex).Sampler);
+		m_Set->UpdateTextureBinding(1, index, (**tex).GPUTexture, (**tex).Sampler);
+        //m_Pipeline->Bind(1, index, (**tex).GPUTexture, (**tex).Sampler);
     }
 
     position.x -= m_WindowSize.x/2;
@@ -197,6 +209,7 @@ void Renderer2D::EndBatch(){
     GPUContext::Get()->Begin();
     {
         GPUContext::Get()->Bind(m_Pipeline);
+		GPUContext::Get()->BindDescriptorSet(m_Set);
 
         GPUContext::Get()->Copy(m_StagingVertex, m_VertexBuffer, sizeof(Vertex2D) * m_VerticesCount);
         GPUContext::Get()->Copy(m_StagingIndex, m_IndexBuffer, sizeof(u32) * m_IndicesCount);

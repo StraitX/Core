@@ -56,6 +56,10 @@ Result GraphicsAPILoader::Load(GraphicsAPI::API api){
 
     RenderPass::s_VTable = api_vtable->RenderPassVTable;
 
+	DescriptorSetLayout::s_VTable = api_vtable->DescriptorSetLayoutVTable;
+
+	DescriptorSetPool::s_VTable = api_vtable->DescriptorPoolVTable;
+
     GraphicsPipeline::s_VTable = api_vtable->GraphicsPipelineVTable;
     
     Framebuffer::s_VTable = api_vtable->FramebufferVTable;

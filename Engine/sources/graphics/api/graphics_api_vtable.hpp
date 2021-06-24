@@ -10,6 +10,7 @@
 #include "graphics/api/sampler.hpp"
 #include "graphics/api/shader.hpp"
 #include "graphics/api/render_pass.hpp"
+#include "graphics/api/descriptor_set.hpp"
 #include "graphics/api/graphics_pipeline.hpp"
 #include "graphics/api/framebuffer.hpp"
 #include "graphics/api/dma.hpp"
@@ -34,6 +35,10 @@ struct GraphicsAPIVtable{
     Shader::VTable ShaderVTable = {};
 
     RenderPass::VTable RenderPassVTable = {};
+
+	DescriptorSetLayout::VTable DescriptorSetLayoutVTable = {};
+
+	DescriptorSetPool::VTable DescriptorPoolVTable = {};
 
     GraphicsPipeline::VTable GraphicsPipelineVTable = {};
 

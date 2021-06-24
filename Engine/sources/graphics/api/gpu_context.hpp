@@ -70,6 +70,8 @@ public:
 
     void Bind(const GraphicsPipeline *pipeline);
 
+	void BindDescriptorSet(const DescriptorSet *set);
+
     void BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer);
 
     void EndRenderPass();
@@ -100,6 +102,8 @@ protected:
     virtual void ChangeLayoutImpl(GPUTexture &texture, GPUTexture::Layout new_layout) = 0;
 
     virtual void BindImpl(const GraphicsPipeline *pipeline) = 0;
+	
+	virtual void BindDescriptorSetImpl(const DescriptorSet *set) = 0;
 
     virtual void BeginRenderPassImpl(const RenderPass *pass, const Framebuffer *framebuffer) = 0;
 
@@ -190,6 +194,13 @@ SX_INLINE void GPUContext::Bind(const GraphicsPipeline *pipeline){
     m_PipelineIsBound = true;
 #endif
     BindImpl(pipeline);
+}
+
+SX_INLINE void GPUContext::BindDescriptorSet(const DescriptorSet *set){
+#ifdef SX_DEBUG
+	SX_CORE_ASSERT(m_PipelineIsBound, "GraphicsPipeline should be bound in order to bind descriptor set");
+#endif
+	BindDescriptorSetImpl(set);
 }
 
 SX_INLINE void GPUContext::BeginRenderPass(const RenderPass *pass, const Framebuffer *framebuffer){

@@ -9,6 +9,7 @@
 #include "graphics/api/render_pass.hpp"
 #include "graphics/api/gpu_texture.hpp"
 #include "graphics/api/sampler.hpp"
+#include "graphics/api/descriptor_set.hpp"
 
 namespace StraitX{
 
@@ -28,25 +29,6 @@ enum class VertexAttribute{
     Float2,
     Float3,
     Float4
-};
-
-enum class ShaderBindingType{
-    UniformBuffer = 0,
-    Sampler       = 1
-};
-
-struct ShaderBinding{
-    u32 Binding;
-    u32 Size;
-    ShaderBindingType Type;
-    Shader::Types VisibleShaders;
-
-    constexpr ShaderBinding(u32 binding, u32 size, ShaderBindingType type, Shader::Types visible_shaders):
-        Binding(binding),
-        Size(size),
-        Type(type),
-        VisibleShaders(visible_shaders)
-    {}
 };
 
 //TODO: Take value from docs
@@ -96,7 +78,8 @@ struct GraphicsPipelineProperties{
     BlendFactor SrcBlendFactor;
     BlendFactor DstBlendFactor;
     const RenderPass *Pass;
-    Span<ShaderBinding> ShaderBindings;
+    //Span<ShaderBinding> ShaderBindings;
+	const class DescriptorSetLayout *DescriptorSetLayout;
 };
 //OpenGL said that
 constexpr size_t MaxVertexAttributes = 8;
@@ -122,10 +105,6 @@ public:
     GraphicsPipeline(const GraphicsPipelineProperties &props);
 
     virtual ~GraphicsPipeline() = default;
-
-    virtual void Bind(size_t binding, size_t index, const GPUBuffer &uniform_buffer) = 0;
-
-    virtual void Bind(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler) = 0;
 
     static size_t CalculateStride(Span<VertexAttribute> attributes);
     

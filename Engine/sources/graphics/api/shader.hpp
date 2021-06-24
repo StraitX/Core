@@ -18,6 +18,7 @@ constexpr size_t MaxUniformBindings = 8;
 class Shader: public NonCopyable, public Validable{
 public:
     typedef u8 Types;
+	// this values are tied to vulkan enum
     enum Type: Types{
         Vertex                  = 0x01,
         Geometry                = 0x02,

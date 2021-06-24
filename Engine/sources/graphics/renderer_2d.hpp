@@ -11,6 +11,7 @@
 #include "graphics/api/render_pass.hpp"
 #include "graphics/api/graphics_pipeline.hpp"
 #include "graphics/api/framebuffer.hpp"
+#include "graphics/api/descriptor_set.hpp"
 #include "graphics/color.hpp"
 #include "graphics/texture.hpp"
 #include "graphics/image.hpp"
@@ -36,13 +37,19 @@ private:
     static constexpr size_t MaxVerticesCount = 400000;
     static constexpr size_t MaxIndicesCount  = 600000;
 
-
     Texture m_WhiteTexture{Image(1,1,Color::White)};
 
     Shader *m_VertexShader = nullptr;
     Shader *m_FragmentShader = nullptr;
 
+	static ShaderBinding s_Bindings[];
+
+	DescriptorSetLayout m_SetLayout;
+	DescriptorSetPool *m_SetPool = nullptr;
+	DescriptorSet *m_Set = nullptr;
+
     GraphicsPipeline *m_Pipeline = nullptr;
+
     const RenderPass *m_Pass = nullptr;
     const Framebuffer *m_CurrentFramebuffer = nullptr;
 
