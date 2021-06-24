@@ -3,9 +3,9 @@
 #include "platform/memory.hpp"
 #include "platform/clock.hpp"
 #include "core/log.hpp"
-#include "graphics/api/graphics_api.hpp"
 #include "graphics/api/gpu_context.hpp"
 #include "graphics/api/graphics_api_loader.hpp"
+#include "graphics/api/graphics_context.hpp"
 #include "main/application.hpp"
 #include "main/engine.hpp"
 
@@ -84,11 +84,24 @@ Result Engine::Initialize(){
 
     LogTrace("Window::Open: Begin");
     {
-        m_Window = DisplayServer::Window.Open(WindowSystem::MainScreen(), m_ApplicationConfig.WindowSize.x, m_ApplicationConfig.WindowSize.y, m_ApplicationConfig.DesiredAPI, m_ApplicationConfig.SwapchainProps);
+        m_Window = DisplayServer::Window.Open(WindowSystem::MainScreen(), m_ApplicationConfig.WindowSize.x, m_ApplicationConfig.WindowSize.y);
     }
     InitAssert("Window::Open", m_Window);
 
-    DisplayServer::Window.SetTitle(m_ApplicationConfig.ApplicationName);
+	DisplayServer::Window.SetTitle(m_ApplicationConfig.ApplicationName);
+
+    LogTrace("GraphicsAPILoader::Load: Begin");
+	auto error_api_load = GraphicsAPILoader::Load(m_ApplicationConfig.DesiredAPI);
+    InitAssert("GraphicsAPILoader::Load", error_api_load);
+
+	LogTrace("GraphicsContext::New: Begin");
+	{
+		m_ErrorGraphicsContext = GraphicsContext::Get().Initialize(DisplayServer::Window);
+	}
+	InitAssert("GraphicsContext::New", m_ErrorGraphicsContext);
+
+	//XXX temp
+	GPUContext::s_Instance = GPUContext::New();
 
     LogTrace("========= Second stage init =========");
 
@@ -122,6 +135,15 @@ Result Engine::Finalize(){
         StraitXExit(m_Application);
         LogTrace("StraitXExit: End");
     }
+
+	// XXX temp
+	GPUContext::Delete(GPUContext::s_Instance);
+
+	if(m_ErrorGraphicsContext == Result::Success){
+		LogTrace("GraphicsContext::Finalize: Begin");
+		GraphicsContext::Get().Finalize();
+		LogTrace("GraphicsContext::Finalize: End");
+	}
 
     if(m_Window == Result::Success){
         LogTrace("DisplayServer::Finalize: Begin");

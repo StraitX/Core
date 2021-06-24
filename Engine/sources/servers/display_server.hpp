@@ -2,12 +2,12 @@
 #define STRAITX_DISPLAY_SERVER_HPP
 
 #include "platform/result.hpp"
-#include "graphics/render_window.hpp"
+#include "platform/window.hpp"
 
 namespace StraitX{
 
 struct DisplayServer{
-    static RenderWindow Window;
+    static class Window Window;
 };
 
 }; // namespace StraitX::

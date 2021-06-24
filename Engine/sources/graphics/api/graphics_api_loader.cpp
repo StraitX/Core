@@ -7,14 +7,14 @@
 namespace StraitX{
 
 #ifdef SX_VULKAN_SUPPORTED
-extern GraphicsAPIVtable VulkanVTable;
+extern GraphicsAPIVTable VulkanVTable;
 #endif
 
 #ifdef SX_OPENGL_SUPPORTED
 extern GraphicsAPIVtable OpenGLVTable;
 #endif
 
-GraphicsAPIVtable *GetVTable(GraphicsAPI::API api){
+GraphicsAPIVTable *GetVTable(GraphicsAPI api){
     switch (api){
         #ifdef SX_VULKAN_SUPPORTED
             case GraphicsAPI::Vulkan: return &VulkanVTable;
@@ -29,16 +29,16 @@ GraphicsAPIVtable *GetVTable(GraphicsAPI::API api){
 }
 
 
-Result GraphicsAPILoader::Load(GraphicsAPI::API api){
-    GraphicsAPIVtable *api_vtable = GetVTable(api);
+Result GraphicsAPILoader::Load(GraphicsAPI api){
+    GraphicsAPIVTable *api_vtable = GetVTable(api);
     if(!api_vtable){
-        LogError("GraphicsAPILoader::Load: Unsupported API: %",GraphicsAPI::Name(api));
+        LogError("GraphicsAPILoader::Load: Unsupported API: %", api.Name());
         return Result::Unsupported;
     }
 
-    GraphicsAPI::s_CurrentAPI = api;
-
-    GraphicsAPI::s_Instance = api_vtable->GraphicsAPIPtr;
+	GraphicsContext::s_CurrentAPI = api;
+	
+	GraphicsContext::s_Instance = api_vtable->GraphicsContextPtr;
 
     GPUContext::s_VTable = api_vtable->GPUContextVTable;
 

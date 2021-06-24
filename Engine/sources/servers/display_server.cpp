@@ -2,6 +2,6 @@
 
 namespace StraitX{
 
-RenderWindow DisplayServer::Window;
+class Window DisplayServer::Window;
 
 }; // namespace StraitX::

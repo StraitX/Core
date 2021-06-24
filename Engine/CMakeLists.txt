@@ -38,7 +38,7 @@ set(SOURCES_CORE
 set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/debug.cpp
 
-    ${SOURCES_DIR}/graphics/vulkan/graphics_api_impl.cpp
+	${SOURCES_DIR}/graphics/vulkan/graphics_api_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/queue.cpp
     ${SOURCES_DIR}/graphics/vulkan/gpu.cpp
     ${SOURCES_DIR}/graphics/vulkan/memory.cpp
@@ -82,7 +82,7 @@ set(SOURCES_GRAPHICS_OPENGL
 set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/format.cpp
     ${SOURCES_DIR}/graphics/api/graphics_api_loader.cpp
-    ${SOURCES_DIR}/graphics/api/graphics_api.cpp
+	${SOURCES_DIR}/graphics/api/graphics_context.cpp
     ${SOURCES_DIR}/graphics/api/gpu_configuration.cpp
     ${SOURCES_DIR}/graphics/api/gpu_buffer.cpp
     ${SOURCES_DIR}/graphics/api/gpu_context.cpp
@@ -104,7 +104,6 @@ set(SOURCES_GRAPHICS_I
     ${SOURCES_DIR}/graphics/image_loader.cpp
     ${SOURCES_DIR}/graphics/image.cpp
     ${SOURCES_DIR}/graphics/texture.cpp
-    ${SOURCES_DIR}/graphics/render_window.cpp
     ${SOURCES_DIR}/graphics/renderer_2d.cpp
 )
 
@@ -151,7 +150,7 @@ if(STRAITX_PLATFORM_LINUX)
 
     set(SOURCES_GRAPHICS_D
         ${SOURCES_GRAPHICS_VULKAN}
-        ${SOURCES_GRAPHICS_OPENGL}
+        #${SOURCES_GRAPHICS_OPENGL}
     )
 
 elseif(STRAITX_PLATFORM_WINDOWS)
