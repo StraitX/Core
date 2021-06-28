@@ -12,11 +12,31 @@ void STDErrWriter(char ch, void *data = nullptr);
 
 void WriterPrint(void (*writer)(char, void*), void *writer_data, const char *fmt);
 
+namespace Details{
+
+template<typename T>
+struct ImplicitPrintCaster{
+	typedef T Type;
+};
+
+template<typename T>
+struct ImplicitPrintCaster<T *>{
+	typedef void * Type;
+};
+
+template<>
+struct ImplicitPrintCaster<const char *>{
+	typedef const char *Type;
+};
+
+}//namespace Details::
+
 template <typename T, typename...Args>
 void WriterPrint(void (*writer)(char, void*), void *writer_data, const char *fmt, T arg, const Args&...args){
 	while(*fmt!=0){
         if(*fmt=='%'){
-			Printer<T>::Print(arg, writer, writer_data);
+			using PrintType = typename Details::ImplicitPrintCaster<T>::Type;
+			Printer<PrintType>::Print((PrintType)arg, writer, writer_data);
             return WriterPrint(writer, writer_data, fmt+1, args...);
         }
         writer(*fmt, writer_data);
