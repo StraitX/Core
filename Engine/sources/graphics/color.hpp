@@ -2,6 +2,7 @@
 #define STRAITX_COLOR_HPP
 
 #include "platform/types.hpp"
+#include "core/math/vector4.hpp"
 
 namespace StraitX{
 
@@ -22,6 +23,8 @@ struct Color{
     constexpr Color(const Color &other) = default;
 
     constexpr Color& operator=(const Color &other) = default;
+
+	constexpr operator Vector4f()const;
 
     constexpr u32 RGBA8()const;
 
@@ -70,6 +73,9 @@ constexpr Color::Color(u8 r, u8 g, u8 b, u8 a):
     B(b/static_cast<float>((decltype(b))-1)),
     A(a/static_cast<float>((decltype(a))-1))
 {}
+constexpr Color::operator Vector4f()const{
+	return {R, G, B, A};
+}
 
 constexpr Color operator+(const Color &lvalue, const Color &rvalue){
     return {
