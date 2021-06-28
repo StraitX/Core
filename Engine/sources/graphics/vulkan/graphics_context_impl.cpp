@@ -74,11 +74,12 @@ Result GraphicsContextImpl::Initialize(const Window &window){
 	m_SignalFence.Construct();
 
 	m_Swapchain->AcquireNext(m_PresentSemaphore->Handle, m_SignalFence->Handle);
-	m_SignalFence->WaitAndReset();
 	return Result::Success;
 }
 
 void GraphicsContextImpl::Finalize(){
+	m_SignalFence->Wait();
+	
 	m_SignalFence.Destruct();
 
 	m_CommandBuffer.Destruct();
@@ -95,6 +96,8 @@ void GraphicsContextImpl::Finalize(){
 }
 
 void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
+	m_SignalFence->WaitAndReset();
+
 	VkCommandBuffer vk_cmd_buffer = m_CommandBuffer->Handle();
 
 	m_CommandBuffer->Begin();
@@ -281,14 +284,12 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 	m_CommandBuffer->End();
 
 	m_CommandBuffer->Submit({}, {}, m_SignalFence->Handle);
-
-	m_SignalFence->WaitAndReset();
 }
 
 void GraphicsContextImpl::SwapBuffers(){
+	m_SignalFence->WaitAndReset();
 	m_Swapchain->PresentCurrent(m_PresentSemaphore->Handle);
 	m_Swapchain->AcquireNext(m_PresentSemaphore->Handle, m_SignalFence->Handle);
-	m_SignalFence->WaitAndReset();
 }
 
 const Framebuffer *GraphicsContextImpl::CurrentFramebuffer(){
