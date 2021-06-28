@@ -77,7 +77,7 @@ private:
 			return m_CurrentBucket->Array[m_CurrentIndex];
 		}
 	};
-
+public:
 	typedef IteratorBase<Type> Iterator;
 	typedef IteratorBase<const Type> ConstIterator;
 private:
@@ -90,7 +90,15 @@ public:
 	{}
 
 	~BucketList(){
-		Clear();
+		while(m_Begin != nullptr){
+			Bucket *current = m_Begin;
+
+			m_Begin = m_Begin->Next;
+
+			FreeBucket(current);
+		}
+		m_End = &m_Begin;
+		m_Size = 0;
 	}
 
 	template<typename...Args>
@@ -118,17 +126,14 @@ public:
 
 	void Clear(){
 		while(m_Begin != nullptr){
-			Bucket *current = m_Begin;
+			m_Begin->Clear();
 
 			m_Begin = m_Begin->Next;
-
-			FreeBucket(current);
 		}
-		m_End = &m_Begin;
 		m_Size = 0;
 	}
 
-	size_t Size(){
+	size_t Size()const{
 		return m_Size;
 	}
 
