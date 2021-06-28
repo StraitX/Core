@@ -38,6 +38,10 @@ public:
     VkQueue TargetQueue()const{
         return m_TargetQueue;
     }
+
+	VkCommandBuffer Handle()const{
+		return m_Handle;
+	}
 };
 
 SX_INLINE void CommandBuffer::CmdBufferCopy(VkBuffer src, VkBuffer dst, VkDeviceSize size, VkDeviceSize src_offset, VkDeviceSize dst_offset)const{

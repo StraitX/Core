@@ -5,6 +5,8 @@
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/dma_impl.hpp"
 #include "graphics/vulkan/debug.hpp"
+#include "graphics/vulkan/gpu_texture_impl.hpp"
+#include "graphics/vulkan/descriptor_set_impl.hpp"
 //XXX remove
 #include "graphics/vulkan/gpu_context_impl.hpp"
 
@@ -65,12 +67,21 @@ Result GraphicsContextImpl::Initialize(const Window &window){
 
     DMAImpl::Initialize();
 
-	m_Swapchain = (Vk::SwapchainImpl*)Vk::SwapchainImpl::New(window, {});
+	m_Swapchain.Construct(window, SwapchainProperties{});
+
+	m_CommandBuffer.Construct(QueueFamily::Graphics);
+
+	m_SignalFence.Construct();
+
 	return Result::Success;
 }
 
 void GraphicsContextImpl::Finalize(){
-	Vk::SwapchainImpl::Delete(m_Swapchain);
+	m_SignalFence.Destruct();
+
+	m_CommandBuffer.Destruct();
+
+	m_Swapchain.Destruct();
 
 	DMAImpl::Finalize();
 
@@ -80,16 +91,199 @@ void GraphicsContextImpl::Finalize(){
     vkDestroyInstance(m_Instance, nullptr);
 }
 
-void GraphicsContextImpl::BeginFrame(){
-	
-}
+void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
+	VkCommandBuffer vk_cmd_buffer = m_CommandBuffer->Handle();
 
-void GraphicsContextImpl::EndFrame(){
+	m_CommandBuffer->Begin();
 
+	for(const auto &cmd: cmd_buffer){
+		switch(cmd.Type){
+		case GPUCommandType::None:
+		{
+			(void)0;
+		}
+		break;
+		case GPUCommandType::CopyCPUToGPUBuffer: 
+		{
+			VkBuffer src = VkBuffer(cmd.CopyCPUToGPUBuffer.Source.U64);
+			VkBuffer dst = VkBuffer(cmd.CopyCPUToGPUBuffer.Destination.U64);
+
+			m_CommandBuffer->CmdBufferCopy(
+				src,
+				dst,
+				cmd.CopyCPUToGPUBuffer.Size,
+				cmd.CopyCPUToGPUBuffer.SourceOffset,
+				cmd.CopyCPUToGPUBuffer.DestinationOffset
+			);
+																					// XXX this can be optimized
+			m_CommandBuffer->CmdMemoryBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT);
+		}
+		break;
+		case GPUCommandType::ChangeTextureLayout: 
+		{
+			m_CommandBuffer->CmdImageBarrier(
+				VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, // XXX this can be optimized
+				VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
+				VK_ACCESS_MEMORY_WRITE_BIT, 
+				VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+				GPUTextureImpl::s_LayoutTable[(size_t)cmd.ChangeTextureLayout.OldLayout], 
+				GPUTextureImpl::s_LayoutTable[(size_t)cmd.ChangeTextureLayout.NewLayout], 
+				VkImage(cmd.ChangeTextureLayout.Texture->Handle().U64)
+			);
+		}
+		break;
+		case GPUCommandType::BindPipeline: 
+		{
+			m_PipelineBindPoint = static_cast<const Vk::GraphicsPipelineImpl *>(cmd.BindPipeline.Pipeline);
+			vkCmdBindPipeline(vk_cmd_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineBindPoint->Handle);
+			
+			vkCmdSetScissor(vk_cmd_buffer, 0, 1, &m_PipelineBindPoint->Scissors);
+
+			VkViewport viewport;
+			viewport.minDepth = 0.0;
+			viewport.maxDepth = 1.0;
+			viewport.x = m_PipelineBindPoint->Scissors.offset.x;
+			viewport.y = m_PipelineBindPoint->Scissors.extent.height - m_PipelineBindPoint->Scissors.offset.y;
+			viewport.width  = m_PipelineBindPoint->Scissors.extent.width;
+			viewport.height = -(float)m_PipelineBindPoint->Scissors.extent.height;
+			vkCmdSetViewport(vk_cmd_buffer, 0, 1, &viewport);
+		}		
+		break;
+		case GPUCommandType::BindDescriptorSet: 
+		{
+			VkDescriptorSet set_handle = ((const Vk::DescriptorSetImpl*)cmd.BindDescriptorSet.DescriptorSet)->Handle();
+
+			vkCmdBindDescriptorSets(vk_cmd_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineBindPoint->Layout, 0, 1, &set_handle, 0, nullptr);
+		}		
+		break;
+		case GPUCommandType::BindVertexBuffer: 
+		{
+			VkBuffer vb = VkBuffer(cmd.BindVertexBuffer.VertexBuffer.U64);
+			VkDeviceSize offset = 0;
+			vkCmdBindVertexBuffers(vk_cmd_buffer, 0, 1, &vb, &offset);
+		}		
+		break;
+		case GPUCommandType::BindIndexBuffer: 
+		{
+			static VkIndexType s_IndexType[]={
+    			VK_INDEX_TYPE_UINT16,
+    			VK_INDEX_TYPE_UINT32
+			};
+
+			VkBuffer ib = VkBuffer(cmd.BindIndexBuffer.IndexBuffer.U64);
+			VkIndexType it = s_IndexType[(size_t)cmd.BindIndexBuffer.IndicesType];
+
+			vkCmdBindIndexBuffer(vk_cmd_buffer, ib, 0, it);
+		}		
+		break;
+		case GPUCommandType::BeginRenderPass: 
+		{
+			m_CurrentRenderPass = static_cast<const Vk::RenderPassImpl*>(cmd.BeginRenderPass.RenderPass);
+			m_CurrentFramebuffer = static_cast<const Vk::FramebufferImpl*>(cmd.BeginRenderPass.Framebuffer);
+
+			VkRenderPassBeginInfo info;
+			info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+			info.pNext = nullptr;
+			info.clearValueCount = 0;
+			info.pClearValues = nullptr;
+			info.framebuffer = m_CurrentFramebuffer->Handle();
+			info.renderPass = m_CurrentRenderPass->Handle();
+			info.renderArea.offset = {0, 0};
+			info.renderArea.extent.width = m_CurrentFramebuffer->Size().x;
+			info.renderArea.extent.height = m_CurrentFramebuffer->Size().y;
+			
+			vkCmdBeginRenderPass(vk_cmd_buffer, &info, VK_SUBPASS_CONTENTS_INLINE);
+		}		
+		break;
+		case GPUCommandType::EndRenderPass: 
+		{
+    		vkCmdEndRenderPass(vk_cmd_buffer);
+
+			m_CurrentFramebuffer = nullptr;
+			m_CurrentRenderPass = nullptr;
+		}		
+		break;
+		case GPUCommandType::DrawIndexed: 
+		{
+    		vkCmdDrawIndexed(vk_cmd_buffer, cmd.DrawIndexed.IndicesCount, 1, 0, 0, 0);
+		}		
+		break;
+		case GPUCommandType::ClearFramebufferColorAttachments:
+		{
+			auto fb_impl = static_cast<const Vk::FramebufferImpl*>(cmd.ClearFramebufferColorAttachments.Framebuffer);
+
+			Vector4f color = cmd.ClearFramebufferColorAttachments.Color;
+
+			VkClearColorValue value;
+			value.float32[0] = color[0];
+			value.float32[1] = color[1];
+			value.float32[2] = color[2];
+			value.float32[3] = color[3];
+
+			VkImageSubresourceRange issr;
+			issr.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			issr.baseArrayLayer = 0;
+			issr.baseMipLevel = 0;
+			issr.levelCount = 1;
+			issr.layerCount = 1;
+
+			for(auto &att: fb_impl->Attachments()){
+				if(IsColorFormat(att->GetFormat())){
+
+					auto layout = GPUTextureImpl::s_LayoutTable[(size_t)att->GetLayout()];
+					constexpr auto clear_layout = VK_IMAGE_LAYOUT_GENERAL;
+
+					m_CommandBuffer->CmdImageBarrier(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, layout, clear_layout, (VkImage)att->Handle().U64);
+
+					vkCmdClearColorImage(vk_cmd_buffer, (VkImage)att->Handle().U64, clear_layout, &value, 1, &issr);
+
+					m_CommandBuffer->CmdImageBarrier(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_READ_BIT, clear_layout, layout, (VkImage)att->Handle().U64);
+				}
+			}
+		}
+		break;
+		case GPUCommandType::ClearFramebufferDepthAttachments:
+		{
+			auto fb_impl = static_cast<const Vk::FramebufferImpl*>(cmd.ClearFramebufferDepthAttachments.Framebuffer);
+
+			VkClearDepthStencilValue depth_value;
+			depth_value.depth = cmd.ClearFramebufferDepthAttachments.Depth;
+			depth_value.stencil = 0;
+
+			VkImageSubresourceRange issr;
+			issr.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+			issr.baseArrayLayer = 0;
+			issr.baseMipLevel = 0;
+			issr.levelCount = 1;
+			issr.layerCount = 1;
+
+			for(auto &att: fb_impl->Attachments()){
+				if(IsDepthFormat(att->GetFormat())){
+
+					auto layout = GPUTextureImpl::s_LayoutTable[(size_t)att->GetLayout()];
+					constexpr auto clear_layout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+
+					m_CommandBuffer->CmdImageBarrier(VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, layout, clear_layout, (VkImage)att->Handle().U64, VK_IMAGE_ASPECT_DEPTH_BIT);
+
+					vkCmdClearDepthStencilImage(vk_cmd_buffer, (VkImage)att->Handle().U64, clear_layout, &depth_value, 1, &issr);
+
+					m_CommandBuffer->CmdImageBarrier(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_READ_BIT, clear_layout, layout, (VkImage)att->Handle().U64, VK_IMAGE_ASPECT_DEPTH_BIT);
+				}
+			}
+		}
+		break;
+		}
+	}
+
+	m_CommandBuffer->End();
+
+	m_CommandBuffer->Submit({}, {}, m_SignalFence->Handle);
+
+	m_SignalFence->WaitFor();
 }
 
 void GraphicsContextImpl::SwapBuffers(){
-	GPUContext::Get()->SwapFramebuffers(m_Swapchain);
+	GPUContext::Get()->SwapFramebuffers(&m_Swapchain);
 }
 
 const Framebuffer *GraphicsContextImpl::CurrentFramebuffer(){
