@@ -4,7 +4,7 @@
 #include "servers/display_server.hpp"
 #include "graphics/renderer_2d.hpp"
 #include "graphics/api/dma.hpp"
-#include "graphics/api/gpu_context.hpp"
+#include "graphics/api/graphics_context.hpp"
 
 namespace StraitX{
 
@@ -146,6 +146,8 @@ void Renderer2D::BeginScene(const Framebuffer *framebuffer, Vector2i camera_posi
     m_QuadsCount = 0;
     m_Textures.Clear();
     BeginBatch();
+	m_CmdBuffer.ClearFramebufferColorAttachments(m_CurrentFramebuffer, Color::Black);
+	m_CmdBuffer.ClearFramebufferDepthAttachments(m_CurrentFramebuffer, 1.f);
 }
 
 void Renderer2D::EndScene(){
@@ -206,24 +208,22 @@ void Renderer2D::BeginBatch(){
 void Renderer2D::EndBatch(){
     if(!m_VerticesCount || !m_IndicesCount)return;
 
-    GPUContext::Get()->Begin();
-    {
-        GPUContext::Get()->Bind(m_Pipeline);
-		GPUContext::Get()->BindDescriptorSet(m_Set);
+	m_CmdBuffer.BindPipeline(m_Pipeline);
+	m_CmdBuffer.BindDescriptorSet(m_Set);
 
-        GPUContext::Get()->Copy(m_StagingVertex, m_VertexBuffer, sizeof(Vertex2D) * m_VerticesCount);
-        GPUContext::Get()->Copy(m_StagingIndex, m_IndexBuffer, sizeof(u32) * m_IndicesCount);
+	m_CmdBuffer.CopyCPUToGPUBuffer(m_StagingVertex, m_VertexBuffer, sizeof(Vertex2D) * m_VerticesCount);
+	m_CmdBuffer.CopyCPUToGPUBuffer(m_StagingIndex, m_IndexBuffer, sizeof(u32) * m_IndicesCount);
 
-        GPUContext::Get()->BeginRenderPass(m_Pass, m_CurrentFramebuffer);
-        {
-            GPUContext::Get()->BindVertexBuffer(m_VertexBuffer);
-            GPUContext::Get()->BindIndexBuffer(m_IndexBuffer, IndicesType::Uint32);
-            GPUContext::Get()->DrawIndexed(m_IndicesCount);
-        }
-        GPUContext::Get()->EndRenderPass();
+	m_CmdBuffer.BeginRenderPass(m_Pass, m_CurrentFramebuffer);
+	{
+		m_CmdBuffer.BindVertexBuffer(m_VertexBuffer);
+		m_CmdBuffer.BindIndexBuffer(m_IndexBuffer, IndicesType::Uint32);
+		m_CmdBuffer.DrawIndexed(m_IndicesCount);
+	}
+	m_CmdBuffer.EndRenderPass();
 
-    }
-    GPUContext::Get()->End(); GPUContext::Get()->Submit();
+	GraphicsContext::Get().ExecuteCmdBuffer(m_CmdBuffer);
+	m_CmdBuffer.Reset();
 
     m_DrawCallsCount++;
 }

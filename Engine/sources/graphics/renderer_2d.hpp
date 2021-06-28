@@ -12,6 +12,7 @@
 #include "graphics/api/graphics_pipeline.hpp"
 #include "graphics/api/framebuffer.hpp"
 #include "graphics/api/descriptor_set.hpp"
+#include "graphics/api/gpu_command_buffer.hpp"
 #include "graphics/color.hpp"
 #include "graphics/texture.hpp"
 #include "graphics/image.hpp"
@@ -38,6 +39,8 @@ private:
     static constexpr size_t MaxIndicesCount  = 600000;
 
     Texture m_WhiteTexture{Image(1,1,Color::White)};
+
+	GPUCommandBuffer m_CmdBuffer;
 
     Shader *m_VertexShader = nullptr;
     Shader *m_FragmentShader = nullptr;

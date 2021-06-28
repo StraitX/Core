@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 02)
-set(VERSION_PATCH 02)
+set(VERSION_PATCH 03)
 
 project(
     StraitXEngine 
@@ -83,6 +83,7 @@ set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/format.cpp
     ${SOURCES_DIR}/graphics/api/graphics_api_loader.cpp
 	${SOURCES_DIR}/graphics/api/graphics_context.cpp
+	${SOURCES_DIR}/graphics/api/gpu_command_buffer.cpp
     ${SOURCES_DIR}/graphics/api/gpu_configuration.cpp
     ${SOURCES_DIR}/graphics/api/gpu_buffer.cpp
     ${SOURCES_DIR}/graphics/api/gpu_context.cpp

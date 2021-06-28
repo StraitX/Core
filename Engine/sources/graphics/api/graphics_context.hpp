@@ -2,8 +2,7 @@
 #define STRAITX_GRAPHICS_CONTEXT_HPP
 
 #include "platform/window.hpp"
-#include "graphics/api/render_pass.hpp"
-#include "graphics/api/framebuffer.hpp"
+#include "graphics/api/gpu_command_buffer.hpp"
 
 namespace StraitX{
 
@@ -52,12 +51,9 @@ private:
 public:
 	//virtual void ScheduleCmdBuffer(CmdBuffer cmd_buffer) = 0;
 
-	virtual void BeginFrame() = 0;
-
-	//calls ExecuteCmdBuffers()
-	virtual void EndFrame() = 0;
-
 	//virtual void ExecuteScheduledCmdBuffers() = 0;
+
+	virtual void ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer) = 0;
 
 	virtual void SwapBuffers() = 0;
 
