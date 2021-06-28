@@ -2,8 +2,6 @@
 #define STRAITX_GRAPHICS_API_VTABLE_HPP
 
 #include "graphics/api/graphics_context.hpp"
-#include "graphics/api/gpu_context.hpp"
-#include "graphics/api/swapchain.hpp"
 #include "graphics/api/gpu_buffer.hpp"
 #include "graphics/api/cpu_buffer.hpp"
 #include "graphics/api/gpu_texture.hpp"
@@ -19,10 +17,6 @@ namespace StraitX{
 
 struct GraphicsAPIVTable{
     GraphicsContext *GraphicsContextPtr= {};
-
-    GPUContext::VTable GPUContextVTable = {};
-
-    Swapchain::VTable SwapchainVTable = {};
 
     GPUBuffer::VTable GPUBufferVTable = {};
 

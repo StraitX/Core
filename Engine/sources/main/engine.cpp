@@ -3,7 +3,6 @@
 #include "platform/memory.hpp"
 #include "platform/clock.hpp"
 #include "core/log.hpp"
-#include "graphics/api/gpu_context.hpp"
 #include "graphics/api/graphics_api_loader.hpp"
 #include "graphics/api/graphics_context.hpp"
 #include "main/application.hpp"
@@ -100,9 +99,6 @@ Result Engine::Initialize(){
 	}
 	InitAssert("GraphicsContext::New", m_ErrorGraphicsContext);
 
-	//XXX temp
-	GPUContext::s_Instance = GPUContext::New();
-
     LogTrace("========= Second stage init =========");
 
     //Engine should be completely initialized at this moment
@@ -135,9 +131,6 @@ Result Engine::Finalize(){
         StraitXExit(m_Application);
         LogTrace("StraitXExit: End");
     }
-
-	// XXX temp
-	GPUContext::Delete(GPUContext::s_Instance);
 
 	if(m_ErrorGraphicsContext == Result::Success){
 		LogTrace("GraphicsContext::Finalize: Begin");

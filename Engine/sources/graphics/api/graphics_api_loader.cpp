@@ -40,10 +40,6 @@ Result GraphicsAPILoader::Load(GraphicsAPI api){
 	
 	GraphicsContext::s_Instance = api_vtable->GraphicsContextPtr;
 
-    GPUContext::s_VTable = api_vtable->GPUContextVTable;
-
-    Swapchain::s_VTable = api_vtable->SwapchainVTable;
-
     GPUBuffer::s_VTable = api_vtable->GPUBufferVTable;
 
     CPUBuffer::s_VTable = api_vtable->CPUBufferVTable;

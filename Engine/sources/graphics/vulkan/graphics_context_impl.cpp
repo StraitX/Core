@@ -7,8 +7,7 @@
 #include "graphics/vulkan/debug.hpp"
 #include "graphics/vulkan/gpu_texture_impl.hpp"
 #include "graphics/vulkan/descriptor_set_impl.hpp"
-//XXX remove
-#include "graphics/vulkan/gpu_context_impl.hpp"
+#include "graphics/vulkan/graphics_pipeline_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -67,12 +66,15 @@ Result GraphicsContextImpl::Initialize(const Window &window){
 
     DMAImpl::Initialize();
 
-	m_Swapchain.Construct(window, SwapchainProperties{});
+	m_Swapchain.Construct(window);
+	m_PresentSemaphore.Construct();
 
 	m_CommandBuffer.Construct(QueueFamily::Graphics);
 
 	m_SignalFence.Construct();
 
+	m_Swapchain->AcquireNext(m_PresentSemaphore->Handle, m_SignalFence->Handle);
+	m_SignalFence->WaitAndReset();
 	return Result::Success;
 }
 
@@ -81,6 +83,7 @@ void GraphicsContextImpl::Finalize(){
 
 	m_CommandBuffer.Destruct();
 
+	m_PresentSemaphore.Destruct();
 	m_Swapchain.Destruct();
 
 	DMAImpl::Finalize();
@@ -279,11 +282,13 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 
 	m_CommandBuffer->Submit({}, {}, m_SignalFence->Handle);
 
-	m_SignalFence->WaitFor();
+	m_SignalFence->WaitAndReset();
 }
 
 void GraphicsContextImpl::SwapBuffers(){
-	GPUContext::Get()->SwapFramebuffers(&m_Swapchain);
+	m_Swapchain->PresentCurrent(m_PresentSemaphore->Handle);
+	m_Swapchain->AcquireNext(m_PresentSemaphore->Handle, m_SignalFence->Handle);
+	m_SignalFence->WaitAndReset();
 }
 
 const Framebuffer *GraphicsContextImpl::CurrentFramebuffer(){

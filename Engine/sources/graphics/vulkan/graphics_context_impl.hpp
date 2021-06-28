@@ -3,9 +3,10 @@
 
 #include "core/raw_var.hpp"
 #include "graphics/api/graphics_context.hpp"
-#include "graphics/vulkan/swapchain_impl.hpp"
+#include "graphics/vulkan/swapchain.hpp"
 #include "graphics/vulkan/command_buffer.hpp"
 #include "graphics/vulkan/fence.hpp"
+#include "graphics/vulkan/semaphore.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -17,7 +18,8 @@ private:
 	VkInstance m_Instance = VK_NULL_HANDLE;
 	VkDebugUtilsMessengerEXT m_Messenger = VK_NULL_HANDLE;
 
-	RawVar<Vk::SwapchainImpl> m_Swapchain;
+	RawVar<Vk::Swapchain> m_Swapchain;
+	RawVar<Vk::Semaphore> m_PresentSemaphore;
 
 	RawVar<Vk::CommandBuffer> m_CommandBuffer;
 

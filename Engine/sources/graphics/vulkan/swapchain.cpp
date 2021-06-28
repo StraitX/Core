@@ -3,9 +3,8 @@
 #include "core/assert.hpp"
 #include "core/log.hpp"
 #include "graphics/vulkan/graphics_context_impl.hpp"
-#include "graphics/vulkan/swapchain_impl.hpp"
+#include "graphics/vulkan/swapchain.hpp"
 #include "graphics/vulkan/gpu_texture_impl.hpp"
-#include "graphics/vulkan/gpu_context_impl.hpp"
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/dma_impl.hpp"
 
@@ -38,61 +37,55 @@ static AttachmentDescription SwapchainAttachments[] = {
         GPUTexture::Layout::PresentSrcOptimal,
         GPUTexture::Layout::PresentSrcOptimal,
         GPUTexture::Layout::ColorAttachmentOptimal,
-        TextureFormat::Unknown,
+        TextureFormat::BGRA8,
         SamplePoints::Samples_1,
     },
     {
         GPUTexture::Layout::DepthStencilAttachmentOptimal,
         GPUTexture::Layout::DepthStencilAttachmentOptimal,
         GPUTexture::Layout::DepthStencilAttachmentOptimal,
-        TextureFormat::Unknown,
+        TextureFormat::Depth32,
         SamplePoints::Samples_1,
     }
 };
 
-static RenderPassProperties ToFramebufferProperties(const SwapchainProperties &props){
-    //XXX not thread-safe
-    SwapchainAttachments[0].Format = TextureFormat::BGRA8;
-    SwapchainAttachments[0].Samples = props.FramebufferSamples; 
-
-    SwapchainAttachments[1].Format = props.DepthFormat;
-    return {{SwapchainAttachments, size_t(1 + IsDepthFormat(props.DepthFormat))}};
+static RenderPassProperties GetFramebufferProperties(){
+    return {{SwapchainAttachments, 2}};
 }
 
 
-SwapchainImpl::SwapchainImpl(const Window &window, const SwapchainProperties &props):
-    Swapchain(props),
+Swapchain::Swapchain(const Window &window):
     m_Colorspace(DesiredColorSpace),
-    m_ImagesCount(props.FramebuffersCount),
-    m_FramebufferPass(ToFramebufferProperties(props)),
+    m_ImagesCount(s_MaxFramebuffers),
+    m_FramebufferPass(GetFramebufferProperties()),
     m_TargetQueueFamily(QueueFamily::Graphics),
     m_TargetQueue(GPU::Get().Queue(m_TargetQueueFamily)),
     m_TargetQueueIndex(GPU::Get().QueueIndex(m_TargetQueueFamily))
 {
     
-    CoreFunctionAssert(m_Surface.Create(Vk::GraphicsContextImpl::s_Instance.Instance(), window),Result::Success, "Vk: SwapchainImpl: Can't obtain surface");
+    CoreFunctionAssert(m_Surface.Create(Vk::GraphicsContextImpl::s_Instance.Instance(), window),Result::Success, "Vk: Swapchain: Can't obtain surface");
     
     {
         VkBool32 supported;
         vkGetPhysicalDeviceSurfaceSupportKHR(GPU::Get().PhysicalHandle(), m_TargetQueueIndex, m_Surface.Handle, &supported);
         if(!supported){
-            LogError("Vk: SwapchainImpl: Current Physical Device does not support swapchain");
+            LogError("Vk: Swapchain: Current Physical Device does not support swapchain");
             return;
         }
     }
     
     VkSurfaceCapabilitiesKHR capabilities;
-    CoreFunctionAssert(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(GPU::Get().PhysicalHandle(), m_Surface.Handle, &capabilities), VK_SUCCESS, "Vk: SwapchainImpl: can't obtain surface sapabilites");
+    CoreFunctionAssert(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(GPU::Get().PhysicalHandle(), m_Surface.Handle, &capabilities), VK_SUCCESS, "Vk: Swapchain: can't obtain surface sapabilites");
 
     if(capabilities.minImageCount > m_ImagesCount){
         LogWarn("Vk: Swapchain: System requires % framebuffers", capabilities.minImageCount);
         m_ImagesCount = capabilities.minImageCount;
     }
 
-    SX_CORE_ASSERT((!capabilities.maxImageCount || m_ImagesCount <= capabilities.maxImageCount), "Vk: SwapchainImpl: current system does not support this amount of framebuffers");
+    SX_CORE_ASSERT((!capabilities.maxImageCount || m_ImagesCount <= capabilities.maxImageCount), "Vk: Swapchain: current system does not support this amount of framebuffers");
     
     if(!IsSupported(GPU::Get().PhysicalHandle(), m_Surface.Handle, m_Format, m_Colorspace)){
-        LogError("Vk: SwapchainImpl: ColorSpace and Format are not supported");
+        LogError("Vk: Swapchain: ColorSpace and Format are not supported");
         return;
     }
 
@@ -119,22 +112,19 @@ SwapchainImpl::SwapchainImpl(const Window &window, const SwapchainProperties &pr
     info.imageArrayLayers = 1;
     info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
-    CoreFunctionAssert(vkCreateSwapchainKHR(GPU::Get().Handle(), &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: SwapchainImpl: Can't create a swapchain");
+    CoreFunctionAssert(vkCreateSwapchainKHR(GPU::Get().Handle(), &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: Swapchain: Can't create a swapchain");
 
-    if(IsDepthFormat(props.DepthFormat)){
-        m_DepthAttachment.New(props.DepthFormat, GPUTexture::DepthStencilOptimal | GPUTexture::TransferDst, m_Size.x, m_Size.y);
-
-        DMAImpl::ChangeGPUTextureLayoutImpl(m_DepthAttachment, GPUTexture::Layout::DepthStencilAttachmentOptimal);
-    }
+	m_DepthAttachment.New(SwapchainAttachments[1].Format, GPUTexture::DepthStencilOptimal | GPUTexture::TransferDst, m_Size.x, m_Size.y);
+	DMAImpl::ChangeGPUTextureLayoutImpl(m_DepthAttachment, GPUTexture::Layout::DepthStencilAttachmentOptimal);
 
     InitializeFramebuffers(m_Format);
 
     // First Acquire is synched
     vkAcquireNextImageKHR(GPU::Get().Handle(), m_Handle, 0, VK_NULL_HANDLE, m_AcquireFence.Handle, &m_CurrentImage);
-    m_AcquireFence.WaitFor();
+    m_AcquireFence.WaitAndReset();
 }
 
-SwapchainImpl::~SwapchainImpl(){
+Swapchain::~Swapchain(){
     vkQueueWaitIdle(m_TargetQueue);
 
     FinalizeFramebuffers();
@@ -144,30 +134,21 @@ SwapchainImpl::~SwapchainImpl(){
     m_Surface.Destroy();
 }
 
-const Framebuffer *SwapchainImpl::CurrentFramebuffer()const{
+const Framebuffer *Swapchain::CurrentFramebuffer()const{
     return &m_Framebuffers[m_CurrentImage];
 }
 
-const RenderPass *SwapchainImpl::FramebufferPass()const{
+const RenderPass *Swapchain::FramebufferPass()const{
     return &m_FramebufferPass;
 }
 
-Swapchain *SwapchainImpl::NewImpl(const Window &window, const SwapchainProperties &props){
-    return new (Memory::Alloc(sizeof(Vk::SwapchainImpl))) SwapchainImpl(window, props);
-}
-
-void SwapchainImpl::DeleteImpl(Swapchain *swapchain){
-    swapchain->~Swapchain();
-    Memory::Free(swapchain);
-}
-
-void SwapchainImpl::InitializeFramebuffers(VkFormat format){
+void Swapchain::InitializeFramebuffers(VkFormat format){
     u32 images_count = 0;
     vkGetSwapchainImagesKHR(GPU::Get().Handle(), m_Handle, &images_count, nullptr);
     auto *images = (VkImage*)alloca(images_count * sizeof(VkImage));
     vkGetSwapchainImagesKHR(GPU::Get().Handle(), m_Handle, &images_count, images);
 
-    SX_CORE_ASSERT(images_count <= MaxFramebuffers, "Vk: Swapchain: unsupported amount of Images");
+    SX_CORE_ASSERT(images_count <= s_MaxFramebuffers, "Vk: Swapchain: unsupported amount of Images");
 
     for(u32 i = 0; i<images_count; ++i){
         GPUTextureImpl(m_Images.Emplace()).CreateWithImage(images[i], GPUTexture::Layout::PresentSrcOptimal, TextureFormat::BGRA8, GPUTexture::UsageBits::Sampled, m_Size.x, m_Size.y);
@@ -184,7 +165,7 @@ void SwapchainImpl::InitializeFramebuffers(VkFormat format){
     }
 }
 
-void SwapchainImpl::FinalizeFramebuffers(){
+void Swapchain::FinalizeFramebuffers(){
     m_Framebuffers.Clear();
     for(auto &image: m_Images){
         GPUTextureImpl(image).DestroyWithoutImage();
@@ -192,7 +173,7 @@ void SwapchainImpl::FinalizeFramebuffers(){
     }
 }
 
-void SwapchainImpl::PresentCurrent(VkSemaphore wait_semaphore){
+void Swapchain::PresentCurrent(VkSemaphore wait_semaphore){
     VkResult result;
 
     VkPresentInfoKHR info;
@@ -208,8 +189,8 @@ void SwapchainImpl::PresentCurrent(VkSemaphore wait_semaphore){
     vkQueuePresentKHR(m_TargetQueue, &info);
 }
 
-void SwapchainImpl::AcquireNext(VkSemaphore signal_semaphore){
-    vkAcquireNextImageKHR(GPU::Get().Handle(), m_Handle, 0, signal_semaphore, VK_NULL_HANDLE, &m_CurrentImage);
+void Swapchain::AcquireNext(VkSemaphore signal_semaphore, VkFence signal_fence){
+    vkAcquireNextImageKHR(GPU::Get().Handle(), m_Handle, 0, signal_semaphore, signal_fence, &m_CurrentImage);
 }
 
 }//namespace Vk::

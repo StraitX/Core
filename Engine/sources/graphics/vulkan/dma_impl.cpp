@@ -42,7 +42,7 @@ void DMAImpl::CmdCopy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 
     m_CmdBuffer.End();
 
     m_CmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, m_OpFence.Handle);
-    m_OpFence.WaitFor();
+    m_OpFence.WaitAndReset();
 }
 
 void DMAImpl::Copy(const void *src, const GPUBuffer &dst, u32 size, u32 dst_offset){
@@ -80,7 +80,7 @@ void DMAImpl::Copy(const CPUTexture &src, const GPUTexture &dst){
     m_CmdBuffer.End();
 
     m_CmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, m_OpFence.Handle);
-    m_OpFence.WaitFor();
+    m_OpFence.WaitAndReset();
 }
 
 void DMAImpl::ChangeLayout(GPUTexture &texture, GPUTexture::Layout layout){
@@ -101,7 +101,7 @@ void DMAImpl::ChangeLayout(GPUTexture &texture, GPUTexture::Layout layout){
     m_CmdBuffer.End();
 
     m_CmdBuffer.Submit({nullptr, 0}, {nullptr, 0}, m_OpFence.Handle);
-    m_OpFence.WaitFor();
+    m_OpFence.WaitAndReset();
 
     texture.m_Layout = layout;
 }

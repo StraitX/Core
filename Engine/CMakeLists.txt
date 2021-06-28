@@ -47,8 +47,7 @@ set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/memory_allocator.cpp
     ${SOURCES_DIR}/graphics/vulkan/gpu_buffer_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/command_buffer.cpp
-    ${SOURCES_DIR}/graphics/vulkan/gpu_context_impl.cpp
-    ${SOURCES_DIR}/graphics/vulkan/swapchain_impl.cpp
+    ${SOURCES_DIR}/graphics/vulkan/swapchain.cpp
     ${SOURCES_DIR}/graphics/vulkan/cpu_buffer_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/gpu_texture_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/sampler_impl.cpp
@@ -86,8 +85,6 @@ set(SOURCES_GRAPHICS_API
 	${SOURCES_DIR}/graphics/api/gpu_command_buffer.cpp
     ${SOURCES_DIR}/graphics/api/gpu_configuration.cpp
     ${SOURCES_DIR}/graphics/api/gpu_buffer.cpp
-    ${SOURCES_DIR}/graphics/api/gpu_context.cpp
-    ${SOURCES_DIR}/graphics/api/swapchain.cpp
     ${SOURCES_DIR}/graphics/api/cpu_buffer.cpp
     ${SOURCES_DIR}/graphics/api/gpu_texture.cpp
     ${SOURCES_DIR}/graphics/api/sampler.cpp

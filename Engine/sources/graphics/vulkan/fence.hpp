@@ -15,7 +15,11 @@ struct Fence: NonCopyable{
 
     ~Fence();
 
-    void WaitFor()const;
+	void Wait()const;
+
+	void Reset()const;
+
+	void WaitAndReset()const;
 };
 
 }//namespace Vk::
