@@ -4,14 +4,19 @@
 #include "platform/types.hpp"
 #include "platform/memory.hpp"
 #include "core/move.hpp"
+#include "core/noncopyable.hpp"
 
 namespace StraitX{
 
 template<typename T>
-class alignas(T) RawVar{
+class alignas(T) RawVar: public NonCopyable{
 private:
 	u8 m_Memory[sizeof(T)];
 public:
+	RawVar() = default;
+
+	~RawVar() = default;
+
 	template<typename ...Args>
 	void Construct(Args&&...args){
 		new (m_Memory) T(Forward<Args>(args)...);
