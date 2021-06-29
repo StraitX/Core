@@ -18,7 +18,7 @@ static int ctxErrorHandler( ::Display *dpy, XErrorEvent *ev )
 
 typedef GLXContext (*glXCreateContextAttribsARBProc)(::Display*, GLXFBConfig, GLXContext, Bool, const int*);
 
-Result OpenGLContextImpl::Create(WindowImpl &window, const Version &version){
+Result OpenGLContextImpl::Create(const WindowImpl &window, const Version &version){
     m_WindowHandle = window.Handle;
 
     

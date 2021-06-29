@@ -11,7 +11,7 @@ extern const char* windowClassName;
 
 constexpr size_t MaxFormatsCount = 64;
 
-Result OpenGLContextImpl::Create(WindowImpl& window, const Version& version) {
+Result OpenGLContextImpl::Create(const WindowImpl& window, const Version& version) {
 	m_WindowHandle = window.Handle();
 	m_DeviceContext = GetDC(m_WindowHandle);
 

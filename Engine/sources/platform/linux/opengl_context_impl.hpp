@@ -16,7 +16,7 @@ private:
 public:
     OpenGLContextImpl() = default;
 
-    Result Create(WindowImpl &window, const Version &version);
+    Result Create(const WindowImpl &window, const Version &version);
 
     Result CreateDummy();
 
