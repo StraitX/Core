@@ -34,6 +34,9 @@ enum class GPUCommandType: u32{
 
 	ClearFramebufferColorAttachments,
 	ClearFramebufferDepthAttachments,
+
+	SetScissors,
+	SetViewport
 };
 
 struct GPUCmdCopyCPUToGPUBuffer{
@@ -83,6 +86,7 @@ struct GPUCmdDraw{
 
 struct GPUCmdDrawIndexed{
 	size_t IndicesCount;
+	size_t IndexOffset;
 };
 
 struct GPUCmdClearFramebufferColorAttachments{
@@ -93,6 +97,20 @@ struct GPUCmdClearFramebufferColorAttachments{
 struct GPUCmdClearFramebufferDepthAttachments{
 	const class Framebuffer *Framebuffer;
 	float Depth;
+};
+
+struct GPUCmdSetScissors{
+	float Width;
+	float Height;
+	float x;
+	float y;
+};
+
+struct GPUCmdSetViewport{
+	float Width;
+	float Height;
+	float x;
+	float y;
 };
 
 struct GPUCommand{
@@ -111,6 +129,8 @@ struct GPUCommand{
 		GPUCmdDrawIndexed DrawIndexed;
 		GPUCmdClearFramebufferColorAttachments ClearFramebufferColorAttachments;
 		GPUCmdClearFramebufferDepthAttachments ClearFramebufferDepthAttachments;
+		GPUCmdSetScissors SetScissors;
+		GPUCmdSetViewport SetViewport;
 	};
 
 	GPUCommand(const GPUCmdCopyCPUToGPUBuffer &cmd);
@@ -134,6 +154,10 @@ struct GPUCommand{
 	GPUCommand(const GPUCmdClearFramebufferColorAttachments &cmd);
 
 	GPUCommand(const GPUCmdClearFramebufferDepthAttachments &cmd);
+
+	GPUCommand(const GPUCmdSetScissors &cmd);
+
+	GPUCommand(const GPUCmdSetViewport &cmd);
 };
 
 class GPUCommandBuffer{
@@ -158,11 +182,15 @@ public:
 
 	void EndRenderPass();
 	//void Draw();
-	void DrawIndexed(size_t indices_count);
+	void DrawIndexed(size_t indices_count, size_t index_offset = 0);
 
 	void ClearFramebufferColorAttachments(const Framebuffer *fb, const Vector4f color);
 
 	void ClearFramebufferDepthAttachments(const Framebuffer *fb, float depth);
+
+	void SetScissors(float width, float height, float x, float y);
+
+	void SetViewport(float width, float height, float x, float y);
 
 	void Reset();
 

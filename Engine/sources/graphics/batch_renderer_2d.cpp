@@ -54,7 +54,7 @@ const Vector2f BatchRenderer2D::s_DefaultTextureCoords[4] = {
 
 ShaderBinding BatchRenderer2D::s_Bindings[] = {
 	{0, 1,           ShaderBindingType::UniformBuffer, Shader::Vertex},
-	{1, MaxTextures, ShaderBindingType::Sampler,       Shader::Fragment}
+	{1, MaxTextures, ShaderBindingType::Texture,       Shader::Fragment}
 };
 
 BatchRenderer2D::BatchRenderer2D(const RenderPass *pass):
@@ -148,8 +148,9 @@ void BatchRenderer2D::BeginScene(const Framebuffer *framebuffer, Vector2i camera
     m_QuadsCount = 0;
     m_Textures.Clear();
     BeginBatch();
-	m_CmdBuffer.ClearFramebufferColorAttachments(m_CurrentFramebuffer, Color(0.2, 0.2, 0.2f));
-	m_CmdBuffer.ClearFramebufferDepthAttachments(m_CurrentFramebuffer, 1.f);
+	auto size = framebuffer->Size();
+	m_CmdBuffer.SetViewport(size.x, size.y, 0, 0);
+	m_CmdBuffer.SetScissors(size.x, size.y, 0, 0);
 }
 
 void BatchRenderer2D::EndScene(){

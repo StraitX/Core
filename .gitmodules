@@ -10,3 +10,6 @@
 [submodule "Engine/thirdparty/glsl2spv"]
 	path = Engine/thirdparty/glsl2spv
 	url = https://github.com/E1Hephaestus/glsl2spv
+[submodule "Engine/thirdparty/imgui"]
+	path = Engine/thirdparty/imgui
+	url = https://github.com/StraitX/imgui

@@ -69,6 +69,19 @@ GPUCommand::GPUCommand(const GPUCmdClearFramebufferDepthAttachments &cmd):
 	ClearFramebufferDepthAttachments = cmd;
 }
 
+
+GPUCommand::GPUCommand(const GPUCmdSetScissors &cmd):
+	Type(GPUCommandType::SetScissors)
+{
+	SetScissors = cmd;
+}
+
+GPUCommand::GPUCommand(const GPUCmdSetViewport &cmd):
+	Type(GPUCommandType::SetViewport)
+{
+	SetViewport = cmd;
+}
+
 void GPUCommandBuffer::CopyCPUToGPUBuffer(const CPUBuffer &src, const GPUBuffer &dst, size_t size, size_t src_offset, size_t dst_offset){
 	GPUCmdCopyCPUToGPUBuffer cmd;
 	cmd.Source = src.Handle();
@@ -133,9 +146,10 @@ void GPUCommandBuffer::EndRenderPass(){
 	m_Commands.PushBack(cmd);
 }
 
-void GPUCommandBuffer::DrawIndexed(size_t indices_count){
+void GPUCommandBuffer::DrawIndexed(size_t indices_count, size_t index_offset){
 	GPUCmdDrawIndexed cmd;
 	cmd.IndicesCount = indices_count;
+	cmd.IndexOffset = index_offset;
 
 	m_Commands.PushBack(cmd);
 }
@@ -153,6 +167,26 @@ void GPUCommandBuffer::ClearFramebufferDepthAttachments(const Framebuffer *fb, f
 	cmd.Framebuffer = fb;
 	cmd.Depth = depth;
 	
+	m_Commands.PushBack(cmd);
+}
+
+void GPUCommandBuffer::SetScissors(float width, float height, float x, float y){
+	GPUCmdSetScissors cmd;
+	cmd.Width = width;
+	cmd.Height = height;
+	cmd.x = x;
+	cmd.y = y;
+
+	m_Commands.PushBack(cmd);
+}
+
+void GPUCommandBuffer::SetViewport(float width, float height, float x, float y){
+	GPUCmdSetViewport cmd;
+	cmd.Width = width;
+	cmd.Height = height;
+	cmd.x = x;
+	cmd.y = y;
+
 	m_Commands.PushBack(cmd);
 }
 

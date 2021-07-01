@@ -179,7 +179,7 @@ u32 GetUniformSamplerStatementArraySize(Span<const char> statement){
 
 ShaderBindingType GetUniformStatementType(Span<const char> statement){
     if(String::Contains(statement.Pointer(), statement.Size(), "sampler2D"))
-        return ShaderBindingType::Sampler;
+        return ShaderBindingType::Texture;
     return ShaderBindingType::UniformBuffer;
 }
 
@@ -295,7 +295,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
                         VirtualBindings[i].ArraySize = GetUniformBufferStatementArraySize(statement);
                         current_uniform += VirtualBindings[i].ArraySize;
                         break;
-                    case ShaderBindingType::Sampler:
+                    case ShaderBindingType::Texture:
                         VirtualBindings[i].BaseGLBinding = current_sampler;
                         VirtualBindings[i].ArraySize = GetUniformSamplerStatementArraySize(statement);
                         current_sampler += VirtualBindings[i].ArraySize;
@@ -414,7 +414,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
                 u32 index = glGetUniformBlockIndex(Program, name_null);
                 glUniformBlockBinding(Program, index, VirtualBindings[binding_index].BaseGLBinding);
             }break;
-            case ShaderBindingType::Sampler:
+            case ShaderBindingType::Texture:
             {
                 const char *name = String::Ignore(String::Find(statement.Pointer(), "sampler2D") + 9, ' ');
 

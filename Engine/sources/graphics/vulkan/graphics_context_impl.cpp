@@ -216,7 +216,7 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		break;
 		case GPUCommandType::DrawIndexed: 
 		{
-    		vkCmdDrawIndexed(vk_cmd_buffer, cmd.DrawIndexed.IndicesCount, 1, 0, 0, 0);
+    		vkCmdDrawIndexed(vk_cmd_buffer, cmd.DrawIndexed.IndicesCount, 1, cmd.DrawIndexed.IndexOffset, 0, 0);
 		}		
 		break;
 		case GPUCommandType::ClearFramebufferColorAttachments:
@@ -283,12 +283,39 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 			}
 		}
 		break;
+		case GPUCommandType::SetScissors:
+		{
+			auto &cmd_scissors = cmd.SetScissors;
+			VkRect2D rect;
+			rect.offset.x = cmd_scissors.x;
+			rect.offset.y = cmd_scissors.y;
+			rect.extent.width = cmd_scissors.Width;
+			rect.extent.height = cmd_scissors.Height;
+			vkCmdSetScissor(vk_cmd_buffer, 0, 1, &rect);
+		}
+		break;
+		case GPUCommandType::SetViewport:
+		{
+			auto &cmd_viewport = cmd.SetViewport;
+
+			VkViewport viewport;
+			viewport.minDepth = 0.0;
+			viewport.maxDepth = 1.0;
+			viewport.x = cmd_viewport.x;
+			viewport.y = cmd_viewport.Height - cmd_viewport.y;
+			viewport.width  = cmd_viewport.Width;
+			viewport.height = -cmd_viewport.Height;
+			vkCmdSetViewport(vk_cmd_buffer, 0, 1, &viewport);
+		}
+		break;
 		}
 	}
 
 	m_CommandBuffer->End();
 
 	m_CommandBuffer->Submit({}, {}, m_SignalFence->Handle);
+
+	m_SignalFence->Wait();
 }
 
 void GraphicsContextImpl::SwapBuffers(){

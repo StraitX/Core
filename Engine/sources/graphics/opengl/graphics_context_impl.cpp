@@ -91,7 +91,12 @@ Result GraphicsContextImpl::Initialize(const Window &window){
 
 
     glEnable(GL_BLEND);
+	glEnable(GL_SCISSOR_TEST);
 	glEnable(GL_DEPTH_TEST);
+
+	glDisable(GL_STENCIL_TEST);
+	glDisable(GL_PRIMITIVE_RESTART);
+
 	glDepthFunc(GL_LEQUAL);
 
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &m_MaxTextureUnits);
@@ -118,6 +123,16 @@ void GraphicsContextImpl::Finalize(){
 	m_FramebufferPass.Destruct();
 
 	m_OpenGLContext.Destroy();
+}
+
+size_t GetIndexTypeSize(GLenum index_type){
+	switch (index_type) {
+	case GL_UNSIGNED_INT: return sizeof(u32);
+	case GL_UNSIGNED_SHORT: return sizeof(u16);
+	default:
+		SX_CORE_ASSERT(false, "GL: GetIndexTypeSize: unknown index type");
+		return 0;
+	}
 }
 
 void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
@@ -203,7 +218,7 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		break;
 		case GPUCommandType::DrawIndexed: 
 		{
-			glDrawElements(pipeline_bind_point->Topology, cmd.DrawIndexed.IndicesCount, current_indices_type, nullptr);
+			glDrawElements(pipeline_bind_point->Topology, cmd.DrawIndexed.IndicesCount, current_indices_type, (void*)(GetIndexTypeSize(current_indices_type) * cmd.DrawIndexed.IndicesCount));
 		}		
 		break;
 		case GPUCommandType::ClearFramebufferColorAttachments:
@@ -246,6 +261,16 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 
 			if(target_framebuffer_handle != current_framebuffer_handle)
 				glBindFramebuffer(GL_FRAMEBUFFER, current_framebuffer_handle);
+		}
+		break;
+		case GPUCommandType::SetScissors:
+		{
+			glScissor(cmd.SetScissors.x, cmd.SetScissors.y, cmd.SetScissors.Width, cmd.SetScissors.Height);
+		}
+		break;
+		case GPUCommandType::SetViewport:
+		{
+			glViewport(cmd.SetViewport.x, cmd.SetViewport.y, cmd.SetViewport.Width, cmd.SetViewport.Height);
 		}
 		break;
 		}

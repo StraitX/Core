@@ -13,7 +13,7 @@ namespace StraitX{
 
 enum class ShaderBindingType: u8{
     UniformBuffer = 0,
-    Sampler       = 1
+    Texture       = 1
 };
 
 struct ShaderBinding{
