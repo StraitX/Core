@@ -3,9 +3,7 @@
 
 #include "platform/platform_detection.hpp"
 
-//defined(SX_PLATFORM_LINUX) ||
-
-#if defined (SX_PLATFORM_WINDOWS) || defined(SX_PLATFORM_MACOS)
+#if defined(SX_PLATFORM_LINUX) || defined (SX_PLATFORM_WINDOWS) || defined(SX_PLATFORM_MACOS)
     #define SX_OPENGL_SUPPORTED
     #include <glad/glad.h>
 #endif
