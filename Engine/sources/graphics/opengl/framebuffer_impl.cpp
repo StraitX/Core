@@ -18,7 +18,7 @@ FramebufferImpl::FramebufferImpl(const RenderPass *const pass, const Framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, m_Handle);
 
     for(size_t i = 0; i<props.Attachments.Size(); ++i){
-        u32 attachment = IsDepthFormat(props.Attachments[i]->GetFormat()) ? GL_DEPTH_ATTACHMENT : GL_COLOR_ATTACHMENT0 + i;
+        u32 attachment = IsDepthFormat(props.Attachments[i]->Format()) ? GL_DEPTH_ATTACHMENT : GL_COLOR_ATTACHMENT0 + i;
         // XXX if it does not work, BindZero()
         glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, props.Attachments[i]->Handle().U32, 0);
     }

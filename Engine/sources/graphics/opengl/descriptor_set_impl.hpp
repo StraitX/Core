@@ -38,7 +38,7 @@ struct DescriptorSetImpl: public DescriptorSet{
 
 	virtual void UpdateUniformBinding(size_t binding, size_t index, const GPUBuffer &buffer)override;
 	
-	virtual void UpdateTextureBinding(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler)override;
+	virtual void UpdateTextureBinding(size_t binding, size_t index, const Texture2D &texture)override;
 };
 
 class DescriptorSetPoolImpl: public DescriptorSetPool{

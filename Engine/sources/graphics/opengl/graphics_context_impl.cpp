@@ -38,20 +38,20 @@ static GPUVendor ExtractGPUVendor(const char *string){
     return GPUVendor::Unknown;
 }
 
-static const GPUTexture *FakeFramebufferTexturePtr = nullptr;
+static const Texture2D *FakeFramebufferTexturePtr = nullptr;
 
 static AttachmentDescription SwapchainAttachments[] = {
     {
-        GPUTexture::Layout::PresentSrcOptimal,
-        GPUTexture::Layout::PresentSrcOptimal,
-        GPUTexture::Layout::ColorAttachmentOptimal,
+        TextureLayout::PresentSrcOptimal,
+        TextureLayout::PresentSrcOptimal,
+        TextureLayout::ColorAttachmentOptimal,
         TextureFormat::BGRA8,
         SamplePoints::Samples_1,
     },
     {
-        GPUTexture::Layout::DepthStencilAttachmentOptimal,
-        GPUTexture::Layout::DepthStencilAttachmentOptimal,
-        GPUTexture::Layout::DepthStencilAttachmentOptimal,
+        TextureLayout::DepthStencilAttachmentOptimal,
+        TextureLayout::DepthStencilAttachmentOptimal,
+        TextureLayout::DepthStencilAttachmentOptimal,
         TextureFormat::Depth32,
         SamplePoints::Samples_1,
     }

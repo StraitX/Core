@@ -3,7 +3,7 @@
 #include "graphics/opengl/graphics_context_impl.hpp"
 #include "graphics/opengl/gpu_buffer_impl.hpp"
 #include "graphics/opengl/cpu_buffer_impl.hpp"
-#include "graphics/opengl/gpu_texture_impl.hpp"
+#include "graphics/opengl/texture_impl.hpp"
 #include "graphics/opengl/sampler_impl.hpp"
 #include "graphics/opengl/shader_impl.hpp"
 #include "graphics/opengl/render_pass_impl.hpp"
@@ -18,7 +18,7 @@ GraphicsAPIVTable OpenGLVTable = {
      &GL::GraphicsContextImpl::s_Instance,
     {&GL::GPUBufferImpl::NewImpl, &GL::GPUBufferImpl::DeleteImpl},
     {&GL::CPUBufferImpl::NewImpl, &GL::CPUBufferImpl::DeleteImpl},
-    {&GL::GPUTextureImpl::NewImpl, &GL::GPUTextureImpl::DeleteImpl},
+    {&GL::Texture2DImpl::NewImpl, &GL::Texture2DImpl::DeleteImpl},
     {&GL::SamplerImpl::NewImpl, &GL::SamplerImpl::DeleteImpl},
     {&GL::ShaderImpl::NewImpl, &GL::ShaderImpl::DeleteImpl},
     {&GL::RenderPassImpl::NewImpl, &GL::RenderPassImpl::DeleteImpl},

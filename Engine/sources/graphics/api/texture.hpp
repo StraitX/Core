@@ -46,6 +46,12 @@ class DMAImpl;
 class GraphicsContextImpl;
 }//namespace Vk::
 
+namespace GL{
+struct Texture2DImpl;
+class DMAImpl;
+class GraphicsContextImpl;
+}//namespace GL::
+
 
 class Texture: public NonCopyable{
 protected:
@@ -58,6 +64,8 @@ protected:
 
 	friend class Vk::DMAImpl;
 	friend class Vk::GraphicsContextImpl;
+	friend class GL::DMAImpl;
+	friend class GL::GraphicsContextImpl;
 public:
     Texture() = default;
 
@@ -96,6 +104,7 @@ private:
 	friend class GraphicsAPILoader;
 
 	friend class Vk::Texture2DImpl;
+	friend class GL::Texture2DImpl;
 private:
 	u32 m_Width = 0;
 	u32 m_Height = 0;

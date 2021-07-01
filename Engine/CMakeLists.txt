@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 02)
-set(VERSION_PATCH 04)
+set(VERSION_PATCH 05)
 
 project(
     StraitXEngine 
@@ -65,7 +65,7 @@ set(SOURCES_GRAPHICS_OPENGL
     ${SOURCES_DIR}/graphics/opengl/graphics_context_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/gpu_buffer_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/cpu_buffer_impl.cpp
-    ${SOURCES_DIR}/graphics/opengl/gpu_texture_impl.cpp
+    ${SOURCES_DIR}/graphics/opengl/texture_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/sampler_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/shader_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/render_pass_impl.cpp

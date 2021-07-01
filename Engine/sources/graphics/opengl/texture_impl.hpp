@@ -2,20 +2,22 @@
 #define STRAITX_OPENGL_GPU_TEXTURE_IMPL_HPP
 
 #include "platform/opengl.hpp"
-#include "graphics/api/gpu_texture.hpp"
+#include "graphics/api/texture.hpp"
 
 namespace StraitX{
 namespace GL{
 
-struct GPUTextureImpl{
+struct TextureImpl{
     static GLenum s_FormatTable[];
     static GLenum s_TypeTable[];
+};
 
-    static void NewImpl(GPUTexture &texture, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height);
+struct Texture2DImpl{
+    static void NewImpl(Texture2D &texture, u32 width, u32 height, TextureFormat format, TextureUsageBits usage);
 
-    static void DeleteImpl(GPUTexture &texture);
+    static void DeleteImpl(Texture2D &texture);
 
-    static void BindZero(const GPUTexture &texture);
+    static void BindZero(const Texture2D &texture);
 };
 
 }//namespace GL::
