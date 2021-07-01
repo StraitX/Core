@@ -1,5 +1,5 @@
-#ifndef STRAITX_GPU_TEXTURE_HPP
-#define STRAITX_GPU_TEXTURE_HPP
+#ifndef STRAITX_TEXTURE_HPP
+#define STRAITX_TEXTURE_HPP
 
 #include "platform/compiler.hpp"
 #include "core/noncopyable.hpp"
@@ -7,6 +7,7 @@
 #include "graphics/api/format.hpp"
 #include "graphics/api/cpu_buffer.hpp"
 #include "graphics/api/sampler.hpp"
+#include "graphics/image.hpp"
 
 namespace StraitX{
 
@@ -30,6 +31,7 @@ enum class TextureLayout : u8{
 };
 
 // NOTE: Don't mess them up, these are tied to vulkan spec
+
 enum class TextureUsageBits: u32{
 	TransferSrc             = 0x00000001,
 	TransferDst             = 0x00000002,
@@ -37,6 +39,13 @@ enum class TextureUsageBits: u32{
 	ColorAttachmentOptimal  = 0x00000010,
 	DepthStencilOptimal     = 0x00000020,
 };
+
+namespace Vk{
+struct Texture2DImpl;
+class DMAImpl;
+class GraphicsContextImpl;
+}//namespace Vk::
+
 
 class Texture: public NonCopyable{
 protected:
@@ -46,6 +55,9 @@ protected:
     TextureLayout m_Layout = TextureLayout::Undefined;
     TextureFormat m_Format = TextureFormat::Unknown;
     TextureUsageBits m_Usage = {};
+
+	friend class Vk::DMAImpl;
+	friend class Vk::GraphicsContextImpl;
 public:
     Texture() = default;
 
@@ -66,7 +78,7 @@ public:
     TextureUsageBits Usage()const;
 
     bool IsEmpty()const;
-private:
+protected:
     void SetZero();
 };
 
@@ -81,13 +93,26 @@ public:
     };
 private:
     static VTable s_VTable;
-
 	friend class GraphicsAPILoader;
+
+	friend class Vk::Texture2DImpl;
 private:
-	u32 m_Width;
-	u32 m_Height;
+	u32 m_Width = 0;
+	u32 m_Height = 0;
 	Sampler m_Sampler;
 public:
+	Texture2D() = default;
+
+	Texture2D(const char *filename, const SamplerProperties &props = {});
+
+    Texture2D(const Image &image, const SamplerProperties &props = {});
+
+	~Texture2D();
+
+	Result New(const char *filename, const SamplerProperties &props = {});
+
+    void New(const Image &image, const SamplerProperties &props = {});
+
 	void New(u32 width, u32 height, TextureFormat format, TextureUsageBits usage, const SamplerProperties &props = {});
 
 	void Delete();
@@ -161,6 +186,11 @@ SX_INLINE void Texture::SetZero(){
     m_Usage = {};
 }
 
+SX_INLINE Texture2D::~Texture2D(){
+	if(!IsEmpty())
+		Texture2D::Delete();
+}
+
 SX_INLINE void Texture2D::New(u32 width, u32 height, TextureFormat format, TextureUsageBits usage, const SamplerProperties &props){
 	m_Sampler.New(props);
 
@@ -171,6 +201,8 @@ SX_INLINE void Texture2D::Delete(){
 	s_VTable.Delete(*this);
 
 	m_Sampler.Delete();	
+
+	SetZero();
 }
 
 SX_INLINE u32 Texture2D::Width()const{
@@ -187,4 +219,4 @@ SX_INLINE const class Sampler &Texture2D::Sampler()const{
 
 }//namespace StraitX::
 
-#endif //STRAITX_GPU_TEXTURE_HPP 
+#endif //STRAITX_TEXTURE_HPP 

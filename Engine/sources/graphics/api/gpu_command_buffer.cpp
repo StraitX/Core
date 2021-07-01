@@ -81,7 +81,7 @@ void GPUCommandBuffer::CopyCPUToGPUBuffer(const CPUBuffer &src, const GPUBuffer 
 	m_Commands.PushBack(cmd);
 }
 
-void GPUCommandBuffer::ChangeTextureLayout(GPUTexture *texture, GPUTexture::Layout old_layout, GPUTexture::Layout new_layout){
+void GPUCommandBuffer::ChangeTextureLayout(Texture *texture, TextureLayout old_layout, TextureLayout new_layout){
 	GPUCmdChangeTextureLayout cmd;
 	cmd.Texture = texture;
 	cmd.OldLayout = old_layout;
