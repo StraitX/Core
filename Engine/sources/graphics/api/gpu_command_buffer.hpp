@@ -38,6 +38,7 @@ enum class GPUCommandType: u32{
 
 struct GPUCmdCopyCPUToGPUBuffer{
 	GPUResourceHandle Source;
+	void *SourcePointer;
 	GPUResourceHandle Destination;
 	size_t Size;
 	size_t SourceOffset;
@@ -144,7 +145,7 @@ public:
 	void CopyCPUToGPUBuffer(const CPUBuffer &src, const GPUBuffer &dst, size_t size, size_t src_offset = 0, size_t dst_offset = 0);
 
 	void ChangeTextureLayout(GPUTexture *texture, GPUTexture::Layout old_layout, GPUTexture::Layout new_layout);
-
+	//NOTE: state of Bind* commands and Begin/End RenderPass is not shared between command buffer submitions
 	void BindPipeline(const GraphicsPipeline *pipeline);
 
 	void BindDescriptorSet(const DescriptorSet *set);

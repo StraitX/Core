@@ -53,6 +53,8 @@ public:
 
 	//virtual void ExecuteScheduledCmdBuffers() = 0;
 
+
+	//XXX OpenGL saves bindings after command buffer execution, but vulkan does not.
 	virtual void ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer) = 0;
 
 	virtual void SwapBuffers() = 0;

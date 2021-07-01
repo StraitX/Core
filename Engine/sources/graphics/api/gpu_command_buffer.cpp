@@ -72,6 +72,7 @@ GPUCommand::GPUCommand(const GPUCmdClearFramebufferDepthAttachments &cmd):
 void GPUCommandBuffer::CopyCPUToGPUBuffer(const CPUBuffer &src, const GPUBuffer &dst, size_t size, size_t src_offset, size_t dst_offset){
 	GPUCmdCopyCPUToGPUBuffer cmd;
 	cmd.Source = src.Handle();
+	cmd.SourcePointer = src.Pointer();
 	cmd.Destination = dst.Handle();
 	cmd.Size = size;
 	cmd.SourceOffset = src_offset;

@@ -11,7 +11,7 @@ extern GraphicsAPIVTable VulkanVTable;
 #endif
 
 #ifdef SX_OPENGL_SUPPORTED
-extern GraphicsAPIVtable OpenGLVTable;
+extern GraphicsAPIVTable OpenGLVTable;
 #endif
 
 GraphicsAPIVTable *GetVTable(GraphicsAPI api){

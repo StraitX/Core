@@ -12,13 +12,13 @@ namespace StraitX{
 
 namespace GL{
 class GPUTextureImpl;
-class GPUContextImpl;
+class GraphicsContextImpl;
 class DMAImpl;
 }//namespace GL::
 
 namespace Vk{
 class GPUTextureImpl;
-class GPUContextImpl;
+class GraphicsContextImpl;
 class DMAImpl;
 }//namespace Vk::
 
@@ -76,8 +76,8 @@ private:
     friend class GraphicsAPILoader;
     friend class Vk::GPUTextureImpl;
     friend class GL::GPUTextureImpl;
-    friend class Vk::GPUContextImpl;
-    friend class GL::GPUContextImpl;
+	friend class Vk::GraphicsContextImpl;
+	friend class GL::GraphicsContextImpl;
     friend class Vk::DMAImpl;
     friend class GL::DMAImpl;
 public:

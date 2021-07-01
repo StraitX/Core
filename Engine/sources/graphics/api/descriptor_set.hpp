@@ -46,19 +46,21 @@ public:
 		NewProc    New    = nullptr;
 		DeleteProc Delete = nullptr;
 	};
-private:
+public:
 	// OpenGL supports at least 16 units, and we use last one as a default binding point
 	static constexpr size_t s_MaxTexturesBindings = 16 - 1; 
 	// this value has nothing to do with the spec
 	static constexpr size_t s_MaxUniformBuffersBindings = 16;
-
+	
+	static constexpr size_t s_MaxBindings = s_MaxTexturesBindings + s_MaxUniformBuffersBindings;
+private:
 	static VTable s_VTable;
 
 	friend class GL::DescriptorSetLayoutImpl;
 	friend class Vk::DescriptorSetLayoutImpl;
 	friend class GraphicsAPILoader;
 private:
-	PushArray<ShaderBinding, s_MaxTexturesBindings + s_MaxUniformBuffersBindings> m_Bindings;
+	PushArray<ShaderBinding, s_MaxBindings> m_Bindings;
 	GPUResourceHandle m_Handle;
 public:
 	DescriptorSetLayout(Span<ShaderBinding> bindings);
