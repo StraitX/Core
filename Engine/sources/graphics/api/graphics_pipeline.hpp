@@ -61,24 +61,27 @@ enum class BlendFactor{
     DstAlpha 
 };
 
-struct Viewport{
-    s32 x;
-    s32 y;
-    u32 Width;
-    u32 Height;
+enum class DepthFunction{
+	Always = 0,
+	Less,
+	LessOrEqual,
+	Equal,
+	NotEqual,
+	GreatedOrEqual,
+	Greater,
+	Never
 };
 
 struct GraphicsPipelineProperties{
     Span<const Shader*> Shaders;
     Span<VertexAttribute> VertexAttributes;
-    PrimitivesTopology Topology;
-    Viewport FramebufferViewport;
-    RasterizationMode Rasterization;
-    BlendFunction BlendFunc;
+    enum PrimitivesTopology PrimitivesTopology;
+    enum RasterizationMode RasterizationMode;
+	enum DepthFunction DepthFunction;
+    enum BlendFunction BlendFunction;
     BlendFactor SrcBlendFactor;
     BlendFactor DstBlendFactor;
     const RenderPass *Pass;
-    //Span<ShaderBinding> ShaderBindings;
 	const class DescriptorSetLayout *DescriptorSetLayout;
 };
 //OpenGL said that

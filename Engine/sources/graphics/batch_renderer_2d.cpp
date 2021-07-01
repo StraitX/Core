@@ -81,18 +81,16 @@ BatchRenderer2D::BatchRenderer2D(const RenderPass *pass):
     };
 
     GraphicsPipelineProperties gp_props = {};
-    gp_props.Shaders          = shaders;
-    gp_props.VertexAttributes = attributes; 
-    gp_props.Topology         = PrimitivesTopology::Triangles;
-    gp_props.FramebufferViewport.Width = DisplayServer::Window.Size().width;
-    gp_props.FramebufferViewport.Height = DisplayServer::Window.Size().height;
-    gp_props.Rasterization  = RasterizationMode::Fill;
-    gp_props.BlendFunc      = BlendFunction::Add;
-    gp_props.SrcBlendFactor = BlendFactor::SrcAlpha;
-    gp_props.DstBlendFactor = BlendFactor::OneMinusSrcAlpha;
-    gp_props.Pass           = m_Pass;
-    //gp_props.ShaderBindings = s_Bindings;
-	gp_props.DescriptorSetLayout = &m_SetLayout;
+    gp_props.Shaders          	= shaders;
+    gp_props.VertexAttributes 	= attributes; 
+    gp_props.PrimitivesTopology = PrimitivesTopology::Triangles;
+    gp_props.RasterizationMode 	= RasterizationMode::Fill;
+    gp_props.BlendFunction      = BlendFunction::Add;
+	gp_props.DepthFunction 		= DepthFunction::Always;
+    gp_props.SrcBlendFactor 	= BlendFactor::SrcAlpha;
+    gp_props.DstBlendFactor 	= BlendFactor::OneMinusSrcAlpha;
+    gp_props.Pass           	= m_Pass;
+	gp_props.DescriptorSetLayout= &m_SetLayout;
 
     m_Pipeline = GraphicsPipeline::New(gp_props);
     SX_CORE_ASSERT(m_Pipeline->IsValid(), "GraphicsPipeline is not valid");

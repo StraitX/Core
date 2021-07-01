@@ -147,17 +147,6 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		{
 			pipeline_bind_point = static_cast<const Vk::GraphicsPipelineImpl *>(cmd.BindPipeline.Pipeline);
 			vkCmdBindPipeline(vk_cmd_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_bind_point->Handle);
-			
-			vkCmdSetScissor(vk_cmd_buffer, 0, 1, &pipeline_bind_point->Scissors);
-
-			VkViewport viewport;
-			viewport.minDepth = 0.0;
-			viewport.maxDepth = 1.0;
-			viewport.x = pipeline_bind_point->Scissors.offset.x;
-			viewport.y = pipeline_bind_point->Scissors.extent.height - pipeline_bind_point->Scissors.offset.y;
-			viewport.width  = pipeline_bind_point->Scissors.extent.width;
-			viewport.height = -(float)pipeline_bind_point->Scissors.extent.height;
-			vkCmdSetViewport(vk_cmd_buffer, 0, 1, &viewport);
 		}		
 		break;
 		case GPUCommandType::BindDescriptorSet: 

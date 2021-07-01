@@ -11,6 +11,7 @@ namespace GL{
 struct GraphicsPipelineImpl: GraphicsPipeline{
     static GLenum s_BlendFunctionTable[];
     static GLenum s_BlendFactorTable[];
+	static GLenum s_DepthFunctionTable[];
     static GLenum s_TopologyTable[];
     static GLenum s_RasterizationModeTable[];
     u32 VertexArray;
@@ -19,10 +20,10 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     PushArray<VertexAttribute, MaxVertexAttributes> Attributes;
     size_t AttributesStride = 0;
 
-    GLenum Topology;
-    GLenum Rasterization;
-    Viewport FramebufferViewport;
-    GLenum BlendFunc;
+    GLenum PrimitiveTopology;
+    GLenum RasterizationMode;
+    GLenum BlendFunction;
+	GLenum DepthFunction;
     GLenum SrcBlendFactor;
     GLenum DstBlendFactor;
 

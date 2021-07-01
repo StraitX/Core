@@ -54,10 +54,20 @@ VkBlendOp GraphicsPipelineImpl::s_BlendFunctionTable[] = {
     VK_BLEND_OP_ADD
 };
 
+VkCompareOp GraphicsPipelineImpl::s_DepthFunctionTable[] = {
+	VK_COMPARE_OP_ALWAYS,
+	VK_COMPARE_OP_LESS,
+	VK_COMPARE_OP_LESS_OR_EQUAL,
+	VK_COMPARE_OP_EQUAL,
+	VK_COMPARE_OP_NOT_EQUAL,
+	VK_COMPARE_OP_GREATER_OR_EQUAL,
+	VK_COMPARE_OP_GREATER,
+	VK_COMPARE_OP_NEVER
+};
+
 GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &props):
     GraphicsPipeline(props),
-    Pass(static_cast<const Vk::RenderPassImpl*>(props.Pass)),
-    Scissors({{props.FramebufferViewport.x, props.FramebufferViewport.y}, {props.FramebufferViewport.Width, props.FramebufferViewport.Height}})
+    Pass(static_cast<const Vk::RenderPassImpl*>(props.Pass))
 {    
     for(auto &shader: props.Shaders){
         if(!shader->IsValid())
@@ -126,7 +136,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     input_assembly_info.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     input_assembly_info.pNext = nullptr;
     input_assembly_info.flags = 0;
-    input_assembly_info.topology = s_TopologyTable[(size_t)props.Topology];
+    input_assembly_info.topology = s_TopologyTable[(size_t)props.PrimitivesTopology];
     input_assembly_info.primitiveRestartEnable = VK_FALSE;
 
     //===ViewportState===
@@ -148,7 +158,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     rasterization_info.flags = 0;
     rasterization_info.depthClampEnable = VK_FALSE;
     rasterization_info.rasterizerDiscardEnable = VK_FALSE;
-    rasterization_info.polygonMode = s_RasterizationModeTable[(size_t)props.Rasterization];
+    rasterization_info.polygonMode = s_RasterizationModeTable[(size_t)props.RasterizationMode];
     rasterization_info.cullMode = VK_CULL_MODE_NONE;// following one is disabled
     rasterization_info.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     rasterization_info.lineWidth = 1.0f;
@@ -177,7 +187,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     depth_stencil_info.flags = 0;
     depth_stencil_info.depthTestEnable = VK_TRUE;
     depth_stencil_info.depthWriteEnable = VK_TRUE;
-    depth_stencil_info.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
+    depth_stencil_info.depthCompareOp = s_DepthFunctionTable[(size_t)props.DepthFunction];
     depth_stencil_info.stencilTestEnable = VK_FALSE;
     depth_stencil_info.front = {};
     depth_stencil_info.back = {};
@@ -195,10 +205,10 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
         blend_states[i].blendEnable = VK_TRUE;
         blend_states[i].srcColorBlendFactor = s_BlendFactorTable[(size_t)props.SrcBlendFactor];
         blend_states[i].dstColorBlendFactor = s_BlendFactorTable[(size_t)props.DstBlendFactor];
-        blend_states[i].colorBlendOp = s_BlendFunctionTable[(size_t)props.BlendFunc];
+        blend_states[i].colorBlendOp = s_BlendFunctionTable[(size_t)props.BlendFunction];
         blend_states[i].srcAlphaBlendFactor = s_BlendFactorTable[(size_t)props.SrcBlendFactor];
         blend_states[i].dstAlphaBlendFactor = s_BlendFactorTable[(size_t)props.DstBlendFactor];
-        blend_states[i].alphaBlendOp = s_BlendFunctionTable[(size_t)props.BlendFunc];
+        blend_states[i].alphaBlendOp = s_BlendFunctionTable[(size_t)props.BlendFunction];
         blend_states[i].colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
     }
 

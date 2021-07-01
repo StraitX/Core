@@ -218,7 +218,7 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		break;
 		case GPUCommandType::DrawIndexed: 
 		{
-			glDrawElements(pipeline_bind_point->Topology, cmd.DrawIndexed.IndicesCount, current_indices_type, (void*)(GetIndexTypeSize(current_indices_type) * cmd.DrawIndexed.IndicesCount));
+			glDrawElements(pipeline_bind_point->PrimitiveTopology, cmd.DrawIndexed.IndicesCount, current_indices_type, (void*)(GetIndexTypeSize(current_indices_type) * cmd.DrawIndexed.IndicesCount));
 		}		
 		break;
 		case GPUCommandType::ClearFramebufferColorAttachments:

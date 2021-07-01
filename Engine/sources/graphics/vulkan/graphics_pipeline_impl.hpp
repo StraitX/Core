@@ -14,11 +14,11 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     static VkPolygonMode s_RasterizationModeTable[];
     static VkBlendFactor s_BlendFactorTable[];
     static VkBlendOp s_BlendFunctionTable[];
+	static VkCompareOp s_DepthFunctionTable[];
 
     VkPipeline Handle = VK_NULL_HANDLE;
     const Vk::RenderPassImpl *Pass;
     VkResult Status = VK_INCOMPLETE;
-    VkRect2D Scissors = {};
 
     VkPipelineLayout Layout = VK_NULL_HANDLE;
 

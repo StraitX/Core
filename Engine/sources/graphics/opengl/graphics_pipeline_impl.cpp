@@ -24,6 +24,17 @@ GLenum GraphicsPipelineImpl::s_BlendFactorTable[]={
     GL_DST_ALPHA
 };
 
+GLenum GraphicsPipelineImpl::s_DepthFunctionTable[] = {
+	GL_ALWAYS,
+	GL_LESS,
+	GL_LEQUAL,
+	GL_EQUAL,
+	GL_NOTEQUAL,
+	GL_GEQUAL,
+	GL_GREATER,
+	GL_NEVER
+};
+
 GLenum GraphicsPipelineImpl::s_TopologyTable[] = {
     GL_POINTS,
     GL_LINES,
@@ -245,10 +256,10 @@ void TranslateStatementToBindingIndex(const Span<const char> &statement,const ch
 GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &props):
     GraphicsPipeline(props),
     AttributesStride(GraphicsPipeline::CalculateStride(props.VertexAttributes)),
-    Topology(s_TopologyTable[(size_t)props.Topology]),
-    Rasterization(s_RasterizationModeTable[(size_t)props.Rasterization]),
-    FramebufferViewport(props.FramebufferViewport),
-    BlendFunc(s_BlendFunctionTable[(size_t)props.BlendFunc]),
+    PrimitiveTopology(s_TopologyTable[(size_t)props.PrimitivesTopology]),
+    RasterizationMode(s_RasterizationModeTable[(size_t)props.RasterizationMode]),
+    BlendFunction(s_BlendFunctionTable[(size_t)props.BlendFunction]),
+	DepthFunction(s_DepthFunctionTable[(size_t)props.DepthFunction]),
     SrcBlendFactor(s_BlendFactorTable[(size_t)props.SrcBlendFactor]),
     DstBlendFactor(s_BlendFactorTable[(size_t)props.DstBlendFactor])
 {
@@ -450,10 +461,10 @@ bool GraphicsPipelineImpl::IsValid()const{
 }
 
 void GraphicsPipelineImpl::Bind()const{
-    glPolygonMode(GL_FRONT_AND_BACK, Rasterization);
-    glViewport(FramebufferViewport.x, FramebufferViewport.y, FramebufferViewport.Width, FramebufferViewport.Height);
+    glPolygonMode(GL_FRONT_AND_BACK, RasterizationMode);
     glBlendFunc(SrcBlendFactor, DstBlendFactor);
-    glBlendEquation(BlendFunc);
+    glBlendEquation(BlendFunction);
+	glDepthFunc(DepthFunction);
     glBindVertexArray(VertexArray);
     glUseProgram(Program);
 }
