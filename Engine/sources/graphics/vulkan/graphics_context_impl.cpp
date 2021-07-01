@@ -12,6 +12,63 @@
 namespace StraitX{
 namespace Vk{
 
+
+void CommandBufferExectuionState::Bind(const GraphicsPipeline *pipeline){
+	PipelineBindPoint = static_cast<const Vk::GraphicsPipelineImpl*>(pipeline);
+}
+
+void CommandBufferExectuionState::BeginRenderPass(const class RenderPass *render_pass, const Framebuffer *framebuffer){
+	RenderPass = static_cast<const Vk::RenderPassImpl*>(render_pass);
+	RenderPassFramebuffer = static_cast<const Vk::FramebufferImpl*>(framebuffer);
+}
+
+void CommandBufferExectuionState::EndRenderPass(){
+	RenderPass = nullptr;
+	RenderPassFramebuffer = nullptr;
+}
+
+void CommandBufferExectuionState::CheckAndUpdateViewportAndScissor(VkCommandBuffer cmd_buffer){
+	if(ShouldSetScissor){
+		VkRect2D rect;
+		rect.offset.x = PendingScissor.offset.x;
+		rect.offset.y = RenderPassFramebuffer->Size().y - (PendingScissor.offset.y + PendingScissor.extent.height);
+		rect.extent.width = PendingScissor.extent.width;
+		rect.extent.height = PendingScissor.extent.height;
+		vkCmdSetScissor(cmd_buffer, 0, 1, &rect);
+	}
+
+	if(ShouldSetViewport){
+		VkViewport viewport;
+		viewport.minDepth = 0.0;
+		viewport.maxDepth = 1.0;
+		viewport.x = PendingViewport.x;
+		viewport.y = RenderPassFramebuffer->Size().y - PendingViewport.y;
+		viewport.width  = PendingViewport.width;
+		viewport.height = -PendingViewport.height;
+		vkCmdSetViewport(cmd_buffer, 0, 1, &viewport);
+	}
+}
+
+void CommandBufferExectuionState::UpdateViewport(s32 x, s32 y, u32 width, u32 height){
+	PendingViewport.x = x;
+	PendingViewport.y = y;
+	PendingViewport.width = width;
+	PendingViewport.height = height;
+	PendingViewport.minDepth = 0.0f;
+	PendingViewport.maxDepth = 1.0f;
+
+	ShouldSetViewport = true;
+}
+
+void CommandBufferExectuionState::UpdateScissor(s32 x, s32 y, u32 width, u32 height){
+	PendingScissor.offset.x = x;
+	PendingScissor.offset.y = y;
+	PendingScissor.extent.width = width;
+	PendingScissor.extent.height = height;
+
+	ShouldSetScissor = true;
+}
+
 static_assert(sizeof(GPUHandle) == sizeof(VkPhysicalDevice), "GPUHandle is not the same size as VkPhysicalDevice");
 static_assert(sizeof(GPUResourceHandle) == sizeof(VkBuffer), "Vulkan handle is not the same size as GPUResourceHandle");
 
@@ -98,42 +155,9 @@ void GraphicsContextImpl::Finalize(){
 void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 	m_SignalFence->WaitAndReset();
 
-	VkCommandBuffer vk_cmd_buffer = m_CommandBuffer->Handle();
-	const Vk::GraphicsPipelineImpl *pipeline_bind_point = nullptr;
-	const Vk::RenderPassImpl *current_render_pass = nullptr;
-	const Vk::FramebufferImpl *current_framebuffer = nullptr;
+	VkCommandBuffer VkCmdBuffer = m_CommandBuffer->Handle();
 
-	VkRect2D scissors;
-	VkViewport viewport;
-
-	VkRect2D *pending_scissors = nullptr;
-	VkViewport *pending_viewport = nullptr;
-
-	auto CheckAndApplyPendingViewportOrScissor = [&](){
-		if(pending_scissors){
-			VkRect2D rect;
-			rect.offset.x = pending_scissors->offset.x;
-			rect.offset.y = current_framebuffer->Size().y - (pending_scissors->offset.y + pending_scissors->extent.height);
-			rect.extent.width = pending_scissors->extent.width;
-			rect.extent.height = pending_scissors->extent.height;
-			vkCmdSetScissor(vk_cmd_buffer, 0, 1, &rect);
-
-			pending_scissors = nullptr;
-		}
-
-		if(pending_viewport){
-			VkViewport viewport;
-			viewport.minDepth = 0.0;
-			viewport.maxDepth = 1.0;
-			viewport.x = pending_viewport->x;
-			viewport.y = current_framebuffer->Size().y - pending_viewport->y;
-			viewport.width  = pending_viewport->width;
-			viewport.height = -pending_viewport->height;
-			vkCmdSetViewport(vk_cmd_buffer, 0, 1, &viewport);
-
-			pending_viewport = nullptr;
-		}
-	};
+	CommandBufferExectuionState state;
 
 	m_CommandBuffer->Begin();
 
@@ -177,22 +201,22 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		break;
 		case GPUCommandType::BindPipeline: 
 		{
-			pipeline_bind_point = static_cast<const Vk::GraphicsPipelineImpl *>(cmd.BindPipeline.Pipeline);
-			vkCmdBindPipeline(vk_cmd_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_bind_point->Handle);
+			state.Bind(cmd.BindPipeline.Pipeline);
+			vkCmdBindPipeline(VkCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, state.PipelineBindPoint->Handle);
 		}		
 		break;
 		case GPUCommandType::BindDescriptorSet: 
 		{
 			VkDescriptorSet set_handle = ((const Vk::DescriptorSetImpl*)cmd.BindDescriptorSet.DescriptorSet)->Handle();
 
-			vkCmdBindDescriptorSets(vk_cmd_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_bind_point->Layout, 0, 1, &set_handle, 0, nullptr);
+			vkCmdBindDescriptorSets(VkCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, state.PipelineBindPoint->Layout, 0, 1, &set_handle, 0, nullptr);
 		}		
 		break;
 		case GPUCommandType::BindVertexBuffer: 
 		{
 			VkBuffer vb = VkBuffer(cmd.BindVertexBuffer.VertexBuffer.U64);
 			VkDeviceSize offset = 0;
-			vkCmdBindVertexBuffers(vk_cmd_buffer, 0, 1, &vb, &offset);
+			vkCmdBindVertexBuffers(VkCmdBuffer, 0, 1, &vb, &offset);
 		}		
 		break;
 		case GPUCommandType::BindIndexBuffer: 
@@ -205,40 +229,38 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 			VkBuffer ib = VkBuffer(cmd.BindIndexBuffer.IndexBuffer.U64);
 			VkIndexType it = s_IndexType[(size_t)cmd.BindIndexBuffer.IndicesType];
 
-			vkCmdBindIndexBuffer(vk_cmd_buffer, ib, 0, it);
+			vkCmdBindIndexBuffer(VkCmdBuffer, ib, 0, it);
 		}		
 		break;
 		case GPUCommandType::BeginRenderPass: 
 		{
-			current_render_pass = static_cast<const Vk::RenderPassImpl*>(cmd.BeginRenderPass.RenderPass);
-			current_framebuffer = static_cast<const Vk::FramebufferImpl*>(cmd.BeginRenderPass.Framebuffer);
+			state.BeginRenderPass(cmd.BeginRenderPass.RenderPass, cmd.BeginRenderPass.Framebuffer);
 
 			VkRenderPassBeginInfo info;
 			info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 			info.pNext = nullptr;
 			info.clearValueCount = 0;
 			info.pClearValues = nullptr;
-			info.framebuffer = current_framebuffer->Handle();
-			info.renderPass = current_render_pass->Handle();
+			info.framebuffer = state.RenderPassFramebuffer->Handle();
+			info.renderPass = state.RenderPass->Handle();
 			info.renderArea.offset = {0, 0};
-			info.renderArea.extent.width = current_framebuffer->Size().x;
-			info.renderArea.extent.height = current_framebuffer->Size().y;
+			info.renderArea.extent.width = state.RenderPassFramebuffer->Size().x;
+			info.renderArea.extent.height = state.RenderPassFramebuffer->Size().y;
 			
-			vkCmdBeginRenderPass(vk_cmd_buffer, &info, VK_SUBPASS_CONTENTS_INLINE);
+			vkCmdBeginRenderPass(VkCmdBuffer, &info, VK_SUBPASS_CONTENTS_INLINE);
 		}		
 		break;
 		case GPUCommandType::EndRenderPass: 
 		{
-    		vkCmdEndRenderPass(vk_cmd_buffer);
+    		vkCmdEndRenderPass(VkCmdBuffer);
 
-			current_framebuffer = nullptr;
-			current_render_pass = nullptr;
+			state.EndRenderPass();
 		}		
 		break;
 		case GPUCommandType::DrawIndexed: 
 		{
-			CheckAndApplyPendingViewportOrScissor();
-    		vkCmdDrawIndexed(vk_cmd_buffer, cmd.DrawIndexed.IndicesCount, 1, cmd.DrawIndexed.IndexOffset, 0, 0);
+			state.CheckAndUpdateViewportAndScissor(VkCmdBuffer);
+    		vkCmdDrawIndexed(VkCmdBuffer, cmd.DrawIndexed.IndicesCount, 1, cmd.DrawIndexed.IndexOffset, 0, 0);
 		}		
 		break;
 		case GPUCommandType::ClearFramebufferColorAttachments:
@@ -268,7 +290,7 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 
 					m_CommandBuffer->CmdImageBarrier(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, layout, clear_layout, (VkImage)att->Handle().U64);
 
-					vkCmdClearColorImage(vk_cmd_buffer, (VkImage)att->Handle().U64, clear_layout, &value, 1, &issr);
+					vkCmdClearColorImage(VkCmdBuffer, (VkImage)att->Handle().U64, clear_layout, &value, 1, &issr);
 
 					m_CommandBuffer->CmdImageBarrier(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_READ_BIT, clear_layout, layout, (VkImage)att->Handle().U64);
 				}
@@ -298,7 +320,7 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 
 					m_CommandBuffer->CmdImageBarrier(VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, layout, clear_layout, (VkImage)att->Handle().U64, VK_IMAGE_ASPECT_DEPTH_BIT);
 
-					vkCmdClearDepthStencilImage(vk_cmd_buffer, (VkImage)att->Handle().U64, clear_layout, &depth_value, 1, &issr);
+					vkCmdClearDepthStencilImage(VkCmdBuffer, (VkImage)att->Handle().U64, clear_layout, &depth_value, 1, &issr);
 
 					m_CommandBuffer->CmdImageBarrier(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_READ_BIT, clear_layout, layout, (VkImage)att->Handle().U64, VK_IMAGE_ASPECT_DEPTH_BIT);
 				}
@@ -308,30 +330,14 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		case GPUCommandType::SetScissors:
 		{
 			auto &cmd_scissors = cmd.SetScissors;
-			VkRect2D rect;
-			rect.offset.x = cmd_scissors.x;
-			rect.offset.y = cmd_scissors.y;
-			rect.extent.width = cmd_scissors.Width;
-			rect.extent.height = cmd_scissors.Height;
-			
-			scissors = rect;
-			pending_scissors = &scissors;
+			state.UpdateScissor(cmd_scissors.x, cmd_scissors.y, cmd_scissors.Width, cmd_scissors.Height);
 		}
 		break;
 		case GPUCommandType::SetViewport:
 		{
 			auto &cmd_viewport = cmd.SetViewport;
 
-			VkViewport new_viewport;
-			new_viewport.minDepth = 0.0;
-			new_viewport.maxDepth = 1.0;
-			new_viewport.x = cmd_viewport.x;
-			new_viewport.y = cmd_viewport.y;
-			new_viewport.width  = cmd_viewport.Width;
-			new_viewport.height = cmd_viewport.Height;
-
-			viewport = new_viewport;
-			pending_viewport = &viewport;
+			state.UpdateViewport(cmd_viewport.x, cmd_viewport.y, cmd_viewport.Width, cmd_viewport.Height);
 		}
 		break;
 		}
