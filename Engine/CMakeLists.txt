@@ -101,7 +101,7 @@ set(SOURCES_GRAPHICS_I
     ${SOURCES_DIR}/graphics/image_loader.cpp
     ${SOURCES_DIR}/graphics/image.cpp
     ${SOURCES_DIR}/graphics/texture.cpp
-    ${SOURCES_DIR}/graphics/renderer_2d.cpp
+    ${SOURCES_DIR}/graphics/batch_renderer_2d.cpp
 )
 
 set(SOURCES_SERVERS

@@ -2,7 +2,7 @@
 #include "core/log.hpp"
 #include "core/string.hpp"
 #include "servers/display_server.hpp"
-#include "graphics/renderer_2d.hpp"
+#include "graphics/batch_renderer_2d.hpp"
 #include "graphics/api/dma.hpp"
 #include "graphics/api/graphics_context.hpp"
 
@@ -45,19 +45,19 @@ void main(){
     f_Color = v_Color * texture(u_Textures[int(v_TexIndex)], v_TexCoord);
 })";
 
-const Vector2f Renderer2D::s_DefaultTextureCoords[4] = {
+const Vector2f BatchRenderer2D::s_DefaultTextureCoords[4] = {
     {0.f, 1.f},
     {0.f, 0.f},
     {1.f, 0.f},
     {1.f, 1.f}
 };
 
-ShaderBinding Renderer2D::s_Bindings[] = {
+ShaderBinding BatchRenderer2D::s_Bindings[] = {
 	{0, 1,           ShaderBindingType::UniformBuffer, Shader::Vertex},
 	{1, MaxTextures, ShaderBindingType::Sampler,       Shader::Fragment}
 };
 
-Renderer2D::Renderer2D(const RenderPass *pass):
+BatchRenderer2D::BatchRenderer2D(const RenderPass *pass):
 	m_SetLayout(s_Bindings),
     m_Pass(pass)
 {
@@ -128,7 +128,7 @@ Renderer2D::Renderer2D(const RenderPass *pass):
 
 }
 
-Renderer2D::~Renderer2D(){
+BatchRenderer2D::~BatchRenderer2D(){
     Shader::Delete(m_VertexShader);
     Shader::Delete(m_FragmentShader);
 
@@ -138,7 +138,7 @@ Renderer2D::~Renderer2D(){
 	DescriptorSetPool::Delete(m_SetPool);
 }
 
-void Renderer2D::BeginScene(const Framebuffer *framebuffer, Vector2i camera_position){
+void BatchRenderer2D::BeginScene(const Framebuffer *framebuffer, Vector2i camera_position){
     m_CurrentFramebuffer = framebuffer;
     m_CameraPosition = camera_position;
 
@@ -150,12 +150,12 @@ void Renderer2D::BeginScene(const Framebuffer *framebuffer, Vector2i camera_posi
 	m_CmdBuffer.ClearFramebufferDepthAttachments(m_CurrentFramebuffer, 1.f);
 }
 
-void Renderer2D::EndScene(){
+void BatchRenderer2D::EndScene(){
     EndBatch();
     //LogInfo("DrawCalls: %, QuadsCount: %",DrawCallsCount, QuadsCount);
 }
 
-void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color, const Texture &texture, const Vector2f (&texture_coords)[4]){
+void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color, const Texture &texture, const Vector2f (&texture_coords)[4]){
     m_QuadsCount++;
     
     if(m_VerticesCount + 4 > MaxVerticesCount || m_IndicesCount + 6 > MaxIndicesCount || m_Textures.Size() == m_Textures.Capacity()){
@@ -192,20 +192,20 @@ void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color, 
     m_IndicesCount += 6;
 }
 
-void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color){
+void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color){
     DrawRect(position,size, color, m_WhiteTexture);
 }
 
-void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Texture &texture, const Vector2f (&texture_coords)[4]){
+void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Texture &texture, const Vector2f (&texture_coords)[4]){
     DrawRect(position,size, Color::White, texture, texture_coords);
 }
 
-void Renderer2D::BeginBatch(){
+void BatchRenderer2D::BeginBatch(){
     m_VerticesCount = 0;
     m_IndicesCount = 0;
 }
 
-void Renderer2D::EndBatch(){
+void BatchRenderer2D::EndBatch(){
     if(!m_VerticesCount || !m_IndicesCount)return;
 
 	m_CmdBuffer.BindPipeline(m_Pipeline);

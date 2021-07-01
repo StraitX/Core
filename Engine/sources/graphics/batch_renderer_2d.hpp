@@ -1,5 +1,5 @@
-#ifndef STRAITX_RENDERER_2D_HPP
-#define STRAITX_RENDERER_2D_HPP
+#ifndef STRAITX_BATCH_RENDERER_2D_HPP
+#define STRAITX_BATCH_RENDERER_2D_HPP
 
 #include "core/math/matrix4.hpp"
 #include "core/math/vector2.hpp"
@@ -19,7 +19,7 @@
 
 namespace StraitX{
 
-class Renderer2D: public NonCopyable{
+class BatchRenderer2D: public NonCopyable{
 private:
     struct Vertex2D{
         Vector2f a_Position;
@@ -78,9 +78,9 @@ private:
     Vector2i m_CameraPosition = {};
     Vector2i m_WindowSize;
 public:
-    Renderer2D(const RenderPass *pass);
+    BatchRenderer2D(const RenderPass *pass);
 
-    ~Renderer2D();
+    ~BatchRenderer2D();
 
     void BeginScene(const Framebuffer *framebuffer, Vector2i camera_position = {});
 
@@ -100,4 +100,4 @@ private:
 
 }//namespace StraitX::
 
-#endif//STRAITX_RENDERER_2D_HPP
+#endif//STRAITX_BATCH_RENDERER_2D_HPP
