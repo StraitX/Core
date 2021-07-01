@@ -99,6 +99,9 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 	m_SignalFence->WaitAndReset();
 
 	VkCommandBuffer vk_cmd_buffer = m_CommandBuffer->Handle();
+	const Vk::GraphicsPipelineImpl *pipeline_bind_point = nullptr;
+	const Vk::RenderPassImpl *current_render_pass = nullptr;
+	const Vk::FramebufferImpl *current_framebuffer = nullptr;
 
 	m_CommandBuffer->Begin();
 
@@ -127,6 +130,7 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		break;
 		case GPUCommandType::ChangeTextureLayout: 
 		{
+
 			m_CommandBuffer->CmdImageBarrier(
 				VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, // XXX this can be optimized
 				VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
@@ -136,22 +140,23 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 				GPUTextureImpl::s_LayoutTable[(size_t)cmd.ChangeTextureLayout.NewLayout], 
 				VkImage(cmd.ChangeTextureLayout.Texture->Handle().U64)
 			);
+			cmd.ChangeTextureLayout.Texture->m_Layout = cmd.ChangeTextureLayout.NewLayout;
 		}
 		break;
 		case GPUCommandType::BindPipeline: 
 		{
-			m_PipelineBindPoint = static_cast<const Vk::GraphicsPipelineImpl *>(cmd.BindPipeline.Pipeline);
-			vkCmdBindPipeline(vk_cmd_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineBindPoint->Handle);
+			pipeline_bind_point = static_cast<const Vk::GraphicsPipelineImpl *>(cmd.BindPipeline.Pipeline);
+			vkCmdBindPipeline(vk_cmd_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_bind_point->Handle);
 			
-			vkCmdSetScissor(vk_cmd_buffer, 0, 1, &m_PipelineBindPoint->Scissors);
+			vkCmdSetScissor(vk_cmd_buffer, 0, 1, &pipeline_bind_point->Scissors);
 
 			VkViewport viewport;
 			viewport.minDepth = 0.0;
 			viewport.maxDepth = 1.0;
-			viewport.x = m_PipelineBindPoint->Scissors.offset.x;
-			viewport.y = m_PipelineBindPoint->Scissors.extent.height - m_PipelineBindPoint->Scissors.offset.y;
-			viewport.width  = m_PipelineBindPoint->Scissors.extent.width;
-			viewport.height = -(float)m_PipelineBindPoint->Scissors.extent.height;
+			viewport.x = pipeline_bind_point->Scissors.offset.x;
+			viewport.y = pipeline_bind_point->Scissors.extent.height - pipeline_bind_point->Scissors.offset.y;
+			viewport.width  = pipeline_bind_point->Scissors.extent.width;
+			viewport.height = -(float)pipeline_bind_point->Scissors.extent.height;
 			vkCmdSetViewport(vk_cmd_buffer, 0, 1, &viewport);
 		}		
 		break;
@@ -159,7 +164,7 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		{
 			VkDescriptorSet set_handle = ((const Vk::DescriptorSetImpl*)cmd.BindDescriptorSet.DescriptorSet)->Handle();
 
-			vkCmdBindDescriptorSets(vk_cmd_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineBindPoint->Layout, 0, 1, &set_handle, 0, nullptr);
+			vkCmdBindDescriptorSets(vk_cmd_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_bind_point->Layout, 0, 1, &set_handle, 0, nullptr);
 		}		
 		break;
 		case GPUCommandType::BindVertexBuffer: 
@@ -184,19 +189,19 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		break;
 		case GPUCommandType::BeginRenderPass: 
 		{
-			m_CurrentRenderPass = static_cast<const Vk::RenderPassImpl*>(cmd.BeginRenderPass.RenderPass);
-			m_CurrentFramebuffer = static_cast<const Vk::FramebufferImpl*>(cmd.BeginRenderPass.Framebuffer);
+			current_render_pass = static_cast<const Vk::RenderPassImpl*>(cmd.BeginRenderPass.RenderPass);
+			current_framebuffer = static_cast<const Vk::FramebufferImpl*>(cmd.BeginRenderPass.Framebuffer);
 
 			VkRenderPassBeginInfo info;
 			info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 			info.pNext = nullptr;
 			info.clearValueCount = 0;
 			info.pClearValues = nullptr;
-			info.framebuffer = m_CurrentFramebuffer->Handle();
-			info.renderPass = m_CurrentRenderPass->Handle();
+			info.framebuffer = current_framebuffer->Handle();
+			info.renderPass = current_render_pass->Handle();
 			info.renderArea.offset = {0, 0};
-			info.renderArea.extent.width = m_CurrentFramebuffer->Size().x;
-			info.renderArea.extent.height = m_CurrentFramebuffer->Size().y;
+			info.renderArea.extent.width = current_framebuffer->Size().x;
+			info.renderArea.extent.height = current_framebuffer->Size().y;
 			
 			vkCmdBeginRenderPass(vk_cmd_buffer, &info, VK_SUBPASS_CONTENTS_INLINE);
 		}		
@@ -205,8 +210,8 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		{
     		vkCmdEndRenderPass(vk_cmd_buffer);
 
-			m_CurrentFramebuffer = nullptr;
-			m_CurrentRenderPass = nullptr;
+			current_framebuffer = nullptr;
+			current_render_pass = nullptr;
 		}		
 		break;
 		case GPUCommandType::DrawIndexed: 

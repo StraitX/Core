@@ -24,10 +24,6 @@ private:
 	RawVar<Vk::CommandBuffer> m_CommandBuffer;
 
 	RawVar<Vk::Fence> m_SignalFence;
-
-	const Vk::GraphicsPipelineImpl *m_PipelineBindPoint = nullptr;
-	const Vk::RenderPassImpl *m_CurrentRenderPass = nullptr;
-	const Vk::FramebufferImpl *m_CurrentFramebuffer = nullptr;
 public:
 	static GraphicsContextImpl s_Instance;
 public:
