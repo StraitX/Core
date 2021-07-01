@@ -146,7 +146,7 @@ void Renderer2D::BeginScene(const Framebuffer *framebuffer, Vector2i camera_posi
     m_QuadsCount = 0;
     m_Textures.Clear();
     BeginBatch();
-	m_CmdBuffer.ClearFramebufferColorAttachments(m_CurrentFramebuffer, Color::Black);
+	m_CmdBuffer.ClearFramebufferColorAttachments(m_CurrentFramebuffer, Color(0.2, 0.2, 0.2f));
 	m_CmdBuffer.ClearFramebufferDepthAttachments(m_CurrentFramebuffer, 1.f);
 }
 

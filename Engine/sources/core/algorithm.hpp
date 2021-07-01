@@ -26,6 +26,27 @@ constexpr const T &Max(const T &a, const T &b){
 	return b;
 }
 
+
+template<typename FwdIt, typename T>
+constexpr FwdIt Find(FwdIt begin, FwdIt end, const T& value){
+	for(; begin != end; begin++){
+		if(*begin == value)
+			return begin;
+	}
+	return begin;
+}
+
+template<typename FwdIt, typename Predicate>
+constexpr FwdIt FindIf(FwdIt begin, FwdIt end, Predicate predicate){
+	for(; begin != end; begin++){
+		if(predicate(*begin))
+			return begin;
+	}
+	return begin;
+}
+
+
+
 } // namespace StraitX::
 
 #endif // STRAITX_ALGORITHM_HPP
