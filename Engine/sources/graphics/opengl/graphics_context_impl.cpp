@@ -97,8 +97,6 @@ Result GraphicsContextImpl::Initialize(const Window &window){
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_PRIMITIVE_RESTART);
 
-	glDepthFunc(GL_LEQUAL);
-
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &m_MaxTextureUnits);
     glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &m_MaxUniformBufferBindings);
 
@@ -218,7 +216,7 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		break;
 		case GPUCommandType::DrawIndexed: 
 		{
-			glDrawElements(pipeline_bind_point->PrimitiveTopology, cmd.DrawIndexed.IndicesCount, current_indices_type, (void*)(GetIndexTypeSize(current_indices_type) * cmd.DrawIndexed.IndicesCount));
+			glDrawElements(pipeline_bind_point->PrimitiveTopology, cmd.DrawIndexed.IndicesCount, current_indices_type, (void*)(GetIndexTypeSize(current_indices_type) * cmd.DrawIndexed.IndexOffset));
 		}		
 		break;
 		case GPUCommandType::ClearFramebufferColorAttachments:
