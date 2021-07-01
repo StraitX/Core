@@ -22,16 +22,11 @@ namespace StraitX{
 Engine *Engine::s_Instance = nullptr;
 
 Engine::Engine(){
-    if(!s_Instance)
-        s_Instance = this;
-#ifdef SX_DEBUG
-    else SX_CORE_ASSERT(false, "Engine: created twice");
-#endif
+	s_Instance = this;
 }
 
 Engine::~Engine(){
-    if(s_Instance == this)
-        s_Instance = nullptr;
+	s_Instance = nullptr;
 }
 
 int Engine::Run(){

@@ -1,8 +1,6 @@
 #include "main/engine.hpp"
 
-
-StraitX::Engine engine;
-
 int main(){
+	static StraitX::Engine engine;
     return engine.Run();
 }

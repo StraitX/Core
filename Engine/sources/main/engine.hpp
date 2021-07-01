@@ -5,6 +5,8 @@
 #include "servers/display_server.hpp"
 #include "main/application.hpp"
 
+int main();
+
 namespace StraitX{
 
 class Application;
@@ -29,12 +31,15 @@ private:
     u64 m_FreeCalls = 0;
     u64 m_PrevFreeCalls = 0;
     u64 m_FrameFreeCalls = 0;
-public:
+
+	friend int ::main();
+private:
     Engine();
 
     ~Engine();
 
     int Run();
+public:
 
     void Stop();
 
@@ -50,7 +55,9 @@ public:
     
 private:
     Result Initialize();
+
     Result Finalize();
+
     void MainLoop();
 };
 
