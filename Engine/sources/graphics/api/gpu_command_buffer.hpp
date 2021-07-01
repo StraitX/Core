@@ -4,7 +4,7 @@
 #include "core/bucket_list.hpp"
 #include "core/math/vector4.hpp"
 #include "graphics/api/gpu_configuration.hpp"
-#include "graphics/api/gpu_texture.hpp"
+#include "graphics/api/texture.hpp"
 
 #include "graphics/api/cpu_buffer.hpp"
 #include "graphics/api/gpu_buffer.hpp"
@@ -46,9 +46,9 @@ struct GPUCmdCopyCPUToGPUBuffer{
 };
 
 struct GPUCmdChangeTextureLayout{
-	GPUTexture *Texture;
-	GPUTexture::Layout OldLayout;
-	GPUTexture::Layout NewLayout;
+	Texture *Texture;
+	TextureLayout OldLayout;
+	TextureLayout NewLayout;
 };
 
 struct GPUCmdBindPipeline{
@@ -144,7 +144,7 @@ private:
 public:	
 	void CopyCPUToGPUBuffer(const CPUBuffer &src, const GPUBuffer &dst, size_t size, size_t src_offset = 0, size_t dst_offset = 0);
 
-	void ChangeTextureLayout(GPUTexture *texture, GPUTexture::Layout old_layout, GPUTexture::Layout new_layout);
+	void ChangeTextureLayout(Texture *texture, TextureLayout old_layout, TextureLayout new_layout);
 	//NOTE: state of Bind* commands and Begin/End RenderPass is not shared between command buffer submitions
 	void BindPipeline(const GraphicsPipeline *pipeline);
 

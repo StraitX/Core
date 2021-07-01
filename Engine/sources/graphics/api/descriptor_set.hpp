@@ -6,7 +6,7 @@
 #include "graphics/api/shader.hpp"
 #include "graphics/api/gpu_configuration.hpp"
 #include "graphics/api/gpu_buffer.hpp"
-#include "graphics/api/gpu_texture.hpp"
+#include "graphics/api/texture.hpp"
 #include "graphics/api/sampler.hpp"
 
 namespace StraitX{
@@ -103,7 +103,7 @@ public:
 
 	virtual void UpdateUniformBinding(size_t binding, size_t index, const GPUBuffer &buffer) = 0;
 	
-	virtual void UpdateTextureBinding(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler) = 0;
+	virtual void UpdateTextureBinding(size_t binding, size_t index, const Texture2D &texture) = 0;
 };
 
 class DescriptorSetPool: public NonCopyable{

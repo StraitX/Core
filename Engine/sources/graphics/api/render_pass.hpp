@@ -5,14 +5,14 @@
 #include "core/push_array.hpp"
 #include "core/math/vector4.hpp"
 #include "core/noncopyable.hpp"
-#include "graphics/api/gpu_texture.hpp"
+#include "graphics/api/texture.hpp"
 
 namespace StraitX{
 
 struct AttachmentDescription{
-    GPUTexture::Layout InitialLayout = GPUTexture::Layout::Undefined;
-    GPUTexture::Layout FinalLayout = GPUTexture::Layout::Undefined;
-    GPUTexture::Layout InPassLayout = GPUTexture::Layout::Undefined;
+    TextureLayout InitialLayout = TextureLayout::Undefined;
+    TextureLayout FinalLayout = TextureLayout::Undefined;
+    TextureLayout InPassLayout = TextureLayout::Undefined;
     TextureFormat Format = TextureFormat::Unknown;
     SamplePoints Samples = SamplePoints::Samples_1;
 };

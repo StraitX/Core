@@ -6,19 +6,19 @@
 #include "core/noncopyable.hpp"
 #include "core/math/vector2.hpp"
 #include "graphics/api/gpu_configuration.hpp"
-#include "graphics/api/gpu_texture.hpp"
+#include "graphics/api/texture.hpp"
 #include "graphics/api/render_pass.hpp"
 
 namespace StraitX{
 
 struct FramebufferProperties{
     Vector2u Size = {0, 0};
-    Span<const GPUTexture* const> Attachments = {};
+    Span<const Texture2D* const> Attachments = {};
 };
 
 class GraphicsAPILoader;
 
-class Framebuffer: NonCopyable{
+class Framebuffer: public NonCopyable{
 public:
     struct VTable{
         using NewProc    = Framebuffer *(*)(const RenderPass *const pass, const FramebufferProperties &props);

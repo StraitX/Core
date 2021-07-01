@@ -7,7 +7,7 @@
 #include "graphics/api/shader.hpp"
 #include "graphics/api/gpu_buffer.hpp"
 #include "graphics/api/render_pass.hpp"
-#include "graphics/api/gpu_texture.hpp"
+#include "graphics/api/texture.hpp"
 #include "graphics/api/sampler.hpp"
 #include "graphics/api/descriptor_set.hpp"
 

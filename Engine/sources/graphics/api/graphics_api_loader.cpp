@@ -44,7 +44,7 @@ Result GraphicsAPILoader::Load(GraphicsAPI api){
 
     CPUBuffer::s_VTable = api_vtable->CPUBufferVTable;
 
-    GPUTexture::s_VTable = api_vtable->GPUTextureVTable;
+    Texture2D::s_VTable = api_vtable->Texture2DVTable;
 
     Sampler::s_VTable = api_vtable->SamplerVTable;
 
