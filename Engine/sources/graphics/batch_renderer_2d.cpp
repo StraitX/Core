@@ -136,6 +136,8 @@ BatchRenderer2D::~BatchRenderer2D(){
 
 	m_SetPool->FreeSet(m_Set);
 	DescriptorSetPool::Delete(m_SetPool);
+
+	m_WhiteTexture.Delete();
 }
 
 void BatchRenderer2D::BeginScene(const Framebuffer *framebuffer, Vector2i camera_position){
@@ -155,7 +157,7 @@ void BatchRenderer2D::EndScene(){
     //LogInfo("DrawCalls: %, QuadsCount: %",DrawCallsCount, QuadsCount);
 }
 
-void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color, const Texture &texture, const Vector2f (&texture_coords)[4]){
+void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color, const Texture2D &texture, const Vector2f (&texture_coords)[4]){
     m_QuadsCount++;
     
     if(m_VerticesCount + 4 > MaxVerticesCount || m_IndicesCount + 6 > MaxIndicesCount || m_Textures.Size() == m_Textures.Capacity()){
@@ -166,8 +168,7 @@ void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Color &co
     auto index = tex - m_Textures.begin();
     if(tex == m_Textures.end()){
         m_Textures.Emplace(&texture);
-		m_Set->UpdateTextureBinding(1, index, (**tex).GPUTexture, (**tex).Sampler);
-        //m_Pipeline->Bind(1, index, (**tex).GPUTexture, (**tex).Sampler);
+		m_Set->UpdateTextureBinding(1, index, (**tex));
     }
 
     position.x -= m_WindowSize.x/2;
@@ -196,7 +197,7 @@ void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Color &co
     DrawRect(position,size, color, m_WhiteTexture);
 }
 
-void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Texture &texture, const Vector2f (&texture_coords)[4]){
+void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Texture2D &texture, const Vector2f (&texture_coords)[4]){
     DrawRect(position,size, Color::White, texture, texture_coords);
 }
 
