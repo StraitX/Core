@@ -103,6 +103,38 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 	const Vk::RenderPassImpl *current_render_pass = nullptr;
 	const Vk::FramebufferImpl *current_framebuffer = nullptr;
 
+	VkRect2D scissors;
+	VkViewport viewport;
+
+	VkRect2D *pending_scissors = nullptr;
+	VkViewport *pending_viewport = nullptr;
+
+	auto CheckAndApplyPendingViewportOrScissor = [&](){
+		if(pending_scissors){
+			VkRect2D rect;
+			rect.offset.x = pending_scissors->offset.x;
+			rect.offset.y = current_framebuffer->Size().y - (pending_scissors->offset.y + pending_scissors->extent.height);
+			rect.extent.width = pending_scissors->extent.width;
+			rect.extent.height = pending_scissors->extent.height;
+			vkCmdSetScissor(vk_cmd_buffer, 0, 1, &rect);
+
+			pending_scissors = nullptr;
+		}
+
+		if(pending_viewport){
+			VkViewport viewport;
+			viewport.minDepth = 0.0;
+			viewport.maxDepth = 1.0;
+			viewport.x = pending_viewport->x;
+			viewport.y = current_framebuffer->Size().y - pending_viewport->y;
+			viewport.width  = pending_viewport->width;
+			viewport.height = -pending_viewport->height;
+			vkCmdSetViewport(vk_cmd_buffer, 0, 1, &viewport);
+
+			pending_viewport = nullptr;
+		}
+	};
+
 	m_CommandBuffer->Begin();
 
 	for(const auto &cmd: cmd_buffer){
@@ -205,6 +237,7 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		break;
 		case GPUCommandType::DrawIndexed: 
 		{
+			CheckAndApplyPendingViewportOrScissor();
     		vkCmdDrawIndexed(vk_cmd_buffer, cmd.DrawIndexed.IndicesCount, 1, cmd.DrawIndexed.IndexOffset, 0, 0);
 		}		
 		break;
@@ -280,21 +313,25 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 			rect.offset.y = cmd_scissors.y;
 			rect.extent.width = cmd_scissors.Width;
 			rect.extent.height = cmd_scissors.Height;
-			vkCmdSetScissor(vk_cmd_buffer, 0, 1, &rect);
+			
+			scissors = rect;
+			pending_scissors = &scissors;
 		}
 		break;
 		case GPUCommandType::SetViewport:
 		{
 			auto &cmd_viewport = cmd.SetViewport;
 
-			VkViewport viewport;
-			viewport.minDepth = 0.0;
-			viewport.maxDepth = 1.0;
-			viewport.x = cmd_viewport.x;
-			viewport.y = cmd_viewport.Height - cmd_viewport.y;
-			viewport.width  = cmd_viewport.Width;
-			viewport.height = -cmd_viewport.Height;
-			vkCmdSetViewport(vk_cmd_buffer, 0, 1, &viewport);
+			VkViewport new_viewport;
+			new_viewport.minDepth = 0.0;
+			new_viewport.maxDepth = 1.0;
+			new_viewport.x = cmd_viewport.x;
+			new_viewport.y = cmd_viewport.y;
+			new_viewport.width  = cmd_viewport.Width;
+			new_viewport.height = cmd_viewport.Height;
+
+			viewport = new_viewport;
+			pending_viewport = &viewport;
 		}
 		break;
 		}
