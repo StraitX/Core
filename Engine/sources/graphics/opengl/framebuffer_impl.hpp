@@ -19,6 +19,8 @@ public:
     
     void Bind()const;
 
+	u32 Handle()const;
+
     static Framebuffer *NewImpl(const RenderPass *const pass, const FramebufferProperties &props);
 
     static void DeleteImpl(Framebuffer *framebuffer);

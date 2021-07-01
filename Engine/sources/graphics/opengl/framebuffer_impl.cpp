@@ -32,6 +32,10 @@ void FramebufferImpl::Bind()const{
     glBindFramebuffer(GL_FRAMEBUFFER, m_Handle);
 }
 
+u32 FramebufferImpl::Handle()const{
+	return m_Handle;
+}
+
 Framebuffer *FramebufferImpl::NewImpl(const RenderPass *const pass, const FramebufferProperties &props){
     return new(Memory::Alloc(sizeof(GL::FramebufferImpl))) GL::FramebufferImpl(pass, props);
 }

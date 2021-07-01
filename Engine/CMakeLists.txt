@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 02)
-set(VERSION_PATCH 03)
+set(VERSION_PATCH 04)
 
 project(
     StraitXEngine 
@@ -62,15 +62,14 @@ set(SOURCES_GRAPHICS_VULKAN
 )
 
 set(SOURCES_GRAPHICS_OPENGL
-    ${SOURCES_DIR}/graphics/opengl/graphics_api_impl.cpp
+    ${SOURCES_DIR}/graphics/opengl/graphics_context_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/gpu_buffer_impl.cpp
-    ${SOURCES_DIR}/graphics/opengl/gpu_context_impl.cpp
-    ${SOURCES_DIR}/graphics/opengl/swapchain_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/cpu_buffer_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/gpu_texture_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/sampler_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/shader_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/render_pass_impl.cpp
+    ${SOURCES_DIR}/graphics/opengl/descriptor_set_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/graphics_pipeline_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/framebuffer_impl.cpp
     ${SOURCES_DIR}/graphics/opengl/dma_impl.cpp
@@ -148,7 +147,7 @@ if(STRAITX_PLATFORM_LINUX)
 
     set(SOURCES_GRAPHICS_D
         ${SOURCES_GRAPHICS_VULKAN}
-        #${SOURCES_GRAPHICS_OPENGL}
+        ${SOURCES_GRAPHICS_OPENGL}
     )
 
 elseif(STRAITX_PLATFORM_WINDOWS)

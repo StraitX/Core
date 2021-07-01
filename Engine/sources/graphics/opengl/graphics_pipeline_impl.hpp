@@ -3,33 +3,10 @@
 
 #include "platform/opengl.hpp"
 #include "graphics/api/graphics_pipeline.hpp"
+#include "graphics/opengl/descriptor_set_impl.hpp"
 
 namespace StraitX{
 namespace GL{
-
-struct VirtualBinding{
-    ShaderBindingType Type;
-    u32 BaseGLBinding;
-    u32 ArraySize = 0;
-};
-
-struct UniformBufferBinding{
-    u32 UniformBuffer = 0;
-};
-
-struct SamplerBinding{
-    u32 Texture = 0;
-    u32 Sampler = 0;
-};
-
-struct DescriptorSet{
-    VirtualBinding VirtualBindings[MaxShaderBindings];
-    UniformBufferBinding UniformBufferBindings[14];
-    //last one is wasted because we reserve one texture unit for creation bindings
-    SamplerBinding SamplerBindings[16];
-
-    void Bind()const;
-};
 
 struct GraphicsPipelineImpl: GraphicsPipeline{
     static GLenum s_BlendFunctionTable[];
@@ -49,7 +26,7 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
     GLenum SrcBlendFactor;
     GLenum DstBlendFactor;
 
-    DescriptorSet Set;
+	VirtualBinding VirtualBindings[DescriptorSetLayout::s_MaxBindings];
 
     GraphicsPipelineImpl(const GraphicsPipelineProperties &props);
 
@@ -59,15 +36,13 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
 
     void Bind()const;
 
-    virtual void Bind(size_t binding, size_t index, const GPUBuffer &uniform_buffer)override;
-
-    virtual void Bind(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler)override;
-
     void BindVertexBuffer(u32 id)const;
 
     void BindIndexBuffer(u32 id)const;
 
     bool SupportsUniformBindings()const;
+
+	bool SupportsVertexAttribFormat()const;
 
     static GraphicsPipeline * NewImpl(const GraphicsPipelineProperties &props);
 

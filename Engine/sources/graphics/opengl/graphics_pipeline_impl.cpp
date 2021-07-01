@@ -7,23 +7,10 @@
 #include "graphics/opengl/shader_impl.hpp"
 #include "graphics/opengl/debug.hpp"
 #include "graphics/opengl/graphics_pipeline_impl.hpp"
-#include "graphics/opengl/graphics_api_impl.hpp"
+#include "graphics/opengl/graphics_context_impl.hpp"
 
 namespace StraitX{
 namespace GL{
-
-
-void DescriptorSet::Bind() const{
-    for(auto i = 0; i<lengthof(UniformBufferBindings); ++i){
-        if(UniformBufferBindings[i].UniformBuffer)
-            glBindBufferBase(GL_UNIFORM_BUFFER, i, UniformBufferBindings[i].UniformBuffer);
-    }
-    for(auto i = 0; i<lengthof(SamplerBindings); ++i){
-        glActiveTexture(GL_TEXTURE0 + i);
-        glBindTexture(GL_TEXTURE_2D, SamplerBindings[i].Texture);
-        glBindSampler(i, SamplerBindings[i].Sampler);
-    }
-}
 
 GLenum GraphicsPipelineImpl::s_BlendFunctionTable[]={
     GL_FUNC_ADD
@@ -280,7 +267,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
 
         glEnableVertexAttribArray(i);
         
-        if(GraphicsAPIImpl::Instance.LoadedVersion().Major == 4 && GraphicsAPIImpl::Instance.LoadedVersion().Minor >= 3){
+        if(SupportsVertexAttribFormat()){
             glVertexAttribFormat(i, ElementsCount(props.VertexAttributes[i]),ElementType(props.VertexAttributes[i]),false, 0 /*offset from the begining of the buffer*/);
             glVertexAttribBinding(i,i);
         }else{
@@ -291,27 +278,27 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     u32 current_uniform = 0;
     u32 current_sampler = 0;
 
-    for(u32 i = 0; i<lengthof(Set.VirtualBindings); ++i){
+    for(u32 i = 0; i<lengthof(VirtualBindings); ++i){
         for(auto shader: props.Shaders){
             auto impl = static_cast<const GL::ShaderImpl*>(shader);
 
-            auto statement = FindUniformBindingStatement(i, impl->Sources);
+            Span<const char> statement = FindUniformBindingStatement(i, impl->Sources);
 
             if(statement.Pointer() && statement.Size()){
-                auto type = GetUniformStatementType(statement);
+                ShaderBindingType type = GetUniformStatementType(statement);
 
-                if(!Set.VirtualBindings[i].ArraySize){
-                    Set.VirtualBindings[i].Type = type;
+                if(!VirtualBindings[i].ArraySize){
+                    VirtualBindings[i].Type = type;
                     switch (type) {
                     case ShaderBindingType::UniformBuffer:
-                        Set.VirtualBindings[i].BaseGLBinding = current_uniform;
-                        Set.VirtualBindings[i].ArraySize = GetUniformBufferStatementArraySize(statement);
-                        current_uniform += Set.VirtualBindings[i].ArraySize;
+                        VirtualBindings[i].BaseGLBinding = current_uniform;
+                        VirtualBindings[i].ArraySize = GetUniformBufferStatementArraySize(statement);
+                        current_uniform += VirtualBindings[i].ArraySize;
                         break;
                     case ShaderBindingType::Sampler:
-                        Set.VirtualBindings[i].BaseGLBinding = current_sampler;
-                        Set.VirtualBindings[i].ArraySize = GetUniformSamplerStatementArraySize(statement);
-                        current_sampler += Set.VirtualBindings[i].ArraySize;
+                        VirtualBindings[i].BaseGLBinding = current_sampler;
+                        VirtualBindings[i].ArraySize = GetUniformSamplerStatementArraySize(statement);
+                        current_sampler += VirtualBindings[i].ArraySize;
                         break;
                     }
                 }
@@ -321,13 +308,13 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
 
     Program = glCreateProgram();
 
-    Span<u32> shaders((u32*)alloca(sizeof(u32)*props.Shaders.Size()),props.Shaders.Size());
+    Span<u32> shaders(SX_STACK_ARRAY_ALLOC(u32, props.Shaders.Size()),props.Shaders.Size());
 
     for(size_t i = 0; i<props.Shaders.Size(); ++i){
         auto impl = static_cast<const GL::ShaderImpl*>(props.Shaders[i]);
         shaders[i] = glCreateShader(ShaderImpl::GetStage(impl->GetType()));
 
-        auto src_size = impl->Length + lengthof(Set.VirtualBindings)*2;
+        auto src_size = impl->Length + lengthof(VirtualBindings)*2;
         char *shader_sources_buffer = (char*)alloca(src_size);
 
         char *out_sources = shader_sources_buffer;
@@ -343,7 +330,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
             if(SupportsUniformBindings()){
                 u32 binding_index = GetStatementBindingIndex(statement);
 
-                TranslateStatementToBindingIndex(statement, in_sources, out_sources, Set.VirtualBindings[binding_index].BaseGLBinding);
+                TranslateStatementToBindingIndex(statement, in_sources, out_sources, VirtualBindings[binding_index].BaseGLBinding);
             }else{
                 // XXX !!!Every uniform should have binding!!! then i can understand if there is any other layout qualifiers by comma search
                 if(String::Find(statement.Pointer(), statement.Size(), ","))
@@ -425,7 +412,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
                 name_null[name_length] = 0;
 
                 u32 index = glGetUniformBlockIndex(Program, name_null);
-                glUniformBlockBinding(Program, index, Set.VirtualBindings[binding_index].BaseGLBinding);
+                glUniformBlockBinding(Program, index, VirtualBindings[binding_index].BaseGLBinding);
             }break;
             case ShaderBindingType::Sampler:
             {
@@ -438,11 +425,11 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
                 Memory::Copy(name, name_null, name_length);
                 name_null[name_length] = 0;
 
-                s32 *units = (s32*)alloca(Set.VirtualBindings[binding_index].ArraySize * sizeof(s32));
-                for(u32 i = 0; i<Set.VirtualBindings[binding_index].ArraySize; ++i){
-                    units[i] = Set.VirtualBindings[binding_index].BaseGLBinding + i;
+                s32 *units = (s32*)alloca(VirtualBindings[binding_index].ArraySize * sizeof(s32));
+                for(u32 i = 0; i<VirtualBindings[binding_index].ArraySize; ++i){
+                    units[i] = VirtualBindings[binding_index].BaseGLBinding + i;
                 }
-                glUniform1iv(glGetUniformLocation(Program, name_null), Set.VirtualBindings[binding_index].ArraySize, units);
+                glUniform1iv(glGetUniformLocation(Program, name_null), VirtualBindings[binding_index].ArraySize, units);
             }break;
             }
         }
@@ -462,21 +449,6 @@ bool GraphicsPipelineImpl::IsValid()const{
     return Valid;
 }
 
-void GraphicsPipelineImpl::Bind(size_t binding, size_t index, const GPUBuffer &uniform_buffer){
-    Set.UniformBufferBindings[Set.VirtualBindings[binding].BaseGLBinding + index].UniformBuffer = uniform_buffer.Handle().U32;
-
-    glBindBufferBase(GL_UNIFORM_BUFFER, Set.VirtualBindings[binding].BaseGLBinding + index, uniform_buffer.Handle().U32);
-}
-
-void GraphicsPipelineImpl::Bind(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler){
-    Set.SamplerBindings[Set.VirtualBindings[binding].BaseGLBinding + index].Texture = texture.Handle().U32;
-    Set.SamplerBindings[Set.VirtualBindings[binding].BaseGLBinding + index].Sampler = sampler.Handle().U32;
-
-    glActiveTexture(GL_TEXTURE0 + Set.VirtualBindings[binding].BaseGLBinding + index);
-    glBindTexture(GL_TEXTURE_2D, texture.Handle().U32);
-    glBindSampler(Set.VirtualBindings[binding].BaseGLBinding + index, sampler.Handle().U32);
-}
-
 void GraphicsPipelineImpl::Bind()const{
     glPolygonMode(GL_FRONT_AND_BACK, Rasterization);
     glViewport(FramebufferViewport.x, FramebufferViewport.y, FramebufferViewport.Width, FramebufferViewport.Height);
@@ -484,12 +456,10 @@ void GraphicsPipelineImpl::Bind()const{
     glBlendEquation(BlendFunc);
     glBindVertexArray(VertexArray);
     glUseProgram(Program);
-
-    Set.Bind();
 }
 
 void GraphicsPipelineImpl::BindVertexBuffer(u32 id)const{
-    if(GraphicsAPIImpl::Instance.LoadedVersion().Major == 4 && GraphicsAPIImpl::Instance.LoadedVersion().Minor >= 3){
+    if(SupportsVertexAttribFormat()){
         size_t offset = 0;
         for(size_t i = 0; i<Attributes.Size(); ++i){
             glBindVertexBuffer(i, id, offset, AttributesStride);
@@ -510,11 +480,15 @@ void GraphicsPipelineImpl::BindIndexBuffer(u32 id)const{
 }
 
 bool GraphicsPipelineImpl::SupportsUniformBindings()const{
-    auto &api = GraphicsAPIImpl::Instance;
+    auto &context = GraphicsContextImpl::s_Instance;
 
-    if(api.LoadedVersion().Major >= 4 && api.LoadedVersion().Minor >= 2)return true;
+    return context.LoadedVersion().Major >= 4 && context.LoadedVersion().Minor >= 2;
+}
 
-    return false;
+bool GraphicsPipelineImpl::SupportsVertexAttribFormat()const{
+    auto &context = GraphicsContextImpl::s_Instance;
+
+	return context.LoadedVersion().Major == 4 && context.LoadedVersion().Minor >= 3;
 }
 
 GraphicsPipeline * GraphicsPipelineImpl::NewImpl(const GraphicsPipelineProperties &props){

@@ -1,7 +1,7 @@
 #include "platform/opengl.hpp"
 #include "graphics/opengl/debug.hpp"
 #include "graphics/opengl/gpu_texture_impl.hpp"
-#include "graphics/opengl/graphics_api_impl.hpp"
+#include "graphics/opengl/graphics_context_impl.hpp"
 
 namespace StraitX{
 namespace GL{
@@ -49,7 +49,7 @@ void GPUTextureImpl::DeleteImpl(GPUTexture &texture){
 }
 
 void GPUTextureImpl::BindZero(const GPUTexture &texture){
-    GL(glActiveTexture(GL_TEXTURE0 + GraphicsAPIImpl::Instance.MaxTextureUnits() - 1));
+    GL(glActiveTexture(GL_TEXTURE0 + GraphicsContextImpl::s_Instance.MaxTextureUnits() - 1));
     GL(glBindTexture(GL_TEXTURE_2D, texture.m_Handle.U32));
 }
 

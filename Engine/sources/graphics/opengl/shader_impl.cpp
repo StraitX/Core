@@ -6,7 +6,6 @@
 #include "core/log.hpp"
 #include "core/string.hpp"
 #include "graphics/opengl/shader_impl.hpp"
-#include "graphics/opengl/graphics_api_impl.hpp"
 
 namespace StraitX{
 namespace GL{
