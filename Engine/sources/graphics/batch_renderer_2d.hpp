@@ -33,7 +33,7 @@ private:
 private:
     static const Vector2f s_DefaultTextureCoords[4];
 
-    static constexpr s32 MaxTextures = 8;
+    static constexpr s32 MaxTextures = DescriptorSetLayout::s_MaxTexturesBindings;
     static constexpr size_t MaxVerticesCount = 400000;
     static constexpr size_t MaxIndicesCount  = 600000;
 
@@ -74,8 +74,8 @@ private:
     GPUBuffer m_IndexBuffer;
     GPUBuffer m_UniformBuffer;
 
-    Vector2i m_CameraPosition = {};
-    Vector2i m_WindowSize;
+    Vector2i m_CameraPosition;
+    Vector2u m_WindowSize;
 public:
     BatchRenderer2D(const RenderPass *pass);
 

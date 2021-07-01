@@ -39,7 +39,7 @@ layout(location = 2)in float v_TexIndex;
 
 layout(location = 0)out vec4 f_Color;
 
-layout(binding = 1)uniform sampler2D u_Textures[8];
+layout(binding = 1)uniform sampler2D u_Textures[15];
 
 void main(){
     f_Color = v_Color * texture(u_Textures[int(v_TexIndex)], v_TexCoord);
@@ -144,11 +144,13 @@ void BatchRenderer2D::BeginScene(const Framebuffer *framebuffer, Vector2i camera
 
     m_DrawCallsCount = 0;
     m_QuadsCount = 0;
-    m_Textures.Clear();
+
     BeginBatch();
-	auto size = framebuffer->Size();
-	m_CmdBuffer.SetViewport(size.x, size.y, 0, 0);
-	m_CmdBuffer.SetScissors(size.x, size.y, 0, 0);
+
+	m_WindowSize = framebuffer->Size();
+
+	m_CmdBuffer.SetViewport(m_WindowSize.x, m_WindowSize.y, 0, 0);
+	m_CmdBuffer.SetScissors(m_WindowSize.x, m_WindowSize.y, 0, 0);
 }
 
 void BatchRenderer2D::EndScene(){
@@ -203,6 +205,8 @@ void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Texture2D
 void BatchRenderer2D::BeginBatch(){
     m_VerticesCount = 0;
     m_IndicesCount = 0;
+
+	m_Textures.Clear();
 }
 
 void BatchRenderer2D::EndBatch(){
