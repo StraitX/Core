@@ -5,7 +5,7 @@
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/dma_impl.hpp"
 #include "graphics/vulkan/debug.hpp"
-#include "graphics/vulkan/gpu_texture_impl.hpp"
+#include "graphics/vulkan/texture_impl.hpp"
 #include "graphics/vulkan/descriptor_set_impl.hpp"
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
 
@@ -136,8 +136,8 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 				VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
 				VK_ACCESS_MEMORY_WRITE_BIT, 
 				VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
-				GPUTextureImpl::s_LayoutTable[(size_t)cmd.ChangeTextureLayout.OldLayout], 
-				GPUTextureImpl::s_LayoutTable[(size_t)cmd.ChangeTextureLayout.NewLayout], 
+				TextureImpl::s_LayoutTable[(size_t)cmd.ChangeTextureLayout.OldLayout], 
+				TextureImpl::s_LayoutTable[(size_t)cmd.ChangeTextureLayout.NewLayout], 
 				VkImage(cmd.ChangeTextureLayout.Texture->Handle().U64)
 			);
 			cmd.ChangeTextureLayout.Texture->m_Layout = cmd.ChangeTextureLayout.NewLayout;
@@ -239,9 +239,9 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 			issr.layerCount = 1;
 
 			for(auto &att: fb_impl->Attachments()){
-				if(IsColorFormat(att->GetFormat())){
+				if(IsColorFormat(att->Format())){
 
-					auto layout = GPUTextureImpl::s_LayoutTable[(size_t)att->GetLayout()];
+					auto layout = TextureImpl::s_LayoutTable[(size_t)att->Layout()];
 					constexpr auto clear_layout = VK_IMAGE_LAYOUT_GENERAL;
 
 					m_CommandBuffer->CmdImageBarrier(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, layout, clear_layout, (VkImage)att->Handle().U64);
@@ -269,9 +269,9 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 			issr.layerCount = 1;
 
 			for(auto &att: fb_impl->Attachments()){
-				if(IsDepthFormat(att->GetFormat())){
+				if(IsDepthFormat(att->Format())){
 
-					auto layout = GPUTextureImpl::s_LayoutTable[(size_t)att->GetLayout()];
+					auto layout = TextureImpl::s_LayoutTable[(size_t)att->Layout()];
 					constexpr auto clear_layout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
 
 					m_CommandBuffer->CmdImageBarrier(VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, VK_ACCESS_MEMORY_WRITE_BIT, layout, clear_layout, (VkImage)att->Handle().U64, VK_IMAGE_ASPECT_DEPTH_BIT);

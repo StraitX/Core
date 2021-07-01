@@ -3,7 +3,7 @@
 #include "core/algorithm.hpp"
 #include "core/log.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
-#include "graphics/vulkan/gpu_texture_impl.hpp"
+#include "graphics/vulkan/texture_impl.hpp"
 #include "graphics/vulkan/gpu.hpp"
 
 namespace StraitX{
@@ -21,16 +21,16 @@ RenderPassImpl::RenderPassImpl(const RenderPassProperties &props){
             m_DepthIndex = i;
 
         attachments[i].flags = 0;
-        attachments[i].format = Vk::GPUTextureImpl::s_FormatTable[(size_t)props.Attachments[i].Format];
-        attachments[i].samples = Vk::GPUTextureImpl::ToVkSampleCount(props.Attachments[i].Samples);
+        attachments[i].format = Vk::TextureImpl::s_FormatTable[(size_t)props.Attachments[i].Format];
+        attachments[i].samples = Vk::TextureImpl::ToVkSampleCount(props.Attachments[i].Samples);
         attachments[i].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         attachments[i].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
         attachments[i].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         attachments[i].stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
-        attachments[i].initialLayout = Vk::GPUTextureImpl::s_LayoutTable[(size_t)props.Attachments[i].InitialLayout];
-        attachments[i].finalLayout = Vk::GPUTextureImpl::s_LayoutTable[(size_t)props.Attachments[i].FinalLayout];
+        attachments[i].initialLayout = Vk::TextureImpl::s_LayoutTable[(size_t)props.Attachments[i].InitialLayout];
+        attachments[i].finalLayout = Vk::TextureImpl::s_LayoutTable[(size_t)props.Attachments[i].FinalLayout];
 
-        references[i].layout = Vk::GPUTextureImpl::s_LayoutTable[(size_t)props.Attachments[i].InPassLayout];
+        references[i].layout = Vk::TextureImpl::s_LayoutTable[(size_t)props.Attachments[i].InPassLayout];
         references[i].attachment = i;
     }
 

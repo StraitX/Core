@@ -2,7 +2,7 @@
 #include "graphics/vulkan/dma_impl.hpp"
 #include "graphics/vulkan/fence.hpp"
 #include "graphics/vulkan/gpu.hpp"
-#include "graphics/vulkan/gpu_texture_impl.hpp"
+#include "graphics/vulkan/texture_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
@@ -60,7 +60,7 @@ void DMAImpl::Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src
         CmdCopy(src, dst, size, src_offset, dst_offset);
 }
 
-void DMAImpl::Copy(const CPUTexture &src, const GPUTexture &dst){
+void DMAImpl::Copy(const CPUTexture &src, const Texture2D &dst){
     m_CmdBuffer.Begin();
     {
         VkBufferImageCopy copy;
@@ -69,13 +69,13 @@ void DMAImpl::Copy(const CPUTexture &src, const GPUTexture &dst){
         copy.bufferRowLength = src.Size().x;
         copy.imageOffset = {};
         copy.imageExtent.depth = 1;
-        copy.imageExtent.width = dst.Size().x;
-        copy.imageExtent.height = dst.Size().y;
+        copy.imageExtent.width = dst.Width();
+        copy.imageExtent.height = dst.Height();
         copy.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         copy.imageSubresource.baseArrayLayer = 0;
         copy.imageSubresource.layerCount = 1;
         copy.imageSubresource.mipLevel = 0;
-        vkCmdCopyBufferToImage(m_CmdBuffer, (VkBuffer)src.Handle().U64, (VkImage)dst.Handle().U64, GPUTextureImpl::s_LayoutTable[(size_t)dst.GetLayout()], 1, &copy);
+        vkCmdCopyBufferToImage(m_CmdBuffer, (VkBuffer)src.Handle().U64, (VkImage)dst.Handle().U64, TextureImpl::s_LayoutTable[(size_t)dst.Layout()], 1, &copy);
     }
     m_CmdBuffer.End();
 
@@ -83,7 +83,7 @@ void DMAImpl::Copy(const CPUTexture &src, const GPUTexture &dst){
     m_OpFence.WaitAndReset();
 }
 
-void DMAImpl::ChangeLayout(GPUTexture &texture, GPUTexture::Layout layout){
+void DMAImpl::ChangeLayout(Texture &texture, TextureLayout layout){
 
     m_CmdBuffer.Begin();
     {
@@ -92,10 +92,10 @@ void DMAImpl::ChangeLayout(GPUTexture &texture, GPUTexture::Layout layout){
             VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
             VK_ACCESS_MEMORY_WRITE_BIT, 
             VK_ACCESS_MEMORY_READ_BIT, 
-            GPUTextureImpl::s_LayoutTable[(size_t)texture.GetLayout()], 
-            GPUTextureImpl::s_LayoutTable[(size_t)layout], 
+            TextureImpl::s_LayoutTable[(size_t)texture.Layout()], 
+            TextureImpl::s_LayoutTable[(size_t)layout], 
             (VkImage)texture.Handle().U64,
-            (IsColorFormat(texture.GetFormat()) ? VK_IMAGE_ASPECT_COLOR_BIT : VK_IMAGE_ASPECT_DEPTH_BIT)
+            (IsColorFormat(texture.Format()) ? VK_IMAGE_ASPECT_COLOR_BIT : VK_IMAGE_ASPECT_DEPTH_BIT)
         );
     }
     m_CmdBuffer.End();
@@ -114,11 +114,11 @@ void DMAImpl::CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, 
     DMAImpl::Get().Copy(src, dst, size, src_offset, dst_offset);
 }
 
-void DMAImpl::CopyCPU2GPUTextureImpl(const CPUTexture &src, const GPUTexture &dst){
+void DMAImpl::CopyCPU2GPUTextureImpl(const CPUTexture &src, const Texture2D &dst){
     DMAImpl::Get().Copy(src, dst);
 }
 
-void DMAImpl::ChangeGPUTextureLayoutImpl(GPUTexture &src, GPUTexture::Layout layout){
+void DMAImpl::ChangeGPUTextureLayoutImpl(Texture &src, TextureLayout layout){
     DMAImpl::Get().ChangeLayout(src, layout);
 }
 

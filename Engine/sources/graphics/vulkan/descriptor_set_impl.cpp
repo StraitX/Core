@@ -65,11 +65,11 @@ void DescriptorSetImpl::UpdateUniformBinding(size_t binding, size_t index, const
     vkUpdateDescriptorSets(GPU::Get().Handle(), 1, &write, 0, nullptr);
 }
 	
-void DescriptorSetImpl::UpdateTextureBinding(size_t binding, size_t index, const GPUTexture &texture, const Sampler &sampler){
+void DescriptorSetImpl::UpdateTextureBinding(size_t binding, size_t index, const Texture2D &texture){
     VkDescriptorImageInfo image;
     image.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;//GPUTextureImpl::s_LayoutTable[(size_t)texture.GetLayout()];
     image.imageView = VkImageView(texture.ViewHandle().U64);
-    image.sampler = VkSampler(sampler.Handle().U64);
+    image.sampler = VkSampler(texture.Sampler().Handle().U64);
 
     VkWriteDescriptorSet write;
     write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

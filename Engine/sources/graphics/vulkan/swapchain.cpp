@@ -4,7 +4,7 @@
 #include "core/log.hpp"
 #include "graphics/vulkan/graphics_context_impl.hpp"
 #include "graphics/vulkan/swapchain.hpp"
-#include "graphics/vulkan/gpu_texture_impl.hpp"
+#include "graphics/vulkan/texture_impl.hpp"
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/dma_impl.hpp"
 
@@ -34,16 +34,16 @@ static bool IsSupported(VkPhysicalDevice dev, VkSurfaceKHR surface, VkFormat for
 
 static AttachmentDescription SwapchainAttachments[] = {
     {
-        GPUTexture::Layout::PresentSrcOptimal,
-        GPUTexture::Layout::PresentSrcOptimal,
-        GPUTexture::Layout::ColorAttachmentOptimal,
+        TextureLayout::PresentSrcOptimal,
+        TextureLayout::PresentSrcOptimal,
+        TextureLayout::ColorAttachmentOptimal,
         TextureFormat::BGRA8,
         SamplePoints::Samples_1,
     },
     {
-        GPUTexture::Layout::DepthStencilAttachmentOptimal,
-        GPUTexture::Layout::DepthStencilAttachmentOptimal,
-        GPUTexture::Layout::DepthStencilAttachmentOptimal,
+        TextureLayout::DepthStencilAttachmentOptimal,
+        TextureLayout::DepthStencilAttachmentOptimal,
+        TextureLayout::DepthStencilAttachmentOptimal,
         TextureFormat::Depth32,
         SamplePoints::Samples_1,
     }
@@ -114,8 +114,8 @@ Swapchain::Swapchain(const Window &window):
 
     CoreFunctionAssert(vkCreateSwapchainKHR(GPU::Get().Handle(), &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: Swapchain: Can't create a swapchain");
 
-	m_DepthAttachment.New(SwapchainAttachments[1].Format, GPUTexture::DepthStencilOptimal | GPUTexture::TransferDst, m_Size.x, m_Size.y);
-	DMAImpl::ChangeGPUTextureLayoutImpl(m_DepthAttachment, GPUTexture::Layout::DepthStencilAttachmentOptimal);
+	m_DepthAttachment.New(m_Size.x, m_Size.y, SwapchainAttachments[1].Format, TextureUsageBits((int)TextureUsageBits::DepthStencilOptimal | (int)TextureUsageBits::TransferDst));
+	DMAImpl::ChangeGPUTextureLayoutImpl(m_DepthAttachment, TextureLayout::DepthStencilAttachmentOptimal);
 
     InitializeFramebuffers(m_Format);
 
@@ -151,9 +151,9 @@ void Swapchain::InitializeFramebuffers(VkFormat format){
     SX_CORE_ASSERT(images_count <= s_MaxFramebuffers, "Vk: Swapchain: unsupported amount of Images");
 
     for(u32 i = 0; i<images_count; ++i){
-        GPUTextureImpl(m_Images.Emplace()).CreateWithImage(images[i], GPUTexture::Layout::PresentSrcOptimal, TextureFormat::BGRA8, GPUTexture::UsageBits::Sampled, m_Size.x, m_Size.y);
+        Texture2DImpl(m_Images.Emplace()).CreateWithImage(images[i], m_Size.x, m_Size.y, TextureLayout::PresentSrcOptimal, TextureFormat::BGRA8, TextureUsageBits::Sampled);
 
-        const GPUTexture *attachments[] = {
+        const Texture2D *attachments[] = {
             &m_Images[i],
             &m_DepthAttachment
         };
@@ -168,8 +168,8 @@ void Swapchain::InitializeFramebuffers(VkFormat format){
 void Swapchain::FinalizeFramebuffers(){
     m_Framebuffers.Clear();
     for(auto &image: m_Images){
-        GPUTextureImpl(image).DestroyWithoutImage();
-        GPUTextureImpl(image).Handle = 0;
+        Texture2DImpl(image).DestroyWithoutImage();
+        Texture2DImpl(image).Handle = 0;
     }
 }
 

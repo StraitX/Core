@@ -23,9 +23,9 @@ public:
 
     void Copy(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset);
 
-    void Copy(const CPUTexture &src, const GPUTexture &dst);
+    void Copy(const CPUTexture &src, const Texture2D &dst);
 
-    void ChangeLayout(GPUTexture &texture, GPUTexture::Layout new_layout);
+    void ChangeLayout(Texture &texture, TextureLayout new_layout);
 
     static DMAImpl &Get(){
         return *reinterpret_cast<DMAImpl*>(s_Instance);
@@ -39,9 +39,9 @@ public:
 
     static void CopyCPU2GPUBufferImpl(const CPUBuffer &src, const GPUBuffer &dst, u32 size, u32 src_offset, u32 dst_offset);
 
-    static void CopyCPU2GPUTextureImpl(const CPUTexture &src, const GPUTexture &dst);
+    static void CopyCPU2GPUTextureImpl(const CPUTexture &src, const Texture2D &dst);
 
-    static void ChangeGPUTextureLayoutImpl(GPUTexture &src, GPUTexture::Layout layout);
+    static void ChangeGPUTextureLayoutImpl(Texture &src, TextureLayout layout);
 };
 
 }//namespace VK::

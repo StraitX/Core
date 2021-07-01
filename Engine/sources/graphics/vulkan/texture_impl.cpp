@@ -2,12 +2,12 @@
 #include "core/log.hpp"
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/memory_allocator.hpp"
-#include "graphics/vulkan/gpu_texture_impl.hpp"
+#include "graphics/vulkan/texture_impl.hpp"
 
 namespace StraitX{
 namespace Vk{
 
-VkFormat GPUTextureImpl::s_FormatTable[] = {
+VkFormat TextureImpl::s_FormatTable[] = {
     VK_FORMAT_UNDEFINED,
     VK_FORMAT_R8G8B8A8_UNORM,
     VK_FORMAT_D24_UNORM_S8_UINT,
@@ -15,7 +15,7 @@ VkFormat GPUTextureImpl::s_FormatTable[] = {
     VK_FORMAT_D32_SFLOAT
 };
 
-VkImageLayout GPUTextureImpl::s_LayoutTable[] = {
+VkImageLayout TextureImpl::s_LayoutTable[] = {
     VK_IMAGE_LAYOUT_UNDEFINED,
     VK_IMAGE_LAYOUT_GENERAL,
     VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
@@ -26,7 +26,11 @@ VkImageLayout GPUTextureImpl::s_LayoutTable[] = {
     VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
 };
 
-GPUTextureImpl::GPUTextureImpl(GPUTexture &texture):
+VkSampleCountFlagBits TextureImpl::ToVkSampleCount(SamplePoints samples){
+    return static_cast<VkSampleCountFlagBits>((u32)std::pow(2, (u32)samples));
+}
+
+Texture2DImpl::Texture2DImpl(Texture2D &texture):
     Handle(reinterpret_cast<VkImage&>(texture.m_Handle.U64)),
     ViewHandle(reinterpret_cast<VkImageView&>(texture.m_ViewHandle.U64)),
     Memory(reinterpret_cast<VkDeviceMemory&>(texture.m_BackingMemory)),
@@ -37,7 +41,7 @@ GPUTextureImpl::GPUTextureImpl(GPUTexture &texture):
     Usage(texture.m_Usage)
 {}
 
-void GPUTextureImpl::Create(TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
+void Texture2DImpl::Create(u32 width, u32 height, TextureFormat format, TextureUsageBits usage){
     SX_CORE_ASSERT(format != TextureFormat::Unknown,"GPUTexture: Can't be created with Format::Unknown");
 
     VkImageCreateInfo info;
@@ -45,33 +49,33 @@ void GPUTextureImpl::Create(TextureFormat format, GPUTexture::Usage usage, u32 w
     info.pNext = nullptr;
     info.flags = 0;
     info.imageType = VK_IMAGE_TYPE_2D;
-    info.format = s_FormatTable[(u32)format];
+    info.format = TextureImpl::s_FormatTable[(size_t)format];
     info.extent.width = width;
     info.extent.height = height;
     info.extent.depth = 1;
     info.mipLevels = 1;
     info.arrayLayers = 1;
-    info.samples = ToVkSampleCount(SamplePoints::Samples_1);
+    info.samples = TextureImpl::ToVkSampleCount(SamplePoints::Samples_1);
     info.tiling = VK_IMAGE_TILING_OPTIMAL;
-    info.usage = usage;
+    info.usage = (u32)usage;
     info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     info.queueFamilyIndexCount = 0;
     info.pQueueFamilyIndices = nullptr;
     info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;// should be undefined by the spec
 
-    CoreFunctionAssert(vkCreateImage(GPU::Get().Handle(), &info, nullptr, &Handle), VK_SUCCESS, "Vk: GPUTextureImpl: Can't create VkImage");
+    CoreFunctionAssert(vkCreateImage(GPU::Get().Handle(), &info, nullptr, &Handle), VK_SUCCESS, "Vk: Texture2DImpl: Can't create VkImage");
 
     VkMemoryRequirements req;
     vkGetImageMemoryRequirements(GPU::Get().Handle(), Handle, &req);
 
     Memory = MemoryAllocator::Alloc(req.size, MemoryType::VRAM);
 
-    CoreFunctionAssert(vkBindImageMemory(GPU::Get().Handle(), Handle, Memory, 0), VK_SUCCESS, "Vk: GPUTextureImpl: can't bind image memory");
+    CoreFunctionAssert(vkBindImageMemory(GPU::Get().Handle(), Handle, Memory, 0), VK_SUCCESS, "Vk: Texture2DImpl: can't bind image memory");
 
-    CreateWithImage(Handle, GPUTexture::Layout::Undefined, format, usage, width, height);
+    CreateWithImage(Handle, width, height, TextureLayout::Undefined, format, usage);
 }
 
-void GPUTextureImpl::CreateWithImage(VkImage image, GPUTexture::Layout layout, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
+void Texture2DImpl::CreateWithImage(VkImage image, u32 width, u32 height, TextureLayout layout, TextureFormat format, TextureUsageBits usage){
     Handle = image;
     ViewHandle = VK_NULL_HANDLE;
     //Memory = image should already have binded memory
@@ -87,7 +91,7 @@ void GPUTextureImpl::CreateWithImage(VkImage image, GPUTexture::Layout layout, T
     view_info.flags = 0;
     view_info.image = Handle;
     view_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    view_info.format = GPUTextureImpl::s_FormatTable[(size_t)Format];
+    view_info.format = TextureImpl::s_FormatTable[(size_t)Format];
     view_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
     view_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
     view_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -98,10 +102,10 @@ void GPUTextureImpl::CreateWithImage(VkImage image, GPUTexture::Layout layout, T
     view_info.subresourceRange.layerCount = 1;
     view_info.subresourceRange.levelCount = 1;
 
-    CoreFunctionAssert(vkCreateImageView(GPU::Get().Handle(), &view_info, nullptr, &ViewHandle), VK_SUCCESS, "Vk: GPUTextureImpl: Can't create VkImageView");
+    CoreFunctionAssert(vkCreateImageView(GPU::Get().Handle(), &view_info, nullptr, &ViewHandle), VK_SUCCESS, "Vk: Texture2DImpl: Can't create VkImageView");
 }
 
-void GPUTextureImpl::Destroy(){
+void Texture2DImpl::Destroy(){
     DestroyWithoutImage();
 
     vkDestroyImage(GPU::Get().Handle(), Handle, nullptr);
@@ -109,19 +113,16 @@ void GPUTextureImpl::Destroy(){
     MemoryAllocator::Free(Memory);
 }
 
-void GPUTextureImpl::DestroyWithoutImage(){
+void Texture2DImpl::DestroyWithoutImage(){
     vkDestroyImageView(GPU::Get().Handle(), ViewHandle, nullptr);
 }
 
-VkSampleCountFlagBits GPUTextureImpl::ToVkSampleCount(SamplePoints samples){
-    return static_cast<VkSampleCountFlagBits>((u32)std::pow(2, (u32)samples));
-}
-void GPUTextureImpl::NewImpl(GPUTexture &texture, TextureFormat format, GPUTexture::Usage usage, u32 width, u32 height){
-    GPUTextureImpl(texture).Create(format, usage, width, height);
+void Texture2DImpl::NewImpl(Texture2D &texture, u32 width, u32 height, TextureFormat format, TextureUsageBits usage){
+    Texture2DImpl(texture).Create(width, height, format, usage);
 }
 
-void GPUTextureImpl::DeleteImpl(GPUTexture &texture){
-    GPUTextureImpl(texture).Destroy();
+void Texture2DImpl::DeleteImpl(Texture2D &texture){
+    Texture2DImpl(texture).Destroy();
 }
 
 }//namespace Vk::

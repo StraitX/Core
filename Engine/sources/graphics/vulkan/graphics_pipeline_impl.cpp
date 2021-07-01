@@ -3,7 +3,7 @@
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
 #include "graphics/vulkan/shader_impl.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
-#include "graphics/vulkan/gpu_texture_impl.hpp"
+#include "graphics/vulkan/texture_impl.hpp"
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/descriptor_set_impl.hpp"
 

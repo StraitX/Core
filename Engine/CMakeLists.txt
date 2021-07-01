@@ -49,7 +49,7 @@ set(SOURCES_GRAPHICS_VULKAN
     ${SOURCES_DIR}/graphics/vulkan/command_buffer.cpp
     ${SOURCES_DIR}/graphics/vulkan/swapchain.cpp
     ${SOURCES_DIR}/graphics/vulkan/cpu_buffer_impl.cpp
-    ${SOURCES_DIR}/graphics/vulkan/gpu_texture_impl.cpp
+    ${SOURCES_DIR}/graphics/vulkan/texture_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/sampler_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/shader_impl.cpp
     ${SOURCES_DIR}/graphics/vulkan/render_pass_impl.cpp
@@ -85,7 +85,7 @@ set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/gpu_configuration.cpp
     ${SOURCES_DIR}/graphics/api/gpu_buffer.cpp
     ${SOURCES_DIR}/graphics/api/cpu_buffer.cpp
-    ${SOURCES_DIR}/graphics/api/gpu_texture.cpp
+    ${SOURCES_DIR}/graphics/api/texture.cpp
     ${SOURCES_DIR}/graphics/api/sampler.cpp
     ${SOURCES_DIR}/graphics/api/shader.cpp
     ${SOURCES_DIR}/graphics/api/render_pass.cpp
@@ -100,7 +100,6 @@ set(SOURCES_GRAPHICS_I
     ${SOURCES_DIR}/graphics/color.cpp
     ${SOURCES_DIR}/graphics/image_loader.cpp
     ${SOURCES_DIR}/graphics/image.cpp
-    ${SOURCES_DIR}/graphics/texture.cpp
     ${SOURCES_DIR}/graphics/batch_renderer_2d.cpp
 )
 
