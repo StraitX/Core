@@ -7,6 +7,7 @@
 #include "graphics/api/graphics_api_loader.hpp"
 #include "graphics/api/graphics_context.hpp"
 #include "graphics/imgui/imgui_backend.hpp"
+#include "graphics/renderer_2d.hpp"
 #include "main/application.hpp"
 #include "main/engine.hpp"
 
@@ -98,7 +99,9 @@ Result Engine::Initialize(){
 
     LogTrace("========= Second stage init =========");
 
+	static Renderer2D renderer_2d;
 	static ImGuiBackend imgui_backend;
+	SubsystemsManager::Push(&renderer_2d);
 	SubsystemsManager::Push(&imgui_backend);
 
 	LogTrace("SubsystemsManager::Initialize: Begin");
