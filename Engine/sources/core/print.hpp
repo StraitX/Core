@@ -28,6 +28,10 @@ template<>
 struct ImplicitPrintCaster<const char *>{
 	typedef const char *Type;
 };
+template<>
+struct ImplicitPrintCaster<char *>{
+	typedef char *Type;
+};
 
 }//namespace Details::
 
