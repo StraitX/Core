@@ -10,8 +10,8 @@ class WindowImpl;
 
 class ScreenImpl{
 private:
-    unsigned int m_Index;
     void *m_Handle;
+    unsigned int m_Index;
     Size2i m_Size;
     Size2f m_DPI;
 

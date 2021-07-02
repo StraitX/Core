@@ -5,6 +5,7 @@
 #undef KeyRelease
 #include "platform/mouse.hpp"
 #include "platform/window.hpp"
+#include "platform/window_system.hpp"
 
 namespace StraitX{
 namespace Linux{
@@ -35,6 +36,8 @@ Point Mouse::GlobalPosition(){
     
     XQueryPointer(Linux::s_Display,RootWindow(Linux::s_Display,DefaultScreen(Linux::s_Display)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
 
+	global.y = WindowSystem::MainScreen().Size().height - global.y;
+
     return global;
 }
 
@@ -42,8 +45,12 @@ Point Mouse::RelativePosition(const Window &window){
     ::Window root,child;
     Point choosen,global;
     unsigned int mask;
+
+	s32 window_height = (s32)window.Size().height;
     
     XQueryPointer(Linux::s_Display,window.Impl().Handle,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
+
+	choosen.y = window_height - choosen.y;
     return choosen;
 }
 

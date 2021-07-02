@@ -4,8 +4,8 @@ namespace StraitX{
 namespace Linux{
 
 ScreenImpl::ScreenImpl(unsigned int index, void *handle, const Size2i &size, const Size2f &dpi):
-    m_Index(index),
     m_Handle(handle),
+    m_Index(index),
     m_Size(size),
     m_DPI(dpi)
 {}
