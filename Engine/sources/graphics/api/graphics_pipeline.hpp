@@ -13,22 +13,31 @@
 
 namespace StraitX{
 
-
 enum class VertexAttribute{
-    Int = 0,
-    Int2,
-    Int3,
-    Int4,
+	Float32x1,
+	Float32x2,
+	Float32x3,
+	Float32x4,
 
-    Uint,
-    Uint2,
-    Uint3,
-    Uint4,
+	UNorm8x1,
+	UNorm8x2,
+	UNorm8x3,
+	UNorm8x4,
 
-    Float,
-    Float2,
-    Float3,
-    Float4
+	SNorm8x1,
+	SNorm8x2,
+	SNorm8x3,
+	SNorm8x4,
+
+	Uint32x1,
+	Uint32x2,
+	Uint32x3,
+	Uint32x4,
+
+	Sint32x1,
+	Sint32x2,
+	Sint32x3,
+	Sint32x4,
 };
 
 //TODO: Take value from docs
@@ -101,9 +110,11 @@ public:
 private:
     static VTable s_VTable;
 
-    friend class GraphicsAPILoader;
+	static const u32 s_VertexAttributeSizeTable[];
+	
+    friend class GraphicsAPILoader;	
 protected:
-    static u32 s_VertexAttributeSizeTable[];
+	static u32 AttributeSize(VertexAttribute attribute);
 public:
     GraphicsPipeline(const GraphicsPipelineProperties &props);
 

@@ -10,24 +10,34 @@
 namespace StraitX{
 namespace Vk{
 
-VkFormat GraphicsPipelineImpl::s_VertexAttributesTable[] = {
-    VK_FORMAT_R32_SINT,
-    VK_FORMAT_R32G32_SINT,
-    VK_FORMAT_R32G32B32_SINT,
-    VK_FORMAT_R32G32B32A32_SINT,
+const VkFormat GraphicsPipelineImpl::s_VertexAttributesTable[] = {
+    VK_FORMAT_R32_SFLOAT,
+    VK_FORMAT_R32G32_SFLOAT,
+    VK_FORMAT_R32G32B32_SFLOAT,
+    VK_FORMAT_R32G32B32A32_SFLOAT,
+
+	VK_FORMAT_R8_UNORM,
+	VK_FORMAT_R8G8_UNORM,
+	VK_FORMAT_R8G8B8_UNORM,
+	VK_FORMAT_R8G8B8A8_UNORM,
+
+	VK_FORMAT_R8_SNORM,
+	VK_FORMAT_R8G8_SNORM,
+	VK_FORMAT_R8G8B8_SNORM,
+	VK_FORMAT_R8G8B8A8_SNORM,
 
     VK_FORMAT_R32_UINT,
     VK_FORMAT_R32G32_UINT,
     VK_FORMAT_R32G32B32_UINT,
     VK_FORMAT_R32G32B32A32_UINT,
 
-    VK_FORMAT_R32_SFLOAT,
-    VK_FORMAT_R32G32_SFLOAT,
-    VK_FORMAT_R32G32B32_SFLOAT,
-    VK_FORMAT_R32G32B32A32_SFLOAT
+    VK_FORMAT_R32_SINT,
+    VK_FORMAT_R32G32_SINT,
+    VK_FORMAT_R32G32B32_SINT,
+    VK_FORMAT_R32G32B32A32_SINT
 };
 
-VkPrimitiveTopology GraphicsPipelineImpl::s_TopologyTable[]={
+const VkPrimitiveTopology GraphicsPipelineImpl::s_TopologyTable[]={
     VK_PRIMITIVE_TOPOLOGY_POINT_LIST,
     VK_PRIMITIVE_TOPOLOGY_LINE_LIST,
     VK_PRIMITIVE_TOPOLOGY_LINE_STRIP,
@@ -35,13 +45,13 @@ VkPrimitiveTopology GraphicsPipelineImpl::s_TopologyTable[]={
     VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP
 };
 
-VkPolygonMode GraphicsPipelineImpl::s_RasterizationModeTable[]={
+const VkPolygonMode GraphicsPipelineImpl::s_RasterizationModeTable[]={
     VK_POLYGON_MODE_FILL,
     VK_POLYGON_MODE_LINE,
     VK_POLYGON_MODE_POINT
 };
 
-VkBlendFactor GraphicsPipelineImpl::s_BlendFactorTable[] = {
+const VkBlendFactor GraphicsPipelineImpl::s_BlendFactorTable[] = {
     VK_BLEND_FACTOR_ZERO,
     VK_BLEND_FACTOR_ONE,
     VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
@@ -50,11 +60,11 @@ VkBlendFactor GraphicsPipelineImpl::s_BlendFactorTable[] = {
     VK_BLEND_FACTOR_DST_ALPHA
 };
 
-VkBlendOp GraphicsPipelineImpl::s_BlendFunctionTable[] = {
+const VkBlendOp GraphicsPipelineImpl::s_BlendFunctionTable[] = {
     VK_BLEND_OP_ADD
 };
 
-VkCompareOp GraphicsPipelineImpl::s_DepthFunctionTable[] = {
+const VkCompareOp GraphicsPipelineImpl::s_DepthFunctionTable[] = {
 	VK_COMPARE_OP_ALWAYS,
 	VK_COMPARE_OP_LESS,
 	VK_COMPARE_OP_LESS_OR_EQUAL,
@@ -113,7 +123,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
         attributes[i].binding = 0;
         attributes[i].format = s_VertexAttributesTable[(size_t)props.VertexAttributes[i]];
 
-        offset += s_VertexAttributeSizeTable[(size_t)props.VertexAttributes[i]];
+        offset += GraphicsPipeline::AttributeSize(props.VertexAttributes[i]);
     }
 
     VkVertexInputBindingDescription binding;

@@ -9,11 +9,11 @@ namespace StraitX{
 namespace GL{
 
 struct GraphicsPipelineImpl: GraphicsPipeline{
-    static GLenum s_BlendFunctionTable[];
-    static GLenum s_BlendFactorTable[];
-	static GLenum s_DepthFunctionTable[];
-    static GLenum s_TopologyTable[];
-    static GLenum s_RasterizationModeTable[];
+    static const GLenum s_BlendFunctionTable[];
+    static const GLenum s_BlendFactorTable[];
+	static const GLenum s_DepthFunctionTable[];
+    static const GLenum s_TopologyTable[];
+    static const GLenum s_RasterizationModeTable[];
     u32 VertexArray;
     u32 Program;
     bool Valid = true;

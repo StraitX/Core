@@ -9,12 +9,12 @@ namespace StraitX{
 namespace Vk{
 
 struct GraphicsPipelineImpl: GraphicsPipeline{
-    static VkFormat s_VertexAttributesTable[];
-    static VkPrimitiveTopology s_TopologyTable[];
-    static VkPolygonMode s_RasterizationModeTable[];
-    static VkBlendFactor s_BlendFactorTable[];
-    static VkBlendOp s_BlendFunctionTable[];
-	static VkCompareOp s_DepthFunctionTable[];
+    static const VkFormat s_VertexAttributesTable[];
+    static const VkPrimitiveTopology s_TopologyTable[];
+    static const VkPolygonMode s_RasterizationModeTable[];
+    static const VkBlendFactor s_BlendFactorTable[];
+    static const VkBlendOp s_BlendFunctionTable[];
+	static const VkCompareOp s_DepthFunctionTable[];
 
     VkPipeline Handle = VK_NULL_HANDLE;
     const Vk::RenderPassImpl *Pass;

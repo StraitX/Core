@@ -74,10 +74,10 @@ BatchRenderer2D::BatchRenderer2D(const RenderPass *pass):
         m_FragmentShader
     };
     VertexAttribute attributes[] = {
-        VertexAttribute::Float2,
-        VertexAttribute::Float2,
-        VertexAttribute::Float,
-        VertexAttribute::Float4
+        VertexAttribute::Float32x2,
+        VertexAttribute::Float32x2,
+        VertexAttribute::Float32x1,
+        VertexAttribute::Float32x4
     };
 
     GraphicsPipelineProperties gp_props = {};

@@ -12,10 +12,10 @@
 namespace StraitX{
 namespace GL{
 
-GLenum GraphicsPipelineImpl::s_BlendFunctionTable[]={
+const GLenum GraphicsPipelineImpl::s_BlendFunctionTable[]={
     GL_FUNC_ADD
 };
-GLenum GraphicsPipelineImpl::s_BlendFactorTable[]={
+const GLenum GraphicsPipelineImpl::s_BlendFactorTable[]={
     GL_ZERO,
     GL_ONE,
     GL_ONE_MINUS_SRC_ALPHA,
@@ -24,7 +24,7 @@ GLenum GraphicsPipelineImpl::s_BlendFactorTable[]={
     GL_DST_ALPHA
 };
 
-GLenum GraphicsPipelineImpl::s_DepthFunctionTable[] = {
+const GLenum GraphicsPipelineImpl::s_DepthFunctionTable[] = {
 	GL_ALWAYS,
 	GL_LESS,
 	GL_LEQUAL,
@@ -35,62 +35,111 @@ GLenum GraphicsPipelineImpl::s_DepthFunctionTable[] = {
 	GL_NEVER
 };
 
-GLenum GraphicsPipelineImpl::s_TopologyTable[] = {
+const GLenum GraphicsPipelineImpl::s_TopologyTable[] = {
     GL_POINTS,
     GL_LINES,
     GL_LINE_STRIP,
     GL_TRIANGLES,
     GL_TRIANGLE_STRIP
 };
-GLenum GraphicsPipelineImpl::s_RasterizationModeTable[] = {
+const GLenum GraphicsPipelineImpl::s_RasterizationModeTable[] = {
     GL_FILL,
     GL_POINT,
     GL_LINE
 };
 
 static u32 ElementsCount(VertexAttribute attribute){
-    switch (attribute){
-    case VertexAttribute::Int:
-    case VertexAttribute::Uint:
-    case VertexAttribute::Float:
-        return 1;
-    case VertexAttribute::Int2:
-    case VertexAttribute::Uint2:
-    case VertexAttribute::Float2:
-        return 2;
-    case VertexAttribute::Int3:
-    case VertexAttribute::Uint3:
-    case VertexAttribute::Float3:
-        return 3;
-    case VertexAttribute::Int4:
-    case VertexAttribute::Uint4:
-    case VertexAttribute::Float4:
-        return 4;
-    }
-    SX_CORE_ASSERT(false, "GL: GraphicsPipeline: Unknown Elements Count");
-    return 0;
+	static u32 s_CountTable[]={
+		1,
+		2,
+		3,
+		4,
+
+		1,
+		2,
+		3,
+		4,
+
+		1,
+		2,
+		3,
+		4,
+
+		1,
+		2,
+		3,
+		4,
+
+		1,
+		2,
+		3,
+		4
+	};
+	return s_CountTable[(size_t)attribute];
 }
 
 static GLenum ElementType(VertexAttribute attribute){
-    switch (attribute){
-    case VertexAttribute::Int:
-    case VertexAttribute::Int2:
-    case VertexAttribute::Int3:
-    case VertexAttribute::Int4:
-        return GL_INT;
-    case VertexAttribute::Uint:
-    case VertexAttribute::Uint2:
-    case VertexAttribute::Uint3:
-    case VertexAttribute::Uint4:
-        return GL_UNSIGNED_INT;
-    case VertexAttribute::Float:
-    case VertexAttribute::Float2:
-    case VertexAttribute::Float3:
-    case VertexAttribute::Float4:
-        return GL_FLOAT;
-    }
+	switch(attribute){
+	case VertexAttribute::Float32x1:
+	case VertexAttribute::Float32x2:
+	case VertexAttribute::Float32x3:
+	case VertexAttribute::Float32x4:
+		return GL_FLOAT;
+	case VertexAttribute::UNorm8x1:
+	case VertexAttribute::UNorm8x2:
+	case VertexAttribute::UNorm8x3:
+	case VertexAttribute::UNorm8x4:
+		return GL_UNSIGNED_BYTE;
+	case VertexAttribute::SNorm8x1:
+	case VertexAttribute::SNorm8x2:
+	case VertexAttribute::SNorm8x3:
+	case VertexAttribute::SNorm8x4:
+		return GL_BYTE;
+	case VertexAttribute::Uint32x1:
+	case VertexAttribute::Uint32x2:
+	case VertexAttribute::Uint32x3:
+	case VertexAttribute::Uint32x4:
+		return GL_UNSIGNED_INT;
+	case VertexAttribute::Sint32x1:
+	case VertexAttribute::Sint32x2:
+	case VertexAttribute::Sint32x3:
+	case VertexAttribute::Sint32x4:
+		return GL_INT;
+	}
     SX_CORE_ASSERT(false, "GL: GraphicsPipeline: Unknown Element Type");
     return 0;
+}
+
+static bool Normalize(VertexAttribute attribute){
+	switch(attribute){
+	case VertexAttribute::Float32x1:
+	case VertexAttribute::Float32x2:
+	case VertexAttribute::Float32x3:
+	case VertexAttribute::Float32x4:
+		return false;
+	case VertexAttribute::UNorm8x1:
+	case VertexAttribute::UNorm8x2:
+	case VertexAttribute::UNorm8x3:
+	case VertexAttribute::UNorm8x4:
+		return true;
+	case VertexAttribute::SNorm8x1:
+	case VertexAttribute::SNorm8x2:
+	case VertexAttribute::SNorm8x3:
+	case VertexAttribute::SNorm8x4:
+		return true;
+	case VertexAttribute::Uint32x1:
+	case VertexAttribute::Uint32x2:
+	case VertexAttribute::Uint32x3:
+	case VertexAttribute::Uint32x4:
+		return false;
+	case VertexAttribute::Sint32x1:
+	case VertexAttribute::Sint32x2:
+	case VertexAttribute::Sint32x3:
+	case VertexAttribute::Sint32x4:
+		return false;
+	}
+	SX_CORE_ASSERT(false, "GL: GraphicsPipeline: Unknown attribute Type");
+    return false;
 }
 
 struct ShaderBindingInfo{
@@ -279,7 +328,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
         glEnableVertexAttribArray(i);
         
         if(SupportsVertexAttribFormat()){
-            glVertexAttribFormat(i, ElementsCount(props.VertexAttributes[i]),ElementType(props.VertexAttributes[i]),false, 0 /*offset from the begining of the buffer*/);
+            glVertexAttribFormat(i, ElementsCount(props.VertexAttributes[i]),ElementType(props.VertexAttributes[i]), Normalize(Attributes[i]), 0 /*offset from the begining of the buffer*/);
             glVertexAttribBinding(i,i);
         }else{
             LogWarn("OpenGL: fallback to a compatible OpenGL profile");
@@ -474,14 +523,14 @@ void GraphicsPipelineImpl::BindVertexBuffer(u32 id)const{
         size_t offset = 0;
         for(size_t i = 0; i<Attributes.Size(); ++i){
             glBindVertexBuffer(i, id, offset, AttributesStride);
-            offset+=GraphicsPipeline::s_VertexAttributeSizeTable[(size_t)Attributes[i]];
+            offset+=GraphicsPipeline::AttributeSize(Attributes[i]);
         }
     }else{
         glBindBuffer(GL_ARRAY_BUFFER, id);
         size_t offset = 0;
         for(size_t i = 0; i<Attributes.Size(); ++i){
-            glVertexAttribPointer(i, ElementsCount(Attributes[i]),ElementType(Attributes[i]), false, AttributesStride, (void*)offset);
-            offset+=GraphicsPipeline::s_VertexAttributeSizeTable[(size_t)Attributes[i]];
+            glVertexAttribPointer(i, ElementsCount(Attributes[i]),ElementType(Attributes[i]), Normalize(Attributes[i]), AttributesStride, (void*)offset);
+            offset+=GraphicsPipeline::AttributeSize(Attributes[i]);
         }
     }
 }
