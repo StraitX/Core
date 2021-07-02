@@ -63,8 +63,6 @@ Result ImGuiBackend::OnInitialize(){
 	ImGui::GetStyle().WindowRounding = 8;
 
     io.BackendPlatformName = "StraitX ImGui Backend";
-    io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
-    io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;  
 
 	io.KeyMap[ImGuiKey_Tab] = (int)Key::Tab;
     io.KeyMap[ImGuiKey_LeftArrow] = (int)Key::Left;
@@ -249,10 +247,23 @@ void ImGuiBackend::OnEvent(const Event &e){
 
 	switch(e.Type){
 	case EventType::KeyPress:
-		io.KeyMap[(size_t)e.KeyPress.KeyCode] = true;
-		break;
+	{
+		Key key = e.KeyPress.KeyCode;
+		io.KeyMap[(size_t)key] = true;
+
+		if(key >= Key::A && key <= Key::Z)
+			io.AddInputCharacter((int)key - (int)Key::A + 'a');
+		if(key >= Key::Key_0 && key <= Key::Key_9)
+			io.AddInputCharacter((int)key - (int)Key::Key_0 + '0');
+		if(key >= Key::Keypad_0 && key <= Key::Keypad_9)
+			io.AddInputCharacter((int)key - (int)Key::Keypad_0 + '0');
+	}
+	break;
 	case EventType::KeyRelease:
 		io.KeyMap[(size_t)e.KeyRelease.KeyCode] = false;
+		break;
+	case EventType::MouseWheel:
+    	io.MouseWheel += (float)e.MouseWheel.Delta/2.f;
 		break;
 	default:
 		(void)0;

@@ -172,7 +172,6 @@ Result Engine::Finalize(){
 void Engine::MainLoop(){
     Clock frametime;
     while(m_Running){
-		SubsystemsManager::BeginFrame();
         Event e;
         while(DisplayServer::Window.PollEvent(e)){
             if(e.Type == EventType::WindowClose){
@@ -185,6 +184,7 @@ void Engine::MainLoop(){
         float dt = frametime.GetElapsedTime().AsSeconds();
         frametime.Restart();
 
+		SubsystemsManager::BeginFrame();
         m_Application->OnUpdate(dt);
 		SubsystemsManager::Update(dt);
 
