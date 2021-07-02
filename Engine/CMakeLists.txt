@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 02)
-set(VERSION_PATCH 05)
+set(VERSION_PATCH 06)
 
 project(
     StraitXEngine 
@@ -101,6 +101,7 @@ set(SOURCES_GRAPHICS_I
     ${SOURCES_DIR}/graphics/image_loader.cpp
     ${SOURCES_DIR}/graphics/image.cpp
     ${SOURCES_DIR}/graphics/batch_renderer_2d.cpp
+	${SOURCES_DIR}/graphics/imgui/imgui_backend.cpp
 )
 
 set(SOURCES_SERVERS
@@ -222,6 +223,7 @@ endif()
 add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/glad)
 add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/stb_image)
 add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/glsl2spv)
+add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/imgui)
 
 set(INCLUDES
     ${SOURCES_DIR}
@@ -229,12 +231,14 @@ set(INCLUDES
     ${THIRDPARTY_DIR}/vulkan-sdk/include
     ${THIRDPARTY_DIR}/stb_image
     ${THIRDPARTY_DIR}/glsl2spv
+    ${THIRDPARTY_DIR}/imgui/include
 )
 
 set(LIBS_ENGINE
     glad
     stb_image
     glsl2spv
+	imgui
 )
 
 add_library(StraitX STATIC 
