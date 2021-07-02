@@ -202,6 +202,12 @@ void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Texture2D
     DrawRect(position,size, Color::White, texture, texture_coords);
 }
 
+void BatchRenderer2D::Clear(const Color &color){
+	EndBatch();
+	BeginBatch();
+	m_CmdBuffer.ClearFramebufferColorAttachments(m_CurrentFramebuffer, color);
+}
+
 void BatchRenderer2D::BeginBatch(){
     m_VerticesCount = 0;
     m_IndicesCount = 0;
