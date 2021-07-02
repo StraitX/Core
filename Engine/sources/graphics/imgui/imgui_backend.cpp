@@ -154,6 +154,8 @@ void ImGuiBackend::OnBeginFrame(){
 
 	auto mouse_pos = Mouse::RelativePosition(DisplayServer::Window);
 
+	mouse_pos.y = window_size.height - mouse_pos.y;
+
 	io.MousePos = ImVec2((float)mouse_pos.x, (float)mouse_pos.y);
 
 	if(Mouse::IsButtonPressed(Mouse::Left))
