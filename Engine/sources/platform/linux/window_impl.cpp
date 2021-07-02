@@ -102,12 +102,16 @@ bool WindowImpl::PollEvent(Event &event){
 }
 
 Size2u WindowImpl::Size()const{
+	return GetSizeFromHandle(Handle);
+}
+
+Size2u WindowImpl::GetSizeFromHandle(unsigned long handle){
     ::Window root_return;
     int x, y;
     unsigned int width, height;
     unsigned int border, depth;
 
-    XGetGeometry(s_Display, Handle, &root_return, &x, &y, &width, &height, &border, &depth);
+    XGetGeometry(s_Display, handle, &root_return, &x, &y, &width, &height, &border, &depth);
     
     return {width, height};
 }

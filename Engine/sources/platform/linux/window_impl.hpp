@@ -32,6 +32,8 @@ struct WindowImpl{
 
     Size2u Size()const;
 
+	static Size2u GetSizeFromHandle(unsigned long handle);
+
     static void *PickBestFBConfig(int screen_index);
 };
 

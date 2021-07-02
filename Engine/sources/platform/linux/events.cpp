@@ -1,3 +1,4 @@
+#include "platform/linux/window_impl.hpp"
 #include "platform/linux/events.hpp"
 #include "platform/linux/keys.hpp"
 #include <X11/X.h>
@@ -68,7 +69,7 @@ Event ToStraitXEvent(const XEvent &event){
             sxEvent.Type = EventType::MouseButtonPress;
             sxEvent.MouseButtonPress.Button = XButtonToMouseButton(event.xbutton.button);
             sxEvent.MouseButtonPress.x = event.xbutton.x;
-            sxEvent.MouseButtonPress.y = event.xbutton.y;
+            sxEvent.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(event.xany.window).height - event.xbutton.y;
         }
         return sxEvent;
 
@@ -76,7 +77,7 @@ Event ToStraitXEvent(const XEvent &event){
         sxEvent.Type = EventType::MouseButtonRelease;
         sxEvent.MouseButtonRelease.Button = XButtonToMouseButton(event.xbutton.button);
         sxEvent.MouseButtonRelease.x = event.xbutton.x;
-        sxEvent.MouseButtonRelease.y = event.xbutton.y;
+        sxEvent.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(event.xany.window).height - event.xbutton.y;
         return sxEvent;
 
     default:
