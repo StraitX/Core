@@ -1,10 +1,12 @@
 #include "platform/window_system.hpp"
-#include "core/print.hpp"
 #include "platform/memory.hpp"
 #include "platform/clock.hpp"
 #include "core/log.hpp"
+#include "core/subsystem.hpp"
+#include "core/print.hpp"
 #include "graphics/api/graphics_api_loader.hpp"
 #include "graphics/api/graphics_context.hpp"
+#include "graphics/imgui/imgui_backend.hpp"
 #include "main/application.hpp"
 #include "main/engine.hpp"
 
@@ -96,6 +98,15 @@ Result Engine::Initialize(){
 
     LogTrace("========= Second stage init =========");
 
+	static ImGuiBackend imgui_backend;
+	SubsystemsManager::Push(&imgui_backend);
+
+	LogTrace("SubsystemsManager::Initialize: Begin");
+	{
+		SubsystemsManager::Initialize();
+	}
+	LogTrace("SubsystemsManager::Initialize: End");
+
     //Engine should be completely initialized at this moment
     LogTrace("StraitXMain: Begin");
     {
@@ -127,6 +138,12 @@ Result Engine::Finalize(){
         LogTrace("StraitXExit: End");
     }
 
+	LogTrace("SubsystemsManager::Finalize: Begin");
+	{
+		SubsystemsManager::Finalize();
+	}
+	LogTrace("SubsystemsManager::Finalize: End");
+
 	if(m_ErrorGraphicsContext == Result::Success){
 		LogTrace("GraphicsContext::Finalize: Begin");
 		GraphicsContext::Get().Finalize();
@@ -152,17 +169,25 @@ Result Engine::Finalize(){
 void Engine::MainLoop(){
     Clock frametime;
     while(m_Running){
+		SubsystemsManager::BeginFrame();
         Event e;
         while(DisplayServer::Window.PollEvent(e)){
-            if(e.Type == EventType::WindowClose)
+            if(e.Type == EventType::WindowClose){
                 Stop();
-            else
+            }else{
                 (void)m_Application->OnEvent(e);
+				SubsystemsManager::ProcessEvent(e);
+			}
         }
         float dt = frametime.GetElapsedTime().AsSeconds();
         frametime.Restart();
 
         m_Application->OnUpdate(dt);
+		SubsystemsManager::Update(dt);
+
+		SubsystemsManager::EndFrame();
+
+		GraphicsContext::Get().SwapBuffers();
 
         m_AllocCalls = Memory::AllocCalls();
         m_FrameAllocCalls = m_AllocCalls - m_PrevAllocCalls;

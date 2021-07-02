@@ -33,6 +33,7 @@ set(SOURCES_CORE
     ${SOURCES_DIR}/core/string.cpp
 	${SOURCES_DIR}/core/print.cpp
 	${SOURCES_DIR}/core/basic_types_printer.cpp
+	${SOURCES_DIR}/core/subsystem.cpp
 )
 
 set(SOURCES_GRAPHICS_VULKAN

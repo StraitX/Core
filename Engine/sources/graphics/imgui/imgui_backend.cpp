@@ -50,7 +50,11 @@ void main()
 }
 )";
 
-void ImGuiBackend::Initialize(){
+ImGuiBackend::ImGuiBackend():
+	Subsystem("ImGuiBackend")
+{}
+
+Result ImGuiBackend::OnInitialize(){
 	ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO();
@@ -137,16 +141,18 @@ void ImGuiBackend::Initialize(){
 	m_UniformBuffer.New(sizeof(Uniform), GPUMemoryType::DynamicVRAM, GPUBuffer::TransferDestination | GPUBuffer::UniformBuffer);
 	m_Set->UpdateTextureBinding(0, 0, m_ImGuiFont);
 	m_Set->UpdateUniformBinding(1, 0, m_UniformBuffer);
+
+	return Result::Success;
 }
 
-void ImGuiBackend::BeginFrame(float dt){
+void ImGuiBackend::OnBeginFrame(){
 	ImGuiIO& io = ImGui::GetIO();
 
 	auto window_size = DisplayServer::Window.Size();
 
 	io.DisplaySize = ImVec2((float)window_size.width, (float)window_size.height);
 	io.DisplayFramebufferScale = ImVec2(1, 1);
-	io.DeltaTime = dt;
+	io.DeltaTime = 0.016;
 
 	auto mouse_pos = Mouse::RelativePosition(DisplayServer::Window);
 
@@ -162,7 +168,7 @@ void ImGuiBackend::BeginFrame(float dt){
 	ImGui::NewFrame();
 }
 
-void ImGuiBackend::EndFrame(){
+void ImGuiBackend::OnEndFrame(){
 	ImGui::Render();
 	const ImDrawData *data = ImGui::GetDrawData();
 
@@ -253,7 +259,7 @@ void ImGuiBackend::OnEvent(const Event &e){
 	}
 }
 
-void ImGuiBackend::Finalize(){
+void ImGuiBackend::OnFinalize(){
 	m_UniformBuffer.Delete();
 
 	m_DescriptorSetPool->FreeSet(m_Set);
