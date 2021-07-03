@@ -5,8 +5,6 @@
 #include "platform/compiler.hpp"
 #include "platform/memory.hpp"
 
-namespace StraitX{
-
 struct DefaultGeneralAllocator{
 	void *Alloc(size_t size);
 
@@ -45,8 +43,5 @@ SX_INLINE void *DefaultPoolAllocator::Alloc(){
 SX_INLINE void DefaultPoolAllocator::Free(void *ptr){
 	Memory::AlignedFree(ptr);
 }
-
-
-}//namespace StraitX::
 
 #endif //DEFAULT_ALLOCATOR_HPP

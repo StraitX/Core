@@ -2,7 +2,6 @@
 #include "platform/macos/opengl_context_impl.hpp"
 #include "platform/macos/ns_opengl_context_wrapper.hpp"
 
-namespace StraitX{
 namespace MacOS{
 
 Result OpenGLContextImpl::Create(WindowImpl &window, const Version &version){
@@ -38,4 +37,3 @@ void OpenGLContextImpl::SwapBuffers(){
 }
 
 }//namespace MacOS::
-}//namespace StraitX::

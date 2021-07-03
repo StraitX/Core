@@ -1,6 +1,5 @@
 #include "platform/windows/screen_impl.hpp"
 
-namespace StraitX {
 namespace Windows {
 
 ScreenImpl::ScreenImpl(Size2i size):
@@ -15,5 +14,4 @@ const Size2f& ScreenImpl::DPI()const {
 	return m_DPI;
 }
 
-};// namespace Windows::
-}; // namespace StraitX::
+}//namespace Windows::

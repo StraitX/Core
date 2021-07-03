@@ -2,7 +2,6 @@
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/memory_allocator.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 CPUBufferImpl::CPUBufferImpl(CPUBuffer &buffer):
@@ -63,4 +62,3 @@ void CPUBufferImpl::DeleteImpl(CPUBuffer &buffer){
 }
 
 }//namespace Vk::
-}//namespace StraitX::

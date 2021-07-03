@@ -2,7 +2,6 @@
 #include "core/assert.hpp"
 #include "graphics/vulkan/memory.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 MemoryType::Type ToVkMemoryType(GPUMemoryType type){
@@ -115,4 +114,3 @@ bool MemoryProperties::IsMappable(MemoryType::Type type)const{
 }
 
 }//namespace Vk::
-}//namespace StraitX::

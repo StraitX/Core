@@ -2,8 +2,6 @@
 #include "platform/memory.hpp"
 #include "graphics/opengl/render_pass_impl.hpp"
 
-
-namespace StraitX{
 namespace GL{
 
 RenderPassImpl::RenderPassImpl(const RenderPassProperties &props){
@@ -24,5 +22,3 @@ void RenderPassImpl::DeleteImpl(RenderPass *pass){
 }
 
 }//namespace GL::
-}//namespace StraitX::
-

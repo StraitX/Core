@@ -8,7 +8,6 @@
 #include "graphics/opengl/render_pass_impl.hpp"
 #include "graphics/opengl/framebuffer_impl.hpp"
 
-namespace StraitX{
 namespace GL{
 
 class GraphicsContextImpl: public GraphicsContext{
@@ -48,6 +47,5 @@ public:
 };
 
 }//namespace GL::
-}//namespace StraitX::
 
 #endif//STRAITX_OPENGL_GRAPHICS_CONTEXT_IMPL_HPP

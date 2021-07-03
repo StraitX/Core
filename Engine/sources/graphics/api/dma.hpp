@@ -6,8 +6,6 @@
 #include "graphics/api/cpu_texture.hpp"
 #include "graphics/api/texture.hpp"
 
-namespace StraitX{
-
 class GraphicsAPILoader;
 
 class DMA{
@@ -66,7 +64,5 @@ SX_INLINE void DMA::Copy(const CPUTexture &src, const Texture2D &dst){
 SX_INLINE void DMA::ChangeLayout(Texture &texture, TextureLayout layout){
     s_VTable.ChangeGPUTextureLayout(texture, layout);
 }
-
-}//namespace StraitX::
 
 #endif//STRAITX_DMA_CONTEXT_HPP

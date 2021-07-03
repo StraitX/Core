@@ -1,6 +1,6 @@
 #include "platform/macos/keys.hpp"
 
-namespace StraitX{
+
 namespace MacOS{
 
 Key ToStraitXKeyCode(int key_code){
@@ -114,4 +114,3 @@ Key ToStraitXKeyCode(int key_code){
 }
 
 }//namespace MacOS::
-}//namespace StraitX::

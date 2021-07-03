@@ -3,7 +3,6 @@
 
 #include "graphics/api/dma.hpp"
 
-namespace StraitX{
 namespace GL{
 
 struct DMAImpl{
@@ -18,6 +17,5 @@ struct DMAImpl{
 };
 
 }//namespace GL::
-}//namespace StraitX::
 
 #endif//STRAITX_OPENGL_DMA_IMPL_HPP

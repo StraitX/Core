@@ -5,7 +5,6 @@
 #include "graphics/api/graphics_pipeline.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 struct GraphicsPipelineImpl: GraphicsPipeline{
@@ -35,6 +34,5 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
 };
 
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif//STRAITX_VULKAN_GRAPHICS_PIPELINE_IMPL_HPP

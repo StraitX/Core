@@ -7,7 +7,7 @@
 #include "platform/window.hpp"
 #include "platform/window_system.hpp"
 
-namespace StraitX{
+
 namespace Linux{
 extern ::Display *s_Display;
 }//namespace Linux::
@@ -90,4 +90,3 @@ void Mouse::SetVisible(bool is_visible){
     }
 }
 
-}//namespace StraitX::

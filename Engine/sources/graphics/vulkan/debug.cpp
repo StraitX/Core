@@ -1,7 +1,6 @@
 #include "graphics/vulkan/debug.hpp"
 #include <cstdio>
 
-namespace StraitX{
 namespace Vk{
 
 constexpr int32_t VkErrorUnUpdatedDescriptor = -1539028524;
@@ -44,4 +43,3 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT
 }
 
 }//namespace VK::
-}//namespace StraitX::

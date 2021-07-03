@@ -4,8 +4,6 @@
 #include "platform/window_system.hpp"
 #include "platform/window.hpp"
 
-namespace StraitX {
-
 bool Mouse::IsButtonPressed(Mouse::Button button) {
     return (GetAsyncKeyState(Windows::MouseButtonToVirtualKey(button)) & 0x8000) != 0;
 }
@@ -41,5 +39,3 @@ void Mouse::SetGlobalPosition(const Point &position){
 void Mouse::SetVisible(bool is_visible){
     ShowCursor(is_visible);
 }
-
-}; // namespace StraitX::

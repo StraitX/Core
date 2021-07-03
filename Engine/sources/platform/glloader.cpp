@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <string.h>
 
-namespace StraitX{
+
 
 Result OpenGLLoader::Load(){
     //this should be called with a valid dummy context
@@ -31,4 +31,3 @@ bool OpenGLLoader::LoadExtensions() {
 }
 
 
-}; // namespace StraitX::

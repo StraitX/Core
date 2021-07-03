@@ -9,8 +9,6 @@
 #include "graphics/api/texture.hpp"
 #include "graphics/api/render_pass.hpp"
 
-namespace StraitX{
-
 struct FramebufferProperties{
     Vector2u Size = {0, 0};
     Span<const Texture2D* const> Attachments = {};
@@ -69,7 +67,5 @@ SX_INLINE Framebuffer *Framebuffer::New(const RenderPass *const pass,const Frame
 SX_INLINE void Framebuffer::Delete(Framebuffer *framebuffer){
     s_VTable.Delete(framebuffer);
 }
-
-}//namespace StraitX::
 
 #endif//STRAITX_FRAMEBUFFER_HPP

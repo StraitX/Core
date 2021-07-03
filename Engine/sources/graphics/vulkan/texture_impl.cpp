@@ -4,7 +4,6 @@
 #include "graphics/vulkan/memory_allocator.hpp"
 #include "graphics/vulkan/texture_impl.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 VkFormat TextureImpl::s_FormatTable[] = {
@@ -126,4 +125,3 @@ void Texture2DImpl::DeleteImpl(Texture2D &texture){
 }
 
 }//namespace Vk::
-}//namespace StraitX::

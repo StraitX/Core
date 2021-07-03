@@ -1,8 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #include "platform/window_system.hpp"
 
-namespace StraitX{
-
 Result WindowSystem::Initialize(){
 
     NSApplication *app = [NSApplication sharedApplication];
@@ -28,5 +26,3 @@ Screen WindowSystem::MainScreen(){
         {float(displayPixelSize.width / displayPhysicalSize.width) * 25.4f, float(displayPixelSize.height / displayPhysicalSize.height) * 25.4f}
     );
 }
-
-}//namespace StraitX::

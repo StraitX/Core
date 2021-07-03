@@ -5,9 +5,6 @@
 #include "core/math/vector3.hpp"
 #include "core/math/vector4.hpp"
 
-namespace StraitX{
-
-
 template <typename T>
 constexpr T Dot(const Vector2<T> &left, const Vector2<T> &right){
     return left.x * right.x + left.y * right.y;
@@ -27,9 +24,5 @@ template<typename T>
 constexpr T Lerp(const T &f, const T &s, float c){
     return f + (s - f)*c;
 }
-
-
-}; // namespace StraitX::
-
 
 #endif // STRAITX_LINEAR_HPP

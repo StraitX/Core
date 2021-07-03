@@ -6,7 +6,7 @@
 #include <cstddef>
 
 // for now
-namespace StraitX{
+
 
 typedef signed   char s8;
 typedef unsigned char u8;
@@ -36,7 +36,7 @@ typedef std::size_t size_t;
     #error "Your architecture does not support size_t type"
 #endif
 
-static_assert(sizeof(StraitX::size_t) == sizeof(offset_t),"size_t of your arch does not match StraitX requirements");
+static_assert(sizeof(size_t) == sizeof(offset_t),"size_t of your arch does not match StraitX requirements");
 
 #if defined(SX_ARCH_X86)
     typedef u32 ptr_t; 
@@ -72,6 +72,6 @@ struct Version{
     u32 Patch;
 };
 
-}//namespace StraitX::
+
 
 #endif // STRAITX_TYPES_HPP

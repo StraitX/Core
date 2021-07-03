@@ -3,7 +3,6 @@
 
 #include "graphics/api/framebuffer.hpp"
 
-namespace StraitX{
 namespace GL{
 
 class FramebufferImpl: public Framebuffer{
@@ -27,6 +26,5 @@ public:
 };
 
 }//namespace GL::
-}//namespace StraitX::
 
 #endif//STRAITX_OPENGL_FRAMEBUFFER_IMPL_HPP

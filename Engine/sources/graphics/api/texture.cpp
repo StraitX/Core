@@ -5,8 +5,6 @@
 #include "graphics/api/dma.hpp"
 #include "graphics/image.hpp"
 
-namespace StraitX{
-
 Texture2D::VTable Texture2D::s_VTable;
 
 Texture2D::Texture2D(const char *filename, const SamplerProperties &props){
@@ -39,5 +37,3 @@ void Texture2D::New(const Image &image, const SamplerProperties &props){
         DMA::ChangeLayout(*this, TextureLayout::ShaderReadOnlyOptimal);
     staging.Delete();
 }
-
-}//namespace StraitX::

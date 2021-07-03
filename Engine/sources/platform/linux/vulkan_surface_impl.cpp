@@ -7,12 +7,9 @@
 #undef KeyPress
 #include "platform/vulkan_surface.hpp"
 
-namespace StraitX{
-
 namespace Linux{
 extern ::Display *s_Display;
 }//namespace Linux::
-
 
 Result VulkanSurface::Create(VkInstance owner, const PlatformWindow &window){
     Owner = owner;
@@ -29,8 +26,3 @@ Result VulkanSurface::Create(VkInstance owner, const PlatformWindow &window){
 void VulkanSurface::Destroy(){
     vkDestroySurfaceKHR(Owner, Handle, nullptr);
 }
-
-}//namespace StraitX::
-
-
-

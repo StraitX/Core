@@ -1,8 +1,6 @@
 #ifndef STRAITX_NONCOPYABLE_HPP
 #define STRAITX_NONCOPYABLE_HPP
 
-namespace StraitX{
-
 struct NonCopyable{
 
     NonCopyable() = default;
@@ -14,7 +12,5 @@ struct NonCopyable{
     ~NonCopyable() = default;
 
 };
-
-};//namespace StraitX::
 
 #endif//STRAITX_NONCOPYABLE_HPP 

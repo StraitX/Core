@@ -6,7 +6,6 @@
 #include "platform/types.hpp"
 #include "platform/defs.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 struct QueueFamily{
@@ -32,7 +31,6 @@ struct QueueProperties{
     static QueueProperties Get(VkPhysicalDevice device);
 };
 
-};//namespace Vk::
-};//namespace StraitX::
+}//namespace Vk::
 
 #endif //STRAITX_VULKAN_QUEUE_HPP

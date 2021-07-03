@@ -2,8 +2,6 @@
 #include <errno.h>
 #include "platform/sleep.hpp"
 
-namespace StraitX{
-
 static constexpr s64 AsNanoseconds(Time time){
     return time.AsMicroseconds() * 1000;
 }
@@ -17,5 +15,3 @@ void Sleep(Time time){
 
     while(nanosleep(&desired, &desired) == -1 && errno == EINTR){}
 }
-
-}//namespace StraitX::

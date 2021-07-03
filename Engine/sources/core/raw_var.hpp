@@ -6,8 +6,6 @@
 #include "core/move.hpp"
 #include "core/noncopyable.hpp"
 
-namespace StraitX{
-
 template<typename T>
 class alignas(T) RawVar: public NonCopyable{
 private:
@@ -58,7 +56,5 @@ public:
 		return reinterpret_cast<const T *>(m_Memory);
 	}
 };
-
-}//namespace StraitX::
 
 #endif//STRAITX_RAW_VAR_HPP

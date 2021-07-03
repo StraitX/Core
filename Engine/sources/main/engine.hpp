@@ -7,8 +7,6 @@
 
 int main();
 
-namespace StraitX{
-
 class Application;
 
 class Engine{
@@ -65,8 +63,5 @@ SX_INLINE Engine &Engine::Get(){
     SX_CORE_ASSERT(s_Instance, "for some reason Engine was not created");
     return *s_Instance;
 }
-
-}; // namespace StraitX::
-
 
 #endif // STRAITX_ENGINE_HPP

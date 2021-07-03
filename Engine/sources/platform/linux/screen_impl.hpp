@@ -3,7 +3,7 @@
 
 #include "platform/types.hpp"
 
-namespace StraitX{
+
 namespace Linux{
 
 class WindowImpl;
@@ -27,6 +27,6 @@ public:
 };
 
 } // namespace Linux::
-} // namespace StraitX::
+
 
 #endif // STRAITX_LINUX_SCREEN_IMPL_HPP

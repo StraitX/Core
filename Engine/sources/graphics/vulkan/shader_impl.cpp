@@ -4,7 +4,6 @@
 #include "graphics/vulkan/shader_impl.hpp"
 #include "graphics/vulkan/gpu.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 static glsl2spv::ShaderType GetGLSL2SPVShaderType(Shader::Type type){
@@ -57,12 +56,12 @@ bool ShaderImpl::IsValid()const{
 VkShaderStageFlagBits ShaderImpl::GetStage(Shader::Type type) {
     switch (type)
     {
-    case StraitX::Shader::Vertex: return VK_SHADER_STAGE_VERTEX_BIT;
-    case StraitX::Shader::Geometry: return VK_SHADER_STAGE_GEOMETRY_BIT;
-    case StraitX::Shader::TessellationControl: return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
-    case StraitX::Shader::TessellationEvaluation: return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
-    case StraitX::Shader::Fragment: return VK_SHADER_STAGE_FRAGMENT_BIT;
-    case StraitX::Shader::Compute: return VK_SHADER_STAGE_COMPUTE_BIT;
+    case Shader::Vertex: return VK_SHADER_STAGE_VERTEX_BIT;
+    case Shader::Geometry: return VK_SHADER_STAGE_GEOMETRY_BIT;
+    case Shader::TessellationControl: return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+    case Shader::TessellationEvaluation: return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+    case Shader::Fragment: return VK_SHADER_STAGE_FRAGMENT_BIT;
+    case Shader::Compute: return VK_SHADER_STAGE_COMPUTE_BIT;
     }
     return (VkShaderStageFlagBits)0;
 }
@@ -77,4 +76,3 @@ void ShaderImpl::DeleteImpl(Shader *shader){
 }
 
 }//namespace Vk::
-}//namespace StraitX::

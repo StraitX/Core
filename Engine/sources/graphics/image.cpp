@@ -5,8 +5,6 @@
 #include "graphics/image.hpp"
 #include "graphics/image_loader.hpp"
 
-namespace StraitX{
-
 Image::Image(u32 width, u32 height, const Color &color){
     Create(width, height, color);
 }
@@ -108,5 +106,3 @@ Result Image::SaveToFile(const char *filename){
     }
     return Result::Failure;
 }
-
-}//namespace StraitX::

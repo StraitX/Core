@@ -6,7 +6,6 @@
 #include "graphics/api/gpu_configuration.hpp"
 #include "graphics/vulkan/memory.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 struct MemoryAllocator{
@@ -16,6 +15,5 @@ struct MemoryAllocator{
 };
 
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif //STRAITX_VULKAN_GPU_MEMORY_ALLOCATOR_HPP 

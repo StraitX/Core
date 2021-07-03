@@ -1,8 +1,6 @@
 #include "graphics/color.hpp"
 #include "core/printer.hpp"
 
-namespace StraitX{
-
 const Color Color::Red        = {1.f, 0, 0, 1.f};
 const Color Color::Green      = {0, 1.f, 0, 1.f};
 const Color Color::Blue       = {0, 0, 1.f, 1.f};
@@ -31,5 +29,3 @@ void Printer<Color>::Print(const Color &value, void (*writer)(char, void*), void
 	Printer<float>::Print(value.A, writer, writer_data);
 	Printer<char>::Print(')', writer, writer_data);
 }
-
-}//namespace StraitX::

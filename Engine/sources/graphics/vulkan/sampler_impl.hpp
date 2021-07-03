@@ -3,7 +3,6 @@
 
 #include "graphics/api/sampler.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 struct SamplerImpl{
@@ -13,6 +12,5 @@ struct SamplerImpl{
 };
 
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif//STRAITX_VULKAN_SAMPLER_IMPL_HPP

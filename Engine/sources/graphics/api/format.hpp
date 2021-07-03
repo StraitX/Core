@@ -3,8 +3,6 @@
 
 #include "platform/types.hpp"
 
-namespace StraitX{
-
 enum class PixelFormat: u8{
     RGBA8 = 1 
 };
@@ -27,7 +25,5 @@ bool IsDepthFormat(TextureFormat format);
 bool IsColorFormat(TextureFormat format);
 
 TextureFormat ToTextureFormat(PixelFormat format);
-
-}//namespace StraitX::
 
 #endif//STRAITX_FORMAT_HPP

@@ -1,7 +1,6 @@
 #include <Windows.h>
 #include "platform/clock.hpp"
 
-namespace StraitX{
 namespace Windows {
 
 LARGE_INTEGER GetFrequency() {
@@ -20,5 +19,3 @@ Time Clock::GetMonotonicTime(){
 
     return Microseconds(counter.QuadPart * sec_by_freq);
 }
-
-}//namespace StraitX::

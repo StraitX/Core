@@ -6,7 +6,6 @@
 #include "platform/result.hpp"
 #include "platform/noncopyable.hpp"
 
-namespace StraitX{
 //TODO take care about size_t and 64 32 bit OS
 class File: public NonCopyable{
 public:
@@ -83,5 +82,4 @@ SX_INLINE bool File::IsOpen(){
     return m_FD != InvalidFD;
 }
 
-}; // namespace StraitX:
 #endif // STRAITX_FILE_HPP

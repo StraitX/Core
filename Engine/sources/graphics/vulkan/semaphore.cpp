@@ -1,7 +1,6 @@
 #include "graphics/vulkan/semaphore.hpp"
 #include "graphics/vulkan/gpu.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 Semaphore::Semaphore()
@@ -18,5 +17,4 @@ Semaphore::~Semaphore(){
     vkDestroySemaphore(GPU::Get().Handle(), Handle, nullptr);
 }
 
-}//Vk::
-}//StraitX::
+}// namespace Vk::

@@ -3,8 +3,6 @@
 #include "platform/linux/keys.hpp"
 #include <X11/X.h>
 
-
-namespace StraitX{
 namespace Linux{
 
 Bool CheckEvent(::Display *display, XEvent *event, XPointer userData){
@@ -87,5 +85,4 @@ Event ToStraitXEvent(const XEvent &event){
     }
 }
 
-} //namespace Linux::
-} //namespace StraitX::
+}//namespace Linux::

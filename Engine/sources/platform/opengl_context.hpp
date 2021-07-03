@@ -7,18 +7,16 @@
 
 #ifdef SX_PLATFORM_LINUX
     #include "platform/linux/opengl_context_impl.hpp"
-    typedef StraitX::Linux::OpenGLContextImpl PlatformGLContextImpl;
+    typedef Linux::OpenGLContextImpl PlatformGLContextImpl;
 #elif defined(SX_PLATFORM_WINDOWS)
     #include "platform/windows/opengl_context_impl.hpp"
-    typedef StraitX::Windows::OpenGLContextImpl PlatformGLContextImpl;
+    typedef Windows::OpenGLContextImpl PlatformGLContextImpl;
 #elif defined(SX_PLATFORM_MACOS)
     #include "platform/macos/opengl_context_impl.hpp"
-    typedef StraitX::MacOS::OpenGLContextImpl PlatformGLContextImpl;
+    typedef MacOS::OpenGLContextImpl PlatformGLContextImpl;
 #else
     #error "Your platform does not support OpenGL context"
 #endif
-
-namespace StraitX{
 
 class OpenGLContext: public NonCopyable{
 private:
@@ -63,7 +61,5 @@ SX_INLINE Result OpenGLContext::MakeCurrent(){
 SX_INLINE void OpenGLContext::SwapBuffers(){
     m_Impl.SwapBuffers();
 }
-
-}// namespace StraitX::
 
 #endif // STRAITX_OPENGL_CONTEXT_HPP

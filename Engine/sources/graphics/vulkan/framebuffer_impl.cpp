@@ -6,7 +6,6 @@
 #include "graphics/vulkan/render_pass_impl.hpp"
 #include "graphics/vulkan/framebuffer_impl.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 FramebufferImpl::FramebufferImpl(const RenderPass *const pass, const FramebufferProperties &props):
@@ -49,5 +48,3 @@ void FramebufferImpl::DeleteImpl(Framebuffer *framebuffer){
 }
 
 }//namespace Vk::
-}//namespace StraitX::
-

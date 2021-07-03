@@ -4,7 +4,6 @@
 #include "platform/vulkan.hpp"
 #include "graphics/api/cpu_buffer.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 struct CPUBufferImpl{
@@ -28,6 +27,5 @@ struct CPUBufferImpl{
 };
 
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif//STRAITX_VULKAN_CPU_BUFFER_IMPL_HPP

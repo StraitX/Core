@@ -3,10 +3,6 @@
 
 #include "platform/time.hpp"
 
-namespace StraitX{
-
 void Sleep(Time time);
-
-}//namespace StraitX::
 
 #endif//STRAITX_SLEEP_HPP

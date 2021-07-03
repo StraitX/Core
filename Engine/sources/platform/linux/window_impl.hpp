@@ -5,7 +5,6 @@
 #include "platform/result.hpp"
 #include "platform/linux/screen_impl.hpp"
 
-namespace StraitX{
 namespace Linux{
 
 struct WindowImpl{
@@ -37,7 +36,6 @@ struct WindowImpl{
     static void *PickBestFBConfig(int screen_index);
 };
 
-} //namespace Linux::
-} //namespace StraitX::
+}//namespace Linux::
 
 #endif // STRAITX_LINUX_WINDOW_IMPL_HPP

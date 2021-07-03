@@ -2,7 +2,7 @@
 #include "platform/types.hpp"
 #include "platform/keyboard.hpp"
 
-namespace StraitX {
+
 namespace Keyboard {
 
 static const char* KeyCodeNames[(size_t)Key::KeysCount] = {
@@ -132,4 +132,3 @@ const char* GetName(Key code) {
 }
 
 }//namespace Keyboard::
-}//namespace StraitX

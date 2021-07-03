@@ -4,8 +4,6 @@
 #include "platform/types.hpp"
 #include "core/math/vector4.hpp"
 
-namespace StraitX{
-
 struct Color{
     float R = 0.0f;
     float G = 0.0f;
@@ -94,7 +92,5 @@ constexpr Color operator*(const Color &lvalue, const Color &rvalue){
         lvalue.A * rvalue.A
     };
 }
-
-}//namespace StraitX::
 
 #endif//STRAITX_COLOR_HPP

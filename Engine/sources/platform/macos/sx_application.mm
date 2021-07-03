@@ -2,7 +2,6 @@
 #include "platform/macos/sx_application.hpp"
 #include "platform/macos/keys.hpp"
 
-namespace StraitX{
 namespace MacOS{
 
 bool SXApplication::s_KeyboardState[(size_t)Key::KeysCount];
@@ -53,4 +52,3 @@ void SXApplication::ProcessEvents(){
 }
 
 }//namespace MacOS::
-}//namespace StraitX::

@@ -4,7 +4,6 @@
 #include "platform/vulkan.hpp"
 #include "graphics/api/shader.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 struct ShaderImpl: public Shader{
@@ -25,6 +24,5 @@ struct ShaderImpl: public Shader{
 };
 
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif//STRAITX_VULKAN_SHADER_IMPL_HPP

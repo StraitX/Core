@@ -6,8 +6,6 @@
 #include "servers/display_server.hpp"
 #include "platform/keyboard.hpp"
 
-namespace StraitX{
-
 ShaderBinding ImGuiBackend::s_Bindings[2] = {
 	{0, 1, ShaderBindingType::Texture, Shader::Fragment},
 	{1, 1, ShaderBindingType::UniformBuffer, Shader::Vertex},
@@ -287,5 +285,3 @@ void ImGuiBackend::OnFinalize(){
 	GraphicsPipeline::Delete(m_Pipeline);
 	m_ImGuiFont.Delete();
 }
-
-}//namespace StraitX::

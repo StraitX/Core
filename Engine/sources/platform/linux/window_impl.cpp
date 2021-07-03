@@ -6,7 +6,6 @@
 #include <GL/glx.h>
 #undef Success
 
-namespace StraitX{
 namespace Linux{
 
 extern ::Display *s_Display;
@@ -177,5 +176,4 @@ void *WindowImpl::PickBestFBConfig(int screen_index){
 }
 
 
-} //namespace Linux::
-} //namespace StraitX::
+}//namespace Linux::

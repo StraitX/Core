@@ -3,7 +3,6 @@
 
 #include "graphics/api/sampler.hpp"
 
-namespace StraitX{
 namespace GL{
 
 struct SamplerImpl{
@@ -13,6 +12,5 @@ struct SamplerImpl{
 };
 
 }//namespace GL::
-}//namespace StraitX::
 
 #endif//STRAITX_OPENGL_SAMPLER_IMPL_HPP

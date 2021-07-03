@@ -11,8 +11,6 @@
 #include "graphics/api/sampler.hpp"
 #include "graphics/api/descriptor_set.hpp"
 
-namespace StraitX{
-
 enum class VertexAttribute{
 	Float32x1,
 	Float32x2,
@@ -135,7 +133,5 @@ SX_INLINE GraphicsPipeline *GraphicsPipeline::New(const GraphicsPipelineProperti
 SX_INLINE void GraphicsPipeline::Delete(GraphicsPipeline *pipeline){
     s_VTable.Delete(pipeline);
 }
-
-}//namespace StraitX::
 
 #endif//STRAITX_GRAPHICS_PIPELINE_HPP

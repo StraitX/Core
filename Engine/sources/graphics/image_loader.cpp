@@ -1,8 +1,6 @@
 #include "stb_image.h"
 #include "graphics/image_loader.hpp"
 
-namespace StraitX{
-
 static int stb_read(void *user,char *data,int size){
     File *file = static_cast<File*>(user);
     return file->Read(data, size);
@@ -63,7 +61,3 @@ Result ImageLoader::SaveImage(File &file, u32 width, u32 height, PixelFormat p_f
     }
     return Result::Success;
 }
-
-
-
-}//namespace StraitX::

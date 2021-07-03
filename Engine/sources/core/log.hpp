@@ -5,15 +5,14 @@
 #include "core/print.hpp"
 #include "platform/compiler.hpp"
 
-
 #ifdef SX_DEBUG
 
-#define DLog(source,error) StraitX::Print("[%]: %: %\n",error==Result::Success? "Info " : "Result",source, error.Name())
-#define DLogTrace(...) do{StraitX::Print("[Trace]: "); StraitX::Println(__VA_ARGS__); }while(0)
-#define DLogInfo(...)  do{StraitX::Print("[Info ]: "); StraitX::Println(__VA_ARGS__); }while(0)
-#define DLogWarn(...)  do{StraitX::Print("[Warn ]: "); StraitX::Println(__VA_ARGS__); }while(0)
-#define DLogError(...) do{StraitX::Print("[Error]: "); StraitX::Println(__VA_ARGS__); }while(0)
-#define DLogSeparator() StraitX::Println("===============================================================")
+#define DLog(source,error) Print("[%]: %: %\n",error==Result::Success? "Info " : "Result",source, error.Name())
+#define DLogTrace(...) do{Print("[Trace]: "); Println(__VA_ARGS__); }while(0)
+#define DLogInfo(...)  do{Print("[Info ]: "); Println(__VA_ARGS__); }while(0)
+#define DLogWarn(...)  do{Print("[Warn ]: "); Println(__VA_ARGS__); }while(0)
+#define DLogError(...) do{Print("[Error]: "); Println(__VA_ARGS__); }while(0)
+#define DLogSeparator() Println("===============================================================")
 
 #else
 
@@ -26,11 +25,11 @@
 
 #endif
 
-#define Log(source,error) StraitX::Print("[%]: %: %\n",error==Result::Success? "Info " : "Result",source, error.Name())
-#define LogTrace(...) do{StraitX::Print("[Trace]: "); StraitX::Println(__VA_ARGS__); }while(0)
-#define LogInfo(...)  do{StraitX::Print("[Info ]: "); StraitX::Println(__VA_ARGS__); }while(0)
-#define LogWarn(...)  do{StraitX::Print("[Warn ]: "); StraitX::Println(__VA_ARGS__); }while(0)
-#define LogError(...) do{StraitX::Print("[Error]: "); StraitX::Println(__VA_ARGS__); }while(0)
-#define LogSeparator() StraitX::Println("===============================================================")
+#define Log(source,error) Print("[%]: %: %\n",error==Result::Success? "Info " : "Result",source, error.Name())
+#define LogTrace(...) do{Print("[Trace]: "); Println(__VA_ARGS__); }while(0)
+#define LogInfo(...)  do{Print("[Info ]: "); Println(__VA_ARGS__); }while(0)
+#define LogWarn(...)  do{Print("[Warn ]: "); Println(__VA_ARGS__); }while(0)
+#define LogError(...) do{Print("[Error]: "); Println(__VA_ARGS__); }while(0)
+#define LogSeparator() Println("===============================================================")
 
 #endif // STRAITX_LOG_HPP

@@ -1,8 +1,6 @@
 #include "platform/compiler.hpp"
 #include "graphics_pipeline.hpp"
 
-namespace StraitX{
-
 GraphicsPipeline::VTable GraphicsPipeline::s_VTable;
 
 const u32 GraphicsPipeline::s_VertexAttributeSizeTable[]={
@@ -61,6 +59,3 @@ size_t GraphicsPipeline::CalculateStride(Span<VertexAttribute> attributes){
     }
     return stride;
 }
-
-
-}//namespace StraitX::

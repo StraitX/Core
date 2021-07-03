@@ -8,8 +8,6 @@
 #include "core/move.hpp"
 #include "core/span.hpp"
 
-namespace StraitX{
-
 template<typename T_Type, size_t T_Capacity>
 class PushArray{
 public:
@@ -230,7 +228,5 @@ template<typename T_Type, size_t T_Capacity>
 typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capacity>::end()const{
     return begin()+Size();
 }
-
-}//namespace StraitX::
 
 #endif//STRAITX_PUSH_ARRAY_HPP

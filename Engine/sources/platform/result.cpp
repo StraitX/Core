@@ -1,9 +1,6 @@
 #include "platform/result.hpp"
 #include "platform/defs.hpp"
 
-
-namespace StraitX{
-
 const char *Result::s_ResultNamesTable[(int)Result::ResultCodesCount] = {
     S(Success),
     S(Failure),
@@ -21,5 +18,3 @@ const char *Result::s_ResultNamesTable[(int)Result::ResultCodesCount] = {
     S(MemoryFailure),
     S(WrongFormat)
 };
-
-}; // namespace StraitX::

@@ -4,7 +4,7 @@
 #include <GL/glx.h>
 #undef Success
 #include <unistd.h>
-namespace StraitX{
+
 namespace Linux{
 
 extern ::Display *s_Display;    
@@ -94,4 +94,3 @@ void OpenGLContextImpl::SwapBuffers(){
 }
 
 } // namespace Linux::
-} // namespace StraitX::

@@ -5,17 +5,18 @@
 #include "platform/keyboard.hpp"
 #include <windows.h>
 
-namespace StraitX {
 namespace Windows {
 
 short MouseButtonToVirtualKey(Mouse::Button button);
+
 short KeyCodeToVirtualKey(Key code);
 
 short MouseButtonToVirtualKey(Mouse::Button button);
+
 Key VirtualKeyToKeyCode(short code);
+
 Key VirtualKeyExtendedToKeyCode(WPARAM key, LPARAM flags);
 
-}; // namespace Windows::
-}; // namespace StraitX::
+}//namespace Windows::
 
 #endif // STRAITX_WINDOWS_VIRTUAL_KEYS_HPP

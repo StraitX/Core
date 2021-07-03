@@ -3,7 +3,6 @@
 
 #include "platform/vulkan.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
@@ -24,6 +23,5 @@ void DestroyDebugUtilsMessengerEXT(
     const VkAllocationCallbacks *pAllocator);
 
 }//namespace Vk::
-}//namepsace StraitX::
 
 #endif //STRAITX_VULKAN_DEBUG_HPP

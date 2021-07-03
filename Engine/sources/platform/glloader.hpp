@@ -4,8 +4,6 @@
 #include "platform/result.hpp"
 #include "platform/types.hpp"
 
-namespace StraitX{
-
 class OpenGLLoader{
 public:
     // we can load OpenGL only when current context exist
@@ -22,7 +20,5 @@ public:
 
     static void *GetOpenGLProc(const char *name);
 };
-
-}; // namespace StraitX::
 
 #endif //STRAITX_GLLOADER_HPP 

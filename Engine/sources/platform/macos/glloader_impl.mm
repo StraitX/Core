@@ -4,8 +4,6 @@
 #import <Foundation/Foundation.h>
 #include "platform/glloader.hpp"
 
-namespace StraitX{
-
 bool OpenGLLoader::LoadPlatformExtensions(){
     return true;
 }
@@ -22,5 +20,3 @@ void *OpenGLLoader::GetOpenGLProc(const char *name){
     CFRelease(symbol_name);
     return symbol;
 }
-
-} // namespace StraitX::

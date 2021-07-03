@@ -2,8 +2,6 @@
 #include "platform/linux/keys.hpp"
 #include <X11/Xlib.h>
 
-namespace StraitX{
-
 namespace Linux{
 extern ::Display *s_Display;
 }//namespace Linux::
@@ -23,5 +21,4 @@ bool IsKeyPressed(Key code){
     }
 }
 
-} // namespace Keyboard::
-} // namespace StraitX::
+}//namespace Keyboard::

@@ -2,8 +2,6 @@
 #include <thread>
 #include "platform/sleep.hpp"
 
-namespace StraitX{
-
 void Sleep(Time time){
     TIMECAPS tc;
     timeGetDevCaps(&tc, sizeof(TIMECAPS));
@@ -14,5 +12,3 @@ void Sleep(Time time){
 
     timeEndPeriod(tc.wPeriodMin);
 }
-
-}//namespace StraitX::

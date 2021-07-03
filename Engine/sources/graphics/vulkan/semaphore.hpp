@@ -4,7 +4,6 @@
 #include "platform/vulkan.hpp"
 #include "core/assert.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 struct Semaphore{
@@ -16,6 +15,5 @@ struct Semaphore{
 };
 
 }//Vk::
-}//StraitX::
 
 #endif//STRAITX_VULKAN_SEMAPHORE_HPP

@@ -7,8 +7,6 @@
 #include "core/move.hpp"
 #include "graphics/api/gpu_configuration.hpp"
 
-namespace StraitX{
-
 enum class FilteringMode: u8{
     Linear,
     Nearest
@@ -105,6 +103,5 @@ SX_INLINE GPUResourceHandle Sampler::Handle()const{
 SX_INLINE bool Sampler::IsEmpty()const{
     return m_Handle.U64 == 0;
 }
-};
 
 #endif//STRAITX_SAMPLER_HPP

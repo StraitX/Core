@@ -3,8 +3,6 @@
 
 #include "platform/types.hpp"
 
-namespace StraitX{
-
 class String{
 public:
     static bool Contains(const char *string, const char *internal);
@@ -75,7 +73,5 @@ SX_INLINE char *String::IgnoreUntil(char *string, char ch){
 SX_INLINE char *String::Ignore(char *string, char ch){
     return (char *)Ignore((const char *)string, ch);
 }
-
-}//namespace StraitX
 
 #endif // STRAITX_STRING_HPP

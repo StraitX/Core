@@ -4,7 +4,6 @@
 #include <windows.h>
 #include <gl/gl.h>
 
-namespace StraitX {
 namespace Windows {
 
 /*
@@ -80,6 +79,5 @@ extern wglChoosePixelFormatARBProc wglChoosePixelFormatARB;
 extern wglGetPixelFormatAttribivARBProc wglGetPixelFormatAttribivARB;
 
 }//namespace Windows::
-}//namespace StraitX::
 
 #endif//STRAITX_WINDOWS_WGL_HPP

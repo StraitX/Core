@@ -2,7 +2,6 @@
 #include "graphics/vulkan/memory_allocator.hpp"
 #include "graphics/vulkan/gpu.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 VkDeviceMemory MemoryAllocator::Alloc(u32 size, MemoryType::Type type){
@@ -24,6 +23,4 @@ void MemoryAllocator::Free(VkDeviceMemory memory){
     vkFreeMemory(GPU::Get().Handle(), memory, nullptr);
 }
 
-
 }//namespace Vk::
-}//namespace StraitX::

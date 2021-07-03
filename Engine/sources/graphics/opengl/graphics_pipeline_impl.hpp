@@ -5,7 +5,6 @@
 #include "graphics/api/graphics_pipeline.hpp"
 #include "graphics/opengl/descriptor_set_impl.hpp"
 
-namespace StraitX{
 namespace GL{
 
 struct GraphicsPipelineImpl: GraphicsPipeline{
@@ -52,6 +51,5 @@ struct GraphicsPipelineImpl: GraphicsPipeline{
 };
 
 }//namespace GL::
-}//namespace StraitX::
 
 #endif//STRAITX_OPENGL_GRAPHICS_PIPELINE_IMPL_HPP

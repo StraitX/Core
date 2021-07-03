@@ -9,7 +9,6 @@
 #include "graphics/vulkan/fence.hpp"
 #include "graphics/vulkan/queue.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 class GPU{
@@ -59,6 +58,5 @@ public:
 };
 
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif//STRAITX_VULKAN_LOGICAL_GPU_IMPL_HPP

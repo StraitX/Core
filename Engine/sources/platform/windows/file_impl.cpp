@@ -2,8 +2,6 @@
 #include <assert.h>
 #include "platform/file.hpp"
 
-namespace StraitX {
-
 static_assert(sizeof(HANDLE) <= sizeof(u64),"Win32 Handle can't fit into File::m_FD");
 
 Result File::Open(const char* filename, Mode mode, bool create) {
@@ -91,5 +89,3 @@ bool File::Exist(const char* filename) {
 	}
 	return false;
 }
-
-}//namespace StraitX

@@ -2,8 +2,6 @@
 #include "main/application.hpp"
 #include "main/engine.hpp"
 
-namespace StraitX{
-
 Result Application::OnInitialize(){
     return Result::Success;
 }
@@ -24,5 +22,3 @@ void Application::OnUpdate(float dt){
 void Application::Stop(){
     Engine::Get().Stop();
 }
-
-}; // namespace StraitX::

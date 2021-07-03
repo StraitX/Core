@@ -6,7 +6,6 @@
 #include "platform/result.hpp"
 #include "platform/window.hpp"
 
-namespace StraitX{
 namespace MacOS{
 
 struct NSOpenGLContextWrapper{
@@ -27,6 +26,5 @@ struct NSOpenGLContextWrapper{
 };
 
 }//namespace MacOS::
-}//namespace StraitX::
 
 #endif// STRAITX_MACOS_NS_OPENGL_CONTEXT_WRAPPER_HPP

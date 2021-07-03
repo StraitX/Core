@@ -2,8 +2,6 @@
 #include "platform/types.hpp"
 #include <cstdio>
 
-namespace StraitX{
-
 template<>
 struct Printer<const char *>{
 	static void Print(const char * const &string, void (*writer)(char, void*), void *writer_data);
@@ -231,5 +229,3 @@ void Printer<Version>::Print(const Version& value, void (*writer)(char, void*), 
 	Printer<char>::Print('.', writer, writer_data);
 	Printer<u32> ::Print(value.Patch, writer, writer_data);
 }
-
-}//namespace StraitX().

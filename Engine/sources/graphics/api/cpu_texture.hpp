@@ -5,8 +5,6 @@
 #include "graphics/api/cpu_buffer.hpp"
 #include "graphics/api/format.hpp"
 
-namespace StraitX{
-
 class CPUTexture: private CPUBuffer{
 private:
     u32 m_Width = 0;
@@ -79,7 +77,5 @@ SX_INLINE Vector2u CPUTexture::Size()const{
 SX_INLINE TextureFormat CPUTexture::Format()const{
     return m_Format;
 }
-
-}//namespace StraitX::
 
 #endif//STRAITX_CPU_TEXTURE_HPP

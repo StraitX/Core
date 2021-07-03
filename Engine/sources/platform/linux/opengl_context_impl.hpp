@@ -6,7 +6,6 @@
 
 struct __GLXcontextRec;
 
-namespace StraitX{
 namespace Linux{
 
 class OpenGLContextImpl{
@@ -31,6 +30,5 @@ public:
 };
 
 } // namespace Linux::
-} // namespace StraitX::
 
 #endif // STRAITX_LINUX_GLCONTEXT_IMPL_HPP

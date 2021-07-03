@@ -4,7 +4,6 @@
 #include "platform/opengl.hpp"
 #include "graphics/api/texture.hpp"
 
-namespace StraitX{
 namespace GL{
 
 struct TextureImpl{
@@ -21,6 +20,5 @@ struct Texture2DImpl{
 };
 
 }//namespace GL::
-}//namespace StraitX::
 
 #endif//STRAITX_OPENGL_GPU_TEXTURE_IMPL_HPP

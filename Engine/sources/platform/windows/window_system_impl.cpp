@@ -1,7 +1,6 @@
 #include <windows.h>
 #include "platform/window_system.hpp"
 
-namespace StraitX {
 namespace Windows {
     extern LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     extern const char* windowClassName;
@@ -25,8 +24,6 @@ Result WindowSystem::Finalize() {
     return Result::Success;
 }
 
-Screen WindowSystem::MainScreen() {
+PlatformScreen WindowSystem::MainScreen() {
     return Windows::ScreenImpl(Windows::screen_size);
 }
-
-}//namespace StraitX::

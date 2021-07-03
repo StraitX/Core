@@ -6,8 +6,6 @@
 #include "core/printer.hpp"
 #include "platform/compiler.hpp"
 
-namespace StraitX{
-
 template<typename T>
 struct Vector2{
     union{
@@ -211,9 +209,9 @@ typedef Vector2<u32> Vector2u;
 typedef Vector2<float> Vector2f;
 typedef Vector2<double> Vector2d;
 
-}; // namespace StraitX::
 
-namespace StraitX{
+
+
 
 template<typename T>
 struct Printer<Vector2<T>>{
@@ -225,8 +223,5 @@ struct Printer<Vector2<T>>{
 		Printer<char>::Print(')', writer, writer_data);
 	}
 };
-
-}; // namespace StraitX::
-
 
 #endif // STRAITX_VECTOR2_HPP

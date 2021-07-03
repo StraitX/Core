@@ -1,8 +1,6 @@
 #include "platform/memory.hpp"
 #include <stdlib.h>
 
-namespace StraitX{
-
 void *Memory::AlignedAllocImpl(size_t size, size_t alignment){
 	void *pointer = nullptr;
 	/*
@@ -17,5 +15,3 @@ void *Memory::AlignedAllocImpl(size_t size, size_t alignment){
 void Memory::AlignedFreeImpl(void *pointer){
 	free(pointer);
 }
-
-}//namespace StraitX::

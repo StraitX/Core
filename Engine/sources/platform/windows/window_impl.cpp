@@ -3,7 +3,6 @@
 #include "platform/windows/virtual_keys.hpp"
 #include <windows.h>
 
-namespace StraitX{
 namespace Windows{
 
 const char *windowClassName = "StraitXWindow";
@@ -120,7 +119,4 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     return 0;
 }
 
-
-
-}; //namespace Windows::
-}; //namespace StraitX::
+}//namespace Windows::

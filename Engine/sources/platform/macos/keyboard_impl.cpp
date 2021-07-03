@@ -1,7 +1,6 @@
 #include "platform/keyboard.hpp"
 #include "platform/macos/sx_application.hpp"
 
-namespace StraitX{
 namespace Keyboard{
 
 bool IsKeyPressed(Key code){
@@ -9,5 +8,4 @@ bool IsKeyPressed(Key code){
     return MacOS::SXApplication::s_KeyboardState[(size_t)code];
 }
 
-} // namespace Keyboard::
-} // namespace StraitX::
+}//namespace Keyboard::

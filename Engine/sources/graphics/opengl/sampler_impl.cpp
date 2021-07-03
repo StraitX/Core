@@ -1,7 +1,6 @@
 #include "platform/opengl.hpp"
 #include "graphics/opengl/sampler_impl.hpp"
 
-namespace StraitX{
 namespace GL{
 
 static GLenum FilteringTable[]={
@@ -31,4 +30,3 @@ void SamplerImpl::DeleteImpl(Sampler &sampler){
 }
 
 }//namespace GL::
-}//namespace StraitX::

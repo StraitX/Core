@@ -5,7 +5,6 @@
 #include "platform/events.hpp"
 #include "platform/macos/screen_impl.hpp"
 
-namespace StraitX{
 namespace MacOS{
 
 struct WindowImpl{
@@ -29,6 +28,5 @@ struct WindowImpl{
 };
 
 }//namespace MacOS::
-}//namespace StraitX::
 
 #endif//STRAITX_MACOS_WINDOW_IMPL_HPP

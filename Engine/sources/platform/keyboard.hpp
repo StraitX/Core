@@ -1,8 +1,6 @@
 #ifndef STRAITX_KEYBOARD_HPP
 #define STRAITX_KEYBOARD_HPP
 
-namespace StraitX{
-
 enum class Key{
     Unknown = 0,
 
@@ -132,8 +130,6 @@ namespace Keyboard{
 
     const char *GetName(Key code);
 
-}; // namespace Keyboard::
-
-}; // namespace StraitX::
+}// namespace Keyboard::
 
 #endif // STRAITX_KEYBOARD_HPP

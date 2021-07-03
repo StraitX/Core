@@ -5,7 +5,6 @@
 #include "core/assert.hpp"
 #include "core/noncopyable.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 struct Fence: NonCopyable{
@@ -23,6 +22,5 @@ struct Fence: NonCopyable{
 };
 
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif//STRAITX_VULKAN_FENCE_HPP

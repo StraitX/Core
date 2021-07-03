@@ -6,8 +6,6 @@
 #include "graphics/color.hpp"
 #include "graphics/api/texture.hpp"
 
-namespace StraitX{
-
 class Renderer2D: public Subsystem{
 private:
 	static const Vector2f (&s_DefaultTextureCoords)[4];
@@ -32,7 +30,5 @@ public:
 
 	static void Clear(const Color &color);
 };
-
-}//namespace StraitX::
 
 #endif//STRAITX_RENDERER_2D_HPP

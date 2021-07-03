@@ -16,8 +16,6 @@
 #include "graphics/color.hpp"
 #include "graphics/image.hpp"
 
-namespace StraitX{
-
 class BatchRenderer2D: public NonCopyable{
 private:
     struct Vertex2D{
@@ -98,7 +96,5 @@ private:
     
     void EndBatch();
 };
-
-}//namespace StraitX::
 
 #endif//STRAITX_BATCH_RENDERER_2D_HPP

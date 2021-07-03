@@ -9,8 +9,6 @@
 
 #include "platform/result.hpp"
 
-
-namespace StraitX{
 namespace Linux{
 ::Display *s_Display = nullptr;
 
@@ -42,8 +40,6 @@ Result WindowSystem::Finalize(){
     return ResultError(res != 0);
 }
 
-Screen WindowSystem::MainScreen(){
-    return Screen(Linux::ScreenImpl(DefaultScreen(Linux::s_Display), Linux::screen, Linux::screen_size, Linux::screen_dpi));
+PlatformScreen WindowSystem::MainScreen(){
+    return PlatformScreen(Linux::ScreenImpl(DefaultScreen(Linux::s_Display), Linux::screen, Linux::screen_size, Linux::screen_dpi));
 }
-
-}// namespace StraitX::

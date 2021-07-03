@@ -4,7 +4,6 @@
 #include "platform/windows/opengl_context_impl.hpp"
 #include "platform/windows/wgl.hpp"
 
-namespace StraitX {
 namespace Windows{
 
 extern const char* windowClassName;
@@ -130,5 +129,4 @@ size_t OpenGLContextImpl::ChooseBestFormat(int formats[], unsigned int count) {
 	return best;
 }
 
-} // namespace Windows::
-} // namespace StraitX::
+}// namespace Windows::

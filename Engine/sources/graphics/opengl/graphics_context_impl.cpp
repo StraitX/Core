@@ -6,9 +6,7 @@
 #include "graphics/opengl/dma_impl.hpp"
 #include "graphics/opengl/graphics_pipeline_impl.hpp"
 
-namespace StraitX{
 namespace GL{
-
 
 GLenum GraphicsContextImpl::s_IndexTypeTable[] = {
     GL_UNSIGNED_SHORT,
@@ -296,4 +294,3 @@ u32 GraphicsContextImpl::MaxTextureUnits()const{
 }
 
 }//namespace GL::
-}//namespace StraitX::

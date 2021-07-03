@@ -9,8 +9,6 @@
 #include "graphics/api/texture.hpp"
 #include "graphics/api/sampler.hpp"
 
-namespace StraitX{
-
 enum class ShaderBindingType: u8{
     UniformBuffer = 0,
     Texture       = 1
@@ -138,7 +136,5 @@ SX_INLINE DescriptorSetPool *DescriptorSetPool::New(const DescriptorSetLayout *l
 SX_INLINE void DescriptorSetPool::Delete(DescriptorSetPool *pool){
 	s_VTable.Delete(pool);
 }
-
-}//namespace StraitX::
 
 #endif//STRAITX_DESCRIPTOR_SET_HPP

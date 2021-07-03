@@ -5,8 +5,6 @@
 #include "core/assert.hpp"
 #include "core/printer.hpp"
 
-namespace StraitX{
-
 template<typename T>
 struct Vector3{
     union {
@@ -224,11 +222,6 @@ typedef Vector3<u32> Vector3u;
 typedef Vector3<float> Vector3f;
 typedef Vector3<double> Vector3d;
 
-}; // namespace StraitX::
-
-
-
-namespace StraitX{
 
 template<typename T>
 struct Printer<Vector3<T>>{
@@ -242,7 +235,5 @@ struct Printer<Vector3<T>>{
 		Printer<char>::Print(')', writer, writer_data);
 	}
 };
-
-}; // namespace StraitX::
 
 #endif // STRAITX_VECTOR3_HPP

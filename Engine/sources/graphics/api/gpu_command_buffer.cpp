@@ -1,8 +1,5 @@
 #include "graphics/api/gpu_command_buffer.hpp"
 
-namespace StraitX{
-
-
 GPUCommand::GPUCommand(const GPUCmdCopyCPUToGPUBuffer &cmd):
 	Type(GPUCommandType::CopyCPUToGPUBuffer)
 {
@@ -193,5 +190,3 @@ void GPUCommandBuffer::SetViewport(float width, float height, float x, float y){
 void GPUCommandBuffer::Reset(){
 	m_Commands.Clear();
 }
-
-}//namespace StraitX::

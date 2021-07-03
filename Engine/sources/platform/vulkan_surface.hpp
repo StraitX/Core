@@ -5,8 +5,6 @@
 #include "platform/result.hpp"
 #include "platform/window.hpp"
 
-namespace StraitX{
-
 struct VulkanSurface{
     VkSurfaceKHR Handle = VK_NULL_HANDLE;
     VkInstance Owner = VK_NULL_HANDLE;
@@ -15,7 +13,5 @@ struct VulkanSurface{
 
     void Destroy();
 };
-
-};//namespace StraitX::
 
 #endif //STRAITX_VULKAN_SURFACE_HPP

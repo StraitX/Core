@@ -2,7 +2,6 @@
 #include "core/assert.hpp"
 #include "graphics/opengl/cpu_buffer_impl.hpp"
 
-namespace StraitX{
 namespace GL{
 
 static u64 s_CPUBufferId = 0;
@@ -19,4 +18,3 @@ void CPUBufferImpl::DeleteImpl(CPUBuffer &buffer){
 }
 
 }//namespace GL::
-}//namespace StraitX::

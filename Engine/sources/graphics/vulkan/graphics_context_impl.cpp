@@ -9,9 +9,7 @@
 #include "graphics/vulkan/descriptor_set_impl.hpp"
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
 
-namespace StraitX{
 namespace Vk{
-
 
 void CommandBufferExectuionState::Bind(const GraphicsPipeline *pipeline){
 	PipelineBindPoint = static_cast<const Vk::GraphicsPipelineImpl*>(pipeline);
@@ -456,6 +454,4 @@ bool GraphicsContextImpl::CheckExtensions(const Span<const char *> &extensions){
     return true; 
 }
 
-
 }//namespace Vk::
-}//namespace StraitX::

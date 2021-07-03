@@ -7,7 +7,6 @@
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/cpu_buffer_impl.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 GPU GPU::s_Instance;
@@ -96,4 +95,3 @@ void GPU::Finalize(){
 }
 
 }//namespace Vk::
-}//namespace StraitX::

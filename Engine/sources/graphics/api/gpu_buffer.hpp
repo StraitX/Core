@@ -7,8 +7,6 @@
 #include "core/assert.hpp"
 #include "graphics/api/gpu_configuration.hpp"
 
-namespace StraitX{
-
 namespace GL{
 class GPUBufferImpl;
 }//namespace GL::
@@ -141,7 +139,5 @@ SX_INLINE void GPUBuffer::SetZero(){
     m_Usage = {};
     m_MemoryType = {};
 }
-
-}//namespace StraitX::
 
 #endif//STRAITX_GPU_BUFFER_HPP

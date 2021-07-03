@@ -2,8 +2,6 @@
 #include "platform/vulkan.hpp"
 #include "platform/vulkan_surface.hpp"
 
-namespace StraitX {
-
 Result VulkanSurface::Create(VkInstance owner, const PlatformWindow& window) {
     Owner = owner;
     VkWin32SurfaceCreateInfoKHR info;
@@ -19,5 +17,3 @@ Result VulkanSurface::Create(VkInstance owner, const PlatformWindow& window) {
 void VulkanSurface::Destroy() {
     vkDestroySurfaceKHR(Owner, Handle, nullptr);
 }
-
-}//namespace StraitX::

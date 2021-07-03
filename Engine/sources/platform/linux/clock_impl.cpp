@@ -1,8 +1,6 @@
 #include <time.h>
 #include "platform/clock.hpp"
 
-namespace StraitX{
-
 static constexpr Time Nanoseconds(s64 nanoseconds){
     return Microseconds(nanoseconds/1000);
 }
@@ -12,5 +10,3 @@ Time Clock::GetMonotonicTime(){
     (void)clock_gettime(CLOCK_MONOTONIC, &ts);
     return Nanoseconds(ts.tv_nsec) + Seconds(ts.tv_sec);
 }
-
-}//namespace StraitX::

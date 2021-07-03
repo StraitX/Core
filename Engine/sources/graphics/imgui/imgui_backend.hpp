@@ -8,8 +8,6 @@
 #include "graphics/api/graphics_context.hpp"
 #include "graphics/api/gpu_command_buffer.hpp"
 
-namespace StraitX{
-
 class ImGuiBackend: public Subsystem{
 private:
 	static ShaderBinding s_Bindings[2];
@@ -50,7 +48,5 @@ public:
 
 	void OnFinalize()override;
 };
-
-}//namespace StraitX::
 
 #endif//STRAITX_IMGUI_BACKEND_HPP

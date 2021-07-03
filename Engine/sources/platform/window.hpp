@@ -8,18 +8,16 @@
 
 #ifdef SX_PLATFORM_LINUX
     #include "platform/linux/window_impl.hpp"
-    typedef StraitX::Linux::WindowImpl PlatformWindowImpl;
+    typedef Linux::WindowImpl PlatformWindowImpl;
 #elif defined(SX_PLATFORM_WINDOWS)
     #include "platform/windows/window_impl.hpp"
-    typedef StraitX::Windows::WindowImpl PlatformWindowImpl;
+    typedef Windows::WindowImpl PlatformWindowImpl;
 #elif defined(SX_PLATFORM_MACOS)
     #include "platform/macos/window_impl.hpp"
-    typedef StraitX::MacOS::WindowImpl PlatformWindowImpl;
+    typedef MacOS::WindowImpl PlatformWindowImpl;
 #else
     #error "Your platform does not support window creation"
 #endif
-
-namespace StraitX{
 
 class PlatformWindow: public NonCopyable{
 private:
@@ -29,7 +27,7 @@ public:
 
     PlatformWindow(PlatformWindow &&other);
 
-    Result Open(const Screen &screen, int width, int height);
+    Result Open(const PlatformScreen &screen, int width, int height);
 
     Result Close();
 
@@ -50,7 +48,7 @@ SX_INLINE PlatformWindow::PlatformWindow(PlatformWindow &&other):
     m_Impl((PlatformWindowImpl&&)other.Impl())
 {}
 
-SX_INLINE Result PlatformWindow::Open(const Screen &screen, int width, int height){
+SX_INLINE Result PlatformWindow::Open(const PlatformScreen &screen, int width, int height){
     return m_Impl.Open(screen.Impl(), width, height);
 }
 
@@ -81,7 +79,5 @@ SX_INLINE bool PlatformWindow::PollEvent(Event &event){
 SX_INLINE Size2u PlatformWindow::Size()const{
     return m_Impl.Size();
 }
-
-}; // namespace StraitX::
 
 #endif // STRAITX_WINDOW_HPP

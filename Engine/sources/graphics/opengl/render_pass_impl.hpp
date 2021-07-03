@@ -4,7 +4,6 @@
 #include "core/push_array.hpp"
 #include "graphics/api/render_pass.hpp"
 
-namespace StraitX{
 namespace GL{
 
 //OpenGL Spec guaranties to support at least 8 color attachments
@@ -21,6 +20,5 @@ struct RenderPassImpl: RenderPass{
 };
 
 }//namespace GL::
-}//namespace StraitX::
 
 #endif//STRAITX_OPENGL_RENDER_PASS_IMPL_HPP

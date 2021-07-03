@@ -4,7 +4,7 @@
 #include "platform/time.hpp"
 #include "platform/compiler.hpp"
 
-namespace StraitX{
+
 
 class Clock{
 private:
@@ -36,6 +36,6 @@ SX_INLINE void Clock::Restart(){
     m_Epoch = GetMonotonicTime();
 }
 
-}//namespace StraitX::
+
 
 #endif//STRAITX_CLOCK_HPP

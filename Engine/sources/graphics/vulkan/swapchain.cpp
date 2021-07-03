@@ -8,11 +8,9 @@
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/dma_impl.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 constexpr VkColorSpaceKHR DesiredColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
-
 
 static bool IsSupported(VkPhysicalDevice dev, VkSurfaceKHR surface, VkFormat format, VkColorSpaceKHR color_space){
     u32 count = 0;
@@ -194,4 +192,3 @@ void Swapchain::AcquireNext(VkSemaphore signal_semaphore, VkFence signal_fence){
 }
 
 }//namespace Vk::
-}//namespace StraitX::

@@ -7,7 +7,6 @@
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/descriptor_set_impl.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 const VkFormat GraphicsPipelineImpl::s_VertexAttributesTable[] = {
@@ -290,4 +289,3 @@ void GraphicsPipelineImpl::DeleteImpl(GraphicsPipeline *pipeline){
 
 
 }//namespace Vk::
-}//namespace StraitX::

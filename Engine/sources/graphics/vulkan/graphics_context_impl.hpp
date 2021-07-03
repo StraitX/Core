@@ -8,7 +8,6 @@
 #include "graphics/vulkan/fence.hpp"
 #include "graphics/vulkan/semaphore.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 class GraphicsPipelineImpl;
@@ -81,6 +80,5 @@ SX_INLINE VkInstance GraphicsContextImpl::Instance()const{
 }
 
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif//STRAITX_VULKAN_GRAPHICS_CONTEXT_IMPL_HPP

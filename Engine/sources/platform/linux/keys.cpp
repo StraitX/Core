@@ -1,6 +1,6 @@
 #include "platform/linux/keys.hpp"
 #include <X11/keysym.h>
-namespace StraitX{
+
 namespace Linux{
 
 KeySym KeyCodeToXKeySym(Key code){
@@ -263,4 +263,3 @@ Mouse::Button XButtonToMouseButton(unsigned int button){
 }
 
 }// namespace Linux::
-}// namespace StraitX::

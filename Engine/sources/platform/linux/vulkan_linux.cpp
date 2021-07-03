@@ -2,7 +2,6 @@
 #include "platform/vulkan.hpp"
 #include "platform/compiler.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 const char *RequiredPlatformExtensions[] = {
@@ -21,4 +20,3 @@ const char *RequiredPlatformLayers[]={
 size_t RequiredPlatformLayersCount = sizeof(RequiredPlatformLayers)/sizeof(char*);
 
 }//namespace Vk::
-}//namespace StraitX::

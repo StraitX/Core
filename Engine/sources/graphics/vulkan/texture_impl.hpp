@@ -4,7 +4,6 @@
 #include "platform/vulkan.hpp"
 #include "graphics/api/texture.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 struct TextureImpl{
@@ -41,6 +40,5 @@ struct Texture2DImpl{
 };
 
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif//STRAITX_VULKAN_GPU_TEXTURE_IMPL_HPP

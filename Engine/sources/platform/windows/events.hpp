@@ -8,12 +8,10 @@
 #define WM_SX_KEYUP		WM_USER + 2
 #define WM_SX_CLOSE		WM_USER + 3
 
-namespace StraitX{
 namespace Windows{
 
 bool ToStraitXEvent(MSG& message, Event &event);
 
-}; //namespace Windows::
-}; //namespace StraitX::
+}//namespace Windows::
 
 #endif //STRAITX_WINDOWS_EVENTS_HPP

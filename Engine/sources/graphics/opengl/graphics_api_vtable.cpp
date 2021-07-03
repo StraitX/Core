@@ -12,8 +12,6 @@
 #include "graphics/opengl/framebuffer_impl.hpp"
 #include "graphics/opengl/dma_impl.hpp"
 
-namespace StraitX{
-
 GraphicsAPIVTable OpenGLVTable = {
      &GL::GraphicsContextImpl::s_Instance,
     {&GL::GPUBufferImpl::NewImpl, &GL::GPUBufferImpl::DeleteImpl},
@@ -28,5 +26,3 @@ GraphicsAPIVTable OpenGLVTable = {
     {&GL::FramebufferImpl::NewImpl, &GL::FramebufferImpl::DeleteImpl},
     {&GL::DMAImpl::CopyMem2GPUBufferImpl, &GL::DMAImpl::CopyCPU2GPUBufferImpl, &GL::DMAImpl::CopyCPU2GPUTextureImpl, &GL::DMAImpl::ChangeGPUTextureLayoutImpl}
 };
-
-}//namespace StraitX::

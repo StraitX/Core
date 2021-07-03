@@ -3,7 +3,6 @@
 
 #include "platform/types.hpp"
 
-namespace StraitX {
 namespace Windows {
 
 class ScreenImpl {
@@ -20,7 +19,6 @@ public:
 	const Size2f &DPI()const;
 };
 
-};// namespace Windows::
-}; // namespace StraitX::
+}//namespace Windows::
 
 #endif //STRAITX_WINDOWS_SCREEN_HPP

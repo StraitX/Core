@@ -3,8 +3,6 @@
 #include "core/log.hpp"
 #include "graphics/api/shader.hpp"
 
-namespace StraitX{
-
 Shader::VTable Shader::s_VTable;
 
 Shader *Shader::New(Shader::Type type, Shader::Lang lang, const char *filename){
@@ -29,5 +27,3 @@ Shader *Shader::New(Shader::Type type, Shader::Lang lang, const char *filename){
         return New(type, lang, nullptr, 0);
     }
 }
-
-}//namespace StraitX::

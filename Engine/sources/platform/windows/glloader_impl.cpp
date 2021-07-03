@@ -3,10 +3,6 @@
 #include "platform/glloader.hpp"
 #include "platform/windows/wgl.hpp"
 
-namespace StraitX{
-
-
-
 bool OpenGLLoader::LoadPlatformExtensions() {
     Windows::wglChoosePixelFormatARB = (Windows::wglChoosePixelFormatARBProc)wglGetProcAddress("wglChoosePixelFormatARB");
     Windows::wglCreateContextAttribsARB = (Windows::wglCreateContextAttribsARBProc)wglGetProcAddress("wglCreateContextAttribsARB");
@@ -20,5 +16,3 @@ void *OpenGLLoader::GetOpenGLProc(const char *name){
         return result;
     return GetProcAddress((HINSTANCE)GetModuleHandle("opengl32.dll"),(LPCSTR)name);
 }
-
-} // namespace StraitX::

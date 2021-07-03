@@ -4,7 +4,7 @@
 
 @implementation SXView
 
--(instancetype)initWithSXWindow:(StraitX::MacOS::SXWindowWrapper*)owner Width: (int)width Height: (int)height{
+-(instancetype)initWithSXWindow:(MacOS::SXWindowWrapper*)owner Width: (int)width Height: (int)height{
     NSRect frame = NSMakeRect(0, 0, width, height);
     self = [super initWithFrame:frame];
 
@@ -18,37 +18,37 @@
 -(void)mouseDown:(NSEvent *)event{
     (void)event;
     NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonPress(StraitX::Mouse::Left, pos.x, event.window.contentView.frame.size.height - pos.y);
+    m_Wrapper->OnMouseButtonPress(Mouse::Left, pos.x, event.window.contentView.frame.size.height - pos.y);
 }
 
 -(void)mouseUp:(NSEvent *)event{
     (void)event;
     NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonRelease(StraitX::Mouse::Left,pos.x, event.window.contentView.frame.size.height - pos.y);
+    m_Wrapper->OnMouseButtonRelease(Mouse::Left,pos.x, event.window.contentView.frame.size.height - pos.y);
 }
 
 -(void)rightMouseDown:(NSEvent *)event{
     (void)event;
     NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonPress(StraitX::Mouse::Right,pos.x, event.window.contentView.frame.size.height - pos.y);
+    m_Wrapper->OnMouseButtonPress(Mouse::Right,pos.x, event.window.contentView.frame.size.height - pos.y);
 }
 
 -(void)rightMouseUp:(NSEvent *)event{
     (void)event;
     NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonRelease(StraitX::Mouse::Right,pos.x, event.window.contentView.frame.size.height - pos.y);
+    m_Wrapper->OnMouseButtonRelease(Mouse::Right,pos.x, event.window.contentView.frame.size.height - pos.y);
 }
 
 -(void)otherMouseDown:(NSEvent *)event{
     (void)event;
     NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonPress(StraitX::Mouse::Middle,pos.x, event.window.contentView.frame.size.height - pos.y);
+    m_Wrapper->OnMouseButtonPress(Mouse::Middle,pos.x, event.window.contentView.frame.size.height - pos.y);
 }
 
 -(void)otherMouseUp:(NSEvent *)event{
     (void)event;
     NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonRelease(StraitX::Mouse::Middle,pos.x, event.window.contentView.frame.size.height - pos.y);
+    m_Wrapper->OnMouseButtonRelease(Mouse::Middle,pos.x, event.window.contentView.frame.size.height - pos.y);
 }
 
 -(BOOL)canBecomeKeyView{
@@ -64,17 +64,17 @@
 }
 
 -(void)keyDown:(NSEvent *)event{
-    m_Wrapper->OnKeyPress(StraitX::MacOS::ToStraitXKeyCode([event keyCode]));
+    m_Wrapper->OnKeyPress(MacOS::ToStraitXKeyCode([event keyCode]));
 }
 
 -(void)keyUp:(NSEvent *)event{
-    m_Wrapper->OnKeyRelease(StraitX::MacOS::ToStraitXKeyCode([event keyCode]));
+    m_Wrapper->OnKeyRelease(MacOS::ToStraitXKeyCode([event keyCode]));
 }
 -(void)flagsChanged:(NSEvent*)event{
     if([event modifierFlags] == 256)//TODO: deal with this value
-        m_Wrapper->OnKeyRelease(StraitX::MacOS::ToStraitXKeyCode([event keyCode]));
+        m_Wrapper->OnKeyRelease(MacOS::ToStraitXKeyCode([event keyCode]));
     else
-        m_Wrapper->OnKeyPress(StraitX::MacOS::ToStraitXKeyCode([event keyCode]));
+        m_Wrapper->OnKeyPress(MacOS::ToStraitXKeyCode([event keyCode]));
 }
 
 -(void)scrollWheel:(NSEvent *)event{
@@ -103,7 +103,7 @@
 
 @implementation SXWindowDelegate
 
--(instancetype)initWithSXWindow:(StraitX::MacOS::SXWindowWrapper*)owner{
+-(instancetype)initWithSXWindow:(MacOS::SXWindowWrapper*)owner{
     self = [super init];
 
     if(self == nil)return nil;
@@ -127,7 +127,7 @@
 
 @implementation SXWindow
 
--(instancetype)initWithSXWindow:(StraitX::MacOS::SXWindowWrapper*)owner Width: (int)width Height: (int)height{
+-(instancetype)initWithSXWindow:(MacOS::SXWindowWrapper*)owner Width: (int)width Height: (int)height{
     NSRect frame = NSMakeRect(0, 0, width, height);
     self = [super initWithContentRect:frame
             styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable
@@ -159,7 +159,7 @@
 
 @end
 
-namespace StraitX{
+
 namespace MacOS{
 
 Result SXWindowWrapper::Open(const ScreenImpl &screen, int width, int height){
@@ -283,4 +283,4 @@ void SXWindowWrapper::OnKeyRelease(Key key){
 }
 
 }//namespace MacOS::
-}//namespace StraitX::
+

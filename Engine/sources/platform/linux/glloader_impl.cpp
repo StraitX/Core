@@ -3,8 +3,6 @@
 #include <GL/gl.h>
 #undef Success
 
-namespace StraitX{
-
 bool OpenGLLoader::LoadPlatformExtensions(){
     return true;
 }
@@ -12,5 +10,3 @@ bool OpenGLLoader::LoadPlatformExtensions(){
 void *OpenGLLoader::GetOpenGLProc(const char *name){
     return (void*)glXGetProcAddress((const GLubyte *)name);
 }
-
-} // namespace StraitX::

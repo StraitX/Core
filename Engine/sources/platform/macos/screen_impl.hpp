@@ -4,7 +4,6 @@
 #include "platform/result.hpp"
 #include "platform/events.hpp"
 
-namespace StraitX{
 namespace MacOS{
 
 class ScreenImpl{
@@ -33,6 +32,5 @@ constexpr const Size2f &ScreenImpl::DPI()const{
 }
 
 }//namespace MacOS::
-}//namespace StraitX::
 
 #endif//STRAITX_MACOS_SCREEN_IMPL_HPP

@@ -6,18 +6,14 @@
 #include "platform/types.hpp"
 #include "platform/result.hpp"
 
-namespace StraitX{
-
 class WindowSystem{
 public:
     static Result Initialize();
 
     static Result Finalize();
 
-    static Screen MainScreen();
+    static PlatformScreen MainScreen();
 
 };
-
-}; // namespace StraitX::
 
 #endif //STRAITX_WINDOW_SYSTEM_HPP

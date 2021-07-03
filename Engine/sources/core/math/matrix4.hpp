@@ -5,8 +5,6 @@
 #include "core/assert.hpp"
 #include "core/printer.hpp"
 
-namespace StraitX{
-
 // Row Major Matrix
 template <typename T>
 struct Matrix4{
@@ -87,9 +85,6 @@ typedef Matrix4<float> Matrix4f;
 typedef Matrix4<s32> Matrix4i;
 typedef Matrix4<u32> Matrix4u;    
 
-}// namepsace StraitX::
-
-namespace StraitX{
 
 template<typename T>
 struct Printer<Matrix4<T>>{
@@ -105,6 +100,5 @@ struct Printer<Matrix4<T>>{
 	}
 };
 
-}// namespace StraitX::
 
 #endif // STRAITX_MATRIX4_HPP

@@ -1,8 +1,6 @@
 #ifndef STRAITX_TEMPLATE_HPP
 #define STRAITX_TEMPLATE_HPP
 
-namespace StraitX{
-
 template <typename T_Type, T_Type T_Value>
 struct IntegralConstant{
     static constexpr T_Type Value = T_Value;
@@ -52,7 +50,5 @@ template <typename T>
 struct RemoveReference<T&&>{
     typedef T Type;
 };
-
-}//namespace StraitX::
 
 #endif //STRAITX_TEMPLATE_HPP

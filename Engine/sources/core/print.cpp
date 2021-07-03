@@ -1,8 +1,6 @@
 #include "core/print.hpp"
 #include <cstdio>
 
-namespace StraitX{
-
 void WriterPrint(void (*writer)(char, void*), void *writer_data, const char *fmt){
 	while(*fmt)
 		writer(*fmt++, writer_data);
@@ -16,6 +14,3 @@ void STDOutWriter(char ch, void*){
 void STDErrWriter(char ch, void *){
 	fputc(ch, stderr);
 }
-
-
-}; // namespace StraitX::

@@ -2,7 +2,6 @@
 #include "platform/macos/ns_opengl_context_wrapper.hpp"
 #include "platform/macos/sx_window.hpp"
 
-namespace StraitX{
 namespace MacOS{
 
 Result NSOpenGLContextWrapper::Create(const WindowImpl &window, const Version &version){
@@ -78,4 +77,3 @@ void NSOpenGLContextWrapper::SwapBuffers(){
 }
 
 }//namespace MacOS::
-}//namespace StraitX::

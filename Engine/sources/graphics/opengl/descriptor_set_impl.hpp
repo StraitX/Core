@@ -3,7 +3,6 @@
 
 #include "graphics/api/descriptor_set.hpp"
 
-namespace StraitX{
 namespace GL{
 
 struct DescriptorSetLayoutImpl{
@@ -58,6 +57,5 @@ public:
 
 
 }//namespace GL::
-}//namespace StraitX::
 
 #endif//STRAITX_OPENGL_DESCRIPTOR_SET_IMPL_HPP

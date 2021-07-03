@@ -3,7 +3,6 @@
 
 #include "platform/keyboard.hpp"
 
-namespace StraitX{
 namespace MacOS{
 
 enum MacOSKeyCode{
@@ -114,7 +113,6 @@ enum MacOSKeyCode{
 
 Key ToStraitXKeyCode(int key_code);
 
-}//namespace MacOS
-}//namespace StraitX
+}//namespace MacOS::
 
 #endif//STRAITX_MACOS_KEYS_HPP

@@ -1,10 +1,6 @@
 #include "core/assert.hpp"
 #include "graphics/api/gpu_configuration.hpp"
 
-namespace StraitX{
-
-
-
 GPUVendor VendorIDToVendor(u32 vendor_id){
     switch (vendor_id) {
     case GPU_VENDOR_ID_NVIDIA:      return GPUVendor::Nvidia;
@@ -39,5 +35,3 @@ const char *GPUTypeNameTable[]={
 const char *GetName(GPUType type){
     return GPUTypeNameTable[(u8)type];
 }
-
-}//namespace StraitX::

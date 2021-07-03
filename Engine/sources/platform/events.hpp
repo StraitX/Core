@@ -4,7 +4,6 @@
 #include "platform/compiler.hpp"
 #include "platform/keyboard.hpp"
 #include "platform/mouse.hpp"
-namespace StraitX{
 
 enum class EventType{
     Unknown = 0,
@@ -19,9 +18,7 @@ enum class EventType{
     KeyRelease
 };
 
-
-struct WindowCloseEvent{
-};
+struct WindowCloseEvent{ };
 
 struct WindowResizedEvent{
     u32 x;
@@ -59,7 +56,5 @@ struct Event{
         KeyEvent KeyRelease;
     };
 };
-
-}; // namespace StraitX::
 
 #endif

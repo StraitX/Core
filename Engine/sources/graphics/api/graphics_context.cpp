@@ -1,8 +1,6 @@
 #include "core/assert.hpp"
 #include "graphics/api/graphics_context.hpp"
 
-namespace StraitX{
-
 const char *GraphicsAPI::Name()const{
 	static const char *s_Names[]={
 		"None",
@@ -18,6 +16,3 @@ const char *GraphicsAPI::Name()const{
 
 GraphicsAPI GraphicsContext::s_CurrentAPI = GraphicsAPI::None;
 GraphicsContext* GraphicsContext::s_Instance = nullptr;
-
-
-}//namespace StraitX::

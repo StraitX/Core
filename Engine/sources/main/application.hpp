@@ -5,8 +5,6 @@
 #include "core/math/vector2.hpp"
 #include "graphics/api/graphics_context.hpp"
 
-namespace StraitX{
-
 class Engine;
 
 struct ApplicationConfig{
@@ -32,8 +30,6 @@ public:
     void Stop();
 };
 
-}; // namespace StraitX::
-
-extern StraitX::ApplicationConfig GetApplicationConfig();
+extern ApplicationConfig GetApplicationConfig();
 
 #endif // STRAITX_APPLICATION_HPP

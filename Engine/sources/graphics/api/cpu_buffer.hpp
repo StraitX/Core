@@ -9,8 +9,6 @@
 #include "core/move.hpp"
 #include "graphics/api/gpu_configuration.hpp"
 
-namespace StraitX{
-
 namespace GL{
 class CPUBufferImpl;
 }//namespace GL::
@@ -140,7 +138,5 @@ SX_INLINE void CPUBuffer::SetZero(){
     m_Pointer = nullptr;
     m_Size = 0;
 }
-
-}//namespace StraitX::
 
 #endif//STRAITX_CPU_BUFFER_HPP

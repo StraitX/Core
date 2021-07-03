@@ -1,7 +1,6 @@
 #include "platform/macos/window_impl.hpp"
 #include "platform/macos/sx_window.hpp"
 
-namespace StraitX{
 namespace MacOS{
 
 WindowImpl::WindowImpl(WindowImpl &&other){
@@ -39,4 +38,3 @@ Size2u WindowImpl::Size()const{
 }
 
 }//namespace MacOS::
-}//namespace StraitX::

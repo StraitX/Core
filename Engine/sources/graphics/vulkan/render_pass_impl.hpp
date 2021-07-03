@@ -5,7 +5,6 @@
 #include "platform/defs.hpp"
 #include "graphics/api/render_pass.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 class RenderPassImpl: public RenderPass{
@@ -41,8 +40,6 @@ SX_INLINE const PushArray<AttachmentDescription, MaxAttachmentsCount> &RenderPas
     return m_Attachments;
 }
 
-
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif//STRAITX_VULKAN_RENDER_PASS_IMPL_HPP

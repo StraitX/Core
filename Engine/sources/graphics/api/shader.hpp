@@ -8,8 +8,6 @@
 #include "core/validable.hpp"
 #include "core/span.hpp"
 
-namespace StraitX{
-
 class GraphicsAPILoader;
 
 //took it from head
@@ -85,7 +83,5 @@ SX_INLINE Shader *Shader::New(Shader::Type type, Shader::Lang lang, const u8 *so
 SX_INLINE void Shader::Delete(Shader *shader){
     s_VTable.Delete(shader);
 }
-
-}//namespace StraitX::
 
 #endif //STRAITX_SHADER_HPP

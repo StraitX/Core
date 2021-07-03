@@ -5,7 +5,6 @@
 #include "graphics/vulkan/fence.hpp"
 #include "graphics/vulkan/command_buffer.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 class DMAImpl{
@@ -45,6 +44,5 @@ public:
 };
 
 }//namespace VK::
-}//namespace StraitX::
 
 #endif//STRAITX_VULKAN_DMA_IMPL_HPP

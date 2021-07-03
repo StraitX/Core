@@ -1,8 +1,6 @@
 #include "core/subsystem.hpp"
 #include "core/log.hpp"
 
-namespace StraitX{
-
 Subsystem::Subsystem(const char *name_literal):
 	m_NameLiteral(name_literal)
 {}
@@ -81,5 +79,3 @@ void SubsystemsManager::ProcessEvent(const Event &e){
 void SubsystemsManager::Push(Subsystem *subsystem){
 	m_Subsystems.Push(subsystem);
 }
-
-}//namespace StraitX::

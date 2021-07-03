@@ -5,7 +5,6 @@
 #include "platform/mouse.hpp"
 #include "platform/compiler.hpp"
 
-namespace StraitX{
 namespace MacOS{
 
 struct SXApplication{
@@ -15,8 +14,6 @@ struct SXApplication{
     static void ProcessEvents();
 };
 
-
 }//namespace MacOS::
-}//namespace StraitX::
 
 #endif//STRAITX_MACOS_SX_APPLICATION_HPP

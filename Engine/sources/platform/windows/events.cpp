@@ -2,7 +2,6 @@
 #include "platform/windows/virtual_keys.hpp"
 #include "platform/windows/window_impl.hpp"
 
-namespace StraitX{
 namespace Windows{
 
 bool ToStraitXEvent(MSG& message, Event& event) {
@@ -92,5 +91,4 @@ bool ToStraitXEvent(MSG& message, Event& event) {
 	}
 }
 
-}; //namespace Windows::
-}; //namespace StraitX::
+}//namespace Windows::

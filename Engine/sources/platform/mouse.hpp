@@ -3,11 +3,8 @@
 
 #include "platform/types.hpp"
 
-namespace StraitX{
-    class PlatformWindow;
-};
+class PlatformWindow;
 
-namespace StraitX{
 namespace Mouse{
 
     enum Button{
@@ -31,9 +28,6 @@ namespace Mouse{
 
     void SetVisible(bool is_visible);
 
-}; // namespace Mouse::
-
-
-}; // namespace StraitX::
+}// namespace Mouse::
 
 #endif // STRAITX_MOUSE_HPP

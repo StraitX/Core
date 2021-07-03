@@ -36,19 +36,19 @@ max(
 #endif
 
 void *operator new(size_t size, const std::nothrow_t&)noexcept{
-	return StraitX::Memory::Alloc(size);
+	return Memory::Alloc(size);
 }
 
 void operator delete(void* ptr, const std::nothrow_t&)noexcept{
-	StraitX::Memory::Free(ptr);
+	Memory::Free(ptr);
 }
 
 void *operator new[](size_t size, const std::nothrow_t&)noexcept{
-	return StraitX::Memory::Alloc(size);
+	return Memory::Alloc(size);
 }
 
 void operator delete[](void* ptr, const std::nothrow_t&)noexcept{
-	StraitX::Memory::Free(ptr);
+	Memory::Free(ptr);
 }
 
 void *operator new(size_t size){
@@ -73,7 +73,7 @@ void operator delete[](void *ptr)noexcept{
     return ::operator delete[](ptr, std::nothrow);
 }
 
-namespace StraitX{
+
 
 static u64 s_Allocated = 0;
 static u64 s_Freed = 0;
@@ -214,4 +214,3 @@ u64 Memory::FreeCalls(){
 }
 
 
-}; // namespace StraitX::

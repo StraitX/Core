@@ -17,10 +17,9 @@
 #define SupportAssert(b, name) if(b){ LogInfo(name ": Supported"); }else{ LogError(name ": Is Not Supported"); return Result::Failure;}
 
 // should be defined at client side
-extern StraitX::Application *StraitXMain();
-extern void StraitXExit(StraitX::Application *);
+extern Application *StraitXMain();
+extern void StraitXExit(Application *);
 
-namespace StraitX{
 
 Engine *Engine::s_Instance = nullptr;
 
@@ -202,5 +201,3 @@ void Engine::MainLoop(){
 
     }
 }
-
-}; // namespace StraitX::

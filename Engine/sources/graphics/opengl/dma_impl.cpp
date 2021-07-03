@@ -2,7 +2,6 @@
 #include "graphics/opengl/dma_impl.hpp"
 #include "graphics/opengl/texture_impl.hpp"
 
-namespace StraitX{
 namespace GL{
 
 void DMAImpl::CopyMem2GPUBufferImpl(const void *src, const GPUBuffer &dst, u32 size, u32 dst_offset){
@@ -24,4 +23,3 @@ void DMAImpl::ChangeGPUTextureLayoutImpl(Texture &src, TextureLayout layout){
 }
 
 }//namespace GL::
-}//namespace StraitX::

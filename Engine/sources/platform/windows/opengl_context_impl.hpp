@@ -8,7 +8,6 @@
 struct HGLRC__;
 struct HDC__;
 
-namespace StraitX {
 namespace Windows{
 
 class OpenGLContextImpl {
@@ -34,7 +33,6 @@ private:
     size_t ChooseBestFormat(int formats[], unsigned int count);
 };  
 
-} // namespace Windows::
-} // namespace StraitX::
+}//namespace Windows::
 
 #endif // STRAITX_WINDOWS_OPENGL_CONTEXT_IMPL_HPP

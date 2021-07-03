@@ -2,7 +2,6 @@
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/command_buffer.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 CommandBuffer::CommandBuffer(QueueFamily::Type target_queue_type):
@@ -113,4 +112,3 @@ CommandBuffer::operator VkCommandBuffer()const{
 }
 
 }//namespace Vk::
-}//namespace StraitX::

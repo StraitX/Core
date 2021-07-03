@@ -5,8 +5,6 @@
 #include <assert.h>
 #include "platform/file.hpp"
 
-namespace StraitX{
-
 constexpr u32 FileCreatePermission = 0664;
 
 Result File::Open(const char *filename, Mode mode, bool create){
@@ -79,5 +77,3 @@ Result File::Delete(const char *filename){
 bool File::Exist(const char *filename){
     return access(filename, F_OK) == 0;
 }
-
-} // namespace StraitX::

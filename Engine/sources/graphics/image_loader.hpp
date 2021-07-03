@@ -5,8 +5,6 @@
 #include "platform/result.hpp"
 #include "graphics/api/format.hpp"
 
-namespace StraitX{
-
 enum class ImageFormat{
     PNG = 1,
     JPG,
@@ -20,7 +18,5 @@ struct ImageLoader{
 
     static Result SaveImage(File &file, u32 width, u32 height, PixelFormat p_format, ImageFormat i_format, u8 *pixels);
 };
-
-}//namespace StraitX::
 
 #endif//STRAITX_IMAGE_LOADER_HPP

@@ -2,7 +2,6 @@
 #include "core/assert.hpp"
 #include "graphics/vulkan/queue.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 static bool IsGraphics(const VkQueueFamilyProperties &props){
@@ -54,4 +53,3 @@ QueueProperties QueueProperties::Get(VkPhysicalDevice device){
 }
 
 }//namespace Vk::
-}//namespace StraitX::

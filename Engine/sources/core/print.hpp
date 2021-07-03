@@ -4,8 +4,6 @@
 #include "platform/types.hpp"
 #include "core/printer.hpp"
 
-namespace StraitX{
-
 void STDOutWriter(char ch, void *data = nullptr);
 
 void STDErrWriter(char ch, void *data = nullptr);
@@ -59,9 +57,5 @@ void Println(const char *fmt, const Args&...args){
     Print(fmt, args...);
     Print("\n");
 }
-
-
-
-}; // namespace StraitX::
 
 #endif //STRAITX_PLATFORM_HPP

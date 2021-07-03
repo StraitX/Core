@@ -2,7 +2,6 @@
 #include "graphics/vulkan/descriptor_set_impl.hpp"
 #include "graphics/vulkan/gpu.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 VkDescriptorType DescriptorSetLayoutImpl::s_DescriptorTypeTable[] = {
@@ -143,5 +142,5 @@ void DescriptorSetPoolImpl::DeleteImpl(DescriptorSetPool *pool){
 	pool->~DescriptorSetPool();
 	Memory::Free(pool);
 }
+
 }//namespace Vk::
-}//namespace StraitX::

@@ -17,8 +17,6 @@
 #define SX_STACK_ALLOC(size) alloca(size)
 #define SX_STACK_ARRAY_ALLOC(type, count) (type*)SX_STACK_ALLOC(sizeof(type)*count)
 
-namespace StraitX{
-
 class Memory{
 public:
     static void *Alloc(size_t size);
@@ -51,7 +49,5 @@ private:
 
 	static void AlignedFreeImpl(void *pointer);
 };
-
-}; // namespace StraitX::
 
 #endif

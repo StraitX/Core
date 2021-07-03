@@ -2,7 +2,6 @@
 #include <mach/mach_time.h>
 #include "platform/clock.hpp"
 
-namespace StraitX{
 namespace MacOS {
 
 static mach_timebase_info_data_t GetTimebaseInfoData(){
@@ -18,5 +17,3 @@ Time Clock::GetMonotonicTime(){
 
     return Microseconds(mach_absolute_time() * freq.numer / freq.denom / 1000);
 }
-
-}//namespace StraitX::

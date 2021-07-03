@@ -13,8 +13,6 @@
 #include "graphics/api/framebuffer.hpp"
 #include "graphics/api/dma.hpp"
 
-namespace StraitX{
-
 struct GraphicsAPIVTable{
     GraphicsContext *GraphicsContextPtr= {};
 
@@ -40,7 +38,5 @@ struct GraphicsAPIVTable{
 
     DMA::VTable DMAVTable = {};
 };
-
-}//namespace StraitX::
 
 #endif//STRAITX_GRAPHICS_API_VTABLE_HPP

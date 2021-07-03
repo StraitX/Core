@@ -4,7 +4,6 @@
 #include "platform/vulkan.hpp"
 #include "graphics/api/descriptor_set.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 struct DescriptorSetLayoutImpl{
@@ -51,6 +50,5 @@ public:
 };
 
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif//STRAITX_VULKAN_DESCRIPTOR_SET_IMPL_HPP

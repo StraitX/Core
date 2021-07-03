@@ -10,7 +10,6 @@
 
 #include "platform/types.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 extern const char *RequiredPlatformExtensions[];
@@ -21,7 +20,5 @@ extern size_t RequiredPlatformLayersCount;
 constexpr Version VulkanVersion = {1, 1, 0};
 
 };//namespace Vk::
-};//namespace StraitX::
-
 
 #endif // STRAITX_VULKAN_HPP

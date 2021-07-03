@@ -3,7 +3,6 @@
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/sampler_impl.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 VkFilter FilteringModeTable[]={
@@ -51,4 +50,3 @@ void SamplerImpl::DeleteImpl(Sampler &sampler){
 }
 
 }//namespace Vk::
-}//namespace StraitX::

@@ -7,7 +7,6 @@
 #include "core/assert.hpp"
 #include "graphics/api/gpu_configuration.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 enum class MemoryLayout{
@@ -40,6 +39,5 @@ struct MemoryProperties{
 };
 
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif //STRAITX_VULKAN_MEMORY_HPP

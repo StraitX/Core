@@ -3,7 +3,6 @@
 #include "graphics/vulkan/memory_allocator.hpp"
 #include "graphics/vulkan/gpu.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 GPUBufferImpl::GPUBufferImpl(GPUBuffer &buffer):
@@ -59,4 +58,3 @@ void GPUBufferImpl::DeleteImpl(GPUBuffer &buffer){
 }
 
 }//namespace Vk::
-}//namespace StraitX::

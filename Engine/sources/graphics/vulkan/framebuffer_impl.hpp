@@ -5,7 +5,6 @@
 #include "core/push_array.hpp"
 #include "graphics/api/framebuffer.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 class FramebufferImpl: public Framebuffer{
@@ -31,6 +30,5 @@ public:
 };
 
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif//STRAITX_VULKAN_FRAMEBUFFER_IMPL_HPP

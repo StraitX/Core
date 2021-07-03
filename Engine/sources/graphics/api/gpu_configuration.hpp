@@ -8,8 +8,6 @@
 #define GPU_VENDOR_ID_INTEL     0x8086
 #define GPU_VENDOR_ID_MICROSOFT 0x1414
 
-namespace StraitX{
-
 enum class GPUVendor: u8{
     Unknown = 0,
     Nvidia,
@@ -54,7 +52,5 @@ GPUVendor VendorIDToVendor(u32 vendor_id);
 const char *GetName(GPUVendor vendor);
 
 const char *GetName(GPUType type);
-
-}//namespace StraitX::
 
 #endif //STRAITX_GPU_CONFIGURATION_HPP

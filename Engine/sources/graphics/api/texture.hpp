@@ -9,8 +9,6 @@
 #include "graphics/api/sampler.hpp"
 #include "graphics/image.hpp"
 
-namespace StraitX{
-
 enum class SamplePoints{
     Samples_1 = 0,
     Samples_2 = 1,
@@ -225,7 +223,5 @@ SX_INLINE u32 Texture2D::Height()const{
 SX_INLINE const class Sampler &Texture2D::Sampler()const{
 	return m_Sampler;
 }
-
-}//namespace StraitX::
 
 #endif //STRAITX_TEXTURE_HPP 

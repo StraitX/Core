@@ -9,7 +9,6 @@
 #include "graphics/opengl/graphics_pipeline_impl.hpp"
 #include "graphics/opengl/graphics_context_impl.hpp"
 
-namespace StraitX{
 namespace GL{
 
 const GLenum GraphicsPipelineImpl::s_BlendFunctionTable[]={
@@ -562,4 +561,3 @@ void GraphicsPipelineImpl::DeleteImpl(GraphicsPipeline *pipeline){
 
 
 }//namespace GL::
-}//namespace StraitX::

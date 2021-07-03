@@ -17,8 +17,6 @@ enum class IndicesType{
     Uint32
 };
 
-namespace StraitX{
-
 enum class GPUCommandType: u32{
 	None = 0,
 	CopyCPUToGPUBuffer,
@@ -210,7 +208,5 @@ SX_INLINE GPUCommandBuffer::CmdBucketList::ConstIterator GPUCommandBuffer::begin
 SX_INLINE GPUCommandBuffer::CmdBucketList::ConstIterator GPUCommandBuffer::end()const{
 	return m_Commands.end();	
 }
-
-}//namespace StraitX::
 
 #endif//STRAIX_COMMAND_BUFFER_HPP

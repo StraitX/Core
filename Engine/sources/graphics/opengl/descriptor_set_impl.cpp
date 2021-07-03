@@ -3,7 +3,6 @@
 #include "core/algorithm.hpp"
 #include "graphics/opengl/descriptor_set_impl.hpp"
 
-namespace StraitX{
 namespace GL{
 
 void DescriptorSetLayoutImpl::NewImpl(DescriptorSetLayout &layout){
@@ -68,4 +67,3 @@ void DescriptorSetPoolImpl::DeleteImpl(DescriptorSetPool *pool){
 }
 
 }//namespace GL::
-}//namespace StraitX::

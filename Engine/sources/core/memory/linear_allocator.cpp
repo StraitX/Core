@@ -2,8 +2,6 @@
 #include "platform/memory.hpp"
 #include "core/assert.hpp"
 
-namespace StraitX{
-
 LinearAllocator::LinearAllocator(size_t size):
     m_Memory(nullptr),
     m_Capacity(size),
@@ -62,12 +60,10 @@ void LinearAllocator::Free(size_t size){
     SX_CORE_ASSERT(m_Size - size >= 0,"LinearAllocator: Overfree");
     m_Size -= size;
 }
+
 void *LinearAllocator::AlignedAlloc(size_t size, size_t alignment){
     SX_CORE_ASSERT(alignment > 1,"LinearAllocator: Don't use allignment of 1 and less, it is wasteful");
 
     size_t offset = (alignment - (ptr_t)Break() % alignment) % alignment;
     return (u8*)Alloc(size + offset) + offset;
 }
-
-
-};//namespace StraitX::

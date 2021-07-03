@@ -3,14 +3,10 @@
 
 #include "platform/compiler.hpp"
 
-namespace StraitX{
-
 extern void _AssertFail(const char *assertion, const char *filename, unsigned int line, const char * function);
 extern void _AssertFail(const char *assertion, const char *message, const char *filename, unsigned int line, const char * function);
 
 extern void _CoreAssertFail(const char *assertion, const char *message, const char * function);
-
-}//namespace StraitX:
 
 #ifdef SX_DEBUG
     #define _SX_ASSERT_EXPR(expr) (static_cast<bool>(expr)? (void)0 : _AssertFail(#expr,SX_THIS_FILE,SX_THIS_LINE,SX_THIS_FUNCTION))

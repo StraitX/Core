@@ -6,8 +6,6 @@
 #include "platform/macos/window_impl.hpp"
 #include "platform/macos/sx_window.hpp"
 
-namespace StraitX{
-
 bool Mouse::IsButtonPressed(Mouse::Button button){
     MacOS::SXApplication::ProcessEvents();
     return MacOS::SXApplication::s_MouseState[button];
@@ -37,5 +35,3 @@ void Mouse::SetVisible(bool is_visible){
     else
         [NSCursor hide];
 }
-
-}//namespace StraitX::

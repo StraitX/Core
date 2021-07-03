@@ -3,8 +3,6 @@
 
 #include "platform/types.hpp"
 
-namespace StraitX{
-
 class LinearAllocator{
 private:
     u8 *m_Memory;
@@ -37,7 +35,5 @@ public:
     void *AlignedAlloc(size_t size, size_t alignment);
 
 };
-
-};//namespace StraitX::
 
 #endif //STRAITX_LINEAT_ALLOCATOR_HPP

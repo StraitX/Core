@@ -3,8 +3,6 @@
 
 #include "core/move.hpp"
 
-namespace StraitX{
-
 template<typename F, typename S>
 struct Pair{
     F First  = {};
@@ -77,7 +75,5 @@ template<typename F, typename S>
 constexpr bool operator!=(const Pair<F, S> &left, const Pair<F, S> &right){
     return !(left == right);
 }
-
-}//namespace StraitX::
 
 #endif // STRAITX_PAIR_HPP

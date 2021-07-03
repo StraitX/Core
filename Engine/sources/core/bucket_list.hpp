@@ -10,8 +10,6 @@
 //for now
 #include "core/noncopyable.hpp"
 
-namespace StraitX{
-
 template<typename Type, size_t BucketSize = 16, typename PoolAllocator = DefaultPoolAllocator>
 class BucketList: protected PoolAllocator, public NonCopyable{
 	static_assert(!IsConst<Type>() && !IsVolatile<Type>(), "Type can't be cv-qualified");
@@ -162,7 +160,5 @@ private:
 		PoolAllocator::Free(bucket);
 	}
 };
-
-}//namespace StraitX::
 
 #endif//STRAITX_BUCKET_LIST_HPP

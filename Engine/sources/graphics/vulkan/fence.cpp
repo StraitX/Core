@@ -1,7 +1,6 @@
 #include "graphics/vulkan/fence.hpp"
 #include "graphics/vulkan/gpu.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 Fence::Fence(){
@@ -30,4 +29,3 @@ void Fence::WaitAndReset()const{
 }
 
 }//namespace Vk::
-}//namespace StraitX::

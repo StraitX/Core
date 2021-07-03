@@ -7,7 +7,6 @@
 
 struct HWND__;
 
-namespace StraitX{
 namespace Windows{
 
 class WindowImpl{
@@ -49,7 +48,6 @@ SX_INLINE HWND__ *WindowImpl::Handle() const {
     return m_Handle;
 }
 
-}; //namespace Windows::
-}; //namespace StraitX::
+}//namespace Windows::
 
 #endif //STRAITX_WINDOWS_WINDOW_HPP

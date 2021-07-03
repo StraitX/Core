@@ -10,7 +10,6 @@
 #include "graphics/vulkan/render_pass_impl.hpp"
 #include "graphics/vulkan/queue.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 class Swapchain{
@@ -57,6 +56,5 @@ public:
 };
 
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif//STRAITX_VULKAN_SWAPCHAIN_IMPL_HPP

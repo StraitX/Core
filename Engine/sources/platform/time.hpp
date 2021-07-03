@@ -3,8 +3,6 @@
 
 #include "platform/types.hpp"
 
-namespace StraitX{
-
 class Time{
 private:
     s64 m_Microseconds = 0;
@@ -131,8 +129,5 @@ constexpr bool Time::operator<=(const Time &other){
 constexpr bool Time::operator>=(const Time &other){
     return m_Microseconds>=other.m_Microseconds;
 }
-
-
-}; // namespace StraitX::
 
 #endif // STRAITX_TIME_HPP

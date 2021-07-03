@@ -3,7 +3,6 @@
 #include "platform/opengl.hpp"
 #include "graphics/opengl/framebuffer_impl.hpp"
 
-namespace StraitX{
 namespace GL{
 
 FramebufferImpl::FramebufferImpl(u32 handle, const RenderPass *const pass, const FramebufferProperties &props):
@@ -46,5 +45,3 @@ void FramebufferImpl::DeleteImpl(Framebuffer *framebuffer){
 }
 
 }//namespace GL::
-}//namespace StraitX::
-

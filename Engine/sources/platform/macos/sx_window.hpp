@@ -8,25 +8,24 @@
 #include "platform/events.hpp"
 #include "platform/macos/screen_impl.hpp"
 
-namespace StraitX{
 namespace MacOS{
 struct SXWindowWrapper;
 }//namespace MacOS::
-}//namespace StraitX::
+
 
 @interface SXView: NSView{
-    StraitX::MacOS::SXWindowWrapper *m_Wrapper;
+    MacOS::SXWindowWrapper *m_Wrapper;
 }
 
--(instancetype)initWithSXWindow:(StraitX::MacOS::SXWindowWrapper*)owner Width: (int)width Height: (int)height;
+-(instancetype)initWithSXWindow:(MacOS::SXWindowWrapper*)owner Width: (int)width Height: (int)height;
 
 @end
 
 @interface SXWindowDelegate: NSObject<NSWindowDelegate>{
-    StraitX::MacOS::SXWindowWrapper *m_Wrapper;
+    MacOS::SXWindowWrapper *m_Wrapper;
 }
 
--(instancetype)initWithSXWindow:(StraitX::MacOS::SXWindowWrapper*)owner;
+-(instancetype)initWithSXWindow:(MacOS::SXWindowWrapper*)owner;
 
 -(BOOL)windowShouldClose:(id)sender;
 
@@ -35,10 +34,10 @@ struct SXWindowWrapper;
 @end
 
 @interface SXWindow: NSWindow{
-    StraitX::MacOS::SXWindowWrapper *m_Wrapper;
+    MacOS::SXWindowWrapper *m_Wrapper;
 }
 
--(instancetype)initWithSXWindow:(StraitX::MacOS::SXWindowWrapper*)owner Width: (int)width Height: (int)height;
+-(instancetype)initWithSXWindow:(MacOS::SXWindowWrapper*)owner Width: (int)width Height: (int)height;
 
 -(void)close;
 
@@ -46,7 +45,6 @@ struct SXWindowWrapper;
 
 @end
 
-namespace StraitX{
 namespace MacOS{
 
 struct SXWindowWrapper{
@@ -85,6 +83,5 @@ struct SXWindowWrapper{
 };
 
 }//namespace MacOS::
-}//namespace StraitX::
 
 #endif//STRAITX_MACOS_SX_WINDOW_HPP

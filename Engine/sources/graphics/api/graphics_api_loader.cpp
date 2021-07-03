@@ -4,8 +4,6 @@
 #include "graphics/api/graphics_api_loader.hpp"
 #include "graphics/api/graphics_api_vtable.hpp"
 
-namespace StraitX{
-
 #ifdef SX_VULKAN_SUPPORTED
 extern GraphicsAPIVTable VulkanVTable;
 #endif
@@ -64,5 +62,3 @@ Result GraphicsAPILoader::Load(GraphicsAPI api){
 
     return Result::Success;
 }
-
-}//namespace StraitX::

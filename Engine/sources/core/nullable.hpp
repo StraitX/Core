@@ -4,8 +4,6 @@
 #include "platform/types.hpp"
 #include "platform/compiler.hpp"
 
-namespace StraitX{
-
 class Nullable{
 public:
     virtual bool operator==(nullptr_t ptr) = 0;
@@ -18,7 +16,5 @@ public:
         return *this==nullptr;
     }
 };
-
-}; //namespace StraitX::
 
 #endif // STRAITX_NULLABLE_HPP

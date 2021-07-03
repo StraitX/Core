@@ -3,8 +3,6 @@
 
 #include "core/move.hpp"
 
-namespace StraitX{
-
 template <typename T>
 constexpr void Swap(T& f, T& s){
     T tmp = Move(f);
@@ -44,9 +42,5 @@ constexpr FwdIt FindIf(FwdIt begin, FwdIt end, Predicate predicate){
 	}
 	return begin;
 }
-
-
-
-} // namespace StraitX::
 
 #endif // STRAITX_ALGORITHM_HPP

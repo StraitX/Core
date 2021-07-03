@@ -3,9 +3,6 @@
 
 #include "platform/types.hpp"
 
-namespace StraitX{
-
-
 template<typename T>
 struct Printer{
 	static void Print(const T &value, void (*writer)(char, void*), void *writer_data);
@@ -32,7 +29,5 @@ public:
 		return state.Written;
 	}
 };
-
-}//namespace StraitX::
 
 #endif//STRAITX_PRINTER_HPP

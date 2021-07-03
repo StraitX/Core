@@ -4,8 +4,6 @@
 #include "platform/types.hpp"
 #include "core/assert.hpp"
 
-namespace StraitX{
-
 // it has no idea about allocations, object lifetime and stuff
 template <typename T_Type, typename T_Size = size_t>
 class Span{
@@ -90,7 +88,5 @@ template <typename T_Type, typename T_Size>
 typename Span<T_Type, T_Size>::iterator Span<T_Type, T_Size>::end()const{
     return Pointer()+Size();
 }
-
-}; // namespace StraitX::
 
 #endif //STRAITX_SPAN_HPP

@@ -4,7 +4,6 @@
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/texture_impl.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 u8 DMAImpl::s_Instance[sizeof(DMAImpl)];
@@ -123,4 +122,3 @@ void DMAImpl::ChangeGPUTextureLayoutImpl(Texture &src, TextureLayout layout){
 }
 
 }//namespace Vk::
-}//namespace StraitX::

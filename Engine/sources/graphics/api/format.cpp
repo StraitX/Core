@@ -1,7 +1,5 @@
 #include "graphics/api/format.hpp"
 
-namespace StraitX{
-
 static size_t PixelFormatSizeTable[] = {
     0,
     4
@@ -37,5 +35,3 @@ bool IsColorFormat(TextureFormat format){
 TextureFormat ToTextureFormat(PixelFormat format){
     return TextureFormat::RGBA8;
 }
-
-}//namespace StraitX::

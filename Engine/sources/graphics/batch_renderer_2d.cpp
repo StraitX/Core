@@ -6,8 +6,6 @@
 #include "graphics/api/dma.hpp"
 #include "graphics/api/graphics_context.hpp"
 
-namespace StraitX{
-
 static const char *s_VertexShaderSources = R"(#version 440 core
 
 layout(location = 0)in vec2 a_Position;
@@ -237,5 +235,3 @@ void BatchRenderer2D::EndBatch(){
 
     m_DrawCallsCount++;
 }
-
-}//namespace StraitX::

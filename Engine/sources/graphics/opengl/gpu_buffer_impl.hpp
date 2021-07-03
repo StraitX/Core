@@ -3,7 +3,6 @@
 
 #include "graphics/api/gpu_buffer.hpp"
 
-namespace StraitX{
 namespace GL{
 
 struct GPUBufferImpl{
@@ -13,6 +12,5 @@ struct GPUBufferImpl{
 };
 
 }//namespace GL::
-}//namespace StraitX::
 
 #endif //STRAITX_OPENGL_GPU_BUFFER_IMPL_HPP 

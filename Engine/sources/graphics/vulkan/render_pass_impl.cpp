@@ -6,7 +6,6 @@
 #include "graphics/vulkan/texture_impl.hpp"
 #include "graphics/vulkan/gpu.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 RenderPassImpl::RenderPassImpl(const RenderPassProperties &props){
@@ -79,6 +78,4 @@ void RenderPassImpl::DeleteImpl(RenderPass *pass){
     Memory::Free(pass);
 }
 
-
 }//namespace Vk::
-}//namespace StraitX::

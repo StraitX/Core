@@ -3,8 +3,6 @@
 
 #include "platform/types.hpp"
 
-namespace StraitX{
-
 class Result{
 public:
     enum Type: u8{
@@ -75,7 +73,5 @@ SX_INLINE const char *Result::Name()const{
 constexpr Result ResultError(bool is_error){
     return Result(!is_error);
 }
-
-}; // namespace StraitX::
 
 #endif

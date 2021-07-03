@@ -3,7 +3,6 @@
 #include "graphics/opengl/texture_impl.hpp"
 #include "graphics/opengl/graphics_context_impl.hpp"
 
-namespace StraitX{
 namespace GL{
 
 GLint InternalFormatTable[]={
@@ -54,4 +53,3 @@ void Texture2DImpl::BindZero(const Texture2D &texture){
 }
 
 }//namespace GL::
-}//namespace StraitX::

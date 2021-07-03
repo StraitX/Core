@@ -1,7 +1,5 @@
 #include "core/string.hpp"
 
-namespace StraitX{
-
 void String::ToUpperCase(char *string){
     for(;*string; ++string){
         if(*string <= 'z' && *string >= 'a')
@@ -96,5 +94,3 @@ const char *String::Ignore(const char *string, char ch){
     while(*string && *string == ch)string++;
     return string;
 }
-
-}//namespace StraitX::

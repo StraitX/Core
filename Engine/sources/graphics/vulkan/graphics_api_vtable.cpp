@@ -12,8 +12,6 @@
 #include "graphics/vulkan/framebuffer_impl.hpp"
 #include "graphics/vulkan/dma_impl.hpp"
 
-namespace StraitX{
-
 GraphicsAPIVTable VulkanVTable = {
      &Vk::GraphicsContextImpl::s_Instance,
     {&Vk::GPUBufferImpl::NewImpl, &Vk::GPUBufferImpl::DeleteImpl},
@@ -28,5 +26,3 @@ GraphicsAPIVTable VulkanVTable = {
     {&Vk::FramebufferImpl::NewImpl, &Vk::FramebufferImpl::DeleteImpl},
     {&Vk::DMAImpl::CopyMem2GPUBufferImpl, &Vk::DMAImpl::CopyCPU2GPUBufferImpl, &Vk::DMAImpl::CopyCPU2GPUTextureImpl, &Vk::DMAImpl::ChangeGPUTextureLayoutImpl}
 };
-
-}//namespace StraitX::

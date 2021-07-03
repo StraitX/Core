@@ -7,8 +7,6 @@
 #include "core/noncopyable.hpp"
 #include "graphics/api/texture.hpp"
 
-namespace StraitX{
-
 struct AttachmentDescription{
     TextureLayout InitialLayout = TextureLayout::Undefined;
     TextureLayout FinalLayout = TextureLayout::Undefined;
@@ -55,7 +53,5 @@ SX_INLINE RenderPass *RenderPass::New(const RenderPassProperties &properties){
 SX_INLINE void RenderPass::Delete(RenderPass *pass){
     s_VTable.Delete(pass);
 }
-
-}//namespace StraitX::
 
 #endif//STRAITX_RENDER_PASS_HPP

@@ -5,9 +5,7 @@
 #include "core/push_array.hpp"
 #include "graphics/api/shader.hpp"
 
-namespace StraitX{
 namespace GL{
-
 
 struct ShaderImpl: public Shader{
     char *Sources = nullptr;
@@ -30,6 +28,5 @@ struct ShaderImpl: public Shader{
 };
 
 }//namespace GL::
-}//namespace StraitX::
 
 #endif//STRAITX_OPENGL_SHADER_IMPL_HPP

@@ -1,6 +1,5 @@
 #include "platform/linux/screen_impl.hpp"
 
-namespace StraitX{
 namespace Linux{
 
 ScreenImpl::ScreenImpl(unsigned int index, void *handle, const Size2i &size, const Size2f &dpi):
@@ -19,4 +18,3 @@ const Size2f &ScreenImpl::DPI()const{
 }
 
 } // namespace Linux::
-} // namespace StraitX::

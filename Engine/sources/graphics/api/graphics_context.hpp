@@ -4,8 +4,6 @@
 #include "platform/window.hpp"
 #include "graphics/api/gpu_command_buffer.hpp"
 
-namespace StraitX{
-
 class GraphicsAPI{
 public:
 	enum Value{
@@ -75,7 +73,5 @@ SX_INLINE GraphicsContext &GraphicsContext::Get(){
 
 	return *s_Instance;
 }
-
-}//namespace StraitX::
 
 #endif //STRAITX_GRAPHICS_CONTEXT_HPP

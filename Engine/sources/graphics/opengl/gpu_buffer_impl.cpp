@@ -1,7 +1,6 @@
 #include "platform/opengl.hpp"
 #include "graphics/opengl/gpu_buffer_impl.hpp"
 
-namespace StraitX{
 namespace GL{
 
 void GPUBufferImpl::NewImpl(GPUBuffer &buffer, u32 size, GPUMemoryType mem_type, GPUBuffer::UsageType usage){
@@ -20,4 +19,3 @@ void GPUBufferImpl::DeleteImpl(GPUBuffer &buffer){
 }
 
 }//namespace GL::
-}//namespace StraitX::

@@ -5,7 +5,6 @@
 #include "core/span.hpp"
 #include "graphics/vulkan/queue.hpp"
 
-namespace StraitX{
 namespace Vk{
 
 class CommandBuffer{
@@ -53,6 +52,5 @@ SX_INLINE void CommandBuffer::CmdBufferCopy(VkBuffer src, VkBuffer dst, VkDevice
 }
 
 }//namespace Vk::
-}//namespace StraitX::
 
 #endif//STRAITX_VULKAN_COMMAND_BUFFER_HPP

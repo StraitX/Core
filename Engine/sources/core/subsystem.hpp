@@ -5,8 +5,6 @@
 #include "platform/result.hpp"
 #include "core/push_array.hpp"
 
-namespace StraitX{
-
 class Subsystem{
 private:
 	friend class SubsystemsManager;
@@ -53,7 +51,5 @@ private:
 	//WARNING: XXX: subsystem's lifetime should be as big as the whole engine lifetime
 	static void Push(Subsystem *subsystem);
 };
-
-}//namespace StraitX::
 
 #endif//STRAITX_SUBSYSTEM_HPP

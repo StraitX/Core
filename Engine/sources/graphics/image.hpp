@@ -9,8 +9,6 @@
 #include "graphics/color.hpp"
 #include "graphics/image_loader.hpp"
 
-namespace StraitX{
-
 // image is NonCopyable just for now
 class Image: public NonCopyable{
 private:
@@ -75,7 +73,5 @@ SX_INLINE PixelFormat Image::Format()const{
 SX_INLINE bool Image::IsEmpty()const{
     return m_Data == nullptr;
 }
-
-};//namespace StraitX::
 
 #endif//STRAITX_IMAGE_HPP

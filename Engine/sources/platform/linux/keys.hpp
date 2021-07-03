@@ -5,8 +5,6 @@
 #include "platform/mouse.hpp"
 #include <X11/Xlib.h>
 
-
-namespace StraitX{
 namespace Linux{
 
 KeySym KeyCodeToXKeySym(Key code);
@@ -15,7 +13,6 @@ Key XKeyCodeToKeyCode(unsigned int key);
 
 Mouse::Button XButtonToMouseButton(unsigned int button);
 
-}// namespace Linux::
-}// namespace StraitX::
+}//namespace Linux::
 
 #endif

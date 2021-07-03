@@ -3,8 +3,6 @@
 #include "graphics/renderer_2d.hpp"
 #include "graphics/batch_renderer_2d.hpp"
 
-namespace StraitX{
-
 const Vector2f (&Renderer2D::s_DefaultTextureCoords)[4] = BatchRenderer2D::s_DefaultTextureCoords;
 
 static RawVar<BatchRenderer2D> s_Renderer2DImpl;
@@ -45,5 +43,3 @@ void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Texture2D &tex
 void Renderer2D::Clear(const Color &color){
 	s_Renderer2DImpl->Clear(color);
 }
-
-}//namespace StraitX::
