@@ -4,7 +4,7 @@
 #include "platform/types.hpp"
 
 namespace StraitX{
-    class Window;
+    class PlatformWindow;
 };
 
 namespace StraitX{
@@ -25,7 +25,7 @@ namespace Mouse{
 
     Point GlobalPosition();
 
-    Point RelativePosition(const Window &window);
+    Point RelativePosition(const PlatformWindow &window);
 
     void SetGlobalPosition(const Point &position);
 

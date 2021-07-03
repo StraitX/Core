@@ -11,7 +11,7 @@ struct VulkanSurface{
     VkSurfaceKHR Handle = VK_NULL_HANDLE;
     VkInstance Owner = VK_NULL_HANDLE;
 
-    Result Create(VkInstance owner, const Window &window);
+    Result Create(VkInstance owner, const PlatformWindow &window);
 
     void Destroy();
 };

@@ -21,13 +21,13 @@
 
 namespace StraitX{
 
-class Window: public NonCopyable{
+class PlatformWindow: public NonCopyable{
 private:
     PlatformWindowImpl m_Impl;
 public:
-    Window() = default;
+    PlatformWindow() = default;
 
-    Window(Window &&other);
+    PlatformWindow(PlatformWindow &&other);
 
     Result Open(const Screen &screen, int width, int height);
 
@@ -46,39 +46,39 @@ public:
     Size2u Size()const;
 };
 
-SX_INLINE Window::Window(Window &&other):
+SX_INLINE PlatformWindow::PlatformWindow(PlatformWindow &&other):
     m_Impl((PlatformWindowImpl&&)other.Impl())
 {}
 
-SX_INLINE Result Window::Open(const Screen &screen, int width, int height){
+SX_INLINE Result PlatformWindow::Open(const Screen &screen, int width, int height){
     return m_Impl.Open(screen.Impl(), width, height);
 }
 
-SX_INLINE Result Window::Close(){
+SX_INLINE Result PlatformWindow::Close(){
     return m_Impl.Close();
 }
 
-SX_INLINE PlatformWindowImpl &Window::Impl(){
+SX_INLINE PlatformWindowImpl &PlatformWindow::Impl(){
     return m_Impl;
 }
 
-SX_INLINE const PlatformWindowImpl &Window::Impl()const{
+SX_INLINE const PlatformWindowImpl &PlatformWindow::Impl()const{
     return m_Impl;
 }
 
-SX_INLINE bool Window::IsOpen()const{
+SX_INLINE bool PlatformWindow::IsOpen()const{
     return m_Impl.IsOpen();
 }
 
-SX_INLINE void Window::SetTitle(const char *title){
+SX_INLINE void PlatformWindow::SetTitle(const char *title){
     m_Impl.SetTitle(title);
 }
 
-SX_INLINE bool Window::PollEvent(Event &event){
+SX_INLINE bool PlatformWindow::PollEvent(Event &event){
     return m_Impl.PollEvent(event);
 }
 
-SX_INLINE Size2u Window::Size()const{
+SX_INLINE Size2u PlatformWindow::Size()const{
     return m_Impl.Size();
 }
 

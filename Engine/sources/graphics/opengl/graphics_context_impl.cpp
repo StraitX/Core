@@ -61,7 +61,7 @@ static RenderPassProperties GetFramebufferProperties(){
     return {{SwapchainAttachments, 2}};
 }
 
-Result GraphicsContextImpl::Initialize(const Window &window){
+Result GraphicsContextImpl::Initialize(const PlatformWindow &window){
 	if (!m_OpenGLContext.CreateDummy()) {
         LogError("OpenGLLoader: Can't create dummy OpenGL context");
         return Result::Unsupported;

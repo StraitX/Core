@@ -20,7 +20,7 @@ Point Mouse::GlobalPosition() {
     return {position.x,position.y};
 }
 
-Point Mouse::RelativePosition(const Window &window){
+Point Mouse::RelativePosition(const PlatformWindow &window){
     // TODO: Make sure it works
     POINT position = { 0 };
     GetCursorPos(&position);

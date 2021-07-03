@@ -14,7 +14,7 @@ extern ::Display *s_Display;
 }//namespace Linux::
 
 
-Result VulkanSurface::Create(VkInstance owner, const Window &window){
+Result VulkanSurface::Create(VkInstance owner, const PlatformWindow &window){
     Owner = owner;
     VkXlibSurfaceCreateInfoKHR info;
     info.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;

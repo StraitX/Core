@@ -74,7 +74,7 @@ static_assert(sizeof(GPUResourceHandle) == sizeof(VkBuffer), "Vulkan handle is n
 
 GraphicsContextImpl GraphicsContextImpl::s_Instance;
 
-Result GraphicsContextImpl::Initialize(const Window &window){
+Result GraphicsContextImpl::Initialize(const PlatformWindow &window){
     Version version = VulkanVersion;
     Span<const char *>extensions = {RequiredPlatformExtensions, RequiredPlatformExtensionsCount};
     Span<const char *>layers     = {RequiredPlatformLayers, RequiredPlatformLayersCount};

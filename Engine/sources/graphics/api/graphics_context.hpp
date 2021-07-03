@@ -45,7 +45,7 @@ private:
 public:
 	GraphicsAPI API()const;
 private:
-	virtual Result Initialize(const Window &window) = 0;
+	virtual Result Initialize(const PlatformWindow &window) = 0;
 
 	virtual void Finalize() = 0;
 public:

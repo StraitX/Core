@@ -27,7 +27,7 @@ public:
 
     OpenGLContext() = default;
 
-    Result Create(const Window &window, const Version &version);
+    Result Create(const PlatformWindow &window, const Version &version);
 
     Result CreateDummy();
 
@@ -40,7 +40,7 @@ public:
     void SwapBuffers();
 };
 
-SX_INLINE Result OpenGLContext::Create(const Window &window, const Version &version){
+SX_INLINE Result OpenGLContext::Create(const PlatformWindow &window, const Version &version){
     return m_Impl.Create(window.Impl(), version);
 }
 

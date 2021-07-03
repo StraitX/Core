@@ -41,7 +41,7 @@ Point Mouse::GlobalPosition(){
     return global;
 }
 
-Point Mouse::RelativePosition(const Window &window){
+Point Mouse::RelativePosition(const PlatformWindow &window){
     ::Window root,child;
     Point choosen,global;
     unsigned int mask;

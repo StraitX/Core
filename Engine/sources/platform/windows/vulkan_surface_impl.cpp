@@ -4,7 +4,7 @@
 
 namespace StraitX {
 
-Result VulkanSurface::Create(VkInstance owner, const Window& window) {
+Result VulkanSurface::Create(VkInstance owner, const PlatformWindow& window) {
     Owner = owner;
     VkWin32SurfaceCreateInfoKHR info;
     info.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;

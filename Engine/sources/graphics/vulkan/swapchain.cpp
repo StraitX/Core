@@ -54,7 +54,7 @@ static RenderPassProperties GetFramebufferProperties(){
 }
 
 
-Swapchain::Swapchain(const Window &window):
+Swapchain::Swapchain(const PlatformWindow &window):
     m_Colorspace(DesiredColorSpace),
     m_ImagesCount(s_MaxFramebuffers),
     m_FramebufferPass(GetFramebufferProperties()),

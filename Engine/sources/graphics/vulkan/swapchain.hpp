@@ -38,7 +38,7 @@ private:
     VkQueue m_TargetQueue = VK_NULL_HANDLE;
     u32 m_TargetQueueIndex = InvalidIndex;
 public:
-    Swapchain(const Window &window);
+    Swapchain(const PlatformWindow &window);
 
     ~Swapchain();
 

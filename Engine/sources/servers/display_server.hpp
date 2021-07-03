@@ -7,7 +7,7 @@
 namespace StraitX{
 
 struct DisplayServer{
-    static class Window Window;
+    static PlatformWindow Window;
 };
 
 }; // namespace StraitX::
