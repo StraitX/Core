@@ -5,18 +5,14 @@
 
 namespace Windows {
 
-class ScreenImpl {
-private:
-	void* m_Handle = nullptr;
-	bool m_IsPrimary = true;
-	Size2i m_Size = {};
-    Size2f m_DPI = {};
-public:
+struct ScreenImpl {
+	void* Handle = nullptr;
+	bool IsPrimary = true;
+	Size2i Size = {};
+    Size2f DPI = {};
+
 	ScreenImpl(Size2i size);
 
-	const Size2i &Size()const;
-
-	const Size2f &DPI()const;
 };
 
 }//namespace Windows::
