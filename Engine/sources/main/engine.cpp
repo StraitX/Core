@@ -43,11 +43,13 @@ Result Engine::Initialize(){
 
     LogInfo("WindowSystem::Initialize: Begin");
     {
-        m_ErrorWindowSystem = WindowSystem::Initialize();
+        m_ErrorWindowSystem = WindowSystem::Initialize(m_ApplicationConfig.WindowSize.x, m_ApplicationConfig.WindowSize.y);
     }
     InitAssert("WindowSystem::Initialize", m_ErrorWindowSystem);
 
 	WindowSystem::Window().SetTitle(m_ApplicationConfig.ApplicationName);
+
+	Println("Size: %: %", WindowSystem::Window().Size().width, WindowSystem::Window().Size().height);
 
     LogTrace("GraphicsAPILoader::Load: Begin");
 	auto error_api_load = GraphicsAPILoader::Load(m_ApplicationConfig.DesiredAPI);

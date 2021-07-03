@@ -8,11 +8,12 @@
 #include "platform/result.hpp"
 
 class WindowSystem{
-public:
-    static Result Initialize();
+private:
+	friend class Engine;
+    static Result Initialize(int width, int height);
 
     static void Finalize();
-
+public:
     static PlatformScreen MainScreen();
 
 	static PlatformWindow Window();

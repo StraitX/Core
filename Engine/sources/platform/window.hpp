@@ -30,6 +30,10 @@ public:
 
     Size2u Size()const;
 
+	void SetSize(u32 width, u32 height);
+
+	void SetSize(Size2u size);
+
 	const PlatformWindowImpl &Impl()const;
 };
 
@@ -47,6 +51,14 @@ SX_INLINE void PlatformWindow::SetTitle(const char *title){
 
 SX_INLINE Size2u PlatformWindow::Size()const{
     return m_Impl.Size();
+}
+
+SX_INLINE void PlatformWindow::SetSize(u32 width, u32 height){
+	m_Impl.SetSize(width, height);
+}
+
+SX_INLINE void PlatformWindow::SetSize(Size2u size){
+	SetSize(size.width, size.height);
 }
 
 SX_INLINE const PlatformWindowImpl &PlatformWindow::Impl()const{
