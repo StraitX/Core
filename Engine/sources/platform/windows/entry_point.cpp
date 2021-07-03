@@ -43,7 +43,9 @@ namespace Windows {
         if (ToStraitXEvent(msg, e))
             PlatformRuntime::ProcessEvent(e);
         
-        return DefWindowProc(hwnd, uMsg, wParam, lParam);
+        if(uMsg != WM_CLOSE)
+            return DefWindowProc(hwnd, uMsg, wParam, lParam);
+        return 0;
     }
 
 }//namespace Windows::
