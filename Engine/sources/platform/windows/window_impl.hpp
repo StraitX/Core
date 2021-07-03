@@ -38,6 +38,8 @@ public:
     void OnResize(int width, int height);
 
     SX_INLINE HWND__ *Handle()const;
+
+    static Size2u GetSizeFromHandle(HWND__* handle);
 private:
 
     bool FetchInternalEvents(Event &event);

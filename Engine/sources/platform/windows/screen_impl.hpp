@@ -13,6 +13,7 @@ private:
 	Size2i m_Size = {};
     Size2f m_DPI = {};
 public:
+	ScreenImpl(Size2i size);
 
 	const Size2i &Size()const;
 

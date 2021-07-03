@@ -3,6 +3,10 @@
 namespace StraitX {
 namespace Windows {
 
+ScreenImpl::ScreenImpl(Size2i size):
+	m_Size(size)
+{}
+
 const Size2i& ScreenImpl::Size()const {
 	return m_Size;
 }

@@ -41,10 +41,7 @@ void WindowImpl::SetTitle(const char* title) {
 }
 
 Size2u WindowImpl::Size()const{
-    RECT currentWindowDimens = { 0 };
-    GetClientRect(m_Handle, &currentWindowDimens);
-    // TODO: Make sure it works
-    return {u32(currentWindowDimens.right - currentWindowDimens.left), u32(currentWindowDimens.bottom - currentWindowDimens.top)};
+    return GetSizeFromHandle(m_Handle);
 }
 
 bool WindowImpl::PollEvent(Event& event) {
@@ -69,6 +66,13 @@ void WindowImpl::OnResize(int width, int height) {
     m_UnhandledResize = true;
     m_Width = width;
     m_Height = height;
+}
+
+Size2u WindowImpl::GetSizeFromHandle(HWND__* handle) {
+    RECT currentWindowDimens = { 0 };
+    GetClientRect(handle, &currentWindowDimens);
+
+    return {u32(currentWindowDimens.right - currentWindowDimens.left), u32(currentWindowDimens.bottom - currentWindowDimens.top)};
 }
 
 
