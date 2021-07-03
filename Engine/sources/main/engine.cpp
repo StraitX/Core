@@ -47,6 +47,8 @@ Result Engine::Initialize(){
     }
     InitAssert("WindowSystem::Initialize", m_ErrorWindowSystem);
 
+	WindowSystem::Window().SetTitle(m_ApplicationConfig.ApplicationName);
+
     LogTrace("GraphicsAPILoader::Load: Begin");
 	auto error_api_load = GraphicsAPILoader::Load(m_ApplicationConfig.DesiredAPI);
     InitAssert("GraphicsAPILoader::Load", error_api_load);
