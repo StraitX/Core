@@ -78,8 +78,8 @@ void WindowImpl::SetTitle(const char *title){
 }
 
 void WindowImpl::SetSize(int width, int height){
-
     XResizeWindow(s_Display,Handle,width,height);
+	XFlush(s_Display);
 }
 
 bool WindowImpl::PollEvent(Event &event){
@@ -96,14 +96,10 @@ Size2u WindowImpl::Size()const{
 }
 
 Size2u WindowImpl::GetSizeFromHandle(unsigned long handle){
-    ::Window root_return;
-    int x, y;
-    unsigned int width, height;
-    unsigned int border, depth;
+    XWindowAttributes attributes;
+    XGetWindowAttributes(s_Display, handle, &attributes);
 
-    XGetGeometry(s_Display, handle, &root_return, &x, &y, &width, &height, &border, &depth);
-    
-    return {width, height};
+    return {(u32)attributes.width, (u32)attributes.height};
 }
 
 void *WindowImpl::PickBestFBConfig(int screen_index){

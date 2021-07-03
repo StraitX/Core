@@ -15,7 +15,7 @@ ScreenImpl s_Screen;
 WindowImpl s_Window;
 }//namespace Linux::
 
-Result WindowSystem::Initialize(){
+Result WindowSystem::Initialize(int width, int height){
 	using namespace Linux;
 
     s_Display = XOpenDisplay(nullptr);
@@ -25,7 +25,7 @@ Result WindowSystem::Initialize(){
 
 	s_Screen = ScreenImpl(s_Display);
 
-	s_Window.Open(s_Screen, 1280, 720);
+	s_Window.Open(s_Screen, width, height);
 
 	return Result::Success;
 }
