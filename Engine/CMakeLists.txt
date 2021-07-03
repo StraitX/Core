@@ -169,6 +169,7 @@ elseif(STRAITX_PLATFORM_WINDOWS)
        ${SOURCES_DIR}/platform/windows/clock_impl.cpp
        ${SOURCES_DIR}/platform/windows/sleep_impl.cpp
        ${SOURCES_DIR}/platform/windows/file_impl.cpp
+       ${SOURCES_DIR}/platform/windows/memory_impl.cpp
     )
 
     set(LIBS_PLATFORM
