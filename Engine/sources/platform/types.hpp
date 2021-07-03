@@ -5,9 +5,6 @@
 #include "platform/arch.hpp"
 #include <cstddef>
 
-// for now
-
-
 typedef signed   char s8;
 typedef unsigned char u8;
 
@@ -71,7 +68,5 @@ struct Version{
     u16 Minor;
     u32 Patch;
 };
-
-
 
 #endif // STRAITX_TYPES_HPP

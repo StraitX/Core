@@ -6,24 +6,15 @@
 
 namespace Linux{
 
-class WindowImpl;
+struct ScreenImpl{
+    void *Handle = nullptr;
+    unsigned int Index = -1;
+    Size2i Size = {};
+    Size2f DPI = {};
 
-class ScreenImpl{
-private:
-    void *m_Handle;
-    unsigned int m_Index;
-    Size2i m_Size;
-    Size2f m_DPI;
+	ScreenImpl() = default;
 
-    friend class WindowImpl;
-public:
-    ScreenImpl(unsigned int index, void *handle, const Size2i &size, const Size2f &dpi);
-
-    ~ScreenImpl() = default;
-    
-    const Size2i &Size()const;
-
-    const Size2f &DPI()const;
+	ScreenImpl(void *display_handle);
 };
 
 } // namespace Linux::

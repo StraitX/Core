@@ -20,18 +20,9 @@ struct PixelFormat{
     int Samples = 0;
 };
 
-
-WindowImpl::WindowImpl(WindowImpl &&other)
-{
-    Handle = other.Handle;
-    other.Handle = 0;
-    FBConfig = other.FBConfig;
-}
-
-
 Result WindowImpl::Open(const ScreenImpl &screen, int width, int height){
 
-    FBConfig = PickBestFBConfig(screen.m_Index);
+    FBConfig = PickBestFBConfig(screen.Index);
     if(FBConfig == nullptr)
         return Result::Unsupported;
 
@@ -41,11 +32,11 @@ Result WindowImpl::Open(const ScreenImpl &screen, int width, int height){
         return Result::Failure;
     
     XSetWindowAttributes attributes;
-    attributes.background_pixel = BlackPixel(s_Display, screen.m_Index);
-    attributes.colormap = XCreateColormap(s_Display, RootWindow(s_Display,screen.m_Index), visualInfo->visual, AllocNone);
+    attributes.background_pixel = BlackPixel(s_Display, screen.Index);
+    attributes.colormap = XCreateColormap(s_Display, RootWindow(s_Display,screen.Index), visualInfo->visual, AllocNone);
     attributes.event_mask = ExposureMask | KeyPressMask| KeyReleaseMask| ButtonPressMask| ButtonReleaseMask| ResizeRedirectMask;
 
-    Handle = XCreateWindow(s_Display, RootWindow(s_Display,screen.m_Index), 0, 0, width, height, 0, visualInfo->depth,
+    Handle = XCreateWindow(s_Display, RootWindow(s_Display,screen.Index), 0, 0, width, height, 0, visualInfo->depth,
         InputOutput, visualInfo->visual, CWBackPixel | CWColormap | CWEventMask, &attributes);
 
     XFree(visualInfo);

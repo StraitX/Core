@@ -3,8 +3,8 @@
 #include "graphics/api/cpu_texture.hpp"
 #include "graphics/api/dma.hpp"
 #include "core/string.hpp"
-#include "servers/display_server.hpp"
 #include "platform/keyboard.hpp"
+#include "platform/window_system.hpp"
 
 ShaderBinding ImGuiBackend::s_Bindings[2] = {
 	{0, 1, ShaderBindingType::Texture, Shader::Fragment},
@@ -144,13 +144,13 @@ Result ImGuiBackend::OnInitialize(){
 void ImGuiBackend::OnBeginFrame(){
 	ImGuiIO& io = ImGui::GetIO();
 
-	auto window_size = DisplayServer::Window.Size();
+	auto window_size = WindowSystem::Window().Size();
 
 	io.DisplaySize = ImVec2((float)window_size.width, (float)window_size.height);
 	io.DisplayFramebufferScale = ImVec2(1, 1);
 	io.DeltaTime = 0.016;
 
-	auto mouse_pos = Mouse::RelativePosition(DisplayServer::Window);
+	auto mouse_pos = Mouse::RelativePosition(WindowSystem::Window());
 
 	mouse_pos.y = window_size.height - mouse_pos.y;
 
@@ -170,7 +170,7 @@ void ImGuiBackend::OnEndFrame(){
 	ImGui::Render();
 	const ImDrawData *data = ImGui::GetDrawData();
 
-	auto window_size = DisplayServer::Window.Size();
+	auto window_size = WindowSystem::Window().Size();
 	ImVec2 clip_off = data->DisplayPos;         // (0,0) unless using multi-viewports
     ImVec2 clip_scale = data->FramebufferScale;
 

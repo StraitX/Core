@@ -1,7 +1,7 @@
 #include "platform/memory.hpp"
+#include "platform/window_system.hpp"
 #include "core/log.hpp"
 #include "core/string.hpp"
-#include "servers/display_server.hpp"
 #include "graphics/batch_renderer_2d.hpp"
 #include "graphics/api/dma.hpp"
 #include "graphics/api/graphics_context.hpp"
@@ -59,7 +59,8 @@ BatchRenderer2D::BatchRenderer2D(const RenderPass *pass):
 	m_SetLayout(s_Bindings),
     m_Pass(pass)
 {
-    auto size = DisplayServer::Window.Size();
+	//XXX set projection matrix based on framebuffer size
+    auto size = WindowSystem::Window().Size();
     m_WindowSize = {size.width, size.height};
     
     m_VertexShader = Shader::New(Shader::Type::Vertex, Shader::Lang::GLSL, (const u8*)s_VertexShaderSources, String::Length(s_VertexShaderSources));

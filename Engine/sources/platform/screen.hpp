@@ -42,11 +42,11 @@ SX_INLINE PlatformScreen::PlatformScreen(const PlatformScreenImpl &impl):
 {}
 
 SX_INLINE const Size2i &PlatformScreen::Size()const{
-    return m_Impl.Size();
+    return m_Impl.Size;
 }
 
 SX_INLINE const Size2f &PlatformScreen::DPI()const{
-    return m_Impl.DPI();
+    return m_Impl.DPI;
 }
 
 SX_INLINE PlatformScreenImpl &PlatformScreen::Impl(){

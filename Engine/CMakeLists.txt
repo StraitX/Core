@@ -106,19 +106,17 @@ set(SOURCES_GRAPHICS_I
 	${SOURCES_DIR}/graphics/renderer_2d.cpp
 )
 
-set(SOURCES_SERVERS
-    ${SOURCES_DIR}/servers/display_server.cpp
-)
-
 set(SOURCES_MAIN
     ${SOURCES_DIR}/main/engine.cpp
     ${SOURCES_DIR}/main/application.cpp
-    ${SOURCES_DIR}/main/main.cpp
+    ${SOURCES_DIR}/main/runtime.cpp
 )
 
 if(STRAITX_PLATFORM_LINUX)
 
     set(SOURCES_PLATFORM_D
+		${SOURCES_DIR}/platform/linux/entry_point.cpp
+
         ${SOURCES_DIR}/platform/linux/window_system_impl.cpp
         ${SOURCES_DIR}/platform/linux/mouse_impl.cpp
         ${SOURCES_DIR}/platform/linux/keyboard_impl.cpp
@@ -250,7 +248,6 @@ add_library(StraitX STATIC
     ${SOURCES_CORE}
     ${SOURCES_GRAPHICS_I}
     ${SOURCES_GRAPHICS_D}
-    ${SOURCES_SERVERS}
     ${SOURCES_MAIN}
 )
 target_include_directories(StraitX PUBLIC 

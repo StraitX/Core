@@ -13,10 +13,6 @@ struct WindowImpl{
 
     WindowImpl() = default;
 
-    WindowImpl(const WindowImpl &other) = default;
-
-    WindowImpl(WindowImpl &&other);
-
     Result Open(const ScreenImpl &screen, int width, int height);
 
     Result Close();

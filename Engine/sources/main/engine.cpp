@@ -31,37 +31,6 @@ Engine::~Engine(){
 	s_Instance = nullptr;
 }
 
-int Engine::Run(){
-    LogTrace("Engine::Initialize: Begin");
-
-    Result initCode = Initialize();
-
-    Log("Engine::Initialize",initCode);
-
-    LogSeparator();
-
-    if(initCode == Result::Success){
-        LogInfo("Engine: Enter Main loop");
-        MainLoop();
-        LogInfo("Engine: Left Main loop");
-    }else{
-        LogWarn("Engine: Main loop was skipped due to Initialization failure");
-    }
-
-    LogSeparator();
-
-    LogTrace("Engine: Finalize: Begin");
-
-    Result finalizeCode = Finalize();
-
-    Log("Engine::Finalize",finalizeCode);
-
-    if(finalizeCode != Result::Success || initCode != Result::Success)
-        return -1;
-
-    return 0;
-}
-
 void Engine::Stop(){
     m_Running = false;
 }
@@ -78,21 +47,13 @@ Result Engine::Initialize(){
     }
     InitAssert("WindowSystem::Initialize", m_ErrorWindowSystem);
 
-    LogTrace("Window::Open: Begin");
-    {
-        m_Window = DisplayServer::Window.Open(WindowSystem::MainScreen(), m_ApplicationConfig.WindowSize.x, m_ApplicationConfig.WindowSize.y);
-    }
-    InitAssert("Window::Open", m_Window);
-
-	DisplayServer::Window.SetTitle(m_ApplicationConfig.ApplicationName);
-
     LogTrace("GraphicsAPILoader::Load: Begin");
 	auto error_api_load = GraphicsAPILoader::Load(m_ApplicationConfig.DesiredAPI);
     InitAssert("GraphicsAPILoader::Load", error_api_load);
 
 	LogTrace("GraphicsContext::New: Begin");
 	{
-		m_ErrorGraphicsContext = GraphicsContext::Get().Initialize(DisplayServer::Window);
+		m_ErrorGraphicsContext = GraphicsContext::Get().Initialize(WindowSystem::Window());
 	}
 	InitAssert("GraphicsContext::New", m_ErrorGraphicsContext);
 
@@ -126,7 +87,7 @@ Result Engine::Initialize(){
     return Result::Success;
 }
 
-Result Engine::Finalize(){
+void Engine::Finalize(){
 
     if(m_ErrorApplication==Result::Success){
         LogTrace("Application::OnFinalize: Begin");
@@ -152,52 +113,40 @@ Result Engine::Finalize(){
 		LogTrace("GraphicsContext::Finalize: End");
 	}
 
-    if(m_Window == Result::Success){
-        LogTrace("DisplayServer::Finalize: Begin");
-        DisplayServer::Window.Close();
-        LogTrace("DisplayServer::Finalize: End");
-    }
-
     if(m_ErrorWindowSystem == Result::Success){
         LogTrace("WindowSystem::Finalize: Begin");
-        m_ErrorWindowSystem = WindowSystem::Finalize();
+        WindowSystem::Finalize();
         Log("WindowSystem::Finalize",m_ErrorWindowSystem);
     }
-
-
-    return Result::Success;
 }
 
-void Engine::MainLoop(){
-    Clock frametime;
-    while(m_Running){
-        Event e;
-        while(DisplayServer::Window.PollEvent(e)){
-            if(e.Type == EventType::WindowClose){
-                Stop();
-            }else{
-                (void)m_Application->OnEvent(e);
-				SubsystemsManager::ProcessEvent(e);
-			}
-        }
-        float dt = frametime.GetElapsedTime().AsSeconds();
-        frametime.Restart();
+bool Engine::Tick(float dt){
+	SubsystemsManager::BeginFrame();
 
-		SubsystemsManager::BeginFrame();
-        m_Application->OnUpdate(dt);
-		SubsystemsManager::Update(dt);
+	m_Application->OnUpdate(dt);
+	SubsystemsManager::Update(dt);
 
-		SubsystemsManager::EndFrame();
+	SubsystemsManager::EndFrame();
 
-		GraphicsContext::Get().SwapBuffers();
+	GraphicsContext::Get().SwapBuffers();
 
-        m_AllocCalls = Memory::AllocCalls();
-        m_FrameAllocCalls = m_AllocCalls - m_PrevAllocCalls;
-        m_PrevAllocCalls = m_AllocCalls;
 
-        m_FreeCalls = Memory::FreeCalls();
-        m_FrameFreeCalls = m_FreeCalls - m_PrevFreeCalls;
-        m_PrevFreeCalls = m_FreeCalls;
+	m_AllocCalls = Memory::AllocCalls();
+	m_FrameAllocCalls = m_AllocCalls - m_PrevAllocCalls;
+	m_PrevAllocCalls = m_AllocCalls;
 
-    }
+	m_FreeCalls = Memory::FreeCalls();
+	m_FrameFreeCalls = m_FreeCalls - m_PrevFreeCalls;
+	m_PrevFreeCalls = m_FreeCalls;
+
+	return m_Running;
 }
+
+void Engine::ProcessEvent(const Event &e){
+	if(e.Type == EventType::WindowClose)
+		Stop();
+
+	m_Application->OnEvent(e);
+	SubsystemsManager::ProcessEvent(e);
+}
+

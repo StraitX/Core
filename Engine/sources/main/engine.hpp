@@ -2,10 +2,8 @@
 #define STRAITX_ENGINE_HPP
 
 #include "platform/result.hpp"
-#include "servers/display_server.hpp"
+#include "platform/platform_runtime.hpp"
 #include "main/application.hpp"
-
-int main();
 
 class Application;
 
@@ -17,7 +15,6 @@ private:
     ApplicationConfig m_ApplicationConfig = {};
     bool m_Running = true;
     Result m_ErrorWindowSystem = Result::None;
-    Result m_Window = Result::None;
 	Result M_ErrorGraphicsAPI = Result::None;
 	Result m_ErrorGraphicsContext = Result::None;
     Result m_ErrorApplication = Result::None;
@@ -30,13 +27,11 @@ private:
     u64 m_PrevFreeCalls = 0;
     u64 m_FrameFreeCalls = 0;
 
-	friend int ::main();
+	friend class PlatformRuntime;
 private:
     Engine();
 
     ~Engine();
-
-    int Run();
 public:
 
     void Stop();
@@ -54,9 +49,11 @@ public:
 private:
     Result Initialize();
 
-    Result Finalize();
+	bool Tick(float dt);
 
-    void MainLoop();
+	void ProcessEvent(const Event &e);
+
+    void Finalize();
 };
 
 SX_INLINE Engine &Engine::Get(){
