@@ -21,6 +21,8 @@ struct PixelFormat{
 };
 
 Result WindowImpl::Open(const ScreenImpl &screen, int width, int height){
+	Width = width;
+	Height = height;
 
     FBConfig = PickBestFBConfig(screen.Index);
     if(FBConfig == nullptr)
@@ -34,7 +36,12 @@ Result WindowImpl::Open(const ScreenImpl &screen, int width, int height){
     XSetWindowAttributes attributes;
     attributes.background_pixel = BlackPixel(s_Display, screen.Index);
     attributes.colormap = XCreateColormap(s_Display, RootWindow(s_Display,screen.Index), visualInfo->visual, AllocNone);
-    attributes.event_mask = ExposureMask | KeyPressMask| KeyReleaseMask| ButtonPressMask| ButtonReleaseMask| ResizeRedirectMask;
+    attributes.event_mask 	= ExposureMask 
+							| KeyPressMask 
+							| KeyReleaseMask 
+							| ButtonPressMask 
+							| ButtonReleaseMask 
+							| StructureNotifyMask;
 
     Handle = XCreateWindow(s_Display, RootWindow(s_Display,screen.Index), 0, 0, width, height, 0, visualInfo->depth,
         InputOutput, visualInfo->visual, CWBackPixel | CWColormap | CWEventMask, &attributes);
@@ -84,11 +91,12 @@ void WindowImpl::SetSize(int width, int height){
 
 bool WindowImpl::PollEvent(Event &event){
     XEvent x11event;
-    if(XCheckIfEvent(s_Display,&x11event,&CheckEvent,reinterpret_cast<XPointer>(Handle))){
-        event = ToStraitXEvent(x11event);
-        return true;
-    }
-    return false;
+
+	while(XCheckIfEvent(s_Display,&x11event,&CheckEvent,reinterpret_cast<XPointer>(Handle))){
+		if(ToStraitXEvent(x11event, event, this))
+			return true;
+	}
+	return false;
 }
 
 Size2u WindowImpl::Size()const{

@@ -6,9 +6,11 @@
 
 namespace Linux{
 
+struct WindowImpl;
+
 Bool CheckEvent(::Display*, XEvent* event, XPointer userData);
 
-Event ToStraitXEvent(const XEvent &event);
+bool ToStraitXEvent(const XEvent &in_event, Event &out_event, WindowImpl *window);
 
 }//namespace Linux::
 

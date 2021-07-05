@@ -10,6 +10,8 @@ namespace Linux{
 struct WindowImpl{
     unsigned long Handle = 0;
     void *FBConfig = nullptr;
+	int Width = 0;
+	int Height = 0;
 
     WindowImpl() = default;
 

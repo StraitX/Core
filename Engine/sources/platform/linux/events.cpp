@@ -9,80 +9,78 @@ Bool CheckEvent(::Display *display, XEvent *event, XPointer userData){
     return event->xany.window == reinterpret_cast< ::Window >(userData);
 }
 
-Event ToStraitXEvent(const XEvent &event){
-    Event sxEvent;
+bool ToStraitXEvent(const XEvent &in_event, Event &out_event, WindowImpl *window){
     Atom close_atom;
-    switch (event.type)
+    switch (in_event.type)
     {
     // Event recieved on window Close button 
     case ClientMessage:
-        close_atom = XInternAtom(event.xany.display,"WM_DELETE_WINDOW",0);
-        if (event.xclient.data.l[0] == close_atom) {
-            sxEvent.Type = EventType::WindowClose;
-        }else{
-            sxEvent.Type = EventType::Unknown;
+        close_atom = XInternAtom(in_event.xany.display,"WM_DELETE_WINDOW",0);
+        if (in_event.xclient.data.l[0] == close_atom) {
+            out_event.Type = EventType::WindowClose;
+			return true;
         }
-        return sxEvent;
+        return false;
 
-    case ResizeRequest:
-        sxEvent.Type = EventType::WindowResized;
-        sxEvent.WindowResized.x = event.xresizerequest.width;
-        sxEvent.WindowResized.y = event.xresizerequest.height;
-        return sxEvent;
+    case ConfigureNotify:
+		if(in_event.xconfigure.width != window->Width || in_event.xconfigure.height != window->Height){
+			out_event.Type = EventType::WindowResized;
+			out_event.WindowResized.x = in_event.xconfigure.width;
+			out_event.WindowResized.y = in_event.xconfigure.height;
+
+			return true;
+		}
+        return false;
 
     case Expose:
-        sxEvent.Type = EventType::WindowDraw;
-        return sxEvent;
+        out_event.Type = EventType::WindowDraw;
+        return true;
         
     case KeyPress:
         #undef KeyPress
-        sxEvent.Type = EventType::KeyPress;
-        sxEvent.KeyPress.KeyCode = Key::Unknown;
+        out_event.Type = EventType::KeyPress;
+        out_event.KeyPress.KeyCode = Key::Unknown;
         for(int i = 0; i<4; i++){
-            sxEvent.KeyPress.KeyCode = XKeyCodeToKeyCode(XLookupKeysym((XKeyEvent*)&event.xkey,i));
-            if(sxEvent.KeyPress.KeyCode != Key::Unknown)
+            out_event.KeyPress.KeyCode = XKeyCodeToKeyCode(XLookupKeysym((XKeyEvent*)&in_event.xkey,i));
+            if(out_event.KeyPress.KeyCode != Key::Unknown)
                 break;
         }
-        return sxEvent;  
+        return true;  
 
     case KeyRelease:
         #undef KeyRelease
-        sxEvent.Type = EventType::KeyRelease;
-        sxEvent.KeyRelease.KeyCode = Key::Unknown;
+        out_event.Type = EventType::KeyRelease;
+        out_event.KeyRelease.KeyCode = Key::Unknown;
         for(int i = 0; i<4; i++){
-            sxEvent.KeyRelease.KeyCode = XKeyCodeToKeyCode(XLookupKeysym((XKeyEvent*)&event.xkey,i));
-            if(sxEvent.KeyRelease.KeyCode != Key::Unknown)
+            out_event.KeyRelease.KeyCode = XKeyCodeToKeyCode(XLookupKeysym((XKeyEvent*)&in_event.xkey,i));
+            if(out_event.KeyRelease.KeyCode != Key::Unknown)
                 break;
         }
-        return sxEvent;  
+        return true;  
 
     case ButtonPress:
-        if(event.xbutton.button == Button4){
-            sxEvent.Type = EventType::MouseWheel;
-            sxEvent.MouseWheel.Delta = 1;
-        }else if(event.xbutton.button == Button5){
-            sxEvent.Type = EventType::MouseWheel;
-            sxEvent.MouseWheel.Delta = -1;
+        if(in_event.xbutton.button == Button4){
+            out_event.Type = EventType::MouseWheel;
+            out_event.MouseWheel.Delta = 1;
+        }else if(in_event.xbutton.button == Button5){
+            out_event.Type = EventType::MouseWheel;
+            out_event.MouseWheel.Delta = -1;
         }else{
-            sxEvent.Type = EventType::MouseButtonPress;
-            sxEvent.MouseButtonPress.Button = XButtonToMouseButton(event.xbutton.button);
-            sxEvent.MouseButtonPress.x = event.xbutton.x;
-            sxEvent.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(event.xany.window).height - event.xbutton.y;
+            out_event.Type = EventType::MouseButtonPress;
+            out_event.MouseButtonPress.Button = XButtonToMouseButton(in_event.xbutton.button);
+            out_event.MouseButtonPress.x = in_event.xbutton.x;
+            out_event.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(in_event.xany.window).height - in_event.xbutton.y;
         }
-        return sxEvent;
+        return true;
 
     case ButtonRelease:
-        sxEvent.Type = EventType::MouseButtonRelease;
-        sxEvent.MouseButtonRelease.Button = XButtonToMouseButton(event.xbutton.button);
-        sxEvent.MouseButtonRelease.x = event.xbutton.x;
-        sxEvent.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(event.xany.window).height - event.xbutton.y;
-        return sxEvent;
-
-    default:
-        sxEvent.Type = EventType::Unknown;
-        return sxEvent;
-        break;
+        out_event.Type = EventType::MouseButtonRelease;
+        out_event.MouseButtonRelease.Button = XButtonToMouseButton(in_event.xbutton.button);
+        out_event.MouseButtonRelease.x = in_event.xbutton.x;
+        out_event.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(in_event.xany.window).height - in_event.xbutton.y;
+        return true;
     }
+	return false;
 }
 
 }//namespace Linux::
