@@ -25,9 +25,8 @@ Result WindowSystem::Initialize(int width, int height){
 
 	s_Screen = ScreenImpl(s_Display);
 
-	s_Window.Open(s_Screen, width, height);
 
-	return Result::Success;
+	return s_Window.Open(s_Screen, width, height);
 }
 void WindowSystem::Finalize(){
 	using namespace Linux;

@@ -7,10 +7,15 @@ namespace Windows{
 bool ToStraitXEvent(MSG& message, Event& event) {
 	switch (message.message)
 	{
-	case WM_SX_CLOSE:
+	case WM_CLOSE:
 		event.Type = EventType::WindowClose;
 		return true;
 
+    case WM_SIZE:
+		event.Type = EventType::WindowResized;
+		event.WindowResized.x = LOWORD(message.lParam);
+		event.WindowResized.y = HIWORD(message.lParam);
+		return true;
 	case WM_PAINT:
 		event.Type = EventType::WindowDraw;
 		return true;
@@ -75,12 +80,14 @@ bool ToStraitXEvent(MSG& message, Event& event) {
 		event.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(message.hwnd).height - HIWORD(message.lParam);
 		return true;
 
-	case WM_SX_KEYDOWN:
+	case WM_KEYDOWN:
+    case WM_SYSKEYDOWN:
 		event.Type = EventType::KeyPress;
 		event.KeyPress.KeyCode = VirtualKeyExtendedToKeyCode(message.wParam,message.lParam);
 		return true;
 
-	case WM_SX_KEYUP:
+	case WM_KEYUP:
+    case WM_SYSKEYUP:
 		event.Type = EventType::KeyRelease;
 		event.KeyRelease.KeyCode = VirtualKeyExtendedToKeyCode(message.wParam,message.lParam);
 		return true;

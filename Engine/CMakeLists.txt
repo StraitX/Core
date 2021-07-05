@@ -152,6 +152,8 @@ if(STRAITX_PLATFORM_LINUX)
 
 elseif(STRAITX_PLATFORM_WINDOWS)
     set(SOURCES_PLATFORM_D
+       ${SOURCES_DIR}/platform/windows/entry_point.cpp
+
        ${SOURCES_DIR}/platform/windows/mouse.cpp
        ${SOURCES_DIR}/platform/windows/keyboard.cpp
        ${SOURCES_DIR}/platform/windows/virtual_keys.cpp

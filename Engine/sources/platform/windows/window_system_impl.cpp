@@ -1,29 +1,38 @@
 #include <windows.h>
+#include "platform/windows/window_impl.hpp"
 #include "platform/window_system.hpp"
 
 namespace Windows {
-    extern LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+    extern LRESULT CALLBACK StraitXWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     extern const char* windowClassName;
-    Size2i screen_size;
+    WindowImpl s_Window;
+    ScreenImpl s_Screen({ 0, 0 });
 }//namespaec Windows::
 
-Result WindowSystem::Initialize() {
+Result WindowSystem::Initialize(int width, int height) {
     WNDCLASS windowClass = { 0 };
-    windowClass.lpfnWndProc = Windows::WindowProc;
+    windowClass.lpfnWndProc = Windows::StraitXWindowProc;
     windowClass.lpszClassName = Windows::windowClassName;
     windowClass.hInstance = GetModuleHandle(nullptr);
     windowClass.style = CS_OWNDC;
+    
+    if (RegisterClass(&windowClass) == 0)
+        return Result::Failure;
 
-    Windows::screen_size.width = GetSystemMetrics(SM_CXSCREEN);
-    Windows::screen_size.height= GetSystemMetrics(SM_CYSCREEN);
+    Windows::s_Screen.Size.width = GetSystemMetrics(SM_CXSCREEN);
+    Windows::s_Screen.Size.height = GetSystemMetrics(SM_CYSCREEN);
 
-	return ResultError(RegisterClass(&windowClass) == 0);
+    return Windows::s_Window.Open(Windows::s_Screen, width, height);
 }
 
-Result WindowSystem::Finalize() {
-    return Result::Success;
+void WindowSystem::Finalize() {
+    Windows::s_Window.Close();
 }
 
 PlatformScreen WindowSystem::MainScreen() {
-    return Windows::ScreenImpl(Windows::screen_size);
+    return Windows::s_Screen;
+}
+
+PlatformWindow WindowSystem::Window() {
+    return Windows::s_Window;
 }

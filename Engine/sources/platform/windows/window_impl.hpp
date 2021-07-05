@@ -12,16 +12,8 @@ namespace Windows{
 class WindowImpl{
 private:
     HWND__ *m_Handle = nullptr;
-    int m_Width = 0;
-    int m_Height = 0;
     bool m_UnhandledResize = false;
 public:
-    WindowImpl() = default;
-
-    WindowImpl(const WindowImpl& other) = default;
-
-    WindowImpl(WindowImpl&& other);
-
     Result Open(const ScreenImpl &screen, int width, int height);
 
     Result Close();
@@ -30,18 +22,13 @@ public:
 
     void SetTitle(const char *title);
 
-    bool PollEvent(Event &event);
-
     Size2u Size()const;
 
-    void OnResize(int width, int height);
+    void SetSize(int width, int height);
 
     SX_INLINE HWND__ *Handle()const;
 
     static Size2u GetSizeFromHandle(HWND__* handle);
-private:
-
-    bool FetchInternalEvents(Event &event);
 };
 
 SX_INLINE HWND__ *WindowImpl::Handle() const {
