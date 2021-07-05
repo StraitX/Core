@@ -138,6 +138,9 @@ Result ImGuiBackend::OnInitialize(){
 	m_Set->UpdateTextureBinding(0, 0, m_ImGuiFont);
 	m_Set->UpdateUniformBinding(1, 0, m_UniformBuffer);
 
+	m_VertexBuffer.New(40*sizeof(ImDrawVert), GPUMemoryType::DynamicVRAM, GPUBuffer::VertexBuffer | GPUBuffer::TransferDestination);
+	m_IndexBuffer.New(40*sizeof(ImDrawIdx), GPUMemoryType::DynamicVRAM, GPUBuffer::IndexBuffer | GPUBuffer::TransferDestination);
+
 	return Result::Success;
 }
 
@@ -185,22 +188,30 @@ void ImGuiBackend::OnEndFrame(){
 
 	for(int i = 0; i<data->CmdListsCount; i++){
 
-		auto cmd_list = data->CmdLists[i];
+		ImDrawList* cmd_list = data->CmdLists[i];
 
-		m_VertexBuffer.New(cmd_list->VtxBuffer.Size * sizeof(ImDrawVert), GPUMemoryType::DynamicVRAM, GPUBuffer::VertexBuffer | GPUBuffer::TransferDestination);
-		m_IndexBuffer.New(cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx), GPUMemoryType::DynamicVRAM, GPUBuffer::IndexBuffer | GPUBuffer::TransferDestination);
+		size_t vertex_size = cmd_list->VtxBuffer.Size * sizeof(ImDrawVert);
+		size_t index_size = cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx);
 
-		DMA::Copy(cmd_list->VtxBuffer.Data, m_VertexBuffer);
-		DMA::Copy(cmd_list->IdxBuffer.Data, m_IndexBuffer);
+		if(vertex_size > m_VertexBuffer.Size())
+			m_VertexBuffer.Realloc(vertex_size);
+
+		if(index_size > m_IndexBuffer.Size())
+			m_IndexBuffer.Realloc(index_size);
+
+		DMA::Copy(cmd_list->VtxBuffer.Data, m_VertexBuffer, vertex_size);
+		DMA::Copy(cmd_list->IdxBuffer.Data, m_IndexBuffer, index_size);
+
+		m_CmdBuffer.BindPipeline(m_Pipeline);
+		m_CmdBuffer.BindDescriptorSet(m_Set);
+		m_CmdBuffer.BindVertexBuffer(m_VertexBuffer);
+		m_CmdBuffer.BindIndexBuffer(m_IndexBuffer, IndicesType::Uint16);
+
+		m_CmdBuffer.SetViewport(window_size.width, window_size.height, 0, 0);
+
+		m_CmdBuffer.BeginRenderPass(GraphicsContext::Get().FramebufferPass(), GraphicsContext::Get().CurrentFramebuffer());
 
 		for(const auto &cmd: cmd_list->CmdBuffer){
-
-			m_Set->UpdateTextureBinding(0, 0, m_ImGuiFont);
-			m_Set->UpdateUniformBinding(1, 0, m_UniformBuffer);
-			m_CmdBuffer.BindPipeline(m_Pipeline);
-			m_CmdBuffer.BindDescriptorSet(m_Set);
-			m_CmdBuffer.SetViewport(window_size.width, window_size.height, 0, 0);
-
 			ImVec4 clip_rect;
 			clip_rect.x = (cmd.ClipRect.x - clip_off.x) * clip_scale.x;
 			clip_rect.y = (cmd.ClipRect.y - clip_off.y) * clip_scale.y;
@@ -211,8 +222,7 @@ void ImGuiBackend::OnEndFrame(){
 				clip_rect.x = 0.0f;
 			if (clip_rect.y < 0.0f)
 				clip_rect.y = 0.0f;
-			m_CmdBuffer.BindVertexBuffer(m_VertexBuffer);
-			m_CmdBuffer.BindIndexBuffer(m_IndexBuffer, IndicesType::Uint16);
+
 
 			Vector2f offset_original(clip_rect.x, clip_rect.y);
 			Vector2f extent_original(clip_rect.z - clip_rect.x, clip_rect.w - clip_rect.y);
@@ -222,17 +232,12 @@ void ImGuiBackend::OnEndFrame(){
 
 			m_CmdBuffer.SetScissors(extent.x, extent.y, offset.x, offset.y);
 
-			m_CmdBuffer.BeginRenderPass(GraphicsContext::Get().FramebufferPass(), GraphicsContext::Get().CurrentFramebuffer());
-				m_CmdBuffer.DrawIndexed(cmd.ElemCount, cmd.IdxOffset);
-			m_CmdBuffer.EndRenderPass();
-
-			GraphicsContext::Get().ExecuteCmdBuffer(m_CmdBuffer);
-			m_CmdBuffer.Reset();
+			m_CmdBuffer.DrawIndexed(cmd.ElemCount, cmd.IdxOffset);
 		}
+		m_CmdBuffer.EndRenderPass();
 
-
-		m_VertexBuffer.Delete();
-		m_IndexBuffer.Delete();
+		GraphicsContext::Get().ExecuteCmdBuffer(m_CmdBuffer);
+		m_CmdBuffer.Reset();
 	}
 
 	ImGuiIO &io = ImGui::GetIO();
@@ -272,6 +277,8 @@ void ImGuiBackend::OnEvent(const Event &e){
 
 void ImGuiBackend::OnFinalize(){
 	m_UniformBuffer.Delete();
+	m_VertexBuffer.Delete();
+	m_IndexBuffer.Delete();
 
 	m_DescriptorSetPool->FreeSet(m_Set);
 
