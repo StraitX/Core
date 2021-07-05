@@ -59,10 +59,6 @@ BatchRenderer2D::BatchRenderer2D(const RenderPass *pass):
 	m_SetLayout(s_Bindings),
     m_Pass(pass)
 {
-	//XXX set projection matrix based on framebuffer size
-    auto size = WindowSystem::Window().Size();
-    m_WindowSize = {size.width, size.height};
-    
     m_VertexShader = Shader::New(Shader::Type::Vertex, Shader::Lang::GLSL, (const u8*)s_VertexShaderSources, String::Length(s_VertexShaderSources));
     m_FragmentShader = Shader::New(Shader::Type::Fragment, Shader::Lang::GLSL, (const u8*)s_FragmentShaderSources, String::Length(s_FragmentShaderSources));
 
@@ -107,15 +103,6 @@ BatchRenderer2D::BatchRenderer2D(const RenderPass *pass):
     m_IndexBuffer.New(m_StagingIndex.Size(), GPUMemoryType::DynamicVRAM, GPUBuffer::IndexBuffer | GPUBuffer::TransferDestination);
     m_UniformBuffer.New(m_StagingUniform.Size(), GPUMemoryType::DynamicVRAM, GPUBuffer::UniformBuffer | GPUBuffer::TransferDestination);
 
-    m_Uniform->u_Projection = {
-        {2.f/size.width, 0.f,             0.f, 0.f},
-        {0.f,            2.f/size.height, 0.f, 0.f},
-        {0.f,            0.f,             1.f, 0.f},
-        {0.f,            0.f,             0.f, 1.f}
-    };
-
-    DMA::Copy(m_StagingUniform, m_UniformBuffer);
-
 	m_SetPool = DescriptorSetPool::New(&m_SetLayout, 1);
 
 	m_Set = m_SetPool->AllocateSet();
@@ -144,12 +131,19 @@ void BatchRenderer2D::BeginScene(const Framebuffer *framebuffer, Vector2i camera
     m_DrawCallsCount = 0;
     m_QuadsCount = 0;
 
-    BeginBatch();
-
 	m_WindowSize = framebuffer->Size();
 
+	m_Uniform->u_Projection = {
+        {2.f/m_WindowSize.x, 0.f,                0.f, 0.f},
+        {0.f,                2.f/m_WindowSize.y, 0.f, 0.f},
+        {0.f,                0.f,                1.f, 0.f},
+        {0.f,                0.f,                0.f, 1.f}
+    };
+
+    BeginBatch();
 	m_CmdBuffer.SetViewport(m_WindowSize.x, m_WindowSize.y, 0, 0);
 	m_CmdBuffer.SetScissors(m_WindowSize.x, m_WindowSize.y, 0, 0);
+	m_CmdBuffer.CopyCPUToGPUBuffer(m_StagingUniform, m_UniformBuffer, m_UniformBuffer.Size());
 }
 
 void BatchRenderer2D::EndScene(){
