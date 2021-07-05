@@ -57,6 +57,8 @@ public:
 
 	virtual void SwapBuffers() = 0;
 
+	virtual void ResizeSwapchain(u32 width, u32 height) = 0;
+
 	virtual const Framebuffer *CurrentFramebuffer() = 0;
 
 	virtual const RenderPass *FramebufferPass() = 0;

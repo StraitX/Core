@@ -150,6 +150,9 @@ void Engine::ProcessEvent(const Event &e){
 	if(e.Type == EventType::WindowClose)
 		Stop();
 
+	if(e.Type == EventType::WindowResized)
+		GraphicsContext::Get().ResizeSwapchain(e.WindowResized.x, e.WindowResized.y);
+
 	m_Application->OnEvent(e);
 	SubsystemsManager::ProcessEvent(e);
 }

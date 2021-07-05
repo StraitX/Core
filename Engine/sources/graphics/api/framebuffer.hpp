@@ -25,19 +25,18 @@ public:
         NewProc    New    = nullptr;
         DeleteProc Delete = nullptr;
     };
-private:
+protected:
     static VTable s_VTable;
 
     const RenderPass *m_Pass;
-    Vector2u m_Size;
 
     friend class GraphicsAPILoader;
 public:
-    Framebuffer(const RenderPass *pass, Vector2u size);
+    Framebuffer(const RenderPass *pass);
 
     virtual ~Framebuffer() = default;
 
-    Vector2u Size()const;
+    virtual Vector2u Size()const = 0;
 
     const RenderPass *Pass()const;
 
@@ -47,14 +46,9 @@ public:
 
 };
 
-SX_INLINE Framebuffer::Framebuffer(const RenderPass *pass, Vector2u size):
-    m_Pass(pass),
-    m_Size(size)
+SX_INLINE Framebuffer::Framebuffer(const RenderPass *pass):
+    m_Pass(pass)
 {}
-
-SX_INLINE Vector2u Framebuffer::Size()const{
-    return m_Size;
-}
 
 SX_INLINE const RenderPass *Framebuffer::Pass()const{
     return m_Pass;
