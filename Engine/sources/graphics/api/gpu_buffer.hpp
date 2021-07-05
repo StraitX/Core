@@ -63,6 +63,8 @@ public:
 
     void Delete();
 
+	void Realloc(u32 new_size);
+
     GPUResourceHandle Handle()const;
 
     GPUResourceHandle Memory()const;
@@ -106,6 +108,12 @@ SX_INLINE void GPUBuffer::New(u32 size, GPUMemoryType mem_type, UsageType usage)
 SX_INLINE void GPUBuffer::Delete(){
     s_VTable.Delete(*this);
     SetZero();
+}
+
+SX_INLINE void GPUBuffer::Realloc(u32 new_size){
+    SX_CORE_ASSERT(!IsEmpty(), "GPUBuffer: Realloc() should be called on non-empty object");
+	s_VTable.Delete(*this);
+	s_VTable.New(*this, new_size, m_MemoryType, m_Usage);
 }
 
 SX_INLINE GPUResourceHandle GPUBuffer::Handle()const{

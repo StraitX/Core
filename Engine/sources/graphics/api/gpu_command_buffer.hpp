@@ -47,7 +47,7 @@ struct GPUCmdCopyCPUToGPUBuffer{
 };
 
 struct GPUCmdChangeTextureLayout{
-	Texture *Texture;
+	class Texture *Texture;
 	TextureLayout OldLayout;
 	TextureLayout NewLayout;
 };
