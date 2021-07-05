@@ -5,10 +5,9 @@
 
 namespace GL{
 
-class FramebufferImpl: public Framebuffer{
-private:
-    u32 m_Handle;
-public:
+struct FramebufferImpl: public Framebuffer{
+    u32 Handle;
+	Vector2u AttachmentsSize;
 
     FramebufferImpl(u32 handle, const RenderPass *const pass, const FramebufferProperties &props);
 
@@ -18,7 +17,7 @@ public:
     
     void Bind()const;
 
-	u32 Handle()const;
+	virtual Vector2u Size()const override;
 
     static Framebuffer *NewImpl(const RenderPass *const pass, const FramebufferProperties &props);
 

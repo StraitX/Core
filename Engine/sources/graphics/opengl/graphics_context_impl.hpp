@@ -37,6 +37,8 @@ public:
 
 	virtual void SwapBuffers()override;
 
+	virtual void ResizeSwapchain(u32 width, u32 height)override;
+
 	virtual const Framebuffer *CurrentFramebuffer()override;
 
 	virtual const RenderPass *FramebufferPass()override;

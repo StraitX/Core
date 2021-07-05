@@ -224,7 +224,7 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 			s32 current_framebuffer_handle = 0;
 			glGetIntegerv(GL_FRAMEBUFFER_BINDING, &current_framebuffer_handle);
 
-			u32 target_framebuffer_handle = target_framebuffer->Handle();
+			u32 target_framebuffer_handle = target_framebuffer->Handle;
 
 			target_framebuffer->Bind();
 
@@ -246,7 +246,7 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 			s32 current_framebuffer_handle = 0;
 			glGetIntegerv(GL_FRAMEBUFFER_BINDING, &current_framebuffer_handle);
 
-			u32 target_framebuffer_handle = target_framebuffer->Handle();
+			u32 target_framebuffer_handle = target_framebuffer->Handle;
 
 			if(target_framebuffer_handle != current_framebuffer_handle)
 				glBindFramebuffer(GL_FRAMEBUFFER, target_framebuffer_handle);
@@ -275,6 +275,10 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 
 void GraphicsContextImpl::SwapBuffers(){
 	m_OpenGLContext.SwapBuffers();	
+}
+void GraphicsContextImpl::ResizeSwapchain(u32 width, u32 height){
+	m_DefaultFramebuffer->AttachmentsSize.x = width;
+	m_DefaultFramebuffer->AttachmentsSize.y = height;
 }
 
 const Framebuffer *GraphicsContextImpl::CurrentFramebuffer(){
