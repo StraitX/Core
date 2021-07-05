@@ -10,8 +10,6 @@
 
 namespace Vk{
 
-constexpr VkColorSpaceKHR DesiredColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
-
 static bool IsSupported(VkPhysicalDevice dev, VkSurfaceKHR surface, VkFormat format, VkColorSpaceKHR color_space){
     u32 count = 0;
     vkGetPhysicalDeviceSurfaceFormatsKHR(dev, surface, &count, nullptr);
@@ -53,7 +51,6 @@ static RenderPassProperties GetFramebufferProperties(){
 
 
 Swapchain::Swapchain(const PlatformWindow &window):
-    m_Colorspace(DesiredColorSpace),
     m_ImagesCount(s_MaxFramebuffers),
     m_FramebufferPass(GetFramebufferProperties()),
     m_TargetQueueFamily(QueueFamily::Graphics),
@@ -116,10 +113,6 @@ Swapchain::Swapchain(const PlatformWindow &window):
 	DMAImpl::ChangeGPUTextureLayoutImpl(m_DepthAttachment, TextureLayout::DepthStencilAttachmentOptimal);
 
     InitializeFramebuffers(m_Format);
-
-    // First Acquire is synched
-    vkAcquireNextImageKHR(GPU::Get().Handle(), m_Handle, 0, VK_NULL_HANDLE, m_AcquireFence.Handle, &m_CurrentImage);
-    m_AcquireFence.WaitAndReset();
 }
 
 Swapchain::~Swapchain(){
@@ -171,14 +164,14 @@ void Swapchain::FinalizeFramebuffers(){
     }
 }
 
-void Swapchain::PresentCurrent(VkSemaphore wait_semaphore){
+void Swapchain::PresentCurrent(Span<VkSemaphore> wait_semaphore){
     VkResult result;
 
     VkPresentInfoKHR info;
     info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
     info.pNext = nullptr;
-    info.waitSemaphoreCount = 1;
-    info.pWaitSemaphores = &wait_semaphore;
+    info.waitSemaphoreCount = wait_semaphore.Size();
+    info.pWaitSemaphores = wait_semaphore.Pointer();
     info.swapchainCount = 1;
     info.pSwapchains = &m_Handle;
     info.pImageIndices = &m_CurrentImage;

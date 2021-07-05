@@ -9,7 +9,8 @@
 namespace Vk{
 
 FramebufferImpl::FramebufferImpl(const RenderPass *const pass, const FramebufferProperties &props):
-    Framebuffer(pass, props.Size)
+    Framebuffer(pass),
+	m_Size(props.Size)
 {
     auto *attachments = (VkImageView *)alloca(props.Attachments.Size() * sizeof(VkImageView));
 

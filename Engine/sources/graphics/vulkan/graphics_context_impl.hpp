@@ -46,7 +46,8 @@ private:
 
 	RawVar<Vk::CommandBuffer> m_CommandBuffer;
 
-	RawVar<Vk::Fence> m_SignalFence;
+	RawVar<Vk::Fence> m_PrevOpFence;
+
 public:
 	static GraphicsContextImpl s_Instance;
 public:
@@ -57,6 +58,8 @@ public:
 	virtual void ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer)override;
 
 	virtual void SwapBuffers()override;
+
+	virtual void ResizeSwapchain(u32 width, u32 height)override;
 
 	virtual const Framebuffer *CurrentFramebuffer()override;
 

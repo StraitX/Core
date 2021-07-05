@@ -11,6 +11,7 @@ class FramebufferImpl: public Framebuffer{
 private:
     VkFramebuffer m_Handle = VK_NULL_HANDLE;
     PushArray<const Texture2D *, MaxAttachmentsCount> m_Attachments;
+	Vector2u m_Size;
 public:
     FramebufferImpl(const RenderPass *const pass, const FramebufferProperties &props);
 
@@ -19,6 +20,10 @@ public:
     VkFramebuffer Handle()const{
         return m_Handle;
     }
+
+	virtual Vector2u Size()const override{
+		return m_Size;
+	}
 
     const PushArray<const Texture2D *, MaxAttachmentsCount> &Attachments()const{
         return m_Attachments;

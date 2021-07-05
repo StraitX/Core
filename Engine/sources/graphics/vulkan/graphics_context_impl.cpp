@@ -9,6 +9,8 @@
 #include "graphics/vulkan/descriptor_set_impl.hpp"
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
 
+#include "platform/window_system.hpp"
+
 namespace Vk{
 
 void CommandBufferExectuionState::Bind(const GraphicsPipeline *pipeline){
@@ -126,21 +128,23 @@ Result GraphicsContextImpl::Initialize(const PlatformWindow &window){
 
 	m_CommandBuffer.Construct(QueueFamily::Graphics);
 
-	m_SignalFence.Construct();
+	m_PrevOpFence.Construct();
 
-	m_Swapchain->AcquireNext(m_PresentSemaphore->Handle, m_SignalFence->Handle);
+	m_Swapchain->AcquireNext(m_PresentSemaphore->Handle, m_PrevOpFence->Handle);
+
 	return Result::Success;
 }
 
 void GraphicsContextImpl::Finalize(){
-	m_SignalFence->Wait();
-	
-	m_SignalFence.Destruct();
+	m_PrevOpFence->WaitAndReset();
 
 	m_CommandBuffer.Destruct();
 
-	m_PresentSemaphore.Destruct();
+	m_Swapchain->PresentCurrent({&m_PresentSemaphore->Handle, 1});
 	m_Swapchain.Destruct();
+
+	m_PresentSemaphore.Destruct();
+	m_PrevOpFence.Destruct();
 
 	DMAImpl::Finalize();
 
@@ -151,8 +155,6 @@ void GraphicsContextImpl::Finalize(){
 }
 
 void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
-	m_SignalFence->WaitAndReset();
-
 	VkCommandBuffer VkCmdBuffer = m_CommandBuffer->Handle();
 
 	CommandBufferExectuionState state;
@@ -343,15 +345,28 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 
 	m_CommandBuffer->End();
 
-	m_CommandBuffer->Submit({}, {}, m_SignalFence->Handle);
+	m_PrevOpFence->WaitAndReset();
 
-	m_SignalFence->Wait();
+	m_CommandBuffer->Submit({}, {}, m_PrevOpFence->Handle);
+
+	m_PrevOpFence->Wait();
 }
 
 void GraphicsContextImpl::SwapBuffers(){
-	m_SignalFence->WaitAndReset();
-	m_Swapchain->PresentCurrent(m_PresentSemaphore->Handle);
-	m_Swapchain->AcquireNext(m_PresentSemaphore->Handle, m_SignalFence->Handle);
+	m_PrevOpFence->WaitAndReset();
+
+	m_Swapchain->PresentCurrent({&m_PresentSemaphore->Handle, 1});
+	m_Swapchain->AcquireNext(m_PresentSemaphore->Handle, m_PrevOpFence->Handle);
+}
+
+void GraphicsContextImpl::ResizeSwapchain(u32 width, u32 height){
+	m_PrevOpFence->WaitAndReset();
+
+	m_Swapchain->PresentCurrent({&m_PresentSemaphore->Handle, 1});
+	m_Swapchain.Destruct();
+
+	m_Swapchain.Construct(WindowSystem::Window());
+	m_Swapchain->AcquireNext(m_PresentSemaphore->Handle, m_PrevOpFence->Handle);
 }
 
 const Framebuffer *GraphicsContextImpl::CurrentFramebuffer(){

@@ -23,8 +23,7 @@ private:
     VkColorSpaceKHR m_Colorspace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
 
     VkSwapchainKHR m_Handle = VK_NULL_HANDLE; 
-
-    Vk::Fence m_AcquireFence;
+	
     u32 m_CurrentImage = 0;
     u32 m_ImagesCount = 0;
 
@@ -50,7 +49,7 @@ private:
 
     void FinalizeFramebuffers();
 public:
-    void PresentCurrent(VkSemaphore wait_semaphore);
+    void PresentCurrent(Span<VkSemaphore> wait_semaphore);
 
     void AcquireNext(VkSemaphore signal_semaphore, VkFence signal_fence);
 };
