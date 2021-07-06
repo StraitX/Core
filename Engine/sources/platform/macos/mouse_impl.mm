@@ -12,23 +12,23 @@ bool Mouse::IsButtonPressed(Mouse::Button button){
     return MacOS::SXApplication::s_MouseState[button];
 }
 
-Point2s Mouse::GlobalPosition(){
+Point2i Mouse::GlobalPosition(){
     CGEventRef event = CGEventCreate(NULL);
     CGPoint cursor = CGEventGetLocation(event);
     CFRelease(event);
 
     auto screen_size = WindowSystem::MainScreen().Size();
-    return {(s32)cursor.x, screen_size.height - (s32)cursor.y};
+    return {(i32)cursor.x, screen_size.height - (i32)cursor.y};
 }
 
-Point2s Mouse::RelativePosition(const PlatformWindow &window){
+Point2i Mouse::RelativePosition(const PlatformWindow &window){
     auto global_pos = GlobalPosition();
     SXWindow *win_impl = static_cast<MacOS::SXWindowWrapper*>(window.Impl().Handle)->Handle;
-    Point2s win_pos = {(s32)[win_impl frame].origin.x, (s32)[win_impl frame].origin.y};
+    Point2i win_pos = {(i32)[win_impl frame].origin.x, (i32)[win_impl frame].origin.y};
     return {global_pos.x - win_pos.x, global_pos.y - win_pos.y};
 }
 
-void Mouse::SetGlobalPosition(const Point2s &position){
+void Mouse::SetGlobalPosition(const Point2i &position){
     CGWarpMouseCursorPosition(CGPointMake(position.x, position.y));
 }
 

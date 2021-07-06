@@ -56,13 +56,13 @@ size_t File::Write(const void *buffer, size_t size){
     return write(m_FD, buffer, size);
 }
 
-s64 File::Seek(SeekPos position, s64 offset){
+i64 File::Seek(SeekPos position, i64 offset){
     assert(m_FD != InvalidFD);
 
     return lseek64(m_FD, offset, position);
 }
 
-s64 File::Tell(){
+i64 File::Tell(){
     assert(m_FD != InvalidFD);
 
     return lseek64(m_FD, 0, SEEK_CUR);

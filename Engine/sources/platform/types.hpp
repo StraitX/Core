@@ -5,20 +5,20 @@
 #include "platform/arch.hpp"
 #include <cstddef>
 
-typedef signed   char s8;
+typedef signed   char i8;
 typedef unsigned char u8;
 
-typedef signed   short s16;
+typedef signed   short i16;
 typedef unsigned short u16;
 
-typedef signed   int s32;
+typedef signed   int i32;
 typedef unsigned int u32;
 
 #if defined(SX_COMPILER_MSVC)
-    typedef signed   __int64 s64;
+    typedef signed   __int64 i64;
     typedef unsigned __int64 u64;
 #else
-    typedef signed   long long s64;
+    typedef signed   long long i64;
     typedef unsigned long long u64;
 #endif
 
@@ -26,9 +26,9 @@ typedef unsigned int u32;
 typedef std::size_t size_t;
 
 #if defined(SX_ARCH_X86)
-    typedef s32 offset_t;
+    typedef i32 offset_t;
 #elif defined(SX_ARCH_X86_64)
-    typedef s64 offset_t;
+    typedef i64 offset_t;
 #else
     #error "Your architecture does not support size_t type"
 #endif
@@ -50,16 +50,16 @@ constexpr size_t lengthof(T (&)[N]){
     return N;
 }
 
-struct Point2s{
-    s32 x;
-    s32 y;
+struct Point2i{
+    i32 x;
+    i32 y;
 };
 template <typename T>
 struct Size2{
     T width;
     T height;
 };
-typedef Size2<s32> Size2i;
+typedef Size2<i32> Size2i;
 typedef Size2<u32> Size2u;
 typedef Size2<float> Size2f;
 

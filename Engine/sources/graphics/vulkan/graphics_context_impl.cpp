@@ -49,7 +49,7 @@ void CommandBufferExectuionState::CheckAndUpdateViewportAndScissor(VkCommandBuff
 	}
 }
 
-void CommandBufferExectuionState::UpdateViewport(s32 x, s32 y, u32 width, u32 height){
+void CommandBufferExectuionState::UpdateViewport(i32 x, i32 y, u32 width, u32 height){
 	PendingViewport.x = x;
 	PendingViewport.y = y;
 	PendingViewport.width = width;
@@ -60,7 +60,7 @@ void CommandBufferExectuionState::UpdateViewport(s32 x, s32 y, u32 width, u32 he
 	ShouldSetViewport = true;
 }
 
-void CommandBufferExectuionState::UpdateScissor(s32 x, s32 y, u32 width, u32 height){
+void CommandBufferExectuionState::UpdateScissor(i32 x, i32 y, u32 width, u32 height){
 	PendingScissor.offset.x = x;
 	PendingScissor.offset.y = y;
 	PendingScissor.extent.width = width;

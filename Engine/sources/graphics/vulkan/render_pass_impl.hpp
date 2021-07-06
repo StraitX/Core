@@ -11,7 +11,7 @@ class RenderPassImpl: public RenderPass{
 private:
     VkRenderPass m_Handle = VK_NULL_HANDLE;
     PushArray<AttachmentDescription, MaxAttachmentsCount> m_Attachments;
-    s32 m_DepthIndex = InvalidIndex;
+    i32 m_DepthIndex = InvalidIndex;
 public:
     RenderPassImpl(const RenderPassProperties &props);
 

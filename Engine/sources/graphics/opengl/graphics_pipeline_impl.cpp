@@ -242,12 +242,12 @@ ShaderBindingType GetUniformStatementType(Span<const char> statement){
     return ShaderBindingType::UniformBuffer;
 }
 
-void ReplaceVersionTo(const char *&in_sources, char *&out_sources, s32 version_number){
+void ReplaceVersionTo(const char *&in_sources, char *&out_sources, i32 version_number){
     const char *version = String::Ignore(String::Find(in_sources, "#version") + 8, ' ');
     Memory::Copy(in_sources, out_sources, version - in_sources);
     out_sources += version - in_sources;
     in_sources = String::IgnoreUntil(version, ' ');
-    out_sources = out_sources + BufferPrinter<s32>::Print(version_number, out_sources);
+    out_sources = out_sources + BufferPrinter<i32>::Print(version_number, out_sources);
 }
 
 void Copy(const char *end, const char *&in_sources, char *&out_sources){
@@ -484,7 +484,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
                 Memory::Copy(name, name_null, name_length);
                 name_null[name_length] = 0;
 
-                s32 *units = (s32*)alloca(VirtualBindings[binding_index].ArraySize * sizeof(s32));
+                i32 *units = (i32*)alloca(VirtualBindings[binding_index].ArraySize * sizeof(i32));
                 for(u32 i = 0; i<VirtualBindings[binding_index].ArraySize; ++i){
                     units[i] = VirtualBindings[binding_index].BaseGLBinding + i;
                 }

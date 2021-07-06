@@ -259,7 +259,7 @@ void SXWindowWrapper::OnMouseWheel(u32 delta){
     EventsQueue.push(e);
 }
 
-void SXWindowWrapper::OnMouseButtonPress(Mouse::Button button, s32 x, s32 y){
+void SXWindowWrapper::OnMouseButtonPress(Mouse::Button button, i32 x, i32 y){
     Event e;
     e.Type = EventType::MouseButtonPress;
     e.MouseButtonPress.Button = button;
@@ -268,7 +268,7 @@ void SXWindowWrapper::OnMouseButtonPress(Mouse::Button button, s32 x, s32 y){
     EventsQueue.push(e);
 }
 
-void SXWindowWrapper::OnMouseButtonRelease(Mouse::Button button, s32 x, s32 y){
+void SXWindowWrapper::OnMouseButtonRelease(Mouse::Button button, i32 x, i32 y){
     Event e;
     e.Type = EventType::MouseButtonRelease;
     e.MouseButtonPress.Button = button;

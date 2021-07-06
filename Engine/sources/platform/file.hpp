@@ -45,9 +45,9 @@ public:
 
     size_t Write(const void *buffer, size_t size);
 
-    s64 Seek(SeekPos position, s64 offset);
+    i64 Seek(SeekPos position, i64 offset);
 
-    s64 Tell();
+    i64 Tell();
 
     u64 Size();
 

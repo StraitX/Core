@@ -31,7 +31,7 @@ private:
 public:
     static const Vector2f s_DefaultTextureCoords[4];
 private:
-    static constexpr s32 MaxTextures = DescriptorSetLayout::s_MaxTexturesBindings;
+    static constexpr i32 MaxTextures = DescriptorSetLayout::s_MaxTexturesBindings;
     static constexpr size_t MaxVerticesCount = 400000;
     static constexpr size_t MaxIndicesCount  = 600000;
 

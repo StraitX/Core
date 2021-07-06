@@ -2,7 +2,7 @@
 #include <errno.h>
 #include "platform/sleep.hpp"
 
-static constexpr s64 AsNanoseconds(Time time){
+static constexpr i64 AsNanoseconds(Time time){
     return time.AsMicroseconds() * 1000;
 }
 

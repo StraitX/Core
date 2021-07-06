@@ -29,9 +29,9 @@ bool Mouse::IsButtonPressed(Mouse::Button button){
     }
 }
 
-Point2s Mouse::GlobalPosition(){
+Point2i Mouse::GlobalPosition(){
     ::Window root,child;
-    Point2s choosen,global;
+    Point2i choosen,global;
     unsigned int mask;
     
     XQueryPointer(Linux::s_Display,RootWindow(Linux::s_Display,DefaultScreen(Linux::s_Display)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
@@ -41,21 +41,21 @@ Point2s Mouse::GlobalPosition(){
     return global;
 }
 
-Point2s Mouse::RelativePosition(const PlatformWindow &window){
+Point2i Mouse::RelativePosition(const PlatformWindow &window){
     ::Window root,child;
-    Point2s choosen,global;
+    Point2i choosen,global;
     unsigned int mask;
 
     XQueryPointer(Linux::s_Display,window.Impl().Handle,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
     
-	s32 window_height = (s32)window.Size().height;
+	i32 window_height = (i32)window.Size().height;
 
 	choosen.y = window_height - choosen.y;
     return choosen;
 }
 
-void Mouse::SetGlobalPosition(const Point2s &position){
-    Point2s new_position;
+void Mouse::SetGlobalPosition(const Point2i &position){
+    Point2i new_position;
     new_position.x = position.x;
     new_position.y = WindowSystem::MainScreen().Size().height - position.y;
 

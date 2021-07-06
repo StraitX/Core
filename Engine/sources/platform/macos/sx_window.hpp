@@ -75,9 +75,9 @@ struct SXWindowWrapper{
     
     void OnMouseWheel(u32 delta);
 
-    void OnMouseButtonPress(Mouse::Button button, s32 x, s32 y);
+    void OnMouseButtonPress(Mouse::Button button, i32 x, i32 y);
 
-    void OnMouseButtonRelease(Mouse::Button button, s32 x, s32 y);
+    void OnMouseButtonRelease(Mouse::Button button, i32 x, i32 y);
 
     void OnKeyPress(Key key);
 

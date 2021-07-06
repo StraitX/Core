@@ -231,7 +231,7 @@ constexpr Vector4<T> &operator/=(Vector4<T> &left, const Vector4<T> &right){
     return left;
 }
 
-typedef Vector4<s32> Vector4i;
+typedef Vector4<i32> Vector4i;
 typedef Vector4<u32> Vector4u;
 typedef Vector4<float> Vector4f;
 typedef Vector4<double> Vector4d;

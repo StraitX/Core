@@ -21,8 +21,8 @@ private:
     const char *m_VersionString   = nullptr;
     GPUVendor m_Vendor = GPUVendor::Unknown;
 
-    s32 m_MaxTextureUnits = 0;
-    s32 m_MaxUniformBufferBindings = 0;
+    i32 m_MaxTextureUnits = 0;
+    i32 m_MaxUniformBufferBindings = 0;
 
 	RawVar<GL::RenderPassImpl> m_FramebufferPass;
     RawVar<GL::FramebufferImpl> m_DefaultFramebuffer;
