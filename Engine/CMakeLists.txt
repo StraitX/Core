@@ -154,8 +154,8 @@ elseif(STRAITX_PLATFORM_WINDOWS)
     set(SOURCES_PLATFORM_D
        ${SOURCES_DIR}/platform/windows/entry_point.cpp
 
-       ${SOURCES_DIR}/platform/windows/mouse.cpp
-       ${SOURCES_DIR}/platform/windows/keyboard.cpp
+       ${SOURCES_DIR}/platform/windows/mouse_impl.cpp
+       ${SOURCES_DIR}/platform/windows/keyboard_impl.cpp
        ${SOURCES_DIR}/platform/windows/virtual_keys.cpp
        ${SOURCES_DIR}/platform/windows/window_impl.cpp
        ${SOURCES_DIR}/platform/windows/events.cpp
