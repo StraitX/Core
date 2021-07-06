@@ -33,7 +33,7 @@ public:
 
     Result LoadFromFile(File &file, PixelFormat desired_format = PixelFormat::RGBA8);
 
-    Result SaveToFile(File &file, ImageFormat save_format);
+    Result SaveToFile(File &file, ImageFileFormat save_format);
 
     Result SaveToFile(const char *filename);
 

@@ -48,15 +48,15 @@ static void stbi_write_function(void *context, void *data, int size){
     file->Write(data, size);
 }
 
-Result ImageLoader::SaveImage(File &file, u32 width, u32 height, PixelFormat p_format, ImageFormat i_format, u8 *pixels){
+Result ImageLoader::SaveImage(File &file, u32 width, u32 height, PixelFormat p_format, ImageFileFormat i_format, u8 *pixels){
     switch (i_format) {
-    case ImageFormat::PNG:
+    case ImageFileFormat::PNG:
         return Result((bool)stbi_write_png_to_func(stbi_write_function, &file, width, height, GetPixelSize(p_format), pixels, width * GetPixelSize(p_format)));
-    case ImageFormat::JPG:
+    case ImageFileFormat::JPG:
         return Result((bool)stbi_write_jpg_to_func(stbi_write_function, &file, width, height, GetPixelSize(p_format), pixels, 100));
-    case ImageFormat::BMP:
+    case ImageFileFormat::BMP:
         return Result((bool)stbi_write_bmp_to_func(stbi_write_function, &file, width, height, GetPixelSize(p_format), pixels));
-    case ImageFormat::TGA:
+    case ImageFileFormat::TGA:
         return Result((bool)stbi_write_tga_to_func(stbi_write_function, &file, width, height, GetPixelSize(p_format), pixels));
     }
     return Result::Success;

@@ -69,12 +69,12 @@ Result Image::LoadFromFile(File &file, PixelFormat format){
     return Result::Success;
 }
 
-Result Image::SaveToFile(File &file, ImageFormat save_format){
+Result Image::SaveToFile(File &file, ImageFileFormat save_format){
     return ImageLoader::SaveImage(file, m_Width, m_Height, m_Format, save_format, m_Data);
 }
 
 Result Image::SaveToFile(const char *filename){
-    ImageFormat format;
+    ImageFileFormat format;
     {
         const char *end = String::FindLast(filename, ".");
 
@@ -88,13 +88,13 @@ Result Image::SaveToFile(const char *filename){
         String::ToLowerCase(extension);
 
         if(String::Equals(extension, "png"))
-            format = ImageFormat::PNG;
+            format = ImageFileFormat::PNG;
         else if(String::Equals(extension, "jpg") || String::Equals(extension, "jpeg"))
-            format = ImageFormat::JPG;
+            format = ImageFileFormat::JPG;
         else if(String::Equals(extension, "tga"))
-            format = ImageFormat::TGA;
+            format = ImageFileFormat::TGA;
         else if(String::Equals(extension, "bmp"))
-            format = ImageFormat::BMP;
+            format = ImageFileFormat::BMP;
         else return Result::WrongFormat;
     }
 
