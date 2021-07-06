@@ -1,20 +1,25 @@
 #import <Cocoa/Cocoa.h>
 #include "platform/window_system.hpp"
+#include "platform/macos/window_impl.hpp"
 
-Result WindowSystem::Initialize(){
+namespace MacOS{
+    WindowImpl s_Window;
+}//namespace MacOS::
+
+Result WindowSystem::Initialize(int width, int height){
 
     NSApplication *app = [NSApplication sharedApplication];
     [app setActivationPolicy: NSApplicationActivationPolicyRegular];
     [app activateIgnoringOtherApps: YES];
 
-    return ResultError(NSApp == nil);
+    return MacOS::s_Window.Open(MainScreen().Impl(), width, height);
 }
 
-Result WindowSystem::Finalize(){
-    return Result::Success;
+void WindowSystem::Finalize(){
+    MacOS::s_Window.Close();
 }
 
-Screen WindowSystem::MainScreen(){
+PlatformScreen WindowSystem::MainScreen(){
     NSScreen *screen = [NSScreen mainScreen];
 
     NSDictionary *description = [screen deviceDescription];
@@ -25,4 +30,8 @@ Screen WindowSystem::MainScreen(){
         {(s32)screen.frame.size.width, (s32)screen.frame.size.height}, 
         {float(displayPixelSize.width / displayPhysicalSize.width) * 25.4f, float(displayPixelSize.height / displayPhysicalSize.height) * 25.4f}
     );
+}
+
+PlatformWindow WindowSystem::Window(){
+    return MacOS::s_Window;
 }
