@@ -96,7 +96,20 @@ set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/dma.cpp
 )
 
-set(SOURCES_GRAPHICS_I
+if(STRAITX_SUPPORT_VULKAN)
+	message("Vulkan")
+
+	list(APPEND SOURCES_GRAPHICS_API_IMPL ${SOURCES_GRAPHICS_VULKAN})
+endif()
+
+if(STRAITX_SUPPORT_OPENGL)
+    message("OpenGL")
+
+    list(APPEND SOURCES_GRAPHICS_API_IMPL ${SOURCES_GRAPHICS_OPENGL})
+endif()
+
+set(SOURCES_GRAPHICS
+	${SOURCES_GRAPHICS_API_IMPL}
     ${SOURCES_GRAPHICS_API}
     ${SOURCES_DIR}/graphics/color.cpp
     ${SOURCES_DIR}/graphics/image_loader.cpp
@@ -145,11 +158,6 @@ if(STRAITX_PLATFORM_LINUX)
         ${THIRDPARTY_DIR}/vulkan-sdk/linux/lib
     )
 
-    set(SOURCES_GRAPHICS_D
-        ${SOURCES_GRAPHICS_VULKAN}
-        ${SOURCES_GRAPHICS_OPENGL}
-    )
-
 elseif(STRAITX_PLATFORM_WINDOWS)
     set(SOURCES_PLATFORM_D
        ${SOURCES_DIR}/platform/windows/entry_point.cpp
@@ -180,11 +188,6 @@ elseif(STRAITX_PLATFORM_WINDOWS)
 
     set(LIBS_DIRS_PLATFORM
         ${THIRDPARTY_DIR}/vulkan-sdk/windows/lib
-    )
-
-    set(SOURCES_GRAPHICS_D
-        ${SOURCES_GRAPHICS_VULKAN}
-        ${SOURCES_GRAPHICS_OPENGL}
     )
 
 elseif(STRAITX_PLATFORM_MACOS)
@@ -218,9 +221,6 @@ elseif(STRAITX_PLATFORM_MACOS)
 
     )
 
-    set(SOURCES_GRAPHICS_D
-        ${SOURCES_GRAPHICS_OPENGL}
-    )
 else()
     message(FATAL_ERROR "Your platform is not supported yet")
 endif()
@@ -228,8 +228,12 @@ endif()
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/glad)
 add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/stb_image)
-add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/glsl2spv)
 add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/imgui)
+
+if(STRAITX_SUPPORT_VULKAN)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/glsl2spv)
+endif()
+
 
 set(INCLUDES
     ${SOURCES_DIR}
@@ -251,8 +255,7 @@ add_library(StraitX STATIC
     ${SOURCES_PLATFORM_D} 
     ${SOURCES_PLATFORM_I}
     ${SOURCES_CORE}
-    ${SOURCES_GRAPHICS_I}
-    ${SOURCES_GRAPHICS_D}
+    ${SOURCES_GRAPHICS}
     ${SOURCES_MAIN}
 )
 target_include_directories(StraitX PUBLIC 
