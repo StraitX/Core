@@ -44,6 +44,10 @@ public:
 
     const RenderPass *FramebufferPass()const;
 
+	Vector2u Size()const{
+		return m_Size;
+	}
+
 private:
     void InitializeFramebuffers(VkFormat images_format);
 

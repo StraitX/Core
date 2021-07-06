@@ -355,18 +355,29 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 void GraphicsContextImpl::SwapBuffers(){
 	m_PrevOpFence->WaitAndReset();
 
-	m_Swapchain->PresentCurrent({&m_PresentSemaphore->Handle, 1});
-	m_Swapchain->AcquireNext(m_PresentSemaphore->Handle, m_PrevOpFence->Handle);
+	if(m_Swapchain->Size() != Vector2u(WindowSystem::Window().Size())){
+
+		m_Swapchain.Destruct();
+		m_Swapchain.Construct(WindowSystem::Window());
+		//recreate semaphore to reset it
+		m_PresentSemaphore.Destruct();
+		m_PresentSemaphore.Construct();
+
+		m_Swapchain->AcquireNext(m_PresentSemaphore->Handle, m_PrevOpFence->Handle);
+	}else{
+		m_Swapchain->PresentCurrent({&m_PresentSemaphore->Handle, 1});
+		m_Swapchain->AcquireNext(m_PresentSemaphore->Handle, m_PrevOpFence->Handle);
+	}
 }
 
 void GraphicsContextImpl::ResizeSwapchain(u32 width, u32 height){
-	m_PrevOpFence->WaitAndReset();
+	(void)width;
+	(void)height;
 
-	m_Swapchain->PresentCurrent({&m_PresentSemaphore->Handle, 1});
-	m_Swapchain.Destruct();
-
-	m_Swapchain.Construct(WindowSystem::Window());
-	m_Swapchain->AcquireNext(m_PresentSemaphore->Handle, m_PrevOpFence->Handle);
+	// according to the vulkan spec,  window size must be the same as swapchain image size
+	// during vkQueuePresentKHR() and vkAcquireNextImageKHR() calls
+	// so we have to resize swapchain before swapbuffers,
+	// now this function serers as nop on Vulkan
 }
 
 const Framebuffer *GraphicsContextImpl::CurrentFramebuffer(){
