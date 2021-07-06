@@ -27,6 +27,8 @@ public:
 
     void SwapBuffers();
 
+	void Resize(u32 width, u32 height);
+
 };
 
 } // namespace Linux::

@@ -93,4 +93,10 @@ void OpenGLContextImpl::SwapBuffers(){
     glXSwapBuffers(s_Display, m_WindowHandle);
 }
 
+void OpenGLContextImpl::Resize(u32 width, u32 height){
+	(void)width;
+	(void)height;
+}
+
+
 } // namespace Linux::
