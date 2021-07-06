@@ -202,6 +202,7 @@ elseif(STRAITX_PLATFORM_MACOS)
         ${SOURCES_DIR}/platform/macos/clock_impl.cpp
         ${SOURCES_DIR}/platform/unix/sleep_impl.cpp
         ${SOURCES_DIR}/platform/unix/file_impl.cpp
+        ${SOURCES_DIR}/platform/unix/memory_impl.cpp
     )
 
     set(LIBS_PLATFORM
