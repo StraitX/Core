@@ -189,6 +189,8 @@ elseif(STRAITX_PLATFORM_WINDOWS)
 
 elseif(STRAITX_PLATFORM_MACOS)
     set(SOURCES_PLATFORM_D
+		${SOURCES_DIR}/platform/macos/entry_point.cpp
+
         ${SOURCES_DIR}/platform/macos/sx_application.mm
         ${SOURCES_DIR}/platform/macos/keys.cpp
         ${SOURCES_DIR}/platform/macos/keyboard_impl.cpp
