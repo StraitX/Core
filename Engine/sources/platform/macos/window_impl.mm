@@ -3,11 +3,6 @@
 
 namespace MacOS{
 
-WindowImpl::WindowImpl(WindowImpl &&other){
-    Handle = other.Handle;
-    other.Handle = nullptr;
-}
-
 Result WindowImpl::Open(const ScreenImpl &screen, int width, int height){
     auto *handle = new SXWindowWrapper();
     Handle = handle;
@@ -35,6 +30,10 @@ bool WindowImpl::PollEvent(Event &event){
 
 Size2u WindowImpl::Size()const{
     return static_cast<SXWindowWrapper*>(Handle)->Size();
+}
+
+void WindowImpl::SetSize(u32 width, u32 height){
+    static_cast<SXWindowWrapper*>(Handle)->SetSize(width, height);
 }
 
 }//namespace MacOS::

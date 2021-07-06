@@ -12,8 +12,6 @@ struct WindowImpl{
 
     WindowImpl() = default;
 
-    WindowImpl(WindowImpl &&other);
-
     Result Open(const ScreenImpl &screen, int width, int height);
 
     Result Close();
@@ -25,6 +23,8 @@ struct WindowImpl{
     bool PollEvent(Event &event);
 
     Size2u Size()const;
+
+    void SetSize(u32 width, u32 height);
 };
 
 }//namespace MacOS::

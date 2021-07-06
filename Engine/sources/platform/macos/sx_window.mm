@@ -225,7 +225,11 @@ Size2u SXWindowWrapper::Size()const{
 }
 
 void SXWindowWrapper::SetSize(u32 width, u32 height){
+    NSRect frame = [Handle frame];
+    frame.size.width = width;
+    frame.size.height = height;
 
+    [Handle setFrame: frame display: YES animate: YES];
 }
 
 void SXWindowWrapper::OnWindowClose(){

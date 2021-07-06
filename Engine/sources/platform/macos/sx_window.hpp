@@ -65,6 +65,8 @@ struct SXWindowWrapper{
 
     Size2u Size()const;
 
+    void SetSize(u32 width, u32 height);
+
     void OnWindowClose();
 
     void OnWindowResized(u32 width, u32 height);
