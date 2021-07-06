@@ -18,37 +18,37 @@
 -(void)mouseDown:(NSEvent *)event{
     (void)event;
     NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonPress(Mouse::Left, pos.x, event.window.contentView.frame.size.height - pos.y);
+    m_Wrapper->OnMouseButtonPress(Mouse::Left, pos.x, pos.y);
 }
 
 -(void)mouseUp:(NSEvent *)event{
     (void)event;
     NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonRelease(Mouse::Left,pos.x, event.window.contentView.frame.size.height - pos.y);
+    m_Wrapper->OnMouseButtonRelease(Mouse::Left,pos.x, pos.y);
 }
 
 -(void)rightMouseDown:(NSEvent *)event{
     (void)event;
     NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonPress(Mouse::Right,pos.x, event.window.contentView.frame.size.height - pos.y);
+    m_Wrapper->OnMouseButtonPress(Mouse::Right,pos.x, pos.y);
 }
 
 -(void)rightMouseUp:(NSEvent *)event{
     (void)event;
     NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonRelease(Mouse::Right,pos.x, event.window.contentView.frame.size.height - pos.y);
+    m_Wrapper->OnMouseButtonRelease(Mouse::Right,pos.x, pos.y);
 }
 
 -(void)otherMouseDown:(NSEvent *)event{
     (void)event;
     NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonPress(Mouse::Middle,pos.x, event.window.contentView.frame.size.height - pos.y);
+    m_Wrapper->OnMouseButtonPress(Mouse::Middle,pos.x, pos.y);
 }
 
 -(void)otherMouseUp:(NSEvent *)event{
     (void)event;
     NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonRelease(Mouse::Middle,pos.x, event.window.contentView.frame.size.height - pos.y);
+    m_Wrapper->OnMouseButtonRelease(Mouse::Middle,pos.x, pos.y);
 }
 
 -(BOOL)canBecomeKeyView{
@@ -191,6 +191,7 @@ view_fail:
 deleagete_fail:
     [Handle close];
 window_fail:
+    Handle = nil;
     return Result::Failure;
 }
 
@@ -199,7 +200,7 @@ Result SXWindowWrapper::Close(){
 }
 
 bool SXWindowWrapper::IsOpen()const{
-    return true;
+    return Handle != nil;
 }
 
 void SXWindowWrapper::SetTitle(const char *title){
@@ -221,6 +222,10 @@ bool SXWindowWrapper::PollEvent(Event &event){
 
 Size2u SXWindowWrapper::Size()const{
     return {(u32)Handle.contentView.frame.size.width, (u32)Handle.contentView.frame.size.height};
+}
+
+void SXWindowWrapper::SetSize(u32 width, u32 height){
+
 }
 
 void SXWindowWrapper::OnWindowClose(){
