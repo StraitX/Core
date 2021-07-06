@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include "platform/windows/window_impl.hpp"
 #include "platform/windows/events.hpp"
+#include "platform/clock.hpp"
 #include "platform/platform_runtime.hpp"
 
 using namespace Windows;
@@ -16,13 +17,19 @@ int main(int argc, char **argv){
 	Result init = PlatformRuntime::Initialize();
 
 	if(init){
-        do {
+        float dt = 1.f / 60;
+        Clock frame_clock;
+        for(;;){
+            frame_clock.Restart();
             MSG message = { 0 };
             while (::PeekMessage(&message, (HWND)s_Window.Handle(), 0, 0, PM_REMOVE)) {
                 TranslateMessage(&message);
                 DispatchMessage(&message);
             }
-        } while (PlatformRuntime::Tick(0.016));
+            if (!PlatformRuntime::Tick(dt))
+                break;
+            dt = frame_clock.GetElapsedTime().AsSeconds();
+        } 
 	}
 
 	PlatformRuntime::Finalize();
