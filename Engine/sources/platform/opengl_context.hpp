@@ -36,6 +36,8 @@ public:
     Result MakeCurrent();
 
     void SwapBuffers();
+    // by spec OpenGL framebuffer should resize automaticaly, but MacOS does not seem to care
+    void Resize(u32 width, u32 height);
 };
 
 SX_INLINE Result OpenGLContext::Create(const PlatformWindow &window, const Version &version){
@@ -60,6 +62,10 @@ SX_INLINE Result OpenGLContext::MakeCurrent(){
 
 SX_INLINE void OpenGLContext::SwapBuffers(){
     m_Impl.SwapBuffers();
+}
+
+SX_INLINE void OpenGLContext::Resize(u32 width, u32 height){
+    m_Impl.Resize(width, height);
 }
 
 #endif // STRAITX_OPENGL_CONTEXT_HPP

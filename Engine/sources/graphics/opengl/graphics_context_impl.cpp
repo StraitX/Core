@@ -277,6 +277,7 @@ void GraphicsContextImpl::SwapBuffers(){
 	m_OpenGLContext.SwapBuffers();	
 }
 void GraphicsContextImpl::ResizeSwapchain(u32 width, u32 height){
+	m_OpenGLContext.Resize(width, height);
 	m_DefaultFramebuffer->AttachmentsSize.x = width;
 	m_DefaultFramebuffer->AttachmentsSize.y = height;
 }

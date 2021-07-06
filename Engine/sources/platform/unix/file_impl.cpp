@@ -4,6 +4,12 @@
 #include <errno.h>
 #include <assert.h>
 #include "platform/file.hpp"
+#include "platform/platform_detection.hpp"
+
+#if defined(SX_PLATFORM_MACOS)
+    //XXX: MacOS does not support lseek64
+    #define lseek64(fd, offset, whence) (off_t)lseek(fd, (off_t)offset, whence)
+#endif
 
 constexpr u32 FileCreatePermission = 0664;
 

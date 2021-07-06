@@ -20,11 +20,11 @@ namespace Mouse{
 
     bool IsButtonPressed(Button button);
 
-    Point GlobalPosition();
+    Point2s GlobalPosition();
 
-    Point RelativePosition(const PlatformWindow &window);
+    Point2s RelativePosition(const PlatformWindow &window);
 
-    void SetGlobalPosition(const Point &position);
+    void SetGlobalPosition(const Point2s &position);
 
     void SetVisible(bool is_visible);
 

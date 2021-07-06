@@ -8,7 +8,7 @@ bool Mouse::IsButtonPressed(Mouse::Button button) {
     return (GetAsyncKeyState(Windows::MouseButtonToVirtualKey(button)) & 0x8000) != 0;
 }
 
-Point Mouse::GlobalPosition() {
+Point2s Mouse::GlobalPosition() {
     POINT position = { 0 };
     GetCursorPos(&position);
 
@@ -18,7 +18,7 @@ Point Mouse::GlobalPosition() {
     return {position.x,position.y};
 }
 
-Point Mouse::RelativePosition(const PlatformWindow &window){
+Point2s Mouse::RelativePosition(const PlatformWindow &window){
     // TODO: Make sure it works
     POINT position = { 0 };
     GetCursorPos(&position);
@@ -28,9 +28,9 @@ Point Mouse::RelativePosition(const PlatformWindow &window){
     return {position.x, position.y};
 }
 
-void Mouse::SetGlobalPosition(const Point &position){
+void Mouse::SetGlobalPosition(const Point2s &position){
     
-    Point new_position;
+    Point2s new_position;
     new_position.x = position.x;
     new_position.y = WindowSystem::MainScreen().Size().height - position.y;
 

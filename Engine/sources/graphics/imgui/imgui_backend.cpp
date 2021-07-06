@@ -25,13 +25,13 @@ layout(location = 2) in vec4 aColor;
 
 layout(binding = 1) uniform uPushConstant { vec2 uScale; vec2 uTranslate; } pc;
 
-out gl_PerVertex { vec4 gl_Position; };
-layout(location = 0) out struct { vec4 Color; vec2 UV; } Out;
+layout(location = 0)out vec4 Color;
+layout(location = 1)out vec2 UV;
 
 void main()
 {
-	Out.Color = aColor;
-    Out.UV = aUV;
+	Color = aColor;
+    UV = aUV;
     gl_Position = vec4(aPos * pc.uScale + pc.uTranslate, 0, 1);
 	gl_Position.y *= -1.0;
 }
@@ -41,10 +41,13 @@ const char *s_FragmentShader = R"(
 #version 440 core
 layout(location = 0) out vec4 fColor;
 layout(binding = 0) uniform sampler2D sTexture;
-layout(location = 0) in struct { vec4 Color; vec2 UV; } In;
+
+layout(location = 0)in vec4 Color;
+layout(location = 1)in vec2 UV;
+
 void main()
 {
-    fColor = In.Color * texture(sTexture, In.UV.st);
+    fColor = Color * texture(sTexture, UV.st);
 }
 )";
 

@@ -50,7 +50,7 @@ constexpr size_t lengthof(T (&)[N]){
     return N;
 }
 
-struct Point{
+struct Point2s{
     s32 x;
     s32 y;
 };
