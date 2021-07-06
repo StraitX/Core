@@ -29,6 +29,8 @@ public:
     Result MakeCurrent();
 
     void SwapBuffers();
+
+	void Resize(u32 width, u32 height);
 private:
     size_t ChooseBestFormat(int formats[], unsigned int count);
 };  

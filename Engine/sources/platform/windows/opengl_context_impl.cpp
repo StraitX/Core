@@ -100,6 +100,11 @@ void OpenGLContextImpl::SwapBuffers() {
 	::SwapBuffers(m_DeviceContext);
 }
 
+void OpenGLContextImpl::Resize(u32 width, u32 height){
+	(void)width;
+	(void)height;
+}
+
 size_t OpenGLContextImpl::ChooseBestFormat(int formats[], unsigned int count) {
 	size_t best = 0;
 	float best_score = std::numeric_limits<float>::min();
