@@ -9,7 +9,7 @@ namespace MacOS{
 struct OpenGLContextImpl{
     void *Handle = nullptr;
 
-    Result Create(WindowImpl &window, const Version &version);
+    Result Create(const WindowImpl &window, const Version &version);
 
     Result CreateDummy();
 
@@ -20,6 +20,8 @@ struct OpenGLContextImpl{
     Result MakeCurrent();
 
     void SwapBuffers();
+
+    void Resize(u32 width, u32 height);
 };
 
 }//namespace MacOS::

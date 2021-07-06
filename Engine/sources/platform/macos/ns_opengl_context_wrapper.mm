@@ -76,4 +76,8 @@ void NSOpenGLContextWrapper::SwapBuffers(){
     [Handle flushBuffer];
 }
 
+void NSOpenGLContextWrapper::Resize(u32 width, u32 height){
+    [Handle update];
+}
+
 }//namespace MacOS::

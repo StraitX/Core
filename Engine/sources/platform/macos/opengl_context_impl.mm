@@ -4,7 +4,7 @@
 
 namespace MacOS{
 
-Result OpenGLContextImpl::Create(WindowImpl &window, const Version &version){
+Result OpenGLContextImpl::Create(const WindowImpl &window, const Version &version){
     auto *ctx = new NSOpenGLContextWrapper();
     Handle = ctx;
     return ctx->Create(window, version);
@@ -34,6 +34,10 @@ Result OpenGLContextImpl::MakeCurrent(){
 
 void OpenGLContextImpl::SwapBuffers(){
     static_cast<NSOpenGLContextWrapper*>(Handle)->SwapBuffers();
+}
+
+void OpenGLContextImpl::Resize(u32 width, u32 height){
+    static_cast<NSOpenGLContextWrapper*>(Handle)->Resize(width, height);
 }
 
 }//namespace MacOS::

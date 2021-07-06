@@ -23,6 +23,8 @@ struct NSOpenGLContextWrapper{
     Result MakeCurrent();
 
     void SwapBuffers();
+
+    void Resize(u32 width, u32 height);
 };
 
 }//namespace MacOS::
