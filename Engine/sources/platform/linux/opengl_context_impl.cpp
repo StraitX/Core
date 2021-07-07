@@ -52,25 +52,7 @@ Result OpenGLContextImpl::Create(const WindowImpl &window, const Version &versio
     return Result::Success;
 }
 
-Result OpenGLContextImpl::CreateDummy(){
-    WindowImpl window;
-    window.FBConfig = WindowImpl::PickBestFBConfig(DefaultScreen(s_Display));
-
-    if(window.FBConfig == nullptr)
-        return Result::Unsupported;
-
-    XVisualInfo *visualInfo = glXGetVisualFromFBConfig(s_Display, (GLXFBConfig)window.FBConfig);
-
-    if(visualInfo == nullptr)
-        return Result::Failure;
-    
-    XSetWindowAttributes attributes;
-    attributes.background_pixel = BlackPixel(s_Display,DefaultScreen(s_Display));
-    attributes.colormap = XCreateColormap(s_Display, RootWindow(s_Display,DefaultScreen(s_Display)), visualInfo->visual, AllocNone);
-
-    window.Handle = XCreateWindow(s_Display, RootWindow(s_Display,DefaultScreen(s_Display)), 0, 0, 1, 1, 0, visualInfo->depth,
-        InputOutput, visualInfo->visual, CWBackPixel | CWColormap, &attributes);
-
+Result OpenGLContextImpl::CreateDummy(const WindowImpl &window){
     return Create(window, {4, 6, 0});
 }
 
@@ -81,7 +63,6 @@ void OpenGLContextImpl::Destroy(){
 }
 
 void OpenGLContextImpl::DestroyDummy(){
-    XDestroyWindow(s_Display, m_WindowHandle);
     Destroy();
 }
 
