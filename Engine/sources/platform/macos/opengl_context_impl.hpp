@@ -11,7 +11,7 @@ struct OpenGLContextImpl{
 
     Result Create(const WindowImpl &window, const Version &version);
 
-    Result CreateLegacy();
+    Result CreateLegacy(const WindowImpl &window);
 
     void Destroy();
 

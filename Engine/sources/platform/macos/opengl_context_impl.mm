@@ -10,7 +10,8 @@ Result OpenGLContextImpl::Create(const WindowImpl &window, const Version &versio
     return ctx->Create(window, version);
 }
 
-Result OpenGLContextImpl::CreateLegacy(){
+Result OpenGLContextImpl::CreateLegacy(const WindowImpl &window){
+    (void)window;
     auto *ctx = new NSOpenGLContextWrapper();
     Handle = ctx;
     return ctx->CreateLegacy();
