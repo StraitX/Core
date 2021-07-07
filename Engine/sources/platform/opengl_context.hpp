@@ -27,7 +27,7 @@ public:
 
     Result Create(const PlatformWindow &window, const Version &version);
 
-    Result CreateDummy();
+    Result CreateDummy(const PlatformWindow &window);
 
     void Destroy();
 
@@ -44,8 +44,8 @@ SX_INLINE Result OpenGLContext::Create(const PlatformWindow &window, const Versi
     return m_Impl.Create(window.Impl(), version);
 }
 
-SX_INLINE Result OpenGLContext::CreateDummy(){
-    return m_Impl.CreateDummy();
+SX_INLINE Result OpenGLContext::CreateDummy(const PlatformWindow &window){
+    return m_Impl.CreateDummy(window.Impl());
 }
 
 SX_INLINE void OpenGLContext::DestroyDummy(){
