@@ -11,11 +11,11 @@ struct OpenGLContextImpl{
 
     Result Create(const WindowImpl &window, const Version &version);
 
-    Result CreateDummy();
+    Result CreateLegacy();
 
     void Destroy();
 
-    void DestroyDummy();
+    void DestroyLegacy();
 
     Result MakeCurrent();
 

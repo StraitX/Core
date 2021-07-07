@@ -52,7 +52,7 @@ Result OpenGLContextImpl::Create(const WindowImpl &window, const Version &versio
     return Result::Success;
 }
 
-Result OpenGLContextImpl::CreateDummy(const WindowImpl &window){
+Result OpenGLContextImpl::CreateLegacy(const WindowImpl &window){
     return Create(window, {4, 6, 0});
 }
 
@@ -62,7 +62,7 @@ void OpenGLContextImpl::Destroy(){
     m_Handle = nullptr;
 }
 
-void OpenGLContextImpl::DestroyDummy(){
+void OpenGLContextImpl::DestroyLegacy(){
     Destroy();
 }
 

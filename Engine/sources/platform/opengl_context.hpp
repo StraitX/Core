@@ -27,11 +27,11 @@ public:
 
     Result Create(const PlatformWindow &window, const Version &version);
 
-    Result CreateDummy(const PlatformWindow &window);
+    Result CreateLegacy(const PlatformWindow &window);
 
     void Destroy();
 
-    void DestroyDummy();
+    void DestroyLegacy();
 
     Result MakeCurrent();
 
@@ -44,12 +44,12 @@ SX_INLINE Result OpenGLContext::Create(const PlatformWindow &window, const Versi
     return m_Impl.Create(window.Impl(), version);
 }
 
-SX_INLINE Result OpenGLContext::CreateDummy(const PlatformWindow &window){
-    return m_Impl.CreateDummy(window.Impl());
+SX_INLINE Result OpenGLContext::CreateLegacy(const PlatformWindow &window){
+    return m_Impl.CreateLegacy(window.Impl());
 }
 
-SX_INLINE void OpenGLContext::DestroyDummy(){
-    m_Impl.DestroyDummy();
+SX_INLINE void OpenGLContext::DestroyLegacy(){
+    m_Impl.DestroyLegacy();
 }
 
 SX_INLINE void OpenGLContext::Destroy(){

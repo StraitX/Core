@@ -35,7 +35,7 @@ Result NSOpenGLContextWrapper::Create(const WindowImpl &window, const Version &v
     return Result::Success;
 }
 
-Result NSOpenGLContextWrapper::CreateDummy(){
+Result NSOpenGLContextWrapper::CreateLegacy(){
     NSOpenGLPixelFormatAttribute attrs[] = {
         NSOpenGLPFADoubleBuffer,
         NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
@@ -59,10 +59,10 @@ Result NSOpenGLContextWrapper::CreateDummy(){
 }
 
 void NSOpenGLContextWrapper::Destroy(){
-    DestroyDummy();
+    DestroyLegacy();
 }
 
-void NSOpenGLContextWrapper::DestroyDummy(){
+void NSOpenGLContextWrapper::DestroyLegacy(){
     [Handle release];
     [Format release];
 }

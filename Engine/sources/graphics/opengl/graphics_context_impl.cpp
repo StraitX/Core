@@ -60,16 +60,16 @@ static RenderPassProperties GetFramebufferProperties(){
 }
 
 Result GraphicsContextImpl::Initialize(const PlatformWindow &window){
-	if (!m_OpenGLContext.CreateDummy(window)) {
+	if (!m_OpenGLContext.CreateLegacy(window)) {
         LogError("OpenGLLoader: Can't create dummy OpenGL context");
         return Result::Unsupported;
     }
     if(!(m_OpenGLContext.MakeCurrent() && OpenGLLoader::Load())){
         LogError("OpenGLLoader: Can't load OpenGL Procedures");
-        m_OpenGLContext.DestroyDummy();
+        m_OpenGLContext.DestroyLegacy();
         return Result::Unsupported;
     }
-    m_OpenGLContext.DestroyDummy();
+    m_OpenGLContext.DestroyLegacy();
 
     if(m_OpenGLContext.Create(window, OpenGLVersion) != Result::Success)
         return Result::Failure;

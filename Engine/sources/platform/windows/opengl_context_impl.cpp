@@ -45,7 +45,7 @@ Result OpenGLContextImpl::Create(const WindowImpl& window, const Version& versio
 	return ResultError(m_Handle == nullptr);
 }
 
-Result OpenGLContextImpl::CreateDummy(const WindowImpl &window) {
+Result OpenGLContextImpl::CreateLegacy(const WindowImpl &window) {
 	m_WindowHandle = window.Handle();
 	m_DeviceContext = GetDC(m_WindowHandle);
 
@@ -85,7 +85,7 @@ void OpenGLContextImpl::Destroy() {
 	wglDeleteContext(m_Handle);
 }
 
-void OpenGLContextImpl::DestroyDummy() {
+void OpenGLContextImpl::DestroyLegacy() {
 	Destroy();
 }
 

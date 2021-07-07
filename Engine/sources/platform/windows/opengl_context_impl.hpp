@@ -20,11 +20,11 @@ public:
 
     Result Create(const WindowImpl& window, const Version& version);
 
-    Result CreateDummy(const WindowImpl &window);
+    Result CreateLegacy(const WindowImpl &window);
 
     void Destroy();
 
-    void DestroyDummy();
+    void DestroyLegacy();
 
     Result MakeCurrent();
 

@@ -10,21 +10,21 @@ Result OpenGLContextImpl::Create(const WindowImpl &window, const Version &versio
     return ctx->Create(window, version);
 }
 
-Result OpenGLContextImpl::CreateDummy(){
+Result OpenGLContextImpl::CreateLegacy(){
     auto *ctx = new NSOpenGLContextWrapper();
     Handle = ctx;
-    return ctx->CreateDummy();
+    return ctx->CreateLegacy();
 }
 
 void OpenGLContextImpl::Destroy(){
     auto *ctx = static_cast<NSOpenGLContextWrapper*>(Handle);
-    ctx->DestroyDummy();
+    ctx->DestroyLegacy();
     delete ctx;
 }
 
-void OpenGLContextImpl::DestroyDummy(){
+void OpenGLContextImpl::DestroyLegacy(){
     auto *ctx = static_cast<NSOpenGLContextWrapper*>(Handle);
-    ctx->DestroyDummy();
+    ctx->DestroyLegacy();
     delete ctx;
 }
 
