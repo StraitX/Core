@@ -45,9 +45,8 @@ Result OpenGLContextImpl::Create(const WindowImpl& window, const Version& versio
 	return ResultError(m_Handle == nullptr);
 }
 
-Result OpenGLContextImpl::CreateDummy() {
-	m_WindowHandle = CreateWindow(windowClassName, "", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1, 1, 0, 0, (HINSTANCE)GetModuleHandle(nullptr), 0);
-	
+Result OpenGLContextImpl::CreateDummy(const WindowImpl &window) {
+	m_WindowHandle = window.Handle();
 	m_DeviceContext = GetDC(m_WindowHandle);
 
 	PIXELFORMATDESCRIPTOR pfd =
@@ -83,12 +82,11 @@ Result OpenGLContextImpl::CreateDummy() {
 
 void OpenGLContextImpl::Destroy() {
 	ReleaseDC(m_WindowHandle, m_DeviceContext);
+	wglDeleteContext(m_Handle);
 }
 
 void OpenGLContextImpl::DestroyDummy() {
-	wglDeleteContext(m_Handle);
-	ReleaseDC(m_WindowHandle, m_DeviceContext);
-	DestroyWindow(m_WindowHandle);
+	Destroy();
 }
 
 Result OpenGLContextImpl::MakeCurrent() {
