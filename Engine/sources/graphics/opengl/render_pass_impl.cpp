@@ -13,12 +13,11 @@ RenderPassImpl::~RenderPassImpl(){
 }
 
 RenderPass *RenderPassImpl::NewImpl(const RenderPassProperties &props){
-    return new(Memory::Alloc(sizeof(GL::RenderPassImpl))) GL::RenderPassImpl(props);
+    return new GL::RenderPassImpl(props);
 }
 
 void RenderPassImpl::DeleteImpl(RenderPass *pass){
-    pass->~RenderPass();
-    Memory::Free(pass);
+    delete pass;
 }
 
 }//namespace GL::

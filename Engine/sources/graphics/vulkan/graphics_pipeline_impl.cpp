@@ -280,12 +280,11 @@ bool GraphicsPipelineImpl::IsValid()const{
 }
 
 GraphicsPipeline * GraphicsPipelineImpl::NewImpl(const GraphicsPipelineProperties &props){
-    return new(Memory::Alloc(sizeof(GraphicsPipelineImpl))) GraphicsPipelineImpl(props);
+    return new GraphicsPipelineImpl(props);
 }
 
 void GraphicsPipelineImpl::DeleteImpl(GraphicsPipeline *pipeline){
-    pipeline->~GraphicsPipeline();
-    Memory::Free(pipeline);
+    delete pipeline;
 }
 
 

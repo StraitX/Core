@@ -71,12 +71,11 @@ RenderPassImpl::~RenderPassImpl(){
 }
 
 RenderPass *RenderPassImpl::NewImpl(const RenderPassProperties &props){
-    return new(Memory::Alloc(sizeof(Vk::RenderPassImpl))) Vk::RenderPassImpl(props);
+    return new Vk::RenderPassImpl(props);
 }
     
 void RenderPassImpl::DeleteImpl(RenderPass *pass){
-    pass->~RenderPass();
-    Memory::Free(pass);
+    delete pass;
 }
 
 }//namespace Vk::

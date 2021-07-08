@@ -127,21 +127,19 @@ DescriptorSet *DescriptorSetPoolImpl::AllocateSet(){
 	SX_VK_ASSERT(vkAllocateDescriptorSets(GPU::Get().Handle(), &info, &set), "Vk: Can't allocate descriptor set");
 
 	//TODO: use pool allocator
-	return new(Memory::Alloc(sizeof(DescriptorSetImpl))) DescriptorSetImpl(set);
+	return new DescriptorSetImpl(set);
 }
 
 void DescriptorSetPoolImpl::FreeSet(DescriptorSet *set){
-	set->~DescriptorSet();
-	Memory::Free(set);
+	delete set;
 }
 
 DescriptorSetPool *DescriptorSetPoolImpl::NewImpl(const DescriptorSetLayout *layout, size_t pool_size){
-	return new(Memory::Alloc(sizeof(DescriptorSetPoolImpl))) DescriptorSetPoolImpl(layout, pool_size);
+	return new DescriptorSetPoolImpl(layout, pool_size);
 }
 
 void DescriptorSetPoolImpl::DeleteImpl(DescriptorSetPool *pool){
-	pool->~DescriptorSetPool();
-	Memory::Free(pool);
+	delete pool;
 }
 
 }//namespace Vk::

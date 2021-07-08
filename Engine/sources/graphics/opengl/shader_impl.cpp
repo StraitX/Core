@@ -45,12 +45,11 @@ GLenum ShaderImpl::GetStage(Type type) {
 }
 
 Shader *ShaderImpl::NewImpl(Type type, Lang lang, const u8 *sources, u32 length){
-    return new (Memory::Alloc(sizeof(ShaderImpl))) ShaderImpl(type, lang, sources, length);
+    return new ShaderImpl(type, lang, sources, length);
 }
 
 void ShaderImpl::DeleteImpl(Shader *shader){
-    shader->~Shader();
-    Memory::Free(shader);
+    delete shader;
 }
 
 }//namespace GL::

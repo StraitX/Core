@@ -551,12 +551,11 @@ bool GraphicsPipelineImpl::SupportsVertexAttribFormat()const{
 }
 
 GraphicsPipeline * GraphicsPipelineImpl::NewImpl(const GraphicsPipelineProperties &props){
-    return new(Memory::Alloc(sizeof(GL::GraphicsPipelineImpl))) GL::GraphicsPipelineImpl(props);
+    return new GL::GraphicsPipelineImpl(props);
 }
 
 void GraphicsPipelineImpl::DeleteImpl(GraphicsPipeline *pipeline){
-    pipeline->~GraphicsPipeline();
-    Memory::Free(pipeline);
+    delete pipeline;
 }
 
 

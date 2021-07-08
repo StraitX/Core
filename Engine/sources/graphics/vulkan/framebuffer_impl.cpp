@@ -41,12 +41,11 @@ FramebufferImpl::~FramebufferImpl(){
 }
 
 Framebuffer *FramebufferImpl::NewImpl(const RenderPass *const pass, const FramebufferProperties &props){
-    return new(Memory::Alloc(sizeof(Vk::FramebufferImpl))) Vk::FramebufferImpl(pass, props);
+    return new Vk::FramebufferImpl(pass, props);
 }
 
 void FramebufferImpl::DeleteImpl(Framebuffer *framebuffer){
-    framebuffer->~Framebuffer();
-    Memory::Free(framebuffer);
+    delete framebuffer;
 }
 
 }//namespace Vk::

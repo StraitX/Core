@@ -48,22 +48,20 @@ DescriptorSetPoolImpl::DescriptorSetPoolImpl(const DescriptorSetLayout *layout, 
 
 DescriptorSet *DescriptorSetPoolImpl::AllocateSet(){
 	//XXX: use pool allocator
-	return new (Memory::Alloc(sizeof(DescriptorSetImpl))) DescriptorSetImpl();
+	return new DescriptorSetImpl();
 }
 
 void DescriptorSetPoolImpl::FreeSet(DescriptorSet *set){
 	//XXX: use pool allocator
-	set->~DescriptorSet();
-	Memory::Free(set);
+	delete set;
 }
 
 DescriptorSetPool *DescriptorSetPoolImpl::NewImpl(const DescriptorSetLayout *layout, size_t pool_size){
-	return new (Memory::Alloc(sizeof(DescriptorSetPoolImpl))) DescriptorSetPoolImpl(layout, pool_size);
+	return new DescriptorSetPoolImpl(layout, pool_size);
 }
 
 void DescriptorSetPoolImpl::DeleteImpl(DescriptorSetPool *pool){
-	pool->~DescriptorSetPool();
-	Memory::Free(pool);
+	delete pool;
 }
 
 }//namespace GL::

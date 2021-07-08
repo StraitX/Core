@@ -39,12 +39,11 @@ Vector2u FramebufferImpl::Size()const{
 }
 
 Framebuffer *FramebufferImpl::NewImpl(const RenderPass *const pass, const FramebufferProperties &props){
-    return new(Memory::Alloc(sizeof(GL::FramebufferImpl))) GL::FramebufferImpl(pass, props);
+    return new GL::FramebufferImpl(pass, props);
 }
 
 void FramebufferImpl::DeleteImpl(Framebuffer *framebuffer){
-    framebuffer->~Framebuffer();
-    Memory::Free(framebuffer);
+    delete framebuffer;
 }
 
 }//namespace GL::
