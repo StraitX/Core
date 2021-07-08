@@ -6,8 +6,7 @@
 #include "platform/file.hpp"
 #include "platform/platform_detection.hpp"
 
-#if defined(SX_PLATFORM_MACOS)
-    //XXX: MacOS does not support lseek64
+#if defined(SX_ARCH_64_BIT)
     #define lseek64(fd, offset, whence) (off_t)lseek(fd, (off_t)offset, whence)
 	#define stat64 stat
 	#define fstat64 fstat
