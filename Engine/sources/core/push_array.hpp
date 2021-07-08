@@ -11,8 +11,8 @@
 template<typename T_Type, size_t T_Capacity>
 class PushArray{
 public:
-    typedef T_Type * iterator;
-    typedef const T_Type * const_iterator;
+    typedef T_Type * Iterator;
+    typedef const T_Type * ConstIterator;
 private:
     // we don't want c++ to construct objects for us
     size_t m_Size = 0;
@@ -49,9 +49,9 @@ public:
 
     void Clear();
 
-    iterator Find(const T_Type &element);
+    Iterator Find(const T_Type &element);
 
-    const_iterator Find(const T_Type &element)const;
+    ConstIterator Find(const T_Type &element)const;
 
     template<typename ...T_Args>
     T_Type &Emplace(T_Args&&...args);
@@ -74,13 +74,13 @@ public:
 
     const T_Type *Data()const;
 
-    iterator begin();
+    Iterator begin();
 
-    iterator end();
+    Iterator end();
 
-    const_iterator begin()const;
+    ConstIterator begin()const;
 
-    const_iterator end()const;
+    ConstIterator end()const;
 };
 
 template<typename T_Type, size_t T_Capacity>
@@ -133,12 +133,12 @@ void PushArray<T_Type, T_Capacity>::Clear(){
 }
 
 template<typename T_Type, size_t T_Capacity>
-typename PushArray<T_Type, T_Capacity>::iterator PushArray<T_Type, T_Capacity>::Find(const T_Type &element){
-    return const_cast<iterator>(const_cast<const PushArray<T_Type, T_Capacity>*>(this)->Find(element));
+typename PushArray<T_Type, T_Capacity>::Iterator PushArray<T_Type, T_Capacity>::Find(const T_Type &element){
+    return const_cast<Iterator>(const_cast<const PushArray<T_Type, T_Capacity>*>(this)->Find(element));
 }
 
 template<typename T_Type, size_t T_Capacity>
-typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capacity>::Find(const T_Type &element)const{
+typename PushArray<T_Type, T_Capacity>::ConstIterator PushArray<T_Type, T_Capacity>::Find(const T_Type &element)const{
     auto it = begin();
     for(;it != end(); ++it){
         if(*it == element)
@@ -210,22 +210,22 @@ const T_Type *PushArray<T_Type, T_Capacity>::Data()const{
 }
 
 template<typename T_Type, size_t T_Capacity>
-typename PushArray<T_Type, T_Capacity>::iterator PushArray<T_Type, T_Capacity>::begin(){
+typename PushArray<T_Type, T_Capacity>::Iterator PushArray<T_Type, T_Capacity>::begin(){
     return Data();
 }
 
 template<typename T_Type, size_t T_Capacity>
-typename PushArray<T_Type, T_Capacity>::iterator PushArray<T_Type, T_Capacity>::end(){
+typename PushArray<T_Type, T_Capacity>::Iterator PushArray<T_Type, T_Capacity>::end(){
     return begin()+Size();
 }
 
 template<typename T_Type, size_t T_Capacity>
-typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capacity>::begin()const{
+typename PushArray<T_Type, T_Capacity>::ConstIterator PushArray<T_Type, T_Capacity>::begin()const{
     return Data();
 }
 
 template<typename T_Type, size_t T_Capacity>
-typename PushArray<T_Type, T_Capacity>::const_iterator PushArray<T_Type, T_Capacity>::end()const{
+typename PushArray<T_Type, T_Capacity>::ConstIterator PushArray<T_Type, T_Capacity>::end()const{
     return begin()+Size();
 }
 

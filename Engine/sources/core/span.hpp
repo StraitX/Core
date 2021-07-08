@@ -7,6 +7,8 @@
 // it has no idea about allocations, object lifetime and stuff
 template <typename T_Type, typename T_Size = size_t>
 class Span{
+public:
+    typedef T_Type* Iterator;
 private:
     T_Type *m_Pointer = nullptr;
     T_Size m_Size = 0;
@@ -29,11 +31,9 @@ public:
 
     T_Type *Pointer()const;
     
-    typedef T_Type* iterator;
+    Iterator begin()const;
 
-    iterator begin()const;
-
-    iterator end()const;
+    Iterator end()const;
 };
 
 template <typename T_Type, typename T_Size>
@@ -80,12 +80,12 @@ T_Type *Span<T_Type, T_Size>::Pointer()const{
 }
 
 template <typename T_Type, typename T_Size>
-typename Span<T_Type, T_Size>::iterator Span<T_Type, T_Size>::begin()const{
+typename Span<T_Type, T_Size>::Iterator Span<T_Type, T_Size>::begin()const{
     return Pointer();
 }
 
 template <typename T_Type, typename T_Size>
-typename Span<T_Type, T_Size>::iterator Span<T_Type, T_Size>::end()const{
+typename Span<T_Type, T_Size>::Iterator Span<T_Type, T_Size>::end()const{
     return Pointer()+Size();
 }
 
