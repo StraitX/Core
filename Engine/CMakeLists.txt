@@ -247,9 +247,11 @@ set(INCLUDES
 set(LIBS_ENGINE
     glad
     stb_image
-    glsl2spv
 	imgui
 )
+if(STRAITX_SUPPORT_VULKAN)
+	list(APPEND LIBS_ENGINE glsl2spv)
+endif()
 
 add_library(StraitX STATIC 
     ${SOURCES_PLATFORM_D} 
