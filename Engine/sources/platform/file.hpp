@@ -6,7 +6,6 @@
 #include "platform/result.hpp"
 #include "platform/noncopyable.hpp"
 
-//TODO take care about size_t and 64 32 bit OS
 class File: public NonCopyable{
 public:
     enum class Mode{

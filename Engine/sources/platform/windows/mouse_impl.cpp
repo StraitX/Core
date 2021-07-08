@@ -19,7 +19,6 @@ Point2i Mouse::GlobalPosition() {
 }
 
 Point2i Mouse::RelativePosition(const PlatformWindow &window){
-    // TODO: Make sure it works
     POINT position = { 0 };
     GetCursorPos(&position);
     ScreenToClient(window.Impl().Handle(),&position);
