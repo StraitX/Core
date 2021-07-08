@@ -12,7 +12,7 @@
 	#elif defined(__aarch64__)
 		#define SX_ARCH_ARM_64
     #else
-        #error "Your arch is not supported yet"
+        #error "Your processor architecture is not supported yet"
     #endif
 #elif defined(SX_COMPILER_MSVC)
     #if defined(_M_IX86)
@@ -20,7 +20,7 @@
     #elif defined(_M_X64)
         #define SX_ARCH_X86_64
     #else
-        #error "Your arch is not supported yet"
+        #error "Your processor architecture is not supported yet"
     #endif
 #endif
 
@@ -30,12 +30,16 @@
     #define SX_ARCH_NAME "x86_64"
 #elif defined(SX_ARCH_ARM_64)
 	#define SX_ARCH_NAME "arm64"
+#else
+	#error "Unknown processor architecture name"
 #endif
 
 #if defined(SX_ARCH_X86)
 	#define SX_ARCH_32_BIT
 #elif defined(SX_ARCH_X86_64) || defined(SX_ARCH_ARM_64)
 	#define SX_ARCH_64_BIT
+#else
+	#error "Unknown processor architecture bit"
 #endif
 
 
