@@ -5,6 +5,7 @@
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
 #include "graphics/vulkan/framebuffer_impl.hpp"
+#include "graphics/vulkan/debug.hpp"
 
 namespace Vk{
 
@@ -32,7 +33,7 @@ FramebufferImpl::FramebufferImpl(const RenderPass *const pass, const Framebuffer
     info.height = props.Size.y;
     info.layers = 1;
 
-    SX_CORE_CALL_ASSERT(vkCreateFramebuffer(GPU::Get().Handle(), &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: FramebufferImpl: Can't create Framebuffer");
+    SX_VK_ASSERT(vkCreateFramebuffer(GPU::Get().Handle(), &info, nullptr, &m_Handle), "Vk: FramebufferImpl: Can't create Framebuffer");
 }
 
 FramebufferImpl::~FramebufferImpl(){

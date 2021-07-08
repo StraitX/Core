@@ -5,6 +5,7 @@
 #include "graphics/vulkan/render_pass_impl.hpp"
 #include "graphics/vulkan/texture_impl.hpp"
 #include "graphics/vulkan/gpu.hpp"
+#include "graphics/vulkan/debug.hpp"
 
 namespace Vk{
 
@@ -62,7 +63,7 @@ RenderPassImpl::RenderPassImpl(const RenderPassProperties &props){
     info.dependencyCount = 0;
     info.pDependencies = nullptr;
 
-    SX_CORE_CALL_ASSERT(vkCreateRenderPass(GPU::Get().Handle(), &info, nullptr, &m_Handle),VK_SUCCESS, "Vk: RenderPassImpl: Creation failed");
+    SX_VK_ASSERT(vkCreateRenderPass(GPU::Get().Handle(), &info, nullptr, &m_Handle), "Vk: RenderPassImpl: Creation failed");
 }
 
 RenderPassImpl::~RenderPassImpl(){

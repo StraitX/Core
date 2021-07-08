@@ -1,5 +1,6 @@
 #include "graphics/vulkan/fence.hpp"
 #include "graphics/vulkan/gpu.hpp"
+#include "graphics/vulkan/debug.hpp"
 
 namespace Vk{
 
@@ -8,7 +9,7 @@ Fence::Fence(){
     info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     info.pNext = nullptr;
     info.flags = 0;
-    SX_CORE_CALL_ASSERT(vkCreateFence(GPU::Get().Handle(), &info, nullptr, &Handle), VK_SUCCESS, "Vk: Fence: Creation Failed");
+    SX_VK_ASSERT(vkCreateFence(GPU::Get().Handle(), &info, nullptr, &Handle), "Vk: Fence: Creation Failed");
 }
 
 Fence::~Fence(){

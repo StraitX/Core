@@ -2,6 +2,7 @@
 #include "graphics/vulkan/gpu_buffer_impl.hpp"
 #include "graphics/vulkan/memory_allocator.hpp"
 #include "graphics/vulkan/gpu.hpp"
+#include "graphics/vulkan/debug.hpp"
 
 namespace Vk{
 
@@ -32,14 +33,14 @@ void GPUBufferImpl::Create(u32 size, GPUMemoryType mem_type, GPUBuffer::UsageTyp
     info.size                   = Size;
     info.usage                  = usage;
 
-    SX_CORE_CALL_ASSERT(vkCreateBuffer(GPU::Get().Handle(), &info, nullptr, &Handle), VK_SUCCESS, "Vk: GPUBufferImpl: Can't create buffer");
+    SX_VK_ASSERT(vkCreateBuffer(GPU::Get().Handle(), &info, nullptr, &Handle), "Vk: GPUBufferImpl: Can't create buffer");
 
     VkMemoryRequirements req;
     vkGetBufferMemoryRequirements(GPU::Get().Handle(), Handle, &req);
 
     Memory = MemoryAllocator::Alloc(req.size, ToVkMemoryType(mem_type));
 
-    SX_CORE_CALL_ASSERT(vkBindBufferMemory(GPU::Get().Handle(), Handle, Memory, 0),VK_SUCCESS, "GPUBuffer: can't bind buffer's memory");
+    SX_VK_ASSERT(vkBindBufferMemory(GPU::Get().Handle(), Handle, Memory, 0), "GPUBuffer: can't bind buffer's memory");
 }
 
 void GPUBufferImpl::Destroy(){

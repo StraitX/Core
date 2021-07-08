@@ -7,6 +7,7 @@
 #include "graphics/vulkan/texture_impl.hpp"
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/dma_impl.hpp"
+#include "graphics/vulkan/debug.hpp"
 
 namespace Vk{
 
@@ -70,7 +71,7 @@ Swapchain::Swapchain(const PlatformWindow &window):
     }
     
     VkSurfaceCapabilitiesKHR capabilities;
-    SX_CORE_CALL_ASSERT(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(GPU::Get().PhysicalHandle(), m_Surface.Handle, &capabilities), VK_SUCCESS, "Vk: Swapchain: can't obtain surface sapabilites");
+    SX_VK_ASSERT(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(GPU::Get().PhysicalHandle(), m_Surface.Handle, &capabilities), "Vk: Swapchain: can't obtain surface sapabilites");
 
     if(capabilities.minImageCount > m_ImagesCount){
         LogWarn("Vk: Swapchain: System requires % framebuffers", capabilities.minImageCount);
@@ -107,7 +108,7 @@ Swapchain::Swapchain(const PlatformWindow &window):
     info.imageArrayLayers = 1;
     info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
-    SX_CORE_CALL_ASSERT(vkCreateSwapchainKHR(GPU::Get().Handle(), &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: Swapchain: Can't create a swapchain");
+    SX_VK_ASSERT(vkCreateSwapchainKHR(GPU::Get().Handle(), &info, nullptr, &m_Handle), "Vk: Swapchain: Can't create a swapchain");
 
 	m_DepthAttachment.New(m_Size.x, m_Size.y, SwapchainAttachments[1].Format, TextureUsageBits((int)TextureUsageBits::DepthStencilOptimal | (int)TextureUsageBits::TransferDst));
 	DMAImpl::ChangeGPUTextureLayoutImpl(m_DepthAttachment, TextureLayout::DepthStencilAttachmentOptimal);

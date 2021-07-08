@@ -1,5 +1,6 @@
 #include "graphics/vulkan/semaphore.hpp"
 #include "graphics/vulkan/gpu.hpp"
+#include "graphics/vulkan/debug.hpp"
 
 namespace Vk{
 
@@ -10,7 +11,7 @@ Semaphore::Semaphore()
     info.pNext = nullptr;
     info.flags = 0;
 
-    SX_CORE_CALL_ASSERT(vkCreateSemaphore(GPU::Get().Handle(), &info, nullptr, &Handle),VK_SUCCESS, "Vk: Can't create semaphore");
+    SX_VK_ASSERT(vkCreateSemaphore(GPU::Get().Handle(), &info, nullptr, &Handle), "Vk: Can't create semaphore");
 }
 
 Semaphore::~Semaphore(){

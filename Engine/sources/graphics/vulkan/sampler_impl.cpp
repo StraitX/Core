@@ -2,6 +2,7 @@
 #include "core/assert.hpp"
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/sampler_impl.hpp"
+#include "graphics/vulkan/debug.hpp"
 
 namespace Vk{
 
@@ -40,7 +41,7 @@ void SamplerImpl::NewImpl(Sampler &sampler, SamplerProperties props){
     info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
     info.unnormalizedCoordinates = VK_FALSE;
 
-    SX_CORE_CALL_ASSERT(vkCreateSampler(GPU::Get().Handle(), &info, nullptr, &handle),VK_SUCCESS,"Vk: SamplerImpl: Can't create sampler");
+    SX_VK_ASSERT(vkCreateSampler(GPU::Get().Handle(), &info, nullptr, &handle), "Vk: SamplerImpl: Can't create sampler");
 }
 
 void SamplerImpl::DeleteImpl(Sampler &sampler){

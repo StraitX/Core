@@ -3,6 +3,7 @@
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/memory_allocator.hpp"
 #include "graphics/vulkan/texture_impl.hpp"
+#include "graphics/vulkan/debug.hpp"
 
 namespace Vk{
 
@@ -62,14 +63,14 @@ void Texture2DImpl::Create(u32 width, u32 height, TextureFormat format, TextureU
     info.pQueueFamilyIndices = nullptr;
     info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;// should be undefined by the spec
 
-    SX_CORE_CALL_ASSERT(vkCreateImage(GPU::Get().Handle(), &info, nullptr, &Handle), VK_SUCCESS, "Vk: Texture2DImpl: Can't create VkImage");
+    SX_VK_ASSERT(vkCreateImage(GPU::Get().Handle(), &info, nullptr, &Handle), "Vk: Texture2DImpl: Can't create VkImage");
 
     VkMemoryRequirements req;
     vkGetImageMemoryRequirements(GPU::Get().Handle(), Handle, &req);
 
     Memory = MemoryAllocator::Alloc(req.size, MemoryType::VRAM);
 
-    SX_CORE_CALL_ASSERT(vkBindImageMemory(GPU::Get().Handle(), Handle, Memory, 0), VK_SUCCESS, "Vk: Texture2DImpl: can't bind image memory");
+    SX_VK_ASSERT(vkBindImageMemory(GPU::Get().Handle(), Handle, Memory, 0), "Vk: Texture2DImpl: can't bind image memory");
 
     CreateWithImage(Handle, width, height, TextureLayout::Undefined, format, usage);
 }
@@ -101,7 +102,7 @@ void Texture2DImpl::CreateWithImage(VkImage image, u32 width, u32 height, Textur
     view_info.subresourceRange.layerCount = 1;
     view_info.subresourceRange.levelCount = 1;
 
-    SX_CORE_CALL_ASSERT(vkCreateImageView(GPU::Get().Handle(), &view_info, nullptr, &ViewHandle), VK_SUCCESS, "Vk: Texture2DImpl: Can't create VkImageView");
+    SX_VK_ASSERT(vkCreateImageView(GPU::Get().Handle(), &view_info, nullptr, &ViewHandle), "Vk: Texture2DImpl: Can't create VkImageView");
 }
 
 void Texture2DImpl::Destroy(){

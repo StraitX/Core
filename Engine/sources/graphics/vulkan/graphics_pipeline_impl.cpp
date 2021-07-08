@@ -6,6 +6,7 @@
 #include "graphics/vulkan/texture_impl.hpp"
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/descriptor_set_impl.hpp"
+#include "graphics/vulkan/debug.hpp"
 
 namespace Vk{
 
@@ -93,7 +94,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     layout_info.pushConstantRangeCount = 0;
     layout_info.pPushConstantRanges = nullptr;
 
-    SX_CORE_CALL_ASSERT(vkCreatePipelineLayout(GPU::Get().Handle(), &layout_info, nullptr, &Layout), VK_SUCCESS, "Vk: GraphicsPipelineImpl: Can't create Pipeline Layout");
+    SX_VK_ASSERT(vkCreatePipelineLayout(GPU::Get().Handle(), &layout_info, nullptr, &Layout), "Vk: GraphicsPipelineImpl: Can't create Pipeline Layout");
 
     //===Shader Stages===
     Span<VkPipelineShaderStageCreateInfo> stages((VkPipelineShaderStageCreateInfo *)alloca(props.Shaders.Size() * sizeof(VkPipelineShaderStageCreateInfo)), props.Shaders.Size());
