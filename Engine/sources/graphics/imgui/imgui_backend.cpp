@@ -153,14 +153,14 @@ void ImGuiBackend::OnBeginFrame(){
 	auto window_size = WindowSystem::Window().Size();
 
 	io.DisplaySize = ImVec2((float)window_size.width, (float)window_size.height);
-	io.DisplayFramebufferScale = ImVec2(1, 1);
+	io.DisplayFramebufferScale = ImVec2(1.5, 1.5);
 	io.DeltaTime = 0.016;
 
 	auto mouse_pos = Mouse::RelativePosition(WindowSystem::Window());
 
 	mouse_pos.y = window_size.height - mouse_pos.y;
 
-	io.MousePos = ImVec2((float)mouse_pos.x, (float)mouse_pos.y);
+	io.MousePos = ImVec2((float)mouse_pos.x/io.DisplayFramebufferScale.x, (float)mouse_pos.y/io.DisplayFramebufferScale.y);
 
 	if(Mouse::IsButtonPressed(Mouse::Left))
 		io.MouseDown[ImGuiMouseButton_Left] = true;
@@ -174,6 +174,7 @@ void ImGuiBackend::OnBeginFrame(){
 
 void ImGuiBackend::OnEndFrame(){
 	ImGui::Render();
+
 	const ImDrawData *data = ImGui::GetDrawData();
 
 	auto window_size = WindowSystem::Window().Size();
@@ -181,8 +182,8 @@ void ImGuiBackend::OnEndFrame(){
     ImVec2 clip_scale = data->FramebufferScale;
 
 	Uniform uniform;
-	uniform.u_Scale.x = 2.0f / data->DisplaySize.x;
-	uniform.u_Scale.y = 2.0f / data->DisplaySize.y;
+	uniform.u_Scale.x = clip_scale.x * 2.0f / data->DisplaySize.x;
+	uniform.u_Scale.y = clip_scale.y * 2.0f / data->DisplaySize.y;
 	uniform.u_Translate.x = -1.0f - data->DisplayPos.x * uniform.u_Scale.x;
 	uniform.u_Translate.y = -1.0f - data->DisplayPos.x * uniform.u_Scale.y;
 
@@ -243,7 +244,7 @@ void ImGuiBackend::OnEndFrame(){
 		m_CmdBuffer.Reset();
 	}
 
-	ImGuiIO &io = ImGui::GetIO();
+	ImGuiIO& io = ImGui::GetIO();
 
 	for(int i = 0; i<lengthof(io.MouseDown); i++)
 		io.MouseDown[i] = false;
