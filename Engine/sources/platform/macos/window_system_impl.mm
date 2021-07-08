@@ -27,6 +27,7 @@ PlatformScreen WindowSystem::MainScreen(){
     CGSize displayPhysicalSize = CGDisplayScreenSize([[description objectForKey:@"NSScreenNumber"] unsignedIntValue]);
 
     return MacOS::ScreenImpl(
+        screen,
         {(i32)screen.frame.size.width, (i32)screen.frame.size.height}, 
         {float(displayPixelSize.width / displayPhysicalSize.width) * 25.4f, float(displayPixelSize.height / displayPhysicalSize.height) * 25.4f}
     );

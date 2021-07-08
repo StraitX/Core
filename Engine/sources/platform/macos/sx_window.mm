@@ -1,6 +1,7 @@
 #include "platform/macos/sx_application.hpp"
 #include "platform/macos/sx_window.hpp"
 #include "platform/macos/keys.hpp"
+#include "platform/macos/linear_units.h"
 
 @implementation SXView
 
@@ -163,6 +164,9 @@
 namespace MacOS{
 
 Result SXWindowWrapper::Open(const ScreenImpl &screen, int width, int height){
+    width = PixelsToLinearUnits(width, (NSScreen*)screen.Handle);
+    height = PixelsToLinearUnits(height, (NSScreen*)screen.Handle);
+
     Handle = [[SXWindow alloc] initWithSXWindow: this Width: width Height: height];
 
     if(Handle == nil)goto window_fail;
@@ -221,10 +225,18 @@ bool SXWindowWrapper::PollEvent(Event &event){
 }
 
 Size2u SXWindowWrapper::Size()const{
-    return {(u32)Handle.contentView.frame.size.width, (u32)Handle.contentView.frame.size.height};
+    Size2u size = {(u32)Handle.contentView.frame.size.width, (u32)Handle.contentView.frame.size.height};
+    
+    size.width = LinearUnitsToPixels(size.width, [Handle screen]);
+    size.height = LinearUnitsToPixels(size.height, [Handle screen]);
+
+    return size;
 }
 
 void SXWindowWrapper::SetSize(u32 width, u32 height){
+    width = PixelsToLinearUnits(width, [Handle screen]);
+    height = PixelsToLinearUnits(height, [Handle screen]);
+
     NSRect frame = [Handle frame];
     frame.size.width = width;
     frame.size.height = height;
@@ -239,6 +251,9 @@ void SXWindowWrapper::OnWindowClose(){
 }
 
 void SXWindowWrapper::OnWindowResized(u32 width, u32 height){
+    width = LinearUnitsToPixels(width, [Handle screen]);
+    height = LinearUnitsToPixels(height, [Handle screen]);
+
     Event e;
     e.Type = EventType::WindowResized;
     e.WindowResized.x = width;
@@ -260,6 +275,9 @@ void SXWindowWrapper::OnMouseWheel(u32 delta){
 }
 
 void SXWindowWrapper::OnMouseButtonPress(Mouse::Button button, i32 x, i32 y){
+    x = LinearUnitsToPixels(x, [Handle screen]);
+    y = LinearUnitsToPixels(y, [Handle screen]);
+
     Event e;
     e.Type = EventType::MouseButtonPress;
     e.MouseButtonPress.Button = button;
@@ -269,6 +287,9 @@ void SXWindowWrapper::OnMouseButtonPress(Mouse::Button button, i32 x, i32 y){
 }
 
 void SXWindowWrapper::OnMouseButtonRelease(Mouse::Button button, i32 x, i32 y){
+    x = LinearUnitsToPixels(x, [Handle screen]);
+    y = LinearUnitsToPixels(y, [Handle screen]);
+    
     Event e;
     e.Type = EventType::MouseButtonRelease;
     e.MouseButtonPress.Button = button;

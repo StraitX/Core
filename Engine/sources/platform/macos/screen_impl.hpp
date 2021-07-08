@@ -8,13 +8,15 @@
 namespace MacOS{
 
 struct ScreenImpl{
+    void *Handle;
     Size2i Size;
     Size2f DPI;
 
-    ScreenImpl(Size2i size, Size2f dpi);
+    ScreenImpl(void *handle, Size2i size, Size2f dpi);
 };
 
-SX_INLINE ScreenImpl::ScreenImpl(Size2i size, Size2f dpi):
+SX_INLINE ScreenImpl::ScreenImpl(void *handle, Size2i size, Size2f dpi):
+    Handle(handle),
     Size(size),
     DPI(dpi)
 {}
