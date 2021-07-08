@@ -32,7 +32,7 @@ FramebufferImpl::FramebufferImpl(const RenderPass *const pass, const Framebuffer
     info.height = props.Size.y;
     info.layers = 1;
 
-    CoreFunctionAssert(vkCreateFramebuffer(GPU::Get().Handle(), &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: FramebufferImpl: Can't create Framebuffer");
+    SX_CORE_CALL_ASSERT(vkCreateFramebuffer(GPU::Get().Handle(), &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: FramebufferImpl: Can't create Framebuffer");
 }
 
 FramebufferImpl::~FramebufferImpl(){

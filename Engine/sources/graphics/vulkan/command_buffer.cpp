@@ -15,7 +15,7 @@ CommandBuffer::CommandBuffer(QueueFamily::Type target_queue_type):
     pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
     pool_info.queueFamilyIndex = GPU::Get().QueueIndex(m_TargetQueueType);
 
-    CoreFunctionAssert(vkCreateCommandPool(GPU::Get().Handle(), &pool_info, nullptr, &m_Pool), VK_SUCCESS, "Vk: CommandBuffer: Failed to create command pool");
+    SX_CORE_CALL_ASSERT(vkCreateCommandPool(GPU::Get().Handle(), &pool_info, nullptr, &m_Pool), VK_SUCCESS, "Vk: CommandBuffer: Failed to create command pool");
 
     VkCommandBufferAllocateInfo buffer_info;
     buffer_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -24,7 +24,7 @@ CommandBuffer::CommandBuffer(QueueFamily::Type target_queue_type):
     buffer_info.commandPool = m_Pool;
     buffer_info.commandBufferCount = 1;
 
-    CoreFunctionAssert(vkAllocateCommandBuffers(GPU::Get().Handle(), &buffer_info, &m_Handle), VK_SUCCESS, "Vk: CommandBuffer: Failed to allocate");
+    SX_CORE_CALL_ASSERT(vkAllocateCommandBuffers(GPU::Get().Handle(), &buffer_info, &m_Handle), VK_SUCCESS, "Vk: CommandBuffer: Failed to allocate");
 }
 
 CommandBuffer::~CommandBuffer(){
@@ -42,11 +42,11 @@ void CommandBuffer::Begin()const{
     begin_info.flags = 0;
     begin_info.pInheritanceInfo = nullptr;
 
-    CoreFunctionAssert(vkBeginCommandBuffer(m_Handle, &begin_info), VK_SUCCESS, "Vk: CommandBuffer: Failed to begin");
+    SX_CORE_CALL_ASSERT(vkBeginCommandBuffer(m_Handle, &begin_info), VK_SUCCESS, "Vk: CommandBuffer: Failed to begin");
 }
 
 void CommandBuffer::End()const{
-    CoreFunctionAssert(vkEndCommandBuffer(m_Handle),VK_SUCCESS, "Vk: CommandBuffer: Failed to end");
+    SX_CORE_CALL_ASSERT(vkEndCommandBuffer(m_Handle),VK_SUCCESS, "Vk: CommandBuffer: Failed to end");
 }
 
 void CommandBuffer::Submit(const Span<VkSemaphore> &wait_semaphores, const Span<VkSemaphore> &signal_semaphores, VkFence signal_fence)const{
@@ -67,7 +67,7 @@ void CommandBuffer::Submit(const Span<VkSemaphore> &wait_semaphores, const Span<
     info.pSignalSemaphores = signal_semaphores.Pointer();
     info.pWaitDstStageMask = stages;
 
-    CoreFunctionAssert(vkQueueSubmit(m_TargetQueue, 1, &info, signal_fence), VK_SUCCESS, "Vk: CommandBuffer: Failed to submit");
+    SX_CORE_CALL_ASSERT(vkQueueSubmit(m_TargetQueue, 1, &info, signal_fence), VK_SUCCESS, "Vk: CommandBuffer: Failed to submit");
 }
 
 void CommandBuffer::CmdPipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst)const{

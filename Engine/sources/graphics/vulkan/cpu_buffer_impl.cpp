@@ -33,7 +33,7 @@ void CPUBufferImpl::Create(u32 size){
     info.size                   = Size;
     info.usage                  = VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
-    CoreFunctionAssert(vkCreateBuffer(GPU::Get().Handle(), &info, nullptr, &Handle), VK_SUCCESS, "Vk: CPUBufferImpl: Can't create buffer");
+    SX_CORE_CALL_ASSERT(vkCreateBuffer(GPU::Get().Handle(), &info, nullptr, &Handle), VK_SUCCESS, "Vk: CPUBufferImpl: Can't create buffer");
 
     VkMemoryRequirements req;
     vkGetBufferMemoryRequirements(GPU::Get().Handle(), Handle, &req);
@@ -42,7 +42,7 @@ void CPUBufferImpl::Create(u32 size){
 
     vkMapMemory(GPU::Get().Handle(), Memory, 0, req.size, 0, &Pointer);
 
-    CoreFunctionAssert(vkBindBufferMemory(GPU::Get().Handle(), Handle, Memory, 0),VK_SUCCESS, "GPUBuffer: can't bind buffer's memory");
+    SX_CORE_CALL_ASSERT(vkBindBufferMemory(GPU::Get().Handle(), Handle, Memory, 0),VK_SUCCESS, "GPUBuffer: can't bind buffer's memory");
 }
 
 void CPUBufferImpl::Destroy(){

@@ -62,7 +62,7 @@ RenderPassImpl::RenderPassImpl(const RenderPassProperties &props){
     info.dependencyCount = 0;
     info.pDependencies = nullptr;
 
-    CoreFunctionAssert(vkCreateRenderPass(GPU::Get().Handle(), &info, nullptr, &m_Handle),VK_SUCCESS, "Vk: RenderPassImpl: Creation failed");
+    SX_CORE_CALL_ASSERT(vkCreateRenderPass(GPU::Get().Handle(), &info, nullptr, &m_Handle),VK_SUCCESS, "Vk: RenderPassImpl: Creation failed");
 }
 
 RenderPassImpl::~RenderPassImpl(){

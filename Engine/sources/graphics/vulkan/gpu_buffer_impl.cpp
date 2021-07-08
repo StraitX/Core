@@ -32,14 +32,14 @@ void GPUBufferImpl::Create(u32 size, GPUMemoryType mem_type, GPUBuffer::UsageTyp
     info.size                   = Size;
     info.usage                  = usage;
 
-    CoreFunctionAssert(vkCreateBuffer(GPU::Get().Handle(), &info, nullptr, &Handle), VK_SUCCESS, "Vk: GPUBufferImpl: Can't create buffer");
+    SX_CORE_CALL_ASSERT(vkCreateBuffer(GPU::Get().Handle(), &info, nullptr, &Handle), VK_SUCCESS, "Vk: GPUBufferImpl: Can't create buffer");
 
     VkMemoryRequirements req;
     vkGetBufferMemoryRequirements(GPU::Get().Handle(), Handle, &req);
 
     Memory = MemoryAllocator::Alloc(req.size, ToVkMemoryType(mem_type));
 
-    CoreFunctionAssert(vkBindBufferMemory(GPU::Get().Handle(), Handle, Memory, 0),VK_SUCCESS, "GPUBuffer: can't bind buffer's memory");
+    SX_CORE_CALL_ASSERT(vkBindBufferMemory(GPU::Get().Handle(), Handle, Memory, 0),VK_SUCCESS, "GPUBuffer: can't bind buffer's memory");
 }
 
 void GPUBufferImpl::Destroy(){

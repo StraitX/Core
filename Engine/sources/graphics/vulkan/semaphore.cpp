@@ -10,7 +10,7 @@ Semaphore::Semaphore()
     info.pNext = nullptr;
     info.flags = 0;
 
-    CoreFunctionAssert(vkCreateSemaphore(GPU::Get().Handle(), &info, nullptr, &Handle),VK_SUCCESS, "Vk: Can't create semaphore");
+    SX_CORE_CALL_ASSERT(vkCreateSemaphore(GPU::Get().Handle(), &info, nullptr, &Handle),VK_SUCCESS, "Vk: Can't create semaphore");
 }
 
 Semaphore::~Semaphore(){

@@ -8,7 +8,7 @@ Fence::Fence(){
     info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     info.pNext = nullptr;
     info.flags = 0;
-    CoreFunctionAssert(vkCreateFence(GPU::Get().Handle(), &info, nullptr, &Handle), VK_SUCCESS, "Vk: Fence: Creation Failed");
+    SX_CORE_CALL_ASSERT(vkCreateFence(GPU::Get().Handle(), &info, nullptr, &Handle), VK_SUCCESS, "Vk: Fence: Creation Failed");
 }
 
 Fence::~Fence(){

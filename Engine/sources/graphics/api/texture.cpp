@@ -8,7 +8,7 @@
 Texture2D::VTable Texture2D::s_VTable;
 
 Texture2D::Texture2D(const char *filename, const SamplerProperties &props){
-	CoreFunctionAssert(New(filename, props), Result::Success, "Can't load image from file");
+	SX_CORE_CALL_ASSERT(New(filename, props), Result::Success, "Can't load image from file");
 }
 
 Texture2D::Texture2D(const Image &image, const SamplerProperties &props){

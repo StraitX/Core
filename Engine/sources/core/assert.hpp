@@ -25,15 +25,15 @@ extern void _CoreAssertFail(const char *assertion, const char *message, const ch
 #endif
 
 #ifdef SX_DEBUG
-    #define FunctionAssert(function, ret_val) SX_ASSERT(function == ret_val)
+    #define SX_CALL_ASSERT(function, ret_val, ...) SX_ASSERT(function == ret_val, __VA_ARGS__)
 #else
-    #define FunctionAssert(function, ret_val) (void)function
+    #define SX_CALL_ASSERT(function, ret_val, ...) (void)function
 #endif
 
 #ifdef SX_DEBUG
-    #define CoreFunctionAssert(function, ret_val, message) SX_CORE_ASSERT(function == ret_val, message)
+    #define SX_CORE_CALL_ASSERT(function, ret_val, message) SX_CORE_ASSERT(function == ret_val, message)
 #else
-    #define CoreFunctionAssert(function, ret_val, message) (void)function
+    #define SX_CORE_CALL_ASSERT(function, ret_val, message) (void)function
 #endif
 
 #endif // STRAITX_ASSERT_HPP

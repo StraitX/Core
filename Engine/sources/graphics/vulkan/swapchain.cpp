@@ -58,7 +58,7 @@ Swapchain::Swapchain(const PlatformWindow &window):
     m_TargetQueueIndex(GPU::Get().QueueIndex(m_TargetQueueFamily))
 {
     
-    CoreFunctionAssert(m_Surface.Create(Vk::GraphicsContextImpl::s_Instance.Instance(), window),Result::Success, "Vk: Swapchain: Can't obtain surface");
+    SX_CORE_CALL_ASSERT(m_Surface.Create(Vk::GraphicsContextImpl::s_Instance.Instance(), window),Result::Success, "Vk: Swapchain: Can't obtain surface");
     
     {
         VkBool32 supported;
@@ -70,7 +70,7 @@ Swapchain::Swapchain(const PlatformWindow &window):
     }
     
     VkSurfaceCapabilitiesKHR capabilities;
-    CoreFunctionAssert(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(GPU::Get().PhysicalHandle(), m_Surface.Handle, &capabilities), VK_SUCCESS, "Vk: Swapchain: can't obtain surface sapabilites");
+    SX_CORE_CALL_ASSERT(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(GPU::Get().PhysicalHandle(), m_Surface.Handle, &capabilities), VK_SUCCESS, "Vk: Swapchain: can't obtain surface sapabilites");
 
     if(capabilities.minImageCount > m_ImagesCount){
         LogWarn("Vk: Swapchain: System requires % framebuffers", capabilities.minImageCount);
@@ -107,7 +107,7 @@ Swapchain::Swapchain(const PlatformWindow &window):
     info.imageArrayLayers = 1;
     info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
-    CoreFunctionAssert(vkCreateSwapchainKHR(GPU::Get().Handle(), &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: Swapchain: Can't create a swapchain");
+    SX_CORE_CALL_ASSERT(vkCreateSwapchainKHR(GPU::Get().Handle(), &info, nullptr, &m_Handle), VK_SUCCESS, "Vk: Swapchain: Can't create a swapchain");
 
 	m_DepthAttachment.New(m_Size.x, m_Size.y, SwapchainAttachments[1].Format, TextureUsageBits((int)TextureUsageBits::DepthStencilOptimal | (int)TextureUsageBits::TransferDst));
 	DMAImpl::ChangeGPUTextureLayoutImpl(m_DepthAttachment, TextureLayout::DepthStencilAttachmentOptimal);

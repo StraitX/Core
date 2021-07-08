@@ -30,7 +30,7 @@ void DescriptorSetLayoutImpl::NewImpl(DescriptorSetLayout &layout){
 
 	VkDescriptorSetLayout handle = VK_NULL_HANDLE;
 
-	CoreFunctionAssert(vkCreateDescriptorSetLayout(GPU::Get().Handle(), &info, nullptr, &handle),VK_SUCCESS, "Vk: Can't create descriptor set layout");	
+	SX_CORE_CALL_ASSERT(vkCreateDescriptorSetLayout(GPU::Get().Handle(), &info, nullptr, &handle),VK_SUCCESS, "Vk: Can't create descriptor set layout");	
 
 	layout.m_Handle.U64 = u64(handle);
 }
@@ -104,7 +104,7 @@ DescriptorSetPoolImpl::DescriptorSetPoolImpl(const DescriptorSetLayout *layout, 
     info.poolSizeCount = layout->Size();
     info.pPoolSizes = sizes;
 
-	CoreFunctionAssert(vkCreateDescriptorPool(GPU::Get().Handle(), &info, nullptr, &m_DescriptorPool), VK_SUCCESS, "Vk: Can't create descriptor pool");
+	SX_CORE_CALL_ASSERT(vkCreateDescriptorPool(GPU::Get().Handle(), &info, nullptr, &m_DescriptorPool), VK_SUCCESS, "Vk: Can't create descriptor pool");
 }
 
 DescriptorSetPoolImpl::~DescriptorSetPoolImpl(){
@@ -123,7 +123,7 @@ DescriptorSet *DescriptorSetPoolImpl::AllocateSet(){
 
 	VkDescriptorSet set = VK_NULL_HANDLE;
 
-	CoreFunctionAssert(vkAllocateDescriptorSets(GPU::Get().Handle(), &info, &set),VK_SUCCESS, "Vk: Can't allocate descriptor set");
+	SX_CORE_CALL_ASSERT(vkAllocateDescriptorSets(GPU::Get().Handle(), &info, &set),VK_SUCCESS, "Vk: Can't allocate descriptor set");
 
 	//TODO: use pool allocator
 	return new(Memory::Alloc(sizeof(DescriptorSetImpl))) DescriptorSetImpl(set);
