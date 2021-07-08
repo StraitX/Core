@@ -27,7 +27,7 @@ typedef std::size_t size_t;
 
 #if defined(SX_ARCH_X86)
     typedef i32 offset_t;
-#elif defined(SX_ARCH_X86_64)
+#elif defined(SX_ARCH_X86_64) || defined (SX_ARCH_ARM_64)
     typedef i64 offset_t;
 #else
     #error "Your architecture does not support size_t type"
@@ -37,7 +37,7 @@ static_assert(sizeof(size_t) == sizeof(offset_t),"size_t of your arch does not m
 
 #if defined(SX_ARCH_X86)
     typedef u32 ptr_t; 
-#elif defined(SX_ARCH_X86_64)
+#elif defined(SX_ARCH_X86_64) || defined (SX_ARCH_ARM_64)
     typedef u64 ptr_t;
 #else
     #error "Your architecture does not support pointer types"

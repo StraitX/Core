@@ -9,6 +9,8 @@
         #define SX_ARCH_X86
     #elif defined(__x86_64__)
         #define SX_ARCH_X86_64
+	#elif defined(__aarch64__)
+		#define SX_ARCH_ARM_64
     #else
         #error "Your arch is not supported yet"
     #endif
@@ -26,6 +28,8 @@
     #define SX_ARCH_NAME "x86"
 #elif defined(SX_ARCH_X86_64)
     #define SX_ARCH_NAME "x86_64"
+#elif defined(SX_ARCH_ARM_64)
+	#define SX_ARCH_NAME "arm64"
 #endif
 
 
