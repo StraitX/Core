@@ -32,5 +32,11 @@
 	#define SX_ARCH_NAME "arm64"
 #endif
 
+#if defined(SX_ARCH_X86)
+	#define SX_ARCH_32_BIT
+#elif defined(SX_ARCH_X86_64) || defined(SX_ARCH_ARM_64)
+	#define SX_ARCH_64_BIT
+#endif
+
 
 #endif // STRAITX_ARCH_HPP
