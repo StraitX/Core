@@ -15,7 +15,8 @@ enum class EventType{
     MouseButtonPress,
     MouseButtonRelease,
     KeyPress,
-    KeyRelease
+    KeyRelease,
+	TextEntered
 };
 
 struct WindowCloseEvent{ };
@@ -42,6 +43,10 @@ struct KeyEvent{
     Key KeyCode;
 };
 
+struct TextEnteredEvent{
+	u32 Unicode;
+};
+
 
 struct Event{
     EventType Type;
@@ -54,6 +59,7 @@ struct Event{
         MouseButtonEvent MouseButtonRelease;
         KeyEvent KeyPress;
         KeyEvent KeyRelease;
+		TextEnteredEvent TextEntered;
     };
 };
 
