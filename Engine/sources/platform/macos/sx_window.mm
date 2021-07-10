@@ -251,9 +251,6 @@ void SXWindowWrapper::OnWindowClose(){
 }
 
 void SXWindowWrapper::OnWindowResized(u32 width, u32 height){
-    width = LinearUnitsToPixels(width, [Handle screen]);
-    height = LinearUnitsToPixels(height, [Handle screen]);
-
     Event e;
     e.Type = EventType::WindowResized;
     e.WindowResized.x = width;
