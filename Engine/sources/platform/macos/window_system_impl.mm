@@ -1,6 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #include "platform/window_system.hpp"
 #include "platform/macos/window_impl.hpp"
+#include "platform/macos/linear_units.h"
 
 namespace MacOS{
     WindowImpl s_Window;
@@ -22,14 +23,17 @@ void WindowSystem::Finalize(){
 PlatformScreen WindowSystem::MainScreen(){
     NSScreen *screen = [NSScreen mainScreen];
 
+    NSRect size = [screen convertRectToBacking: screen.frame];
+
     NSDictionary *description = [screen deviceDescription];
     NSSize displayPixelSize = [[description objectForKey:NSDeviceSize] sizeValue];
     CGSize displayPhysicalSize = CGDisplayScreenSize([[description objectForKey:@"NSScreenNumber"] unsignedIntValue]);
 
     return MacOS::ScreenImpl(
         screen,
-        {(i32)screen.frame.size.width, (i32)screen.frame.size.height}, 
-        {float(displayPixelSize.width / displayPhysicalSize.width) * 25.4f, float(displayPixelSize.height / displayPhysicalSize.height) * 25.4f}
+        {(i32)size.size.width, (i32)size.size.height}, 
+        {LinearUnitsToPixels(float(displayPixelSize.width / displayPhysicalSize.width) * 25.4f, screen), 
+        LinearUnitsToPixels(float(displayPixelSize.height / displayPhysicalSize.height) * 25.4f, screen)}
     );
 }
 
