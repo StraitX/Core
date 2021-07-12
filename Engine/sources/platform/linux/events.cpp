@@ -58,7 +58,13 @@ void PollEvents(const WindowImpl &window, void (*handler)(const Event &e)){
 				break;
 
 			if(status == XLookupChars || status == XLookupBoth){
-				//TODO: TextEntered event
+
+				if(buf[0] <= 127){
+					Event e;
+					e.Type = EventType::TextEntered;
+					e.TextEntered.Unicode = buf[0];
+					handler(e);
+				}//TODO else handle utf-8 to utf-32 conversion
 			}
 			if(status == XLookupKeySym || status == XLookupBoth){
 				Event e;
