@@ -260,22 +260,27 @@ void ImGuiBackend::OnEvent(const Event &e){
 	ImGuiIO &io = ImGui::GetIO();
 
 	switch(e.Type){
-	case EventType::KeyPress:
-	{
-		Key key = e.KeyPress.KeyCode;
-		io.KeyMap[(size_t)key] = true;
-
-		if(key >= Key::A && key <= Key::Z)
-			io.AddInputCharacter((int)key - (int)Key::A + 'a');
-		if(key >= Key::Key_0 && key <= Key::Key_9)
-			io.AddInputCharacter((int)key - (int)Key::Key_0 + '0');
-		if(key >= Key::Keypad_0 && key <= Key::Keypad_9)
-			io.AddInputCharacter((int)key - (int)Key::Keypad_0 + '0');
-	}
-	break;
-	case EventType::KeyRelease:
-		io.KeyMap[(size_t)e.KeyRelease.KeyCode] = false;
+	case EventType::TextEntered:
+		io.AddInputCharacter(e.TextEntered.Unicode);
 		break;
+	case EventType::KeyPress:
+		io.KeysDown[(size_t)e.KeyPress.KeyCode] = true;
+		
+		io.KeyAlt = io.KeysDown[(size_t)Key::LeftAlt] || io.KeysDown[(size_t)Key::RightAlt];
+		io.KeyShift = io.KeysDown[(size_t)Key::LeftShift] || io.KeysDown[(size_t)Key::RightShift];
+		io.KeyCtrl = io.KeysDown[(size_t)Key::LeftControl] || io.KeysDown[(size_t)Key::RightControl];
+		io.KeySuper = io.KeysDown[(size_t)Key::LeftSuper] || io.KeysDown[(size_t)Key::RightSuper];
+		break;
+	case EventType::KeyRelease:
+		io.KeysDown[(size_t)e.KeyRelease.KeyCode] = false;
+
+		io.KeyAlt = io.KeysDown[(size_t)Key::LeftAlt] || io.KeysDown[(size_t)Key::RightAlt];
+		io.KeyShift = io.KeysDown[(size_t)Key::LeftShift] || io.KeysDown[(size_t)Key::RightShift];
+		io.KeyCtrl = io.KeysDown[(size_t)Key::LeftControl] || io.KeysDown[(size_t)Key::RightControl];
+		io.KeySuper = io.KeysDown[(size_t)Key::LeftSuper] || io.KeysDown[(size_t)Key::RightSuper];
+		break;
+	//TODO: reset all keys
+	//case EventType::LoseFocus:
 	case EventType::MouseWheel:
     	io.MouseWheel += (float)e.MouseWheel.Delta/2.f;
 		break;
