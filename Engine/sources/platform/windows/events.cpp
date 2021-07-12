@@ -91,7 +91,12 @@ bool ToStraitXEvent(MSG& message, Event& event) {
 		event.Type = EventType::KeyRelease;
 		event.KeyRelease.KeyCode = VirtualKeyExtendedToKeyCode(message.wParam,message.lParam);
 		return true;
-
+	case WM_SETFOCUS:
+		event.Type = EventType::FocusIn;
+		return true;
+	case WM_KILLFOCUS:
+		event.Type = EventType::FocusOut;
+		return true;
 	default:
 		// we don't care
 		return false;
