@@ -8,7 +8,7 @@
 #include "platform/macos/linear_units.h"
 
 bool Mouse::IsButtonPressed(Mouse::Button button){
-    MacOS::SXApplication::ProcessEvents();
+    MacOS::SXApplication::HandleEvents();
     return MacOS::SXApplication::s_MouseState[button];
 }
 

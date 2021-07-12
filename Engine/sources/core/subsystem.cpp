@@ -71,7 +71,7 @@ void SubsystemsManager::Update(float dt){
 		subsystem->OnUpdate(dt);
 }
 
-void SubsystemsManager::ProcessEvent(const Event &e){
+void SubsystemsManager::HandleEvent(const Event &e){
 	for(auto subsystem: m_Subsystems)
 		subsystem->OnEvent(e);
 }

@@ -21,7 +21,7 @@ int main(int argc, char **argv){
 		for(;;){
 			frame_clock.Restart();
 
-			Linux::PollEvents(Linux::s_Window, PlatformRuntime::ProcessEvent);
+			Linux::PollEvents(Linux::s_Window, PlatformRuntime::HandleEvent);
 
 			if(!PlatformRuntime::Tick(dt))
 				break;			

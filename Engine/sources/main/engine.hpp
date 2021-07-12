@@ -51,7 +51,7 @@ private:
 
 	bool Tick(float dt);
 
-	void ProcessEvent(const Event &e);
+	void HandleEvent(const Event &e);
 
     void Finalize();
 };

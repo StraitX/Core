@@ -21,7 +21,7 @@ int main(int argc, char **argv){
 
 			Event e;
 			while(MacOS::s_Window.PollEvent(e))
-				PlatformRuntime::ProcessEvent(e);
+				PlatformRuntime::HandleEvent(e);
 
 			if(!PlatformRuntime::Tick(dt))
 				break;			

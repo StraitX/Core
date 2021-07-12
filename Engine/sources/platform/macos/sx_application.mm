@@ -7,7 +7,7 @@ namespace MacOS{
 bool SXApplication::s_KeyboardState[(size_t)Key::KeysCount];
 bool SXApplication::s_MouseState[Mouse::ButtonCount];
 
-void SXApplication::ProcessEvents(){
+void SXApplication::HandleEvents(){
     [NSApplication sharedApplication];
     NSEvent *e = nil;
 

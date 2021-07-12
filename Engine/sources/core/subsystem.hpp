@@ -47,7 +47,7 @@ private:
 
 	static void Update(float dt);	
 
-	static void ProcessEvent(const Event &e);
+	static void HandleEvent(const Event &e);
 	//WARNING: XXX: subsystem's lifetime should be as big as the whole engine lifetime
 	static void Push(Subsystem *subsystem);
 };

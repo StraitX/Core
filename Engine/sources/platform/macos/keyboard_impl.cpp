@@ -4,7 +4,7 @@
 namespace Keyboard{
 
 bool IsKeyPressed(Key code){
-    MacOS::SXApplication::ProcessEvents();
+    MacOS::SXApplication::HandleEvents();
     return MacOS::SXApplication::s_KeyboardState[(size_t)code];
 }
 

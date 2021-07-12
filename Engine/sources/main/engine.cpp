@@ -146,7 +146,7 @@ bool Engine::Tick(float dt){
 	return m_Running;
 }
 
-void Engine::ProcessEvent(const Event &e){
+void Engine::HandleEvent(const Event &e){
 	if(e.Type == EventType::WindowClose)
 		Stop();
 
@@ -154,6 +154,6 @@ void Engine::ProcessEvent(const Event &e){
 		GraphicsContext::Get().ResizeSwapchain(e.WindowResized.x, e.WindowResized.y);
 
 	m_Application->OnEvent(e);
-	SubsystemsManager::ProcessEvent(e);
+	SubsystemsManager::HandleEvent(e);
 }
 

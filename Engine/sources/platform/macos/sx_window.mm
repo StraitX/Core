@@ -214,7 +214,7 @@ void SXWindowWrapper::SetTitle(const char *title){
 bool SXWindowWrapper::PollEvent(Event &event){
     [NSApplication sharedApplication];
 
-    SXApplication::ProcessEvents();
+    SXApplication::HandleEvents();
 
     if(!EventsQueue.empty()){
         event = EventsQueue.front();
