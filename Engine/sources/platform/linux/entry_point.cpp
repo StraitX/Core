@@ -4,6 +4,8 @@
 
 namespace Linux{
 extern WindowImpl s_Window;
+extern void PollEvents(const WindowImpl &window, void (*handler)(const Event &e));
+
 }//namespace Linux::
 
 int main(int argc, char **argv){
@@ -19,9 +21,7 @@ int main(int argc, char **argv){
 		for(;;){
 			frame_clock.Restart();
 
-			Event e;
-			while(Linux::s_Window.PollEvent(e))
-				PlatformRuntime::ProcessEvent(e);
+			Linux::PollEvents(Linux::s_Window, PlatformRuntime::ProcessEvent);
 
 			if(!PlatformRuntime::Tick(dt))
 				break;			

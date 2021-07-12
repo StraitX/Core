@@ -10,7 +10,7 @@ struct WindowImpl;
 
 Bool CheckEvent(::Display*, XEvent* event, XPointer userData);
 
-bool ToStraitXEvent(const XEvent &in_event, Event &out_event, WindowImpl *window);
+bool ToStraitXEvent(XEvent &in_event, Event &out_event, WindowImpl *window);
 
 }//namespace Linux::
 

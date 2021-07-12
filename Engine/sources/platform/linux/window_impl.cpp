@@ -58,12 +58,31 @@ Result WindowImpl::Open(const ScreenImpl &screen, int width, int height){
 
     XMapWindow(s_Display,Handle);
 
+	InputMethod = XOpenIM(s_Display, nullptr, nullptr, nullptr);
+
+	if(!InputMethod){
+		Close();
+		return Result::Failure;
+	}
+
+	InputContext = XCreateIC(InputMethod,
+                        XNInputStyle,   XIMPreeditNothing | XIMStatusNothing,
+                        XNClientWindow, Handle,
+                        XNFocusWindow,  Handle,
+                        NULL);
+
+	XSetICFocus(InputContext);
+
     return Result::Success;
 }
 
 
 
 Result WindowImpl::Close(){
+	XDestroyIC(InputContext);
+	
+	XCloseIM(InputMethod);
+
     XDestroyWindow(s_Display,Handle);
 
     Handle = 0;
@@ -89,16 +108,6 @@ void WindowImpl::SetSize(int width, int height){
 	XFlush(s_Display);
 }
 
-bool WindowImpl::PollEvent(Event &event){
-    XEvent x11event;
-
-	while(XCheckIfEvent(s_Display,&x11event,&CheckEvent,reinterpret_cast<XPointer>(Handle))){
-		if(ToStraitXEvent(x11event, event, this))
-			return true;
-	}
-	return false;
-}
-
 Size2u WindowImpl::Size()const{
 	return GetSizeFromHandle(Handle);
 }
@@ -110,8 +119,8 @@ Size2u WindowImpl::GetSizeFromHandle(unsigned long handle){
     return {(u32)attributes.width, (u32)attributes.height};
 }
 
-void *WindowImpl::PickBestFBConfig(int screen_index){
-    void *result = nullptr;
+__GLXFBConfigRec *WindowImpl::PickBestFBConfig(int screen_index){
+    GLXFBConfig result = nullptr;
 
     // if client system doesn't have such a FBConfig, we are going to drop it
     int glxAttributes[]={
@@ -163,7 +172,7 @@ void *WindowImpl::PickBestFBConfig(int screen_index){
     }
 
 
-    result = (void*)configs[bestIndex];
+    result = configs[bestIndex];
 
     XFree(configs);
 

@@ -5,13 +5,19 @@
 #include "platform/result.hpp"
 #include "platform/linux/screen_impl.hpp"
 
+struct _XIM;
+struct _XIC;
+struct __GLXFBConfigRec;
+
 namespace Linux{
 
 struct WindowImpl{
     unsigned long Handle = 0;
-    void *FBConfig = nullptr;
+    struct __GLXFBConfigRec *FBConfig = nullptr;
 	int Width = 0;
 	int Height = 0;
+	struct _XIM *InputMethod = nullptr;
+	struct _XIC *InputContext = 0;
 
     WindowImpl() = default;
 
@@ -25,13 +31,11 @@ struct WindowImpl{
 
     void SetSize(int width, int height);
 
-    bool PollEvent(Event &event);
-
     Size2u Size()const;
 
 	static Size2u GetSizeFromHandle(unsigned long handle);
 
-    static void *PickBestFBConfig(int screen_index);
+    static __GLXFBConfigRec *PickBestFBConfig(int screen_index);
 };
 
 }//namespace Linux::
