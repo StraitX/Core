@@ -91,6 +91,14 @@ bool ToStraitXEvent(MSG& message, Event& event) {
 		event.Type = EventType::KeyRelease;
 		event.KeyRelease.KeyCode = VirtualKeyExtendedToKeyCode(message.wParam,message.lParam);
 		return true;
+	case WM_CHAR:
+		// TODO handle other utf characters
+		if (message.wParam < 127) {
+			event.Type = EventType::TextEntered;
+			event.TextEntered.Unicode = message.wParam;
+			return true;
+		}
+		return false;
 	case WM_SETFOCUS:
 		event.Type = EventType::FocusIn;
 		return true;
