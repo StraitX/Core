@@ -127,8 +127,8 @@ void Engine::Finalize(){
 bool Engine::Tick(float dt){
 	SubsystemsManager::BeginFrame();
 
-	m_Application->OnUpdate(dt);
 	SubsystemsManager::Update(dt);
+	m_Application->OnUpdate(dt);
 
 	SubsystemsManager::EndFrame();
 

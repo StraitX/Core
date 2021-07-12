@@ -42,6 +42,8 @@ public:
 
 	void OnBeginFrame()override;
 
+	void OnUpdate(float dt)override;
+
 	void OnEndFrame()override;
 
 	void OnEvent(const Event &e)override;

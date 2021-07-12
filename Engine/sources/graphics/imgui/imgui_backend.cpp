@@ -177,6 +177,12 @@ void ImGuiBackend::OnBeginFrame(){
 	ImGui::NewFrame();
 }
 
+void ImGuiBackend::OnUpdate(float dt){
+	ImGuiIO& io = ImGui::GetIO();
+
+	io.DeltaTime = dt;
+}
+
 void ImGuiBackend::OnEndFrame(){
 	ImGui::Render();
 
