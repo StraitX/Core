@@ -10,9 +10,6 @@ struct ScreenImpl {
 	bool IsPrimary = true;
 	Size2i Size = {};
     Size2f DPI = {};
-
-	ScreenImpl(Size2i size);
-
 };
 
 }//namespace Windows::

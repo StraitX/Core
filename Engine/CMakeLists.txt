@@ -167,7 +167,6 @@ elseif(STRAITX_PLATFORM_WINDOWS)
        ${SOURCES_DIR}/platform/windows/virtual_keys.cpp
        ${SOURCES_DIR}/platform/windows/window_impl.cpp
        ${SOURCES_DIR}/platform/windows/events.cpp
-       ${SOURCES_DIR}/platform/windows/screen_impl.cpp
        ${SOURCES_DIR}/platform/windows/window_system_impl.cpp
        ${SOURCES_DIR}/platform/windows/glloader_impl.cpp
        ${SOURCES_DIR}/platform/windows/wgl.cpp

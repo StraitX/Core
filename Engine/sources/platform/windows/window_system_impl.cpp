@@ -6,7 +6,7 @@ namespace Windows {
     extern LRESULT CALLBACK StraitXWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     extern const char* windowClassName;
     WindowImpl s_Window;
-    ScreenImpl s_Screen({ 0, 0 });
+    ScreenImpl s_Screen;
 }//namespaec Windows::
 
 Result WindowSystem::Initialize(int width, int height) {
@@ -21,6 +21,9 @@ Result WindowSystem::Initialize(int width, int height) {
 
     Windows::s_Screen.Size.width = GetSystemMetrics(SM_CXSCREEN);
     Windows::s_Screen.Size.height = GetSystemMetrics(SM_CYSCREEN);
+
+    Windows::s_Screen.DPI.width = 96;
+    Windows::s_Screen.DPI.height = 96;
 
     return Windows::s_Window.Open(Windows::s_Screen, width, height);
 }
