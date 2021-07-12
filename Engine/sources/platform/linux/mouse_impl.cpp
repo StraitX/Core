@@ -3,6 +3,8 @@
 #undef None
 #undef KeyPress
 #undef KeyRelease
+#undef FocusIn
+#undef FocusOut
 #include "platform/mouse.hpp"
 #include "platform/window.hpp"
 #include "platform/window_system.hpp"

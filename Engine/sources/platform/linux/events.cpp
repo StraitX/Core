@@ -46,8 +46,8 @@ void PollEvents(const WindowImpl &window, void (*handler)(const Event &e)){
 			handler(e);
 		}break;
 		case KeyPress:
+		#undef KeyPress
 		{
-			#undef KeyPress
 			int count = 0;
 			KeySym keysym = 0;
 			char buf[20] = {};
@@ -79,9 +79,9 @@ void PollEvents(const WindowImpl &window, void (*handler)(const Event &e)){
 			}
 		}break;
 		case KeyRelease:
+		#undef KeyRelease
 		{
 			Event e;
-			#undef KeyRelease
 			e.Type = EventType::KeyRelease;
 			e.KeyRelease.KeyCode = Key::Unknown;
 			for(int i = 0; i<4; i++){
@@ -115,6 +115,20 @@ void PollEvents(const WindowImpl &window, void (*handler)(const Event &e)){
 			e.MouseButtonRelease.Button = XButtonToMouseButton(in_event.xbutton.button);
 			e.MouseButtonRelease.x = in_event.xbutton.x;
 			e.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(in_event.xany.window).height - in_event.xbutton.y;
+			handler(e);
+		}break;
+		case FocusIn:
+		#undef FocusIn
+		{
+			Event e;
+			e.Type = EventType::FocusIn;
+			handler(e);
+		}break;
+		case FocusOut:
+		#undef FocusOut
+		{
+			Event e;
+			e.Type = EventType::FocusOut;
 			handler(e);
 		}break;
 		default:

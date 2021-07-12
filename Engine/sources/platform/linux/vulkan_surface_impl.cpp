@@ -5,6 +5,8 @@
 #undef None
 #undef KeyRelease
 #undef KeyPress
+#undef FocusIn
+#undef FocusOut
 #include "platform/vulkan_surface.hpp"
 
 namespace Linux{

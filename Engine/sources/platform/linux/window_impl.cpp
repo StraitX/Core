@@ -41,7 +41,8 @@ Result WindowImpl::Open(const ScreenImpl &screen, int width, int height){
 							| KeyReleaseMask 
 							| ButtonPressMask 
 							| ButtonReleaseMask 
-							| StructureNotifyMask;
+							| StructureNotifyMask
+							| FocusChangeMask;
 
     Handle = XCreateWindow(s_Display, RootWindow(s_Display,screen.Index), 0, 0, width, height, 0, visualInfo->depth,
         InputOutput, visualInfo->visual, CWBackPixel | CWColormap | CWEventMask, &attributes);
