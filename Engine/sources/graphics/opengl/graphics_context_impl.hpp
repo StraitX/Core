@@ -29,7 +29,7 @@ private:
 public:
 	static GraphicsContextImpl s_Instance;
 
-	virtual Result Initialize(const PlatformWindow &window)override;
+	virtual Result Initialize()override;
 
 	virtual void Finalize()override;
 

@@ -160,7 +160,7 @@ void ImGuiBackend::OnBeginFrame(){
 	io.DisplaySize = ImVec2((float)window_size.width, (float)window_size.height);
 	io.DeltaTime = 0.016;
 
-	auto mouse_pos = Mouse::RelativePosition(PlatformWindow());
+	auto mouse_pos = Mouse::RelativePosition();
 
 	mouse_pos.y = window_size.height - mouse_pos.y;
 

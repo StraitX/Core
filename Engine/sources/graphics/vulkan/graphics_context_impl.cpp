@@ -72,7 +72,7 @@ static_assert(sizeof(GPUResourceHandle) == sizeof(VkBuffer), "Vulkan handle is n
 
 GraphicsContextImpl GraphicsContextImpl::s_Instance;
 
-Result GraphicsContextImpl::Initialize(const PlatformWindow &window){
+Result GraphicsContextImpl::Initialize(){
     Version version = VulkanVersion;
     Span<const char *>extensions = {RequiredPlatformExtensions, RequiredPlatformExtensionsCount};
     Span<const char *>layers     = {RequiredPlatformLayers, RequiredPlatformLayersCount};
@@ -121,7 +121,7 @@ Result GraphicsContextImpl::Initialize(const PlatformWindow &window){
 
     DMAImpl::Initialize();
 
-	m_Swapchain.Construct(window);
+	m_Swapchain.Construct(nullptr);
 	m_PresentSemaphore.Construct();
 
 	m_CommandBuffer.Construct(QueueFamily::Graphics);

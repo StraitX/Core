@@ -12,7 +12,7 @@
 
 namespace Vk{
 
-class Swapchain{
+class Swapchain: public NonCopyable{
 private:
 	static constexpr size_t s_MaxFramebuffers = 3;
 
@@ -36,7 +36,7 @@ private:
     VkQueue m_TargetQueue = VK_NULL_HANDLE;
     u32 m_TargetQueueIndex = InvalidIndex;
 public:
-    Swapchain(const PlatformWindow &window);
+    Swapchain();
 
     ~Swapchain();
 

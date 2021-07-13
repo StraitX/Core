@@ -49,7 +49,7 @@ Result Engine::Initialize(){
 
 	LogTrace("GraphicsContext::New: Begin");
 	{
-		m_ErrorGraphicsContext = GraphicsContext::Get().Initialize(PlatformWindow());
+		m_ErrorGraphicsContext = GraphicsContext::Get().Initialize();
 	}
 	InitAssert("GraphicsContext::New", m_ErrorGraphicsContext);
 
