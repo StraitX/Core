@@ -6,8 +6,6 @@
 
 namespace Windows{
 
-extern const char* windowClassName;
-
 constexpr size_t MaxFormatsCount = 64;
 
 Result OpenGLContextImpl::Create(const WindowImpl& window, const Version& version) {

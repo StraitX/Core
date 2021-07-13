@@ -13,7 +13,7 @@ bool PlatformRuntime::Tick(float dt){
 
 void PlatformRuntime::HandleEvent(const Event &e){
 	// some platforms can post events during Window creation, during that process application is nullptr
-	if(Engine::s_Instance->m_Application)
+	if(Engine::s_Instance && Engine::s_Instance->m_Application)
 		Engine::s_Instance->HandleEvent(e);
 }
 

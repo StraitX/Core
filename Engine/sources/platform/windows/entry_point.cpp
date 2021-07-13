@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <cstdlib>
 #include "platform/windows/window_impl.hpp"
 #include "platform/windows/events.hpp"
 #include "platform/clock.hpp"
@@ -6,23 +7,29 @@
 
 using namespace Windows;
 
-namespace Windows {
-    extern WindowImpl s_Window;
-};
-
 int main(int argc, char **argv){
 	(void)argc;
 	(void)argv;
 
-	Result init = PlatformRuntime::Initialize();
+    if (!WindowImpl::RegisterWindowClass()) {
+        MessageBox(nullptr, "Windows: Can't register a window class", "PlatformRuntime", MB_ICONERROR);
+        return EXIT_FAILURE;
+    }
 
-	if(init){
+    if (!WindowImpl::s_MainWindow.Open(1280, 720)) {
+        MessageBox(nullptr, "Windows: Can't open a window", "PlatformRuntime", MB_ICONERROR);
+        return EXIT_FAILURE;
+    }
+
+    Result init = Result::None;
+
+	if((init = PlatformRuntime::Initialize())){
         float dt = 1.f / 60;
         Clock frame_clock;
         for(;;){
             frame_clock.Restart();
             MSG message = { 0 };
-            while (::PeekMessage(&message, (HWND)s_Window.Handle(), 0, 0, PM_REMOVE)) {
+            while (::PeekMessage(&message, (HWND)WindowImpl::s_MainWindow.Handle(), 0, 0, PM_REMOVE)) {
                 TranslateMessage(&message);
                 DispatchMessage(&message);
             }
@@ -30,7 +37,9 @@ int main(int argc, char **argv){
                 break;
             dt = frame_clock.GetElapsedTime().AsSeconds();
         } 
-	}
+    }else {
+        MessageBox(nullptr, "Windows: Can't initialize PlatformRuntime", "PlatformRuntime", MB_ICONERROR);
+    }
 
 	PlatformRuntime::Finalize();
 
