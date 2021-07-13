@@ -121,7 +121,7 @@ Result GraphicsContextImpl::Initialize(){
 
     DMAImpl::Initialize();
 
-	m_Swapchain.Construct(nullptr);
+	m_Swapchain.Construct();
 	m_PresentSemaphore.Construct();
 
 	m_CommandBuffer.Construct(QueueFamily::Graphics);
@@ -356,7 +356,7 @@ void GraphicsContextImpl::SwapBuffers(){
 	if(m_Swapchain->Size() != Vector2u(PlatformWindow::Size())){
 
 		m_Swapchain.Destruct();
-		m_Swapchain.Construct(PlatformWindow());
+		m_Swapchain.Construct();
 		//recreate semaphore to reset it
 		m_PresentSemaphore.Destruct();
 		m_PresentSemaphore.Construct();
