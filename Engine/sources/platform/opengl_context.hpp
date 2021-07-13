@@ -25,9 +25,9 @@ public:
 
     OpenGLContext() = default;
 
-    Result Create(const PlatformWindow &window, const Version &version);
+    Result Create(const PlatformWindowImpl &window, const Version &version);
 
-    Result CreateLegacy(const PlatformWindow &window);
+    Result CreateLegacy(const PlatformWindowImpl &window);
 
     void Destroy();
 
@@ -40,12 +40,12 @@ public:
     void Resize(u32 width, u32 height);
 };
 
-SX_INLINE Result OpenGLContext::Create(const PlatformWindow &window, const Version &version){
-    return m_Impl.Create(window.Impl(), version);
+SX_INLINE Result OpenGLContext::Create(const PlatformWindowImpl &window, const Version &version){
+    return m_Impl.Create(window, version);
 }
 
-SX_INLINE Result OpenGLContext::CreateLegacy(const PlatformWindow &window){
-    return m_Impl.CreateLegacy(window.Impl());
+SX_INLINE Result OpenGLContext::CreateLegacy(const PlatformWindowImpl &window){
+    return m_Impl.CreateLegacy(window);
 }
 
 SX_INLINE void OpenGLContext::DestroyLegacy(){
