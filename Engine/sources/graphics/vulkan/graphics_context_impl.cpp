@@ -9,8 +9,6 @@
 #include "graphics/vulkan/descriptor_set_impl.hpp"
 #include "graphics/vulkan/graphics_pipeline_impl.hpp"
 
-#include "platform/window_system.hpp"
-
 namespace Vk{
 
 void CommandBufferExectuionState::Bind(const GraphicsPipeline *pipeline){
@@ -355,10 +353,10 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 void GraphicsContextImpl::SwapBuffers(){
 	m_PrevOpFence->WaitAndReset();
 
-	if(m_Swapchain->Size() != Vector2u(WindowSystem::Window().Size())){
+	if(m_Swapchain->Size() != Vector2u(PlatformWindow::Size())){
 
 		m_Swapchain.Destruct();
-		m_Swapchain.Construct(WindowSystem::Window());
+		m_Swapchain.Construct(PlatformWindow());
 		//recreate semaphore to reset it
 		m_PresentSemaphore.Destruct();
 		m_PresentSemaphore.Construct();

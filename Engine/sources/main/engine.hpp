@@ -14,7 +14,6 @@ private:
     Application *m_Application = nullptr;
     ApplicationConfig m_ApplicationConfig = {};
     bool m_Running = true;
-    Result m_ErrorWindowSystem = Result::None;
 	Result M_ErrorGraphicsAPI = Result::None;
 	Result m_ErrorGraphicsContext = Result::None;
     Result m_ErrorApplication = Result::None;

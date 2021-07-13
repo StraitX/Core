@@ -1,4 +1,3 @@
-#include "platform/window_system.hpp"
 #include "platform/memory.hpp"
 #include "platform/clock.hpp"
 #include "core/log.hpp"
@@ -41,15 +40,8 @@ Result Engine::Initialize(){
 
     LogTrace("========= First stage init =========");
 
-    LogInfo("WindowSystem::Initialize: Begin");
-    {
-        m_ErrorWindowSystem = WindowSystem::Initialize(m_ApplicationConfig.WindowSize.x, m_ApplicationConfig.WindowSize.y);
-    }
-    InitAssert("WindowSystem::Initialize", m_ErrorWindowSystem);
-
-	WindowSystem::Window().SetTitle(m_ApplicationConfig.ApplicationName);
-
-	Println("Size: %: %", WindowSystem::Window().Size().width, WindowSystem::Window().Size().height);
+	PlatformWindow::SetTitle(m_ApplicationConfig.ApplicationName);
+	PlatformWindow::SetSize(m_ApplicationConfig.WindowSize.x, m_ApplicationConfig.WindowSize.y);
 
     LogTrace("GraphicsAPILoader::Load: Begin");
 	auto error_api_load = GraphicsAPILoader::Load(m_ApplicationConfig.DesiredAPI);
@@ -57,7 +49,7 @@ Result Engine::Initialize(){
 
 	LogTrace("GraphicsContext::New: Begin");
 	{
-		m_ErrorGraphicsContext = GraphicsContext::Get().Initialize(WindowSystem::Window());
+		m_ErrorGraphicsContext = GraphicsContext::Get().Initialize(PlatformWindow());
 	}
 	InitAssert("GraphicsContext::New", m_ErrorGraphicsContext);
 
@@ -116,12 +108,6 @@ void Engine::Finalize(){
 		GraphicsContext::Get().Finalize();
 		LogTrace("GraphicsContext::Finalize: End");
 	}
-
-    if(m_ErrorWindowSystem == Result::Success){
-        LogTrace("WindowSystem::Finalize: Begin");
-        WindowSystem::Finalize();
-        Log("WindowSystem::Finalize",m_ErrorWindowSystem);
-    }
 }
 
 bool Engine::Tick(float dt){

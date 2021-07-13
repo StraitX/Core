@@ -1,5 +1,4 @@
 #include "platform/memory.hpp"
-#include "platform/window_system.hpp"
 #include "core/log.hpp"
 #include "core/string.hpp"
 #include "graphics/batch_renderer_2d.hpp"

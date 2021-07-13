@@ -4,7 +4,6 @@
 #include "graphics/api/dma.hpp"
 #include "core/string.hpp"
 #include "platform/keyboard.hpp"
-#include "platform/window_system.hpp"
 
 ShaderBinding ImGuiBackend::s_Bindings[2] = {
 	{0, 1, ShaderBindingType::Texture, Shader::Fragment},
@@ -66,7 +65,7 @@ Result ImGuiBackend::OnInitialize(){
     io.BackendPlatformName = "StraitX ImGui Backend";
 
 	static constexpr float s_BaseDPI = 93;
-	auto screen_dpi = WindowSystem::MainScreen().DPI();
+	auto screen_dpi = PlatformWindow::Screen().DPI;
 
 	io.DisplayFramebufferScale = ImVec2(screen_dpi.width / s_BaseDPI, screen_dpi.height / s_BaseDPI);
 
@@ -156,12 +155,12 @@ Result ImGuiBackend::OnInitialize(){
 void ImGuiBackend::OnBeginFrame(){
 	ImGuiIO& io = ImGui::GetIO();
 
-	auto window_size = WindowSystem::Window().Size();
+	auto window_size = PlatformWindow::Size();
 
 	io.DisplaySize = ImVec2((float)window_size.width, (float)window_size.height);
 	io.DeltaTime = 0.016;
 
-	auto mouse_pos = Mouse::RelativePosition(WindowSystem::Window());
+	auto mouse_pos = Mouse::RelativePosition(PlatformWindow());
 
 	mouse_pos.y = window_size.height - mouse_pos.y;
 
@@ -188,7 +187,7 @@ void ImGuiBackend::OnEndFrame(){
 
 	const ImDrawData *data = ImGui::GetDrawData();
 
-	auto window_size = WindowSystem::Window().Size();
+	auto window_size = PlatformWindow::Size();
 	ImVec2 clip_off = data->DisplayPos;         // (0,0) unless using multi-viewports
     ImVec2 clip_scale = data->FramebufferScale;
 

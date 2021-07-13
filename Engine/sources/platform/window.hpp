@@ -19,49 +19,42 @@
 #endif
 
 class PlatformWindow{
-private:
-    PlatformWindowImpl m_Impl;
 public:
-    PlatformWindow(PlatformWindowImpl impl);
+    static void SetTitle(const char *title);
 
-    bool IsOpen()const;
+    static Size2u Size();
 
-    void SetTitle(const char *title);
+	static void SetSize(u32 width, u32 height);
 
-    Size2u Size()const;
+	static void SetSize(Size2u size);
 
-	void SetSize(u32 width, u32 height);
+	static const PlatformScreen &Screen();
 
-	void SetSize(Size2u size);
-
-	const PlatformWindowImpl &Impl()const;
+	static const PlatformWindowImpl &Impl();
 };
 
-SX_INLINE PlatformWindow::PlatformWindow(PlatformWindowImpl impl):
-	m_Impl(impl)
-{}
-
-SX_INLINE bool PlatformWindow::IsOpen()const{
-    return m_Impl.IsOpen();
-}
-
 SX_INLINE void PlatformWindow::SetTitle(const char *title){
-    m_Impl.SetTitle(title);
+	PlatformWindowImpl::s_MainWindow.SetTitle(title);
 }
 
-SX_INLINE Size2u PlatformWindow::Size()const{
-    return m_Impl.Size();
+SX_INLINE Size2u PlatformWindow::Size(){
+	return PlatformWindowImpl::s_MainWindow.Size();
 }
 
 SX_INLINE void PlatformWindow::SetSize(u32 width, u32 height){
-	m_Impl.SetSize(width, height);
+	PlatformWindowImpl::s_MainWindow.SetSize(width, height);
 }
 
 SX_INLINE void PlatformWindow::SetSize(Size2u size){
-	SetSize(size.width, size.height);
+	PlatformWindowImpl::s_MainWindow.SetSize(size.width, size.height);
 }
 
-SX_INLINE const PlatformWindowImpl &PlatformWindow::Impl()const{
-	return m_Impl;
+SX_INLINE const PlatformScreen &PlatformWindow::Screen(){
+	return PlatformWindowImpl::s_MainWindow.Screen();
 }
+
+SX_INLINE const PlatformWindowImpl &PlatformWindow::Impl(){
+	return PlatformWindowImpl::s_MainWindow;
+}
+
 #endif // STRAITX_WINDOW_HPP
