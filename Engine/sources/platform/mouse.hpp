@@ -22,7 +22,7 @@ namespace Mouse{
 
     Point2i GlobalPosition();
 
-    Point2i RelativePosition(const PlatformWindow &window);
+    Point2i RelativePosition();
 
     void SetGlobalPosition(const Point2i &position);
 
