@@ -10,14 +10,14 @@
 #include "platform/vulkan_surface.hpp"
 #include "platform/linux/display_server.hpp"
 
-Result VulkanSurface::Create(VkInstance owner, const PlatformWindow &window){
+Result VulkanSurface::Create(VkInstance owner, const PlatformWindowImpl &window){
     Owner = owner;
     VkXlibSurfaceCreateInfoKHR info;
     info.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
     info.pNext = nullptr;
     info.flags = 0;
     info.dpy = Linux::DisplayServer::Handle;
-    info.window = window.Impl().Handle;
+    info.window = window.Handle;
 
     return ResultError(vkCreateXlibSurfaceKHR(Owner, &info, nullptr, &Handle) != VK_SUCCESS);
 }
