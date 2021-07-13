@@ -42,14 +42,14 @@ Point2i GlobalPosition(){
     return global;
 }
 
-Point2i RelativePosition(const PlatformWindow &window){
+Point2i RelativePosition(){
     ::Window root,child;
     Point2i choosen,global;
     unsigned int mask;
 
-    XQueryPointer(DisplayServer::Handle, window.Impl().Handle,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
+    XQueryPointer(DisplayServer::Handle, WindowImpl::s_MainWindow.Handle,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
     
-	i32 window_height = (i32)window.Size().height;
+	i32 window_height = (i32)WindowImpl::s_MainWindow.Size().height;
 
 	choosen.y = window_height - choosen.y;
     return choosen;
