@@ -1,20 +1,18 @@
 #include "platform/keyboard.hpp"
 #include "platform/linux/keys.hpp"
-#include <X11/Xlib.h>
-
-namespace Linux{
-extern ::Display *s_Display;
-}//namespace Linux::
+#include "platform/linux/display_server.hpp"
 
 namespace Keyboard{
 
+using namespace Linux;
+
 bool IsKeyPressed(Key code){
-    KeySym sym = Linux::KeyCodeToXKeySym(code);
-    ::KeyCode keyCode = XKeysymToKeycode(Linux::s_Display,sym);  
+    KeySym sym = KeyCodeToXKeySym(code);
+    ::KeyCode keyCode = XKeysymToKeycode(DisplayServer::Handle, sym);  
 
     if(keyCode != 0){
         char keymap[32];
-        XQueryKeymap(Linux::s_Display,keymap);
+        XQueryKeymap(DisplayServer::Handle,keymap);
         return (keymap[keyCode/8] & (1 << (keyCode%8))) != 0;
     }else{
         return false;

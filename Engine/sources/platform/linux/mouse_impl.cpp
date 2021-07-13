@@ -7,18 +7,17 @@
 #undef FocusOut
 #include "platform/mouse.hpp"
 #include "platform/window.hpp"
-#include "platform/window_system.hpp"
+#include "platform/linux/display_server.hpp"
 
+namespace Mouse{
 
-namespace Linux{
-extern ::Display *s_Display;
-}//namespace Linux::
+using namespace Linux;	
 
-bool Mouse::IsButtonPressed(Mouse::Button button){
+bool IsButtonPressed(Mouse::Button button){
     ::Window root,child;
     int x,y;
     unsigned int button_mask;
-    XQueryPointer(Linux::s_Display,RootWindow(Linux::s_Display,DefaultScreen(Linux::s_Display)),&root,&child,&x,&y,&x,&y,&button_mask);
+    XQueryPointer(DisplayServer::Handle, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)),&root,&child,&x,&y,&x,&y,&button_mask);
 
     switch (button)
     {
@@ -31,24 +30,24 @@ bool Mouse::IsButtonPressed(Mouse::Button button){
     }
 }
 
-Point2i Mouse::GlobalPosition(){
+Point2i GlobalPosition(){
     ::Window root,child;
     Point2i choosen,global;
     unsigned int mask;
     
-    XQueryPointer(Linux::s_Display,RootWindow(Linux::s_Display,DefaultScreen(Linux::s_Display)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
+    XQueryPointer(DisplayServer::Handle, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
 
-	global.y = WindowSystem::MainScreen().Size().height - global.y;
+	global.y = PlatformWindow::Screen().Size.height - global.y;
 
     return global;
 }
 
-Point2i Mouse::RelativePosition(const PlatformWindow &window){
+Point2i RelativePosition(const PlatformWindow &window){
     ::Window root,child;
     Point2i choosen,global;
     unsigned int mask;
 
-    XQueryPointer(Linux::s_Display,window.Impl().Handle,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
+    XQueryPointer(DisplayServer::Handle, window.Impl().Handle,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
     
 	i32 window_height = (i32)window.Size().height;
 
@@ -56,12 +55,12 @@ Point2i Mouse::RelativePosition(const PlatformWindow &window){
     return choosen;
 }
 
-void Mouse::SetGlobalPosition(const Point2i &position){
+void SetGlobalPosition(const Point2i &position){
     Point2i new_position;
     new_position.x = position.x;
-    new_position.y = WindowSystem::MainScreen().Size().height - position.y;
+    new_position.y = PlatformWindow::Screen().Size.height - position.y;
 
-    XWarpPointer(Linux::s_Display, 0, RootWindow(Linux::s_Display, DefaultScreen(Linux::s_Display)),0,0,0,0,new_position.x, new_position.y);
+    XWarpPointer(DisplayServer::Handle, 0, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)),0,0,0,0,new_position.x, new_position.y);
 }
 
 static Cursor BlankCursor(){
@@ -75,20 +74,21 @@ static Cursor BlankCursor(){
         Pixmap blank;
         XColor dummy;
 
-        blank = XCreateBitmapFromData(Linux::s_Display, RootWindow(Linux::s_Display, DefaultScreen(Linux::s_Display)), data, 1, 1);
+        blank = XCreateBitmapFromData(DisplayServer::Handle, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)), data, 1, 1);
         if(blank == 0)
             is_created = false;
-        cursor = XCreatePixmapCursor(Linux::s_Display, blank, blank, &dummy, &dummy, 0, 0);
-        XFreePixmap(Linux::s_Display, blank);
+        cursor = XCreatePixmapCursor(DisplayServer::Handle, blank, blank, &dummy, &dummy, 0, 0);
+        XFreePixmap(DisplayServer::Handle, blank);
     }
     return cursor;
 }
 
-void Mouse::SetVisible(bool is_visible){
+void SetVisible(bool is_visible){
     if(is_visible){
-        XUndefineCursor(Linux::s_Display, RootWindow(Linux::s_Display, DefaultScreen(Linux::s_Display)));
+        XUndefineCursor(DisplayServer::Handle, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)));
     }else{
-        XDefineCursor(Linux::s_Display, RootWindow(Linux::s_Display, DefaultScreen(Linux::s_Display)), BlankCursor());
+        XDefineCursor(DisplayServer::Handle, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)), BlankCursor());
     }
 }
 
+}//namespace Mouse::

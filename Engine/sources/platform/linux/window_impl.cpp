@@ -4,11 +4,11 @@
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 #include <GL/glx.h>
-#undef Success
+#include "platform/linux/display_server.hpp"
 
 namespace Linux{
 
-extern ::Display *s_Display;
+WindowImpl WindowImpl::s_MainWindow;
 
 struct PixelFormat{
     int Red = 0;
@@ -20,22 +20,24 @@ struct PixelFormat{
     int Samples = 0;
 };
 
-Result WindowImpl::Open(const ScreenImpl &screen, int width, int height){
+Result WindowImpl::Open(int width, int height){
 	Width = width;
 	Height = height;
 
-    FBConfig = PickBestFBConfig(screen.Index);
+	int screen_index = DefaultScreen(DisplayServer::Handle);
+
+    FBConfig = PickBestFBConfig(screen_index);
     if(FBConfig == nullptr)
         return Result::Unsupported;
 
-    XVisualInfo *visualInfo = glXGetVisualFromFBConfig(s_Display, (GLXFBConfig)FBConfig);
+    XVisualInfo *visualInfo = glXGetVisualFromFBConfig(DisplayServer::Handle, (GLXFBConfig)FBConfig);
 
     if(visualInfo == nullptr)
         return Result::Failure;
     
     XSetWindowAttributes attributes;
-    attributes.background_pixel = BlackPixel(s_Display, screen.Index);
-    attributes.colormap = XCreateColormap(s_Display, RootWindow(s_Display,screen.Index), visualInfo->visual, AllocNone);
+    attributes.background_pixel = BlackPixel(DisplayServer::Handle, screen_index);
+    attributes.colormap = XCreateColormap(DisplayServer::Handle, RootWindow(DisplayServer::Handle,screen_index), visualInfo->visual, AllocNone);
     attributes.event_mask 	= ExposureMask 
 							| KeyPressMask 
 							| KeyReleaseMask 
@@ -44,7 +46,7 @@ Result WindowImpl::Open(const ScreenImpl &screen, int width, int height){
 							| StructureNotifyMask
 							| FocusChangeMask;
 
-    Handle = XCreateWindow(s_Display, RootWindow(s_Display,screen.Index), 0, 0, width, height, 0, visualInfo->depth,
+    Handle = XCreateWindow(DisplayServer::Handle, RootWindow(DisplayServer::Handle,screen_index), 0, 0, width, height, 0, visualInfo->depth,
         InputOutput, visualInfo->visual, CWBackPixel | CWColormap | CWEventMask, &attributes);
 
     XFree(visualInfo);
@@ -53,13 +55,13 @@ Result WindowImpl::Open(const ScreenImpl &screen, int width, int height){
         return Result::Failure;
     
     //intercept close event
-    Atom close_atom = XInternAtom(s_Display,"WM_DELETE_WINDOW",0);
-    XSetWMProtocols(s_Display,Handle,&close_atom,1);
+    Atom close_atom = XInternAtom(DisplayServer::Handle,"WM_DELETE_WINDOW",0);
+    XSetWMProtocols(DisplayServer::Handle,Handle,&close_atom,1);
 
 
-    XMapWindow(s_Display,Handle);
+    XMapWindow(DisplayServer::Handle,Handle);
 
-	InputMethod = XOpenIM(s_Display, nullptr, nullptr, nullptr);
+	InputMethod = XOpenIM(DisplayServer::Handle, nullptr, nullptr, nullptr);
 
 	if(!InputMethod){
 		Close();
@@ -84,38 +86,49 @@ Result WindowImpl::Close(){
 	
 	XCloseIM(InputMethod);
 
-    XDestroyWindow(s_Display,Handle);
+    XDestroyWindow(DisplayServer::Handle,Handle);
 
     Handle = 0;
     return Result::Success;
 }
 
-bool WindowImpl::IsOpen()const{
-    return Handle;
-}
-
 void WindowImpl::SetTitle(const char *title){
 
-    Atom atom = XInternAtom(s_Display,"WM_NAME",0);
+    Atom atom = XInternAtom(DisplayServer::Handle,"WM_NAME",0);
     
     XTextProperty titleText;
     char * pTitle = (char *)title;
     XStringListToTextProperty(&pTitle,1,&titleText);
-    XSetTextProperty(s_Display,Handle,&titleText,atom);
+    XSetTextProperty(DisplayServer::Handle,Handle,&titleText,atom);
 }
 
 void WindowImpl::SetSize(int width, int height){
-    XResizeWindow(s_Display,Handle,width,height);
-	XFlush(s_Display);
+    XResizeWindow(DisplayServer::Handle,Handle,width,height);
+	XFlush(DisplayServer::Handle);
 }
 
 Size2u WindowImpl::Size()const{
 	return GetSizeFromHandle(Handle);
 }
 
+const PlatformScreen &WindowImpl::Screen(){
+	// XXX: linux does not support multiple screens for now
+	if(CurrentScreen.Handle == nullptr){
+		CurrentScreen.Handle = DefaultScreenOfDisplay(DisplayServer::Handle);
+
+		CurrentScreen.Size.width = XWidthOfScreen((::Screen*)CurrentScreen.Handle);
+		CurrentScreen.Size.height = XHeightOfScreen((::Screen*)CurrentScreen.Handle);
+
+		CurrentScreen.DPI.width  = float(CurrentScreen.Size.width) / (float(XWidthMMOfScreen((::Screen*)CurrentScreen.Handle)) / 25.4f);
+		CurrentScreen.DPI.height = float(CurrentScreen.Size.height) / (float(XHeightMMOfScreen((::Screen*)CurrentScreen.Handle)) / 25.4f);
+	}
+
+	return CurrentScreen;
+}
+
 Size2u WindowImpl::GetSizeFromHandle(unsigned long handle){
     XWindowAttributes attributes;
-    XGetWindowAttributes(s_Display, handle, &attributes);
+    XGetWindowAttributes(DisplayServer::Handle, handle, &attributes);
 
     return {(u32)attributes.width, (u32)attributes.height};
 }
@@ -130,11 +143,11 @@ __GLXFBConfigRec *WindowImpl::PickBestFBConfig(int screen_index){
 		GLX_RENDER_TYPE     , GLX_RGBA_BIT,
 		GLX_X_VISUAL_TYPE   , GLX_TRUE_COLOR,
 		GLX_DOUBLEBUFFER    , True,
-		None // NULL Terminated arg array
+		0 // NULL Terminated arg array
     };
 
     int configsCount = 0;
-    GLXFBConfig *configs = glXChooseFBConfig(s_Display,screen_index,glxAttributes,&configsCount);
+    GLXFBConfig *configs = glXChooseFBConfig(DisplayServer::Handle,screen_index,glxAttributes,&configsCount);
 
     // in case if we have not find any suitable FBConfig
     if(configsCount == 0)
@@ -155,13 +168,13 @@ __GLXFBConfigRec *WindowImpl::PickBestFBConfig(int screen_index){
 
     for(int i = 0; i<configsCount; i++){
         PixelFormat current;
-        glXGetFBConfigAttrib(s_Display, configs[i], GLX_RED_SIZE,     &current.Red);
-        glXGetFBConfigAttrib(s_Display, configs[i], GLX_GREEN_SIZE,   &current.Green);
-        glXGetFBConfigAttrib(s_Display, configs[i], GLX_BLUE_SIZE,    &current.Blue);
-        glXGetFBConfigAttrib(s_Display, configs[i], GLX_ALPHA_SIZE,   &current.Alpha);
-        glXGetFBConfigAttrib(s_Display, configs[i], GLX_DEPTH_SIZE,   &current.Depth);
-        glXGetFBConfigAttrib(s_Display, configs[i], GLX_STENCIL_SIZE, &current.Stencil);
-        glXGetFBConfigAttrib(s_Display, configs[i], GLX_SAMPLES,      &current.Samples);
+        glXGetFBConfigAttrib(DisplayServer::Handle, configs[i], GLX_RED_SIZE,     &current.Red);
+        glXGetFBConfigAttrib(DisplayServer::Handle, configs[i], GLX_GREEN_SIZE,   &current.Green);
+        glXGetFBConfigAttrib(DisplayServer::Handle, configs[i], GLX_BLUE_SIZE,    &current.Blue);
+        glXGetFBConfigAttrib(DisplayServer::Handle, configs[i], GLX_ALPHA_SIZE,   &current.Alpha);
+        glXGetFBConfigAttrib(DisplayServer::Handle, configs[i], GLX_DEPTH_SIZE,   &current.Depth);
+        glXGetFBConfigAttrib(DisplayServer::Handle, configs[i], GLX_STENCIL_SIZE, &current.Stencil);
+        glXGetFBConfigAttrib(DisplayServer::Handle, configs[i], GLX_SAMPLES,      &current.Samples);
 
         float score = float(current.Red)/float(desired.Red) + float(current.Green)/float(desired.Green) + float(current.Blue)/float(desired.Blue) + 
                 float(current.Alpha)/float(desired.Alpha) + float(current.Depth)/float(desired.Depth) + float(current.Stencil)/float(desired.Stencil) + float(current.Samples)/float(desired.Samples) - 7;

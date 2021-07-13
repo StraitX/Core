@@ -3,10 +3,9 @@
 
 namespace Linux{
 
-ScreenImpl::ScreenImpl(void *display_handle){
-	Handle = DefaultScreenOfDisplay((::Display*)display_handle);
-
-	Index = DefaultScreen((::Display*)display_handle);
+ScreenImpl::ScreenImpl(void *screen_handle, unsigned int screen_index){
+	Handle = screen_handle;
+	Index = screen_index;
 
     Size.width = XWidthOfScreen((::Screen*)Handle);
     Size.height = XHeightOfScreen((::Screen*)Handle);

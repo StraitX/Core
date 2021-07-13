@@ -14,7 +14,7 @@ struct ScreenImpl{
 
 	ScreenImpl() = default;
 
-	ScreenImpl(void *display_handle);
+	ScreenImpl(void *screen_handle, unsigned int screen_index);
 };
 
 } // namespace Linux::

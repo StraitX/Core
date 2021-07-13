@@ -8,10 +8,7 @@
 #undef FocusIn
 #undef FocusOut
 #include "platform/vulkan_surface.hpp"
-
-namespace Linux{
-extern ::Display *s_Display;
-}//namespace Linux::
+#include "platform/linux/display_server.hpp"
 
 Result VulkanSurface::Create(VkInstance owner, const PlatformWindow &window){
     Owner = owner;
@@ -19,7 +16,7 @@ Result VulkanSurface::Create(VkInstance owner, const PlatformWindow &window){
     info.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
     info.pNext = nullptr;
     info.flags = 0;
-    info.dpy = Linux::s_Display;
+    info.dpy = Linux::DisplayServer::Handle;
     info.window = window.Impl().Handle;
 
     return ResultError(vkCreateXlibSurfaceKHR(Owner, &info, nullptr, &Handle) != VK_SUCCESS);

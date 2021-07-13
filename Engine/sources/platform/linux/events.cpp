@@ -1,11 +1,10 @@
 #include "platform/linux/window_impl.hpp"
 #include "platform/linux/events.hpp"
 #include "platform/linux/keys.hpp"
-#include <X11/X.h>
+#include "platform/linux/display_server.hpp"
 
 namespace Linux{
 
-extern ::Display *s_Display;
 
 Bool CheckEvent(::Display *display, XEvent *event, XPointer userData){
     return event->xany.window == reinterpret_cast< ::Window >(userData);
@@ -14,7 +13,7 @@ Bool CheckEvent(::Display *display, XEvent *event, XPointer userData){
 void PollEvents(const WindowImpl &window, void (*handler)(const Event &e)){
 	XEvent in_event;
 
-	while(XCheckIfEvent(s_Display, &in_event, &CheckEvent,reinterpret_cast<XPointer>(window.Handle))){
+	while(XCheckIfEvent(DisplayServer::Handle, &in_event, &CheckEvent,reinterpret_cast<XPointer>(window.Handle))){
 		switch (in_event.type)
 		{
 		// Event recieved on window Close button 

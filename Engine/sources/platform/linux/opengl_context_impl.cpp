@@ -2,12 +2,10 @@
 #include <X11/Xlib.h>
 #include <stdlib.h>
 #include <GL/glx.h>
-#undef Success
+#include "platform/linux/display_server.hpp"
 #include <unistd.h>
 
 namespace Linux{
-
-extern ::Display *s_Display;    
 
 static bool ctxErrorOccurred = false;
 static int ctxErrorHandler( ::Display *dpy, XErrorEvent *ev )
@@ -33,18 +31,18 @@ Result OpenGLContextImpl::Create(const WindowImpl &window, const Version &versio
 		GLX_CONTEXT_MINOR_VERSION_ARB, version.Minor,
 		GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
         GLX_CONTEXT_PROFILE_MASK_ARB, GLX_CONTEXT_CORE_PROFILE_BIT_ARB,
-		None
+		0
 	};
     // OpenGL 3.0 requires context error handler
     if(version.Major >= 3)
         XSetErrorHandler(&ctxErrorHandler);
     
-    m_Handle = glXCreateContextAttribsARB(s_Display,(GLXFBConfig)window.FBConfig, 0, true, contextAttribs);
+    m_Handle = glXCreateContextAttribsARB(DisplayServer::Handle,(GLXFBConfig)window.FBConfig, 0, true, contextAttribs);
 
     if(m_Handle == nullptr)
         return Result::Unsupported;
 
-	if (!glXIsDirect (s_Display, m_Handle)){
+	if (!glXIsDirect (DisplayServer::Handle, m_Handle)){
         Destroy();
         return Result::Failure;
     }
@@ -57,7 +55,7 @@ Result OpenGLContextImpl::CreateLegacy(const WindowImpl &window){
 }
 
 void OpenGLContextImpl::Destroy(){
-    glXDestroyContext(s_Display, m_Handle);
+    glXDestroyContext(DisplayServer::Handle, m_Handle);
     m_WindowHandle = 0;
     m_Handle = nullptr;
 }
@@ -67,11 +65,11 @@ void OpenGLContextImpl::DestroyLegacy(){
 }
 
 Result OpenGLContextImpl::MakeCurrent(){
-    return ResultError(glXMakeCurrent(s_Display, m_WindowHandle, m_Handle) != True);
+    return ResultError(glXMakeCurrent(DisplayServer::Handle, m_WindowHandle, m_Handle) != True);
 }
 
 void OpenGLContextImpl::SwapBuffers(){
-    glXSwapBuffers(s_Display, m_WindowHandle);
+    glXSwapBuffers(DisplayServer::Handle, m_WindowHandle);
 }
 
 void OpenGLContextImpl::Resize(u32 width, u32 height){
