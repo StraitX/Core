@@ -66,8 +66,9 @@ void WindowImpl::SetSize(u32 width, u32 height){
 }
 
 const PlatformScreen &WindowImpl::Screen(){
-    if(CurrentScreen.Handle != ((SXWindow*)Handle).screen){
-        CurrentScreen.Handle = ((SXWindow*)Handle).screen;
+    //TODO for now macos supports only one screen
+    if(CurrentScreen.Handle != [NSScreen mainScreen]){
+        CurrentScreen.Handle = [NSScreen mainScreen];
 
         NSRect size = [(NSScreen*)CurrentScreen.Handle convertRectToBacking: ((NSScreen*)CurrentScreen.Handle).frame];
 
