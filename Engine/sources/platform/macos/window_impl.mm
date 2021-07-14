@@ -1,39 +1,85 @@
 #include "platform/macos/window_impl.hpp"
-#include "platform/macos/sx_window.hpp"
+#include "platform/macos/sx_window.h"
+#include "platform/macos/sx_view.h"
+#include "platform/macos/sx_window_delegate.h"
+#include "platform/macos/linear_units.h"
 
 namespace MacOS{
 
-Result WindowImpl::Open(const ScreenImpl &screen, int width, int height){
-    auto *handle = new SXWindowWrapper();
-    Handle = handle;
-    return handle->Open(screen, width, height);
+WindowImpl WindowImpl::s_MainWindow;
+
+Result WindowImpl::Open(int width, int height){
+    width = PixelsToLinearUnits(width, [NSScreen mainScreen]);
+    height = PixelsToLinearUnits(height, [NSScreen mainScreen]);
+
+    Handle = [[SXWindow alloc]initWithWidth:width Height:height];
+    if(!Handle)
+        return Result::Failure;
+
+    View = [[SXView alloc]initWithWidht:width Height:height WindowImpl:this];
+    if(!View)
+        return Result::Failure;
+
+    //should not return nil
+    Delegate = [[SXWindowDelegate alloc]initWithWindowImpl:this];
+    
+    [(SXWindow*)Handle setDelegate: (SXWindowDelegate*)Delegate];
+    [(SXWindow*)Handle setContentView: (SXView*)View];
+    [(SXWindow*)Handle setInitialFirstResponder: (SXView*)View];
+    [(SXWindow*)Handle setNextResponder: (SXView*)View];
+    [(SXWindow*)Handle makeFirstResponder: (SXView*)View];
+    [(SXWindow*)Handle center];//TODO replicate on other OSes
+    [(SXWindow*)Handle makeKeyWindow];
+    [(SXWindow*)Handle setOpaque:YES];
+    [(SXWindow*)Handle makeKeyAndOrderFront: nil];
+
+    return Result::Success;
 }
 
-Result WindowImpl::Close(){
-    auto *handle = static_cast<SXWindowWrapper*>(Handle);
-    auto res = handle->Close();
-    delete handle;
-    return res;
-}
-
-bool WindowImpl::IsOpen()const{
-    return static_cast<SXWindowWrapper*>(Handle)->IsOpen();
+void WindowImpl::Close(){
+    [(SXWindow*)Handle release];
+    [(SXView*)View release];
 }
 
 void WindowImpl::SetTitle(const char *title){
-    static_cast<SXWindowWrapper*>(Handle)->SetTitle(title);
-}
-
-bool WindowImpl::PollEvent(Event &event){
-    return static_cast<SXWindowWrapper*>(Handle)->PollEvent(event);
+    [(SXWindow*)Handle setTitle: [NSString stringWithUTF8String: title]];
 }
 
 Size2u WindowImpl::Size()const{
-    return static_cast<SXWindowWrapper*>(Handle)->Size();
+    Size2u size = {(u32)((SXWindow*)Handle).contentView.frame.size.width, (u32)((SXWindow*)Handle).contentView.frame.size.height};
+    
+    size.width = LinearUnitsToPixels(size.width, [(SXWindow*)Handle screen]);
+    size.height = LinearUnitsToPixels(size.height, [(SXWindow*)Handle screen]);
+
+    return size;
 }
 
 void WindowImpl::SetSize(u32 width, u32 height){
-    static_cast<SXWindowWrapper*>(Handle)->SetSize(width, height);
+    width = PixelsToLinearUnits(width, [(SXWindow*)Handle screen]);
+    height = PixelsToLinearUnits(height, [(SXWindow*)Handle screen]);
+
+    NSRect frame = [(SXWindow*)Handle frame];
+    frame.size.width = width;
+    frame.size.height = height;
+
+    [(SXWindow*)Handle setFrame: frame display: YES animate: YES];
+}
+
+const PlatformScreen &WindowImpl::Screen(){
+    if(CurrentScreen.Handle != ((SXWindow*)Handle).screen){
+        CurrentScreen.Handle = ((SXWindow*)Handle).screen;
+
+        NSRect size = [(NSScreen*)CurrentScreen.Handle convertRectToBacking: ((NSScreen*)CurrentScreen.Handle).frame];
+
+        NSDictionary *description = [((NSScreen*)CurrentScreen.Handle)deviceDescription];
+        NSSize displayPixelSize = [[description objectForKey:NSDeviceSize] sizeValue];
+        CGSize displayPhysicalSize = CGDisplayScreenSize([[description objectForKey:@"NSScreenNumber"] unsignedIntValue]);
+
+        CurrentScreen.Size = {(i32)size.size.width, (i32)size.size.height};
+        CurrentScreen.DPI = {LinearUnitsToPixels(float(displayPixelSize.width / displayPhysicalSize.width) * 25.4f, ((NSScreen*)CurrentScreen.Handle)), 
+        LinearUnitsToPixels(float(displayPixelSize.height / displayPhysicalSize.height) * 25.4f, ((NSScreen*)CurrentScreen.Handle))};
+    }
+    return CurrentScreen;
 }
 
 }//namespace MacOS::

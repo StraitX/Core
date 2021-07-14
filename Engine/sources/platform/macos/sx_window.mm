@@ -1,142 +1,17 @@
-#include "platform/macos/sx_application.hpp"
-#include "platform/macos/sx_window.hpp"
-#include "platform/macos/keys.hpp"
-#include "platform/macos/linear_units.h"
+#include "platform/macos/sx_window.h"
 
-@implementation SXView
-
--(instancetype)initWithSXWindow:(MacOS::SXWindowWrapper*)owner Width: (int)width Height: (int)height{
-    NSRect frame = NSMakeRect(0, 0, width, height);
-    self = [super initWithFrame:frame];
-
-    if(self==nil)return nil;
-
-    m_Wrapper = owner;
-
-    return self;
-}
-
--(void)mouseDown:(NSEvent *)event{
-    (void)event;
-    NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonPress(Mouse::Left, pos.x, pos.y);
-}
-
--(void)mouseUp:(NSEvent *)event{
-    (void)event;
-    NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonRelease(Mouse::Left,pos.x, pos.y);
-}
-
--(void)rightMouseDown:(NSEvent *)event{
-    (void)event;
-    NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonPress(Mouse::Right,pos.x, pos.y);
-}
-
--(void)rightMouseUp:(NSEvent *)event{
-    (void)event;
-    NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonRelease(Mouse::Right,pos.x, pos.y);
-}
-
--(void)otherMouseDown:(NSEvent *)event{
-    (void)event;
-    NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonPress(Mouse::Middle,pos.x, pos.y);
-}
-
--(void)otherMouseUp:(NSEvent *)event{
-    (void)event;
-    NSPoint pos = [event locationInWindow];
-    m_Wrapper->OnMouseButtonRelease(Mouse::Middle,pos.x, pos.y);
-}
-
--(BOOL)canBecomeKeyView{
-    return YES;
-}
-
--(BOOL)acceptsFirstResponder{
-    return YES;
-}
-
--(BOOL)wantsUpdateLayer{
-    return YES;
-}
-
--(void)keyDown:(NSEvent *)event{
-    m_Wrapper->OnKeyPress(MacOS::ToStraitXKeyCode([event keyCode]));
-}
-
--(void)keyUp:(NSEvent *)event{
-    m_Wrapper->OnKeyRelease(MacOS::ToStraitXKeyCode([event keyCode]));
-}
--(void)flagsChanged:(NSEvent*)event{
-    if([event modifierFlags] == 256)//TODO: deal with this value
-        m_Wrapper->OnKeyRelease(MacOS::ToStraitXKeyCode([event keyCode]));
-    else
-        m_Wrapper->OnKeyPress(MacOS::ToStraitXKeyCode([event keyCode]));
-}
-
--(void)scrollWheel:(NSEvent *)event{
-    double deltaY = [event scrollingDeltaY];
-
-    if ([event hasPreciseScrollingDeltas]){
-        deltaY *= 0.1;
-    }
-    if((int)deltaY)//TODO take care of direction on macos
-        m_Wrapper->OnMouseWheel((int)deltaY);
-}
-
--(void)mouseDragged:(NSEvent *)event{
-    (void)event;
-}
-
--(void)rightMouseDragged:(NSEvent *)event{
-    (void)event;
-}
-
--(void)otherMouseDragged:(NSEvent *)event{
-    (void)event;
-}
-
-@end
-
-@implementation SXWindowDelegate
-
--(instancetype)initWithSXWindow:(MacOS::SXWindowWrapper*)owner{
-    self = [super init];
-
-    if(self == nil)return nil;
-
-    m_Wrapper = owner;
-
-    return self;
-}
-
--(BOOL)windowShouldClose:(id)sender{
-    m_Wrapper->OnWindowClose();
-    return NO;
-}
-
--(void)windowDidResize:(NSNotification*)notification{
-    auto size = m_Wrapper->Size();
-    m_Wrapper->OnWindowResized(size.width, size.height);
-}
-
-@end
 
 @implementation SXWindow
 
--(instancetype)initWithSXWindow:(MacOS::SXWindowWrapper*)owner Width: (int)width Height: (int)height{
+-(instancetype)initWithWidth: (int)width Height: (int)height{
     NSRect frame = NSMakeRect(0, 0, width, height);
+
     self = [super initWithContentRect:frame
             styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable
             backing:NSBackingStoreBuffered
             defer:NO];
-    if(self == nil)
-        return nil;
-    m_Wrapper = owner;
+    if(self == nil)return nil;
+
     [self setBackgroundColor:[NSColor blueColor]];
     [self makeKeyAndOrderFront:[NSApplication sharedApplication]];
     [self makeKeyWindow];
@@ -145,12 +20,12 @@
     return self;
 }
 
--(void)close{
+-(void)dealloc{
     [self close];
+    [super dealloc];
 }
 
 -(BOOL)canBecomeKeyWindow{
-    // Required for NSWindowStyleMaskBorderless windows
     return YES;
 }
 
@@ -159,155 +34,3 @@
 }
 
 @end
-
-
-namespace MacOS{
-
-Result SXWindowWrapper::Open(const ScreenImpl &screen, int width, int height){
-    width = PixelsToLinearUnits(width, (NSScreen*)screen.Handle);
-    height = PixelsToLinearUnits(height, (NSScreen*)screen.Handle);
-
-    Handle = [[SXWindow alloc] initWithSXWindow: this Width: width Height: height];
-
-    if(Handle == nil)goto window_fail;
-
-    Delegate = [[SXWindowDelegate alloc]initWithSXWindow: this]; 
-
-    if(Delegate == nil)goto deleagete_fail;
-
-    View = [[SXView alloc]initWithSXWindow: this Width: width Height: height];
-
-    if(View == nil)goto view_fail;
-
-    [Handle setDelegate: Delegate];
-    [Handle setContentView: View];
-    [Handle setInitialFirstResponder: View];
-    [Handle setNextResponder: View];
-    [Handle makeFirstResponder: View];
-    [Handle center];//TODO replicate on other OSes
-    [Handle makeKeyWindow];
-    [Handle setOpaque:YES];
-    [Handle makeKeyAndOrderFront: nil];
-
-    return Result::Success;
-view_fail:
-    //somehow delete Delegate
-deleagete_fail:
-    [Handle close];
-window_fail:
-    Handle = nil;
-    return Result::Failure;
-}
-
-Result SXWindowWrapper::Close(){
-    return Result::Success;
-}
-
-bool SXWindowWrapper::IsOpen()const{
-    return Handle != nil;
-}
-
-void SXWindowWrapper::SetTitle(const char *title){
-    [Handle setTitle: [NSString stringWithUTF8String: title]];
-}
-
-bool SXWindowWrapper::PollEvent(Event &event){
-    [NSApplication sharedApplication];
-
-    SXApplication::HandleEvents();
-
-    if(!EventsQueue.empty()){
-        event = EventsQueue.front();
-        EventsQueue.pop();
-        return true;
-    }
-    return false;
-}
-
-Size2u SXWindowWrapper::Size()const{
-    Size2u size = {(u32)Handle.contentView.frame.size.width, (u32)Handle.contentView.frame.size.height};
-    
-    size.width = LinearUnitsToPixels(size.width, [Handle screen]);
-    size.height = LinearUnitsToPixels(size.height, [Handle screen]);
-
-    return size;
-}
-
-void SXWindowWrapper::SetSize(u32 width, u32 height){
-    width = PixelsToLinearUnits(width, [Handle screen]);
-    height = PixelsToLinearUnits(height, [Handle screen]);
-
-    NSRect frame = [Handle frame];
-    frame.size.width = width;
-    frame.size.height = height;
-
-    [Handle setFrame: frame display: YES animate: YES];
-}
-
-void SXWindowWrapper::OnWindowClose(){
-    Event e;
-    e.Type = EventType::WindowClose;
-    EventsQueue.push(e);
-}
-
-void SXWindowWrapper::OnWindowResized(u32 width, u32 height){
-    Event e;
-    e.Type = EventType::WindowResized;
-    e.WindowResized.x = width;
-    e.WindowResized.y = height;
-    EventsQueue.push(e);
-}
-
-void SXWindowWrapper::OnWindowDraw(){
-    Event e;
-    e.Type = EventType::WindowDraw;
-    EventsQueue.push(e);
-}
-
-void SXWindowWrapper::OnMouseWheel(u32 delta){
-    Event e;
-    e.Type = EventType::MouseWheel;
-    e.MouseWheel.Delta = delta;
-    EventsQueue.push(e);
-}
-
-void SXWindowWrapper::OnMouseButtonPress(Mouse::Button button, i32 x, i32 y){
-    x = LinearUnitsToPixels(x, [Handle screen]);
-    y = LinearUnitsToPixels(y, [Handle screen]);
-
-    Event e;
-    e.Type = EventType::MouseButtonPress;
-    e.MouseButtonPress.Button = button;
-    e.MouseButtonPress.x = x;
-    e.MouseButtonPress.y = y;
-    EventsQueue.push(e);
-}
-
-void SXWindowWrapper::OnMouseButtonRelease(Mouse::Button button, i32 x, i32 y){
-    x = LinearUnitsToPixels(x, [Handle screen]);
-    y = LinearUnitsToPixels(y, [Handle screen]);
-    
-    Event e;
-    e.Type = EventType::MouseButtonRelease;
-    e.MouseButtonPress.Button = button;
-    e.MouseButtonPress.x = x;
-    e.MouseButtonPress.y = y;
-    EventsQueue.push(e);
-}
-
-void SXWindowWrapper::OnKeyPress(Key key){
-    Event e;
-    e.Type = EventType::KeyPress;
-    e.KeyPress.KeyCode = key;
-    EventsQueue.push(e);
-}
-
-void SXWindowWrapper::OnKeyRelease(Key key){
-    Event e;
-    e.Type = EventType::KeyRelease;
-    e.KeyPress.KeyCode = key;
-    EventsQueue.push(e);
-}
-
-}//namespace MacOS::
-

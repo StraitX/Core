@@ -4,12 +4,13 @@
 #include "platform/events.hpp"
 #include "platform/result.hpp"
 #include "platform/screen.hpp"
+#include "platform/noncopyable.hpp"
 
 struct HWND__;
 
 namespace Windows{
 
-class WindowImpl{
+class WindowImpl: public NonCopyable{
 private:
     HWND__ *m_Handle = nullptr;
     bool m_UnhandledResize = false;

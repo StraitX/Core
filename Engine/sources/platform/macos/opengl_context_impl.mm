@@ -1,44 +1,79 @@
-#include "platform/macos/common.hpp"
+#define GL_SILENCE_DEPRECATION
+#import <Cocoa/Cocoa.h>
 #include "platform/macos/opengl_context_impl.hpp"
-#include "platform/macos/ns_opengl_context_wrapper.hpp"
 
 namespace MacOS{
 
 Result OpenGLContextImpl::Create(const WindowImpl &window, const Version &version){
-    auto *ctx = new NSOpenGLContextWrapper();
-    Handle = ctx;
-    return ctx->Create(window, version);
+    NSOpenGLPixelFormatAttribute attrs[] = {
+        NSOpenGLPFAAccelerated,
+        NSOpenGLPFADoubleBuffer,
+        NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
+        NSOpenGLPFAColorSize, 24,
+        NSOpenGLPFAAlphaSize, 8,
+        NSOpenGLPFADepthSize, 24,
+        NSOpenGLPFAStencilSize, 8,
+        NSOpenGLPFASampleBuffers, 0,
+        0,
+    };
+
+    Format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+
+    if(Format == nil)
+        return Result::Unsupported;
+
+    Handle = [[NSOpenGLContext alloc]initWithFormat:(NSOpenGLPixelFormat*)Format shareContext:NULL];
+
+    if(Handle == nil)return Result::Failure;
+    
+    [(NSOpenGLContext*)Handle setView: (NSView*)window.View];
+
+    return Result::Success;
 }
 
 Result OpenGLContextImpl::CreateLegacy(const WindowImpl &window){
-    (void)window;
-    auto *ctx = new NSOpenGLContextWrapper();
-    Handle = ctx;
-    return ctx->CreateLegacy();
+    NSOpenGLPixelFormatAttribute attrs[] = {
+        NSOpenGLPFADoubleBuffer,
+        NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
+        NSOpenGLPFAColorSize, 24,
+        NSOpenGLPFAAlphaSize, 8,
+        NSOpenGLPFADepthSize, 24,
+        NSOpenGLPFAStencilSize, 8,
+        NSOpenGLPFASampleBuffers, 0,
+        0,
+    };
+
+    Format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+
+    if(Format == nil)
+        return Result::Unsupported;
+
+    Handle = [[NSOpenGLContext alloc]
+                                  initWithFormat:(NSOpenGLPixelFormat*)Format
+                                  shareContext:NULL];
+    return ResultError(Handle == nil);
 }
 
 void OpenGLContextImpl::Destroy(){
-    auto *ctx = static_cast<NSOpenGLContextWrapper*>(Handle);
-    ctx->DestroyLegacy();
-    delete ctx;
+    DestroyLegacy();
 }
 
 void OpenGLContextImpl::DestroyLegacy(){
-    auto *ctx = static_cast<NSOpenGLContextWrapper*>(Handle);
-    ctx->DestroyLegacy();
-    delete ctx;
+    [(NSOpenGLContext*)Handle release];
+    [(NSOpenGLPixelFormat*)Format release];
 }
 
 Result OpenGLContextImpl::MakeCurrent(){
-    return static_cast<NSOpenGLContextWrapper*>(Handle)->MakeCurrent();
+    [(NSOpenGLContext*)Handle makeCurrentContext];
+    return ResultError(Handle != [NSOpenGLContext currentContext]);
 }
 
 void OpenGLContextImpl::SwapBuffers(){
-    static_cast<NSOpenGLContextWrapper*>(Handle)->SwapBuffers();
+    [(NSOpenGLContext*)Handle flushBuffer];
 }
 
 void OpenGLContextImpl::Resize(u32 width, u32 height){
-    static_cast<NSOpenGLContextWrapper*>(Handle)->Resize(width, height);
+    [(NSOpenGLContext*)Handle update];
 }
 
 }//namespace MacOS::

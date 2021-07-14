@@ -1,13 +1,18 @@
 #ifndef STRAITX_MACOS_OPENGL_CONTEXT_IMPL_HPP
 #define STRAITX_MACOS_OPENGL_CONTEXT_IMPL_HPP
 
-#include "platform/window.hpp"
+#include "platform/types.hpp"
+#include "platform/result.hpp"
 #include "platform/macos/window_impl.hpp"
 
 namespace MacOS{
 
-struct OpenGLContextImpl{
+class OpenGLContextImpl{
+private:
     void *Handle = nullptr;
+    void *Format = nullptr;
+public:
+    OpenGLContextImpl() = default;
 
     Result Create(const WindowImpl &window, const Version &version);
 
@@ -21,9 +26,10 @@ struct OpenGLContextImpl{
 
     void SwapBuffers();
 
-    void Resize(u32 width, u32 height);
+	void Resize(u32 width, u32 height);
+
 };
 
 }//namespace MacOS::
 
-#endif//STRAITX_MACOS_OPENGL_CONTEXT_IMPL_HPP
+#endif //STRAITX_MACOS_OPENGL_CONTEXT_IMPL_HPP

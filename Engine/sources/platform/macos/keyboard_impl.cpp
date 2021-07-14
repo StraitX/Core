@@ -1,11 +1,10 @@
 #include "platform/keyboard.hpp"
-#include "platform/macos/sx_application.hpp"
+#include "platform/macos/input_manager.hpp"
 
 namespace Keyboard{
 
 bool IsKeyPressed(Key code){
-    MacOS::SXApplication::HandleEvents();
-    return MacOS::SXApplication::s_KeyboardState[(size_t)code];
+    return MacOS::InputManager::s_KeyboardState[(size_t)code];
 }
 
 }//namespace Keyboard::

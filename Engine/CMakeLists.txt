@@ -190,19 +190,20 @@ elseif(STRAITX_PLATFORM_WINDOWS)
 
 elseif(STRAITX_PLATFORM_MACOS)
     set(SOURCES_PLATFORM_D
-		${SOURCES_DIR}/platform/macos/entry_point.cpp
+		${SOURCES_DIR}/platform/macos/entry_point.mm
 
         ${SOURCES_DIR}/platform/macos/sx_application.mm
         ${SOURCES_DIR}/platform/macos/keys.cpp
         ${SOURCES_DIR}/platform/macos/keyboard_impl.cpp
         ${SOURCES_DIR}/platform/macos/mouse_impl.mm
+        ${SOURCES_DIR}/platform/macos/sx_view.mm
         ${SOURCES_DIR}/platform/macos/sx_window.mm
+        ${SOURCES_DIR}/platform/macos/sx_window_delegate.mm
         ${SOURCES_DIR}/platform/macos/window_impl.mm
-        ${SOURCES_DIR}/platform/macos/window_system_impl.mm
         ${SOURCES_DIR}/platform/macos/glloader_impl.mm
-        ${SOURCES_DIR}/platform/macos/ns_opengl_context_wrapper.mm
         ${SOURCES_DIR}/platform/macos/opengl_context_impl.mm
         ${SOURCES_DIR}/platform/macos/clock_impl.cpp
+        ${SOURCES_DIR}/platform/macos/input_manager.cpp
         ${SOURCES_DIR}/platform/unix/sleep_impl.cpp
         ${SOURCES_DIR}/platform/unix/file_impl.cpp
         ${SOURCES_DIR}/platform/unix/memory_impl.cpp

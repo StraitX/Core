@@ -1,4 +1,3 @@
-#include "platform/macos/common.hpp"
 #include <OpenGL/gl.h>
 #include <assert.h>
 #import <Foundation/Foundation.h>

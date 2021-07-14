@@ -3,28 +3,35 @@
 
 #include "platform/result.hpp"
 #include "platform/events.hpp"
-#include "platform/macos/screen_impl.hpp"
+#include "platform/screen.hpp"
+#include "platform/noncopyable.hpp"
 
 namespace MacOS{
 
-struct WindowImpl{
+struct WindowImpl: NonCopyable{
+    using EventHandlerProc = void (*)(const Event &e);
+
     void *Handle = nullptr;
+    void *View = nullptr;
+    void *Delegate = nullptr;
+    EventHandlerProc EventHandler = nullptr;
+    PlatformScreen CurrentScreen;
+
+    static WindowImpl s_MainWindow;
 
     WindowImpl() = default;
 
-    Result Open(const ScreenImpl &screen, int width, int height);
+    Result Open(int width, int height);
 
-    Result Close();
-
-    bool IsOpen()const;
+    void Close();
 
     void SetTitle(const char *title);
-
-    bool PollEvent(Event &event);
 
     Size2u Size()const;
 
     void SetSize(u32 width, u32 height);
+
+    const PlatformScreen &Screen();
 };
 
 }//namespace MacOS::

@@ -13,5 +13,4 @@ T LinearUnitsToPixels(const T& units, NSScreen *screen){
     return units * [screen backingScaleFactor];
 }
 
-
 #endif//STRAITX_MACOS_LINEAR_UNITS_H
