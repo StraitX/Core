@@ -40,6 +40,9 @@
     e.Type = EventType::FocusIn;
 
     WindowImpl->EventHandler(e);
+
+	MacOS::InputManager::ResetKeyboardState();
+    MacOS::InputManager::ResetMouseState();
 }
 
 -(void)resignKeyWindow{
