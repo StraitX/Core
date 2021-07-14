@@ -12,7 +12,7 @@ Result WindowImpl::Open(int width, int height){
     width = PixelsToLinearUnits(width, [NSScreen mainScreen]);
     height = PixelsToLinearUnits(height, [NSScreen mainScreen]);
 
-    Handle = [[SXWindow alloc]initWithWidth:width Height:height];
+    Handle = [[SXWindow alloc]initWithWidth:width Height:height WindowImpl:this];
     if(!Handle)
         return Result::Failure;
 

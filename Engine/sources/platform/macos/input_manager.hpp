@@ -10,9 +10,9 @@ struct InputManager{
     static bool s_KeyboardState[(size_t)Key::KeysCount];
     static bool s_MouseState[(size_t)Mouse::Button::ButtonCount];
 
-    void ResetKeyboardState();
+    static void ResetKeyboardState();
 
-    void ResetMouseState();
+    static void ResetMouseState();
 };
 
 }//namespace MacOS::
