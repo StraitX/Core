@@ -36,6 +36,25 @@ struct IsVolatile: IntegralConstant<bool, false>{};
 template <typename T>
 struct IsVolatile<volatile T>: IntegralConstant<bool, true>{};
 
+template <typename Base, typename Derived>
+class IsBaseOf{
+private:
+	static constexpr Derived *Pointer(){
+		return nullptr;
+	}
+
+	static constexpr bool Check(Base *){
+		return true;
+	}
+
+	static constexpr bool Check(void *){
+		return false;
+	}
+public:
+	static constexpr bool Value = Check(Pointer());
+};
+
+
 template <typename T>
 struct RemoveReference{
     typedef T Type;
