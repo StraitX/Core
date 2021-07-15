@@ -1,7 +1,7 @@
 #ifndef STRAITX_OPENGL_SAMPLER_IMPL_HPP
 #define STRAITX_OPENGL_SAMPLER_IMPL_HPP
 
-#include "graphics/api/sampler.hpp"
+#include "graphics/sampler.hpp"
 
 namespace GL{
 

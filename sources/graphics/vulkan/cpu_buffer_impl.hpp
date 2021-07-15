@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_CPU_BUFFER_IMPL_HPP
 
 #include "platform/vulkan.hpp"
-#include "graphics/api/cpu_buffer.hpp"
+#include "graphics/cpu_buffer.hpp"
 
 namespace Vk{
 

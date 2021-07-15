@@ -1,7 +1,7 @@
 #include "platform/file.hpp"
 #include "platform/memory.hpp"
 #include "core/log.hpp"
-#include "graphics/api/shader.hpp"
+#include "graphics/shader.hpp"
 
 Shader::VTable Shader::s_VTable;
 

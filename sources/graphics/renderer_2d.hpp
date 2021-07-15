@@ -4,7 +4,7 @@
 #include "core/subsystem.hpp"
 #include "core/math/vector2.hpp"
 #include "graphics/color.hpp"
-#include "graphics/api/texture.hpp"
+#include "graphics/texture.hpp"
 
 class Renderer2D: public Subsystem{
 private:

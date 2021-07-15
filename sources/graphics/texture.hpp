@@ -3,10 +3,10 @@
 
 #include "platform/compiler.hpp"
 #include "core/noncopyable.hpp"
-#include "graphics/api/gpu_configuration.hpp"
-#include "graphics/api/format.hpp"
-#include "graphics/api/cpu_buffer.hpp"
-#include "graphics/api/sampler.hpp"
+#include "graphics/gpu_configuration.hpp"
+#include "graphics/format.hpp"
+#include "graphics/cpu_buffer.hpp"
+#include "graphics/sampler.hpp"
 #include "graphics/image.hpp"
 
 enum class SamplePoints{

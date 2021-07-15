@@ -1,4 +1,4 @@
-#include "graphics/api/format.hpp"
+#include "graphics/format.hpp"
 
 static size_t PixelFormatSizeTable[] = {
     0,

@@ -1,5 +1,5 @@
 #include "core/assert.hpp"
-#include "graphics/api/gpu_configuration.hpp"
+#include "graphics/gpu_configuration.hpp"
 
 GPUVendor VendorIDToVendor(u32 vendor_id){
     switch (vendor_id) {

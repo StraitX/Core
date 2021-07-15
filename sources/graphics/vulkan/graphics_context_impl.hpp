@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_GRAPHICS_CONTEXT_IMPL_HPP
 
 #include "core/raw_var.hpp"
-#include "graphics/api/graphics_context.hpp"
+#include "graphics/graphics_context.hpp"
 #include "graphics/vulkan/swapchain.hpp"
 #include "graphics/vulkan/command_buffer.hpp"
 #include "graphics/vulkan/fence.hpp"

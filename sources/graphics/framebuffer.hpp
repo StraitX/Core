@@ -5,9 +5,9 @@
 #include "core/push_array.hpp"
 #include "core/noncopyable.hpp"
 #include "core/math/vector2.hpp"
-#include "graphics/api/gpu_configuration.hpp"
-#include "graphics/api/texture.hpp"
-#include "graphics/api/render_pass.hpp"
+#include "graphics/gpu_configuration.hpp"
+#include "graphics/texture.hpp"
+#include "graphics/render_pass.hpp"
 
 struct FramebufferProperties{
     Vector2u Size = {0, 0};

@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_GPU_BUFFER_IMPL_HPP
 
 #include "platform/vulkan.hpp"
-#include "graphics/api/gpu_buffer.hpp"
+#include "graphics/gpu_buffer.hpp"
 
 namespace Vk{
 

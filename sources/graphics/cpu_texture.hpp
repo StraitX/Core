@@ -2,8 +2,8 @@
 #define STRAITX_CPU_TEXTURE_HPP
 
 #include "core/math/vector2.hpp"
-#include "graphics/api/cpu_buffer.hpp"
-#include "graphics/api/format.hpp"
+#include "graphics/cpu_buffer.hpp"
+#include "graphics/format.hpp"
 
 class CPUTexture: private CPUBuffer{
 private:

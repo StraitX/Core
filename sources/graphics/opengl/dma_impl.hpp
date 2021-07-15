@@ -1,7 +1,7 @@
 #ifndef STRAITX_OPENGL_DMA_IMPL_HPP
 #define STRAITX_OPENGL_DMA_IMPL_HPP
 
-#include "graphics/api/dma.hpp"
+#include "graphics/dma.hpp"
 
 namespace GL{
 

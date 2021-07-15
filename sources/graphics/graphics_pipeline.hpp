@@ -4,12 +4,12 @@
 #include "core/span.hpp"
 #include "core/noncopyable.hpp"
 #include "core/validable.hpp"
-#include "graphics/api/shader.hpp"
-#include "graphics/api/gpu_buffer.hpp"
-#include "graphics/api/render_pass.hpp"
-#include "graphics/api/texture.hpp"
-#include "graphics/api/sampler.hpp"
-#include "graphics/api/descriptor_set.hpp"
+#include "graphics/shader.hpp"
+#include "graphics/gpu_buffer.hpp"
+#include "graphics/render_pass.hpp"
+#include "graphics/texture.hpp"
+#include "graphics/sampler.hpp"
+#include "graphics/descriptor_set.hpp"
 
 enum class VertexAttribute{
 	Float32x1,

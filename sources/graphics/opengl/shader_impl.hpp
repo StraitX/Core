@@ -3,7 +3,7 @@
 
 #include "platform/opengl.hpp"
 #include "core/push_array.hpp"
-#include "graphics/api/shader.hpp"
+#include "graphics/shader.hpp"
 
 namespace GL{
 

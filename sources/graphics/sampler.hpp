@@ -5,7 +5,7 @@
 #include "platform/compiler.hpp"
 #include "core/assert.hpp"
 #include "core/move.hpp"
-#include "graphics/api/gpu_configuration.hpp"
+#include "graphics/gpu_configuration.hpp"
 
 enum class FilteringMode: u8{
     Linear,

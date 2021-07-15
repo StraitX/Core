@@ -5,7 +5,7 @@
 #include "core/noncopyable.hpp"
 #include "core/algorithm.hpp"
 #include "core/assert.hpp"
-#include "graphics/api/gpu_configuration.hpp"
+#include "graphics/gpu_configuration.hpp"
 
 namespace GL{
 class GPUBufferImpl;

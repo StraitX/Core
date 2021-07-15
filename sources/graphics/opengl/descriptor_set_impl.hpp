@@ -1,7 +1,7 @@
 #ifndef STRAITX_OPENGL_DESCRIPTOR_SET_IMPL_HPP
 #define STRAITX_OPENGL_DESCRIPTOR_SET_IMPL_HPP
 
-#include "graphics/api/descriptor_set.hpp"
+#include "graphics/descriptor_set.hpp"
 
 namespace GL{
 

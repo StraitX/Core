@@ -1,5 +1,5 @@
 #include "core/raw_var.hpp"
-#include "graphics/api/graphics_context.hpp"
+#include "graphics/graphics_context.hpp"
 #include "graphics/renderer_2d.hpp"
 #include "graphics/batch_renderer_2d.hpp"
 

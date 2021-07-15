@@ -3,11 +3,11 @@
 
 #include "platform/compiler.hpp"
 #include "core/push_array.hpp"
-#include "graphics/api/shader.hpp"
-#include "graphics/api/gpu_configuration.hpp"
-#include "graphics/api/gpu_buffer.hpp"
-#include "graphics/api/texture.hpp"
-#include "graphics/api/sampler.hpp"
+#include "graphics/shader.hpp"
+#include "graphics/gpu_configuration.hpp"
+#include "graphics/gpu_buffer.hpp"
+#include "graphics/texture.hpp"
+#include "graphics/sampler.hpp"
 
 enum class ShaderBindingType: u8{
     UniformBuffer = 0,

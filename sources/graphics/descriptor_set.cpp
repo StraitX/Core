@@ -1,4 +1,4 @@
-#include "graphics/api/descriptor_set.hpp"
+#include "graphics/descriptor_set.hpp"
 
 DescriptorSetLayout::VTable DescriptorSetLayout::s_VTable;
 

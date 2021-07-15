@@ -1,4 +1,4 @@
-#include "graphics/api/gpu_command_buffer.hpp"
+#include "graphics/gpu_command_buffer.hpp"
 
 GPUCommand::GPUCommand(const GPUCmdCopyCPUToGPUBuffer &cmd):
 	Type(GPUCommandType::CopyCPUToGPUBuffer)

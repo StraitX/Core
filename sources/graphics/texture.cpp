@@ -1,8 +1,8 @@
 #include "core/algorithm.hpp"
 #include "core/assert.hpp"
-#include "graphics/api/texture.hpp"
-#include "graphics/api/cpu_texture.hpp"
-#include "graphics/api/dma.hpp"
+#include "graphics/texture.hpp"
+#include "graphics/cpu_texture.hpp"
+#include "graphics/dma.hpp"
 #include "graphics/image.hpp"
 
 Texture2D::VTable Texture2D::s_VTable;

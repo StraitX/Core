@@ -5,7 +5,7 @@
 #include "platform/types.hpp"
 #include "platform/defs.hpp"
 #include "core/assert.hpp"
-#include "graphics/api/gpu_configuration.hpp"
+#include "graphics/gpu_configuration.hpp"
 
 namespace Vk{
 

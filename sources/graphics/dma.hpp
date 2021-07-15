@@ -1,10 +1,10 @@
 #ifndef STRAITX_DMA_HPP
 #define STRAITX_DMA_HPP
 
-#include "graphics/api/cpu_buffer.hpp"
-#include "graphics/api/gpu_buffer.hpp"
-#include "graphics/api/cpu_texture.hpp"
-#include "graphics/api/texture.hpp"
+#include "graphics/cpu_buffer.hpp"
+#include "graphics/gpu_buffer.hpp"
+#include "graphics/cpu_texture.hpp"
+#include "graphics/texture.hpp"
 
 class GraphicsAPILoader;
 

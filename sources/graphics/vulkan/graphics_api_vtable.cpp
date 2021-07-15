@@ -1,4 +1,4 @@
-#include "graphics/api/graphics_api_vtable.hpp"
+#include "graphics/graphics_api_vtable.hpp"
 
 #include "graphics/vulkan/graphics_context_impl.hpp"
 #include "graphics/vulkan/gpu_buffer_impl.hpp"

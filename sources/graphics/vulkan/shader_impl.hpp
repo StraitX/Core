@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_SHADER_IMPL_HPP
 
 #include "platform/vulkan.hpp"
-#include "graphics/api/shader.hpp"
+#include "graphics/shader.hpp"
 
 namespace Vk{
 

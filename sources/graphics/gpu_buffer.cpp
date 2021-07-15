@@ -1,3 +1,3 @@
-#include "graphics/api/gpu_buffer.hpp"
+#include "graphics/gpu_buffer.hpp"
 
 GPUBuffer::VTable GPUBuffer::s_VTable;

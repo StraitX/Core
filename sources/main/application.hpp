@@ -3,7 +3,7 @@
 
 #include "platform/events.hpp"
 #include "core/math/vector2.hpp"
-#include "graphics/api/graphics_context.hpp"
+#include "graphics/graphics_context.hpp"
 
 class Engine;
 

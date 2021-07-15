@@ -1,7 +1,7 @@
 #ifndef STRAITX_OPENGL_GPU_BUFFER_IMPL_HPP
 #define STRAITX_OPENGL_GPU_BUFFER_IMPL_HPP
 
-#include "graphics/api/gpu_buffer.hpp"
+#include "graphics/gpu_buffer.hpp"
 
 namespace GL{
 

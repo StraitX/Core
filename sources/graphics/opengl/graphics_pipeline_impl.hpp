@@ -2,7 +2,7 @@
 #define STRAITX_OPENGL_GRAPHICS_PIPELINE_IMPL_HPP
 
 #include "platform/opengl.hpp"
-#include "graphics/api/graphics_pipeline.hpp"
+#include "graphics/graphics_pipeline.hpp"
 #include "graphics/opengl/descriptor_set_impl.hpp"
 
 namespace GL{

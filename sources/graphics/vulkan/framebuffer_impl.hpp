@@ -3,7 +3,7 @@
 
 #include "platform/vulkan.hpp"
 #include "core/push_array.hpp"
-#include "graphics/api/framebuffer.hpp"
+#include "graphics/framebuffer.hpp"
 
 namespace Vk{
 

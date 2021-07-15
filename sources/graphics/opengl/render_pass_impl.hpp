@@ -2,7 +2,7 @@
 #define STRAITX_OPENGL_RENDER_PASS_IMPL_HPP
 
 #include "core/push_array.hpp"
-#include "graphics/api/render_pass.hpp"
+#include "graphics/render_pass.hpp"
 
 namespace GL{
 

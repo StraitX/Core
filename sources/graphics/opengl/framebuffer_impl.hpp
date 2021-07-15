@@ -1,7 +1,7 @@
 #ifndef STRAITX_OPENGL_FRAMEBUFFER_IMPL_HPP
 #define STRAITX_OPENGL_FRAMEBUFFER_IMPL_HPP
 
-#include "graphics/api/framebuffer.hpp"
+#include "graphics/framebuffer.hpp"
 
 namespace GL{
 

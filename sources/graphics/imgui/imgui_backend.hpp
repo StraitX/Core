@@ -2,11 +2,11 @@
 #define STRAITX_IMGUI_BACKEND_HPP
 
 #include "core/subsystem.hpp"
-#include "graphics/api/texture.hpp"
-#include "graphics/api/graphics_pipeline.hpp"
-#include "graphics/api/descriptor_set.hpp"
-#include "graphics/api/graphics_context.hpp"
-#include "graphics/api/gpu_command_buffer.hpp"
+#include "graphics/texture.hpp"
+#include "graphics/graphics_pipeline.hpp"
+#include "graphics/descriptor_set.hpp"
+#include "graphics/graphics_context.hpp"
+#include "graphics/gpu_command_buffer.hpp"
 
 class ImGuiBackend: public Subsystem{
 private:

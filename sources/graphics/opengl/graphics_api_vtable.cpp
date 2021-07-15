@@ -1,4 +1,4 @@
-#include "graphics/api/graphics_api_vtable.hpp"
+#include "graphics/graphics_api_vtable.hpp"
 
 #include "graphics/opengl/graphics_context_impl.hpp"
 #include "graphics/opengl/gpu_buffer_impl.hpp"

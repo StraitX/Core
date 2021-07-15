@@ -2,8 +2,8 @@
 #include "core/log.hpp"
 #include "core/string.hpp"
 #include "graphics/batch_renderer_2d.hpp"
-#include "graphics/api/dma.hpp"
-#include "graphics/api/graphics_context.hpp"
+#include "graphics/dma.hpp"
+#include "graphics/graphics_context.hpp"
 
 static const char *s_VertexShaderSources = R"(#version 440 core
 

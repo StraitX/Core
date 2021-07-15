@@ -1,7 +1,7 @@
 #ifndef STRAITX_VULKAN_DMA_IMPL_HPP
 #define STRAITX_VULKAN_DMA_IMPL_HPP
 
-#include "graphics/api/dma.hpp"
+#include "graphics/dma.hpp"
 #include "graphics/vulkan/fence.hpp"
 #include "graphics/vulkan/command_buffer.hpp"
 

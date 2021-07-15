@@ -5,7 +5,7 @@
 #include "platform/file.hpp"
 #include "core/math/vector2.hpp"
 #include "core/noncopyable.hpp"
-#include "graphics/api/format.hpp"
+#include "graphics/format.hpp"
 #include "graphics/color.hpp"
 #include "graphics/image_loader.hpp"
 

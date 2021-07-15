@@ -3,7 +3,7 @@
 
 #include "platform/vulkan.hpp"
 #include "platform/defs.hpp"
-#include "graphics/api/gpu_configuration.hpp"
+#include "graphics/gpu_configuration.hpp"
 #include "graphics/vulkan/memory.hpp"
 
 namespace Vk{

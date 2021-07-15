@@ -4,7 +4,7 @@
 #include "platform/opengl_context.hpp"
 #include "platform/opengl.hpp"
 #include "core/raw_var.hpp"
-#include "graphics/api/graphics_context.hpp"
+#include "graphics/graphics_context.hpp"
 #include "graphics/opengl/render_pass_impl.hpp"
 #include "graphics/opengl/framebuffer_impl.hpp"
 

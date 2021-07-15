@@ -1,7 +1,7 @@
 #ifndef STRAITX_VULKAN_SAMPLER_IMPL_HPP
 #define STRAITX_VULKAN_SAMPLER_IMPL_HPP
 
-#include "graphics/api/sampler.hpp"
+#include "graphics/sampler.hpp"
 
 namespace Vk{
 

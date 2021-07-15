@@ -5,7 +5,7 @@
 #include "core/push_array.hpp"
 #include "core/math/vector4.hpp"
 #include "core/noncopyable.hpp"
-#include "graphics/api/texture.hpp"
+#include "graphics/texture.hpp"
 
 struct AttachmentDescription{
     TextureLayout InitialLayout = TextureLayout::Undefined;

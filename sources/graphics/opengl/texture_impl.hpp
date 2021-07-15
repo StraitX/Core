@@ -2,7 +2,7 @@
 #define STRAITX_OPENGL_GPU_TEXTURE_IMPL_HPP
 
 #include "platform/opengl.hpp"
-#include "graphics/api/texture.hpp"
+#include "graphics/texture.hpp"
 
 namespace GL{
 

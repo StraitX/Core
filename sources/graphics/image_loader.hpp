@@ -3,7 +3,7 @@
 
 #include "platform/file.hpp"
 #include "platform/result.hpp"
-#include "graphics/api/format.hpp"
+#include "graphics/format.hpp"
 
 enum class ImageFileFormat{
     PNG = 1,

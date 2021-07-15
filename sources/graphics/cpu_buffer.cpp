@@ -1,5 +1,5 @@
 #include "platform/memory.hpp"
-#include "graphics/api/cpu_buffer.hpp"
+#include "graphics/cpu_buffer.hpp"
 
 CPUBuffer::VTable CPUBuffer::s_VTable;
 

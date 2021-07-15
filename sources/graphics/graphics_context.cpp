@@ -1,5 +1,5 @@
 #include "core/assert.hpp"
-#include "graphics/api/graphics_context.hpp"
+#include "graphics/graphics_context.hpp"
 
 const char *GraphicsAPI::Name()const{
 	static const char *s_Names[]={

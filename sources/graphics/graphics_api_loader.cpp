@@ -1,8 +1,8 @@
 #include "platform/opengl.hpp"
 #include "platform/vulkan.hpp"
 #include "core/log.hpp"
-#include "graphics/api/graphics_api_loader.hpp"
-#include "graphics/api/graphics_api_vtable.hpp"
+#include "graphics/graphics_api_loader.hpp"
+#include "graphics/graphics_api_vtable.hpp"
 
 #ifdef SX_VULKAN_SUPPORTED
 extern GraphicsAPIVTable VulkanVTable;

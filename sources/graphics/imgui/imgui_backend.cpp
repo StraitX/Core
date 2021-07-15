@@ -1,7 +1,7 @@
 #include "graphics/imgui/imgui_backend.hpp"
 #include "graphics/imgui/imgui.hpp"
-#include "graphics/api/cpu_texture.hpp"
-#include "graphics/api/dma.hpp"
+#include "graphics/cpu_texture.hpp"
+#include "graphics/dma.hpp"
 #include "core/string.hpp"
 #include "platform/keyboard.hpp"
 

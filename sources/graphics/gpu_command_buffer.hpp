@@ -3,14 +3,14 @@
 
 #include "core/bucket_list.hpp"
 #include "core/math/vector4.hpp"
-#include "graphics/api/gpu_configuration.hpp"
-#include "graphics/api/texture.hpp"
+#include "graphics/gpu_configuration.hpp"
+#include "graphics/texture.hpp"
 
-#include "graphics/api/cpu_buffer.hpp"
-#include "graphics/api/gpu_buffer.hpp"
-#include "graphics/api/graphics_pipeline.hpp"
-#include "graphics/api/framebuffer.hpp"
-#include "graphics/api/descriptor_set.hpp"
+#include "graphics/cpu_buffer.hpp"
+#include "graphics/gpu_buffer.hpp"
+#include "graphics/graphics_pipeline.hpp"
+#include "graphics/framebuffer.hpp"
+#include "graphics/descriptor_set.hpp"
 
 enum class IndicesType{
     Uint16,

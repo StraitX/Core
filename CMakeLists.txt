@@ -79,21 +79,21 @@ set(SOURCES_GRAPHICS_OPENGL
 )
 
 set(SOURCES_GRAPHICS_API
-    ${SOURCES_DIR}/graphics/api/format.cpp
-    ${SOURCES_DIR}/graphics/api/graphics_api_loader.cpp
-	${SOURCES_DIR}/graphics/api/graphics_context.cpp
-	${SOURCES_DIR}/graphics/api/gpu_command_buffer.cpp
-    ${SOURCES_DIR}/graphics/api/gpu_configuration.cpp
-    ${SOURCES_DIR}/graphics/api/gpu_buffer.cpp
-    ${SOURCES_DIR}/graphics/api/cpu_buffer.cpp
-    ${SOURCES_DIR}/graphics/api/texture.cpp
-    ${SOURCES_DIR}/graphics/api/sampler.cpp
-    ${SOURCES_DIR}/graphics/api/shader.cpp
-    ${SOURCES_DIR}/graphics/api/render_pass.cpp
-    ${SOURCES_DIR}/graphics/api/descriptor_set.cpp
-    ${SOURCES_DIR}/graphics/api/graphics_pipeline.cpp
-    ${SOURCES_DIR}/graphics/api/framebuffer.cpp
-    ${SOURCES_DIR}/graphics/api/dma.cpp
+    ${SOURCES_DIR}/graphics/format.cpp
+    ${SOURCES_DIR}/graphics/graphics_api_loader.cpp
+	${SOURCES_DIR}/graphics/graphics_context.cpp
+	${SOURCES_DIR}/graphics/gpu_command_buffer.cpp
+    ${SOURCES_DIR}/graphics/gpu_configuration.cpp
+    ${SOURCES_DIR}/graphics/gpu_buffer.cpp
+    ${SOURCES_DIR}/graphics/cpu_buffer.cpp
+    ${SOURCES_DIR}/graphics/texture.cpp
+    ${SOURCES_DIR}/graphics/sampler.cpp
+    ${SOURCES_DIR}/graphics/shader.cpp
+    ${SOURCES_DIR}/graphics/render_pass.cpp
+    ${SOURCES_DIR}/graphics/descriptor_set.cpp
+    ${SOURCES_DIR}/graphics/graphics_pipeline.cpp
+    ${SOURCES_DIR}/graphics/framebuffer.cpp
+    ${SOURCES_DIR}/graphics/dma.cpp
 )
 
 if(STRAITX_SUPPORT_VULKAN)
