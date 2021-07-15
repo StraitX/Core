@@ -115,8 +115,11 @@ set(SOURCES_GRAPHICS
     ${SOURCES_DIR}/graphics/image_loader.cpp
     ${SOURCES_DIR}/graphics/image.cpp
     ${SOURCES_DIR}/graphics/batch_renderer_2d.cpp
-	${SOURCES_DIR}/graphics/imgui/imgui_backend.cpp
 	${SOURCES_DIR}/graphics/renderer_2d.cpp
+)
+
+set(SOURCES_SUBSYSTEMS
+	${SOURCES_DIR}/subsystems/imgui/imgui_backend.cpp
 )
 
 set(SOURCES_MAIN
@@ -257,6 +260,7 @@ add_library(StraitX STATIC
     ${SOURCES_PLATFORM_I}
     ${SOURCES_CORE}
     ${SOURCES_GRAPHICS}
+	${SOURCES_SUBSYSTEMS}
     ${SOURCES_MAIN}
 )
 target_include_directories(StraitX PUBLIC 
