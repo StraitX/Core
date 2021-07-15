@@ -289,8 +289,15 @@ void ImGuiBackend::OnEvent(const Event &e){
 		io.KeyCtrl = io.KeysDown[(size_t)Key::LeftControl] || io.KeysDown[(size_t)Key::RightControl];
 		io.KeySuper = io.KeysDown[(size_t)Key::LeftSuper] || io.KeysDown[(size_t)Key::RightSuper];
 		break;
-	//TODO: reset all keys
-	//case EventType::LoseFocus:
+	case EventType::FocusOut:
+	case EventType::FocusIn:
+		for(int i = 0; i<lengthof(io.KeysDown); i++)
+			io.KeysDown[i] = 0;
+		io.KeyAlt = false;
+		io.KeyShift = false;
+		io.KeyCtrl = false;
+		io.KeySuper = false;
+		break;
 	case EventType::MouseWheel:
     	io.MouseWheel += (float)e.MouseWheel.Delta/2.f;
 		break;
