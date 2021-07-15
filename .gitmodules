@@ -9,7 +9,7 @@
 	url = https://github.com/StraitX/stb_image
 [submodule "thirdparty/glsl2spv"]
 	path = thirdparty/glsl2spv
-	url = https://github.com/E1Hephaestus/glsl2spv
+	url = https://github.com/e1hephaestus/glsl2spv
 [submodule "thirdparty/imgui"]
 	path = thirdparty/imgui
 	url = https://github.com/StraitX/imgui
