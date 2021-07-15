@@ -1,15 +1,15 @@
-[submodule "Engine/thirdparty/glad"]
-	path = Engine/thirdparty/glad
+[submodule "thirdparty/glad"]
+	path = thirdparty/glad
 	url = https://github.com/StraitX/glad
-[submodule "Engine/thirdparty/vulkan-sdk"]
-	path = Engine/thirdparty/vulkan-sdk
+[submodule "thirdparty/vulkan-sdk"]
+	path = thirdparty/vulkan-sdk
 	url = https://github.com/StraitX/vulkan-sdk
-[submodule "Engine/thirdparty/stb_image"]
-	path = Engine/thirdparty/stb_image
+[submodule "thirdparty/stb_image"]
+	path = thirdparty/stb_image
 	url = https://github.com/StraitX/stb_image
-[submodule "Engine/thirdparty/glsl2spv"]
-	path = Engine/thirdparty/glsl2spv
+[submodule "thirdparty/glsl2spv"]
+	path = thirdparty/glsl2spv
 	url = https://github.com/E1Hephaestus/glsl2spv
-[submodule "Engine/thirdparty/imgui"]
-	path = Engine/thirdparty/imgui
+[submodule "thirdparty/imgui"]
+	path = thirdparty/imgui
 	url = https://github.com/StraitX/imgui
