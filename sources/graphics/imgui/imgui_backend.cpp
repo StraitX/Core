@@ -102,7 +102,12 @@ Result ImGuiBackend::OnInitialize(){
 		CPUTexture staging_font_texture;
 		staging_font_texture.New(width, height, TextureFormat::RGBA8, pixels);
 
-		m_ImGuiFont.New(width, height, TextureFormat::RGBA8, TextureUsageBits((int)TextureUsageBits::Sampled | (int)TextureUsageBits::TransferDst));
+
+		SamplerProperties font_text_sampler_props;
+		font_text_sampler_props.MagFiltering = FilteringMode::Nearest;
+		font_text_sampler_props.MinFiltering = FilteringMode::Nearest;
+
+		m_ImGuiFont.New(width, height, TextureFormat::RGBA8, TextureUsageBits((int)TextureUsageBits::Sampled | (int)TextureUsageBits::TransferDst), font_text_sampler_props);
 		DMA::ChangeLayout(m_ImGuiFont, TextureLayout::TransferDstOptimal);
 		DMA::Copy(staging_font_texture, m_ImGuiFont);
 		DMA::ChangeLayout(m_ImGuiFont, TextureLayout::ShaderReadOnlyOptimal);
