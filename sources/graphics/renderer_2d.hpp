@@ -10,7 +10,7 @@ class Renderer2D: public Subsystem{
 private:
 	static const Vector2f (&s_DefaultTextureCoords)[4];
 private:
-	friend class Engine;
+	friend class SubsystemsManager;
 
 	Renderer2D();
 

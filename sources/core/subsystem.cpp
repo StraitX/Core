@@ -29,27 +29,10 @@ void Subsystem::OnEvent(const Event &e){
 	(void)e;
 }
 
-PushArray<Subsystem*, SubsystemsManager::s_MaxSubsystems> SubsystemsManager::m_Subsystems;
-
-void SubsystemsManager::Initialize(){
-	for(size_t i = 0; i<m_Subsystems.Size(); i++){
-		auto res = m_Subsystems[i]->OnInitialize();
-
-		if(res == Result::Success){
-			LogTrace("SubsystemsManager: %: Initialized", m_Subsystems[i]->Name());
-		}else{
-			LogError("SubsystemsManager: %: OnInitialize: %", m_Subsystems[i]->Name(), res.Name());
-			LogTrace("SubsystemsManager: Finalizing %", m_Subsystems[i]->Name());
-			m_Subsystems[i]->OnFinalize();
-			m_Subsystems[i] = m_Subsystems[m_Subsystems.Size() - 1];
-			m_Subsystems.Pop();
-			--i;
-		}
-	}
-}
+PushArray<Subsystem*, SubsystemsManager::s_MaxSubsystems> SubsystemsManager::s_Subsystems;
 
 void SubsystemsManager::Finalize(){
-	for(auto subsystem: m_Subsystems){
+	for(auto subsystem: s_Subsystems){
 		subsystem->OnFinalize();
 
 		LogTrace("SubsystemsManager: %: Finalized", subsystem->Name());
@@ -57,25 +40,36 @@ void SubsystemsManager::Finalize(){
 }
 
 void SubsystemsManager::BeginFrame(){
-	for(auto subsystem: m_Subsystems)
+	for(auto subsystem: s_Subsystems)
 		subsystem->OnBeginFrame();
 }
 
 void SubsystemsManager::EndFrame(){
-	for(auto subsystem: m_Subsystems)
+	for(auto subsystem: s_Subsystems)
 		subsystem->OnEndFrame();
 }
 
 void SubsystemsManager::Update(float dt){
-	for(auto subsystem: m_Subsystems)
+	for(auto subsystem: s_Subsystems)
 		subsystem->OnUpdate(dt);
 }
 
 void SubsystemsManager::HandleEvent(const Event &e){
-	for(auto subsystem: m_Subsystems)
+	for(auto subsystem: s_Subsystems)
 		subsystem->OnEvent(e);
 }
 
-void SubsystemsManager::Push(Subsystem *subsystem){
-	m_Subsystems.Push(subsystem);
+Result SubsystemsManager::Push(Subsystem *subsystem){
+	
+	auto res = subsystem->OnInitialize();
+
+	if(res == Result::Success){
+		LogTrace("SubsystemsManager: %: Initialized", subsystem->Name());
+		s_Subsystems.Push(subsystem);
+	}else{
+		LogError("SubsystemsManager: %: OnInitialize: %", subsystem->Name(), res.Name());
+		LogTrace("SubsystemsManager: Finalizing %", subsystem->Name());
+		subsystem->OnFinalize();
+	}
+	return res;
 }

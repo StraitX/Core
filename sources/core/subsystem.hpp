@@ -4,6 +4,7 @@
 #include "platform/events.hpp"
 #include "platform/result.hpp"
 #include "core/push_array.hpp"
+#include "core/assert.hpp"
 
 class Subsystem{
 private:
@@ -32,13 +33,12 @@ protected:
 
 class SubsystemsManager{
 private:
-	static constexpr size_t s_MaxSubsystems = 4;
-	static PushArray<Subsystem*, s_MaxSubsystems> m_Subsystems;
+	static constexpr size_t s_MaxSubsystems = 8;
+
+	static PushArray<Subsystem*, s_MaxSubsystems> s_Subsystems;
 
 	friend class Engine;
 private:
-	static void Initialize();
-
 	static void Finalize();
 
 	static void BeginFrame();
@@ -48,8 +48,24 @@ private:
 	static void Update(float dt);	
 
 	static void HandleEvent(const Event &e);
+
 	//WARNING: XXX: subsystem's lifetime should be as big as the whole engine lifetime
-	static void Push(Subsystem *subsystem);
+	static Result Push(Subsystem *subsystem);
+public:
+	template<typename T>
+	static Result Register(){
+		static_assert(IsBaseOf<Subsystem, T>::Value, "SubsystemManager: Can't insert non-subsystem class");
+
+		static T subsystem;
+#ifdef SX_DEBUG
+		static bool is_registered = false;
+
+		SX_CORE_ASSERT(!is_registered, "SubsystemManager: can't register one subsystem twice");
+
+		is_registered = true;
+#endif
+		return Push(&subsystem);
+	}
 };
 
 #endif//STRAITX_SUBSYSTEM_HPP

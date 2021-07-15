@@ -54,15 +54,8 @@ Result Engine::Initialize(){
 
     LogTrace("========= Second stage init =========");
 
-	static Renderer2D renderer_2d;
-	SubsystemsManager::Push(&renderer_2d);
-
-	LogTrace("SubsystemsManager::Initialize: Begin");
-	{
-		SubsystemsManager::Initialize();
-	}
-	LogTrace("SubsystemsManager::Initialize: End");
-
+	SubsystemsManager::Register<Renderer2D>();
+	
     //Engine should be completely initialized at this moment
     LogTrace("StraitXMain: Begin");
     {
