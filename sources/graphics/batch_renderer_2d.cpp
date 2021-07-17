@@ -208,24 +208,28 @@ void BatchRenderer2D::BeginBatch(){
 }
 
 void BatchRenderer2D::EndBatch(){
-    if(!m_VerticesCount || !m_IndicesCount)return;
+    if (m_VerticesCount && m_IndicesCount) {
 
-	m_CmdBuffer.BindPipeline(m_Pipeline);
-	m_CmdBuffer.BindDescriptorSet(m_Set);
+        m_CmdBuffer.BindPipeline(m_Pipeline);
+        m_CmdBuffer.BindDescriptorSet(m_Set);
 
-	m_CmdBuffer.CopyCPUToGPUBuffer(m_StagingVertex, m_VertexBuffer, sizeof(Vertex2D) * m_VerticesCount);
-	m_CmdBuffer.CopyCPUToGPUBuffer(m_StagingIndex, m_IndexBuffer, sizeof(u32) * m_IndicesCount);
+        m_CmdBuffer.CopyCPUToGPUBuffer(m_StagingVertex, m_VertexBuffer, sizeof(Vertex2D) * m_VerticesCount);
+        m_CmdBuffer.CopyCPUToGPUBuffer(m_StagingIndex, m_IndexBuffer, sizeof(u32) * m_IndicesCount);
 
-	m_CmdBuffer.BeginRenderPass(m_Pass, m_CurrentFramebuffer);
-	{
-		m_CmdBuffer.BindVertexBuffer(m_VertexBuffer);
-		m_CmdBuffer.BindIndexBuffer(m_IndexBuffer, IndicesType::Uint32);
-		m_CmdBuffer.DrawIndexed(m_IndicesCount);
-	}
-	m_CmdBuffer.EndRenderPass();
+        m_CmdBuffer.BeginRenderPass(m_Pass, m_CurrentFramebuffer);
+        {
+            m_CmdBuffer.BindVertexBuffer(m_VertexBuffer);
+            m_CmdBuffer.BindIndexBuffer(m_IndexBuffer, IndicesType::Uint32);
+            m_CmdBuffer.DrawIndexed(m_IndicesCount);
+        }
+        m_CmdBuffer.EndRenderPass();
+    }
 
-	GraphicsContext::Get().ExecuteCmdBuffer(m_CmdBuffer);
-	m_CmdBuffer.Reset();
+    if (m_CmdBuffer.CommandsCount()) {
 
-    m_DrawCallsCount++;
+        GraphicsContext::Get().ExecuteCmdBuffer(m_CmdBuffer);
+        m_CmdBuffer.Reset();
+
+        m_DrawCallsCount++;
+    }
 }
