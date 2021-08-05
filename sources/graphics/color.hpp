@@ -26,6 +26,8 @@ struct Color{
 
     constexpr u32 RGBA8()const;
 
+    constexpr u32 ABGR8()const;
+
     //i wish it was a constexpr
     static const Color Red;
     static const Color Green;
@@ -62,6 +64,15 @@ constexpr u32 Color::RGBA8()const{
     color |= u8(G*u8(-1)) << 16;
     color |= u8(B*u8(-1)) << 8;
     color |= u8(A*u8(-1)) << 0;
+    return color;
+}
+
+constexpr u32 Color::ABGR8()const {
+    u32 color = 0;
+    color |= u8(R*u8(-1)) << 0;
+    color |= u8(G*u8(-1)) << 8;
+    color |= u8(B*u8(-1)) << 16;
+    color |= u8(A*u8(-1)) << 24;
     return color;
 }
 

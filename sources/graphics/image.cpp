@@ -41,7 +41,8 @@ void Image::Create(u32 width, u32 height, const Color &color){
 
 
     u32 *pixels = (u32*)m_Data;
-    u32 pixel = color.RGBA8();
+    // we use here ABGR because of little-endian cpu assumption 
+    u32 pixel = color.ABGR8();
 
     for(u32 i = 0; i<m_Height; i++){
         u32 offset = i * m_Width;
