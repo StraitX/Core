@@ -3,30 +3,30 @@
 
 #include "core/move.hpp"
 
-template <typename T>
-constexpr void Swap(T& f, T& s){
-    T tmp = Move(f);
+template <typename Type>
+constexpr void Swap(Type& f, Type& s){
+    Type tmp = Move(f);
     f = Move(s);
     s = Move(tmp);
 }
 
-template<typename T>
-constexpr const T &Min(const T &a, const T &b){
+template<typename Type>
+constexpr const Type &Min(const Type &a, const Type &b){
 	if(a < b)
 		return a;
 	return b;
 }
 
-template<typename T>
-constexpr const T &Max(const T &a, const T &b){
+template<typename Type>
+constexpr const Type &Max(const Type &a, const Type &b){
 	if(a > b)
 		return a;
 	return b;
 }
 
 
-template<typename FwdIt, typename T>
-constexpr FwdIt Find(FwdIt begin, FwdIt end, const T& value){
+template<typename FwdIt, typename Type>
+constexpr FwdIt Find(FwdIt begin, FwdIt end, const Type& value){
 	for(; begin != end; begin++){
 		if(*begin == value)
 			return begin;
