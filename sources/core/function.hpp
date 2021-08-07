@@ -2,6 +2,7 @@
 #define STRAITX_FUNCTION_HPP
 
 #include "core/move.hpp"
+#include "core/assert.hpp"
 
 template<typename T>
 class Function;
@@ -64,7 +65,7 @@ public:
     }
 
     ReturnType operator()(ArgsType...args){
-        assert(m_Proxy);
+        SX_CORE_ASSERT(m_Proxy, "Can't call empty function");
 
         return m_Proxy(m_Ptr, Forward<ArgsType>(args)...);
     }
