@@ -5,88 +5,52 @@
 #include "core/assert.hpp"
 
 // it has no idea about allocations, object lifetime and stuff
-template <typename T_Type, typename T_Size = size_t>
+template <typename Type, typename SizeType = size_t>
 class Span{
 public:
-    typedef T_Type* Iterator;
+    typedef Type* Iterator;
 private:
-    T_Type *m_Pointer = nullptr;
-    T_Size m_Size = 0;
+    Type *m_Pointer = nullptr;
+    SizeType m_Size = 0;
 public:
 
     Span() = default;
 
-    Span(T_Type *pointer, T_Size size);
+    Span(const Span &other) = default;
 
-    template<size_t T_ArraySize>
-    Span(T_Type (&array)[T_ArraySize]);
+    Span(Type *pointer, SizeType size):
+        m_Pointer(pointer),
+        m_Size(size)
+    {}
 
-    Span(const Span &other);
+    template<size_t ArraySize>
+    Span(Type (&array)[ArraySize]):
+        m_Pointer(&array[0]),
+        m_Size(ArraySize)
+    {}
 
-    T_Type &operator[](T_Size index)const;
+    Type &operator[](SizeType index)const{
+        SX_CORE_ASSERT(index < m_Size, "Span: can't index more that Span::Size elements");
+        return m_Pointer[index]; 
+    }
 
-    Span &operator=(const Span &other);
+    Span &operator=(const Span &other) = default;
 
-    T_Size Size()const;
+    SizeType Size()const{
+        return m_Size;
+    }
+    // XXX Change it to Data()
+    Type *Pointer()const{
+        return m_Pointer;
+    }
 
-    T_Type *Pointer()const;
-    
-    Iterator begin()const;
+    Iterator begin()const{
+        return Pointer();
+    }
 
-    Iterator end()const;
+    Iterator end()const{
+        return Pointer() + Size();
+    }
 };
-
-template <typename T_Type, typename T_Size>
-Span<T_Type, T_Size>::Span(T_Type *pointer, T_Size size):
-    m_Pointer(pointer),
-    m_Size(size)
-{}
-
-
-template <typename T_Type, typename T_Size>
-template<size_t T_ArraySize>
-Span<T_Type, T_Size>::Span(T_Type (&array)[T_ArraySize]):
-    m_Pointer(&array[0]),
-    m_Size(T_ArraySize)
-{}
-
-template <typename T_Type, typename T_Size>
-Span<T_Type, T_Size>::Span(const Span &other):
-    m_Pointer(other.m_Pointer),
-    m_Size(other.m_Size)
-{}
-
-template <typename T_Type, typename T_Size>
-T_Type &Span<T_Type, T_Size>::operator[](T_Size index)const{
-    SX_CORE_ASSERT(index < m_Size, "Span: can't index more that Span::Size elements");
-    return m_Pointer[index]; 
-}
-
-template <typename T_Type, typename T_Size>
-Span<T_Type,T_Size> &Span<T_Type, T_Size>::operator=(const Span &other){
-    m_Pointer = other.m_Pointer;
-    m_Size = other.m_Size;
-    return *this;
-}
-
-template <typename T_Type, typename T_Size>
-T_Size Span<T_Type, T_Size>::Size()const{
-    return m_Size;
-}
-
-template <typename T_Type, typename T_Size>
-T_Type *Span<T_Type, T_Size>::Pointer()const{
-    return m_Pointer;
-}
-
-template <typename T_Type, typename T_Size>
-typename Span<T_Type, T_Size>::Iterator Span<T_Type, T_Size>::begin()const{
-    return Pointer();
-}
-
-template <typename T_Type, typename T_Size>
-typename Span<T_Type, T_Size>::Iterator Span<T_Type, T_Size>::end()const{
-    return Pointer()+Size();
-}
 
 #endif //STRAITX_SPAN_HPP
