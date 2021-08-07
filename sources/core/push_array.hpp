@@ -8,225 +8,153 @@
 #include "core/move.hpp"
 #include "core/span.hpp"
 
-template<typename T_Type, size_t T_Capacity>
+template<typename Type, size_t CapacityValue>
 class PushArray{
 public:
-    typedef T_Type * Iterator;
-    typedef const T_Type * ConstIterator;
+    typedef Type * Iterator;
+    typedef const Type * ConstIterator;
 private:
     // we don't want c++ to construct objects for us
     size_t m_Size = 0;
-	class alignas(T_Type){
+	class alignas(Type){
 	private:
-    	u8 m_Memory[T_Capacity * sizeof(T_Type)];
+    	u8 m_Memory[CapacityValue * sizeof(Type)];
 	public:
-		T_Type *Data(){
-			return reinterpret_cast<T_Type*>(m_Memory);
+		Type *Data(){
+			return reinterpret_cast<Type*>(m_Memory);
 		}
 
-		const T_Type *Data()const{
-			return reinterpret_cast<const T_Type*>(m_Memory);
+		const Type *Data()const{
+			return reinterpret_cast<const Type*>(m_Memory);
 		}
 	}m_Array;
 public:
-    static_assert(!IsConst<T_Type>() && !IsVolatile<T_Type>(), "T_Type can't be cv-qualified");
+    static_assert(!IsConst<Type>() && !IsVolatile<Type>(), "Type can't be cv-qualified");
 
     PushArray() = default;
 
-    PushArray(const PushArray &other);
+    PushArray(const PushArray &other){
+        *this = other;
+    }
 
-    PushArray(PushArray &&other);
+    PushArray(PushArray &&other){
+        *this = Move(other);
+    }
 
-    PushArray(std::initializer_list<T_Type> initializer_list);
+    PushArray(std::initializer_list<Type> initializer_list):
+        m_Size(initializer_list.size())
+    {
+        SX_CORE_ASSERT(initializer_list.size() <= CapacityValue, "Initializer list is bigger than PushArray capacity");
 
-    ~PushArray();
+        size_t i = 0;
+        for(auto &e: initializer_list){
+            operator[](i) = e;
+            ++i;
+        }
+    }
 
-    void Push(const T_Type &element);
+    ~PushArray(){
+        Clear();
+    }
 
-    void Push(T_Type &&element);
+    void Push(const Type &element){
+        Emplace(element);
+    }
 
-    void Pop();
+    void Push(Type &&element){
+        Emplace(Move(element));
+    }
 
-    void Clear();
+    void Pop(){
+        begin()[--m_Size].~Type();
+    }
 
-    Iterator Find(const T_Type &element);
+    void Clear(){
+        while(Size())
+            Pop();
+    }
 
-    ConstIterator Find(const T_Type &element)const;
+    Iterator Find(const Type &element){
+        return const_cast<Iterator>(const_cast<const PushArray<Type, CapacityValue>*>(this)->Find(element));
+    }
 
-    template<typename ...T_Args>
-    T_Type &Emplace(T_Args&&...args);
+    ConstIterator Find(const Type &element)const{
+        auto it = begin();
+        for(;it != end(); ++it){
+            if(*it == element)
+                return it;
+        }
+        return it;
+    }
 
-    T_Type &operator[](size_t index);
 
-    const T_Type &operator[](size_t index)const;
+    template<typename ...ArgsType>
+    Type &Emplace(ArgsType&&...args){
+        SX_CORE_ASSERT(m_Size < CapacityValue, "PushArray: Can't add an element, array is full");
 
-    PushArray &operator=(const PushArray &other);
+        return *new(&begin()[m_Size++])Type(Forward<ArgsType>(args)...);
+    }
 
-    PushArray &operator=(PushArray &&other);
+    Type &operator[](size_t index){
+        return const_cast<Type &>(const_cast<const PushArray<Type, CapacityValue>*>(this)->operator[](index));
+    }
 
-    operator Span<T_Type>();
+    const Type &operator[](size_t index)const{
+        SX_CORE_ASSERT(index < m_Size, "PushArray: Can't index more than PushArray::Size() elements");
 
-    size_t Size()const;
+        return begin()[index];
+    }
 
-    size_t Capacity()const;
+    PushArray &operator=(const PushArray &other){
+        Clear();
+        for(auto &e: other)
+            Push(e);
+        return *this;
+    }
 
-    T_Type *Data();
+    PushArray &operator=(PushArray &&other){
+        Clear();
+        for(auto &e: other)
+            Emplace(Move(e)); // We assume that moved stuff does not required to be destroyed
+        other.m_Size = 0;
+        return *this;
+    }
 
-    const T_Type *Data()const;
+    operator Span<Type>(){
+        return Span<Type>(m_Array.Data(), Size());
+    }
 
-    Iterator begin();
+    size_t Size()const{
+        return m_Size;
+    }
 
-    Iterator end();
+    size_t Capacity()const{
+        return CapacityValue;
+    }
 
-    ConstIterator begin()const;
+    Type *Data(){
+        return m_Array.Data();
+    }
 
-    ConstIterator end()const;
+    const Type *Data()const{
+        return m_Array.Data();
+    }
+
+    Iterator begin(){
+        return Data();
+    }
+
+    Iterator end(){
+        return Data() + Size();
+    }
+
+    ConstIterator begin()const{
+        return Data();
+    }
+
+    ConstIterator end()const{
+        return Data() + Size();
+    }
 };
-
-template<typename T_Type, size_t T_Capacity>
-PushArray<T_Type, T_Capacity>::PushArray(const PushArray &other){
-    *this = other;
-}
-
-template<typename T_Type, size_t T_Capacity>
-PushArray<T_Type, T_Capacity>::PushArray(PushArray &&other){
-    *this = Move(other);
-}
-
-template<typename T_Type, size_t T_Capacity>
-PushArray<T_Type, T_Capacity>::PushArray(std::initializer_list<T_Type> initializer_list):
-    m_Size(initializer_list.size())
-{
-    SX_CORE_ASSERT(initializer_list.size() <= T_Capacity, "Initializer list is bigger than PushArray capacity");
-
-    size_t i = 0;
-    for(auto &e: initializer_list){
-        operator[](i) = e;
-        ++i;
-    }
-}
-
-template<typename T_Type, size_t T_Capacity>
-PushArray<T_Type, T_Capacity>::~PushArray(){
-    Clear();
-}
-
-template<typename T_Type, size_t T_Capacity>
-void PushArray<T_Type, T_Capacity>::Push(const T_Type &element){
-    Emplace(element);
-}
-
-template<typename T_Type, size_t T_Capacity>
-void PushArray<T_Type, T_Capacity>::Push(T_Type &&element){
-    Emplace(Move(element));
-}
-
-template<typename T_Type, size_t T_Capacity>
-void PushArray<T_Type, T_Capacity>::Pop(){
-    begin()[--m_Size].~T_Type();
-}
-
-template<typename T_Type, size_t T_Capacity>
-void PushArray<T_Type, T_Capacity>::Clear(){
-    while(Size())
-        Pop();
-}
-
-template<typename T_Type, size_t T_Capacity>
-typename PushArray<T_Type, T_Capacity>::Iterator PushArray<T_Type, T_Capacity>::Find(const T_Type &element){
-    return const_cast<Iterator>(const_cast<const PushArray<T_Type, T_Capacity>*>(this)->Find(element));
-}
-
-template<typename T_Type, size_t T_Capacity>
-typename PushArray<T_Type, T_Capacity>::ConstIterator PushArray<T_Type, T_Capacity>::Find(const T_Type &element)const{
-    auto it = begin();
-    for(;it != end(); ++it){
-        if(*it == element)
-            return it;
-    }
-    return it;
-}
-
-template<typename T_Type, size_t T_Capacity>
-template<typename ...T_Args>
-T_Type &PushArray<T_Type, T_Capacity>::Emplace(T_Args&&...args){
-    SX_CORE_ASSERT(m_Size < T_Capacity, "PushArray: Can't add an element, array is full");
-
-    return *new(&begin()[m_Size++])T_Type(Forward<T_Args>(args)...);
-}
-
-template<typename T_Type, size_t T_Capacity>
-T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index){
-    return const_cast<T_Type &>(const_cast<const PushArray<T_Type, T_Capacity>*>(this)->operator[](index));
-}
-
-template<typename T_Type, size_t T_Capacity>
-const T_Type &PushArray<T_Type, T_Capacity>::operator[](size_t index)const{
-    SX_CORE_ASSERT(index < m_Size, "PushArray: Can't index more than PushArray::Size() elements");
-
-    return begin()[index];
-}
-
-template<typename T_Type, size_t T_Capacity>
-PushArray<T_Type, T_Capacity> &PushArray<T_Type, T_Capacity>::operator=(const PushArray &other){
-    Clear();
-    for(auto &e: other)
-        Push(e);
-    return *this;
-}
-
-template<typename T_Type, size_t T_Capacity>
-PushArray<T_Type, T_Capacity> &PushArray<T_Type, T_Capacity>::operator=(PushArray &&other){
-    Clear();
-    for(auto &e: other)
-        Emplace(Move(e)); // We assume that moved stuff does not required to be destroyed
-    other.m_Size = 0;
-    return *this;
-}
-
-template<typename T_Type, size_t T_Capacity>
-PushArray<T_Type, T_Capacity>::operator Span<T_Type>(){
-    return Span<T_Type>(m_Array.Data(), Size());
-}
-
-template<typename T_Type, size_t T_Capacity>
-size_t PushArray<T_Type, T_Capacity>::Size()const{
-    return m_Size;
-}
-
-template<typename T_Type, size_t T_Capacity>
-size_t PushArray<T_Type, T_Capacity>::Capacity()const{
-    return T_Capacity;
-}
-
-template<typename T_Type, size_t T_Capacity>
-T_Type *PushArray<T_Type, T_Capacity>::Data(){
-    return m_Array.Data();
-}
-
-template<typename T_Type, size_t T_Capacity>
-const T_Type *PushArray<T_Type, T_Capacity>::Data()const{
-    return m_Array.Data();
-}
-
-template<typename T_Type, size_t T_Capacity>
-typename PushArray<T_Type, T_Capacity>::Iterator PushArray<T_Type, T_Capacity>::begin(){
-    return Data();
-}
-
-template<typename T_Type, size_t T_Capacity>
-typename PushArray<T_Type, T_Capacity>::Iterator PushArray<T_Type, T_Capacity>::end(){
-    return begin()+Size();
-}
-
-template<typename T_Type, size_t T_Capacity>
-typename PushArray<T_Type, T_Capacity>::ConstIterator PushArray<T_Type, T_Capacity>::begin()const{
-    return Data();
-}
-
-template<typename T_Type, size_t T_Capacity>
-typename PushArray<T_Type, T_Capacity>::ConstIterator PushArray<T_Type, T_Capacity>::end()const{
-    return begin()+Size();
-}
 
 #endif//STRAITX_PUSH_ARRAY_HPP
