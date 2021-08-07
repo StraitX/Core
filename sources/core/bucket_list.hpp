@@ -5,7 +5,7 @@
 #include "platform/types.hpp"
 #include "core/assert.hpp"
 #include "core/memory/allocator.hpp"
-#include "core/template.hpp"
+#include "core/type_traits.hpp"
 #include "core/move.hpp"
 //for now
 #include "core/noncopyable.hpp"

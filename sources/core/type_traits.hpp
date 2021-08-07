@@ -1,16 +1,16 @@
-#ifndef STRAITX_TEMPLATE_HPP
-#define STRAITX_TEMPLATE_HPP
+#ifndef STRAITX_TYPE_TRAITS_HPP
+#define STRAITX_TYPE_TRAITS_HPP
 
-template <typename T_Type, T_Type T_Value>
+template <typename Type, Type TypeValue>
 struct IntegralConstant{
-    static constexpr T_Type Value = T_Value;
+    static constexpr Type Value = TypeValue;
 
-    constexpr operator T_Type()const{
-        return T_Value;
+    constexpr operator Type()const{
+        return TypeValue;
     }
 
-    constexpr T_Type operator()()const{
-        return T_Value;
+    constexpr Type operator()()const{
+        return TypeValue;
     }
 };
 
@@ -70,4 +70,4 @@ struct RemoveReference<T&&>{
     typedef T Type;
 };
 
-#endif //STRAITX_TEMPLATE_HPP
+#endif //STRAITX_TYPE_TRAITS_HPP

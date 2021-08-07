@@ -1,7 +1,7 @@
 #ifndef STRAITX_MOVE_HPP
 #define STRAITX_MOVE_HPP
 
-#include "core/template.hpp"
+#include "core/type_traits.hpp"
 
 template <typename T>
 constexpr typename RemoveReference<T>::Type&& Move(T&& t){
