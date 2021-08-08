@@ -59,15 +59,16 @@ Result ImGuiBackend::OnInitialize(){
 
 	ImGuiIO& io = ImGui::GetIO();
 
-	ImGui::StyleColorsDark();
-	ImGui::GetStyle().WindowRounding = 8;
-
-    io.BackendPlatformName = "StraitX ImGui Backend";
-
 	static constexpr float s_BaseDPI = 93;
 	auto screen_dpi = PlatformWindow::Screen().DPI;
 
-	io.DisplayFramebufferScale = ImVec2(screen_dpi.x / s_BaseDPI, screen_dpi.y / s_BaseDPI);
+	ImGui::StyleColorsDark();
+	ImGui::GetStyle().WindowRounding = 8;
+	ImGui::GetStyle().ScaleAllSizes((screen_dpi.x > screen_dpi.y ? screen_dpi.x : screen_dpi.y) / s_BaseDPI);
+
+    io.BackendPlatformName = "StraitX ImGui Backend";
+
+	io.DisplayFramebufferScale = ImVec2(1, 1);
 
 
 	io.KeyMap[ImGuiKey_Tab] = (int)Key::Tab;
