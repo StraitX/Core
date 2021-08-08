@@ -67,7 +67,7 @@ Result ImGuiBackend::OnInitialize(){
 	static constexpr float s_BaseDPI = 93;
 	auto screen_dpi = PlatformWindow::Screen().DPI;
 
-	io.DisplayFramebufferScale = ImVec2(screen_dpi.width / s_BaseDPI, screen_dpi.height / s_BaseDPI);
+	io.DisplayFramebufferScale = ImVec2(screen_dpi.x / s_BaseDPI, screen_dpi.y / s_BaseDPI);
 
 
 	io.KeyMap[ImGuiKey_Tab] = (int)Key::Tab;
@@ -162,12 +162,12 @@ void ImGuiBackend::OnBeginFrame(){
 
 	auto window_size = PlatformWindow::Size();
 
-	io.DisplaySize = ImVec2((float)window_size.width, (float)window_size.height);
+	io.DisplaySize = ImVec2((float)window_size.x, (float)window_size.y);
 	io.DeltaTime = 0.016;
 
 	auto mouse_pos = Mouse::RelativePosition();
 
-	mouse_pos.y = window_size.height - mouse_pos.y;
+	mouse_pos.y = window_size.y - mouse_pos.y;
 
 	io.MousePos = ImVec2((float)mouse_pos.x/io.DisplayFramebufferScale.x, (float)mouse_pos.y/io.DisplayFramebufferScale.y);
 
@@ -226,7 +226,7 @@ void ImGuiBackend::OnEndFrame(){
 		m_CmdBuffer.BindVertexBuffer(m_VertexBuffer);
 		m_CmdBuffer.BindIndexBuffer(m_IndexBuffer, IndicesType::Uint16);
 
-		m_CmdBuffer.SetViewport(window_size.width, window_size.height, 0, 0);
+		m_CmdBuffer.SetViewport(window_size.x, window_size.y, 0, 0);
 
 		m_CmdBuffer.BeginRenderPass(GraphicsContext::Get().FramebufferPass(), GraphicsContext::Get().CurrentFramebuffer());
 
@@ -246,7 +246,7 @@ void ImGuiBackend::OnEndFrame(){
 			Vector2f offset_original(clip_rect.x, clip_rect.y);
 			Vector2f extent_original(clip_rect.z - clip_rect.x, clip_rect.w - clip_rect.y);
 
-			Vector2f offset(offset_original.x, window_size.height - extent_original.y - offset_original.y);
+			Vector2f offset(offset_original.x, window_size.y - extent_original.y - offset_original.y);
 			Vector2f extent = extent_original;
 
 			m_CmdBuffer.SetScissors(extent.x, extent.y, offset.x, offset.y);

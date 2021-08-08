@@ -110,7 +110,7 @@ Result GraphicsContextImpl::Initialize(){
 	m_FramebufferPass.Construct(GetFramebufferProperties());
 
 	auto window_size = PlatformWindow::Size();
-	m_DefaultFramebuffer.Construct(0, &m_FramebufferPass, FramebufferProperties{ {window_size.width, window_size.height}, {&FakeFramebufferTexturePtr, 1} });
+	m_DefaultFramebuffer.Construct(0, &m_FramebufferPass, FramebufferProperties{ {window_size.x, window_size.y}, {&FakeFramebufferTexturePtr, 1} });
 
 	return Result::Success;
 }

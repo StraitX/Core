@@ -2,6 +2,7 @@
 #define STRAITX_MOUSE_HPP
 
 #include "core/types.hpp"
+#include "core/math/vector2.hpp"
 
 class PlatformWindow;
 
@@ -20,11 +21,11 @@ namespace Mouse{
 
     bool IsButtonPressed(Button button);
 
-    Point2i GlobalPosition();
+    Vector2i GlobalPosition();
 
-    Point2i RelativePosition();
+    Vector2i RelativePosition();
 
-    void SetGlobalPosition(const Point2i &position);
+    void SetGlobalPosition(const Vector2i &position);
 
     void SetVisible(bool is_visible);
 

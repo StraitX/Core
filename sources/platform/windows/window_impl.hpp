@@ -24,7 +24,7 @@ public:
 
     void SetTitle(const char *title);
 
-    Size2u Size()const;
+    Vector2u Size()const;
 
     void SetSize(int width, int height);
 
@@ -32,7 +32,7 @@ public:
 
     SX_INLINE HWND__ *Handle()const;
 
-    static Size2u GetSizeFromHandle(HWND__* handle);
+    static Vector2u GetSizeFromHandle(HWND__* handle);
 
     static Result RegisterWindowClass();
 };

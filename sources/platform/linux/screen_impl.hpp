@@ -2,15 +2,15 @@
 #define STRAITX_LINUX_SCREEN_IMPL_HPP
 
 #include "core/types.hpp"
-
+#include "core/math/vector2.hpp"
 
 namespace Linux{
 
 struct ScreenImpl{
     void *Handle = nullptr;
     unsigned int Index = -1;
-    Size2i Size = {};
-    Size2f DPI = {};
+    Vector2i Size = {};
+    Vector2f DPI = {};
 
 	ScreenImpl() = default;
 

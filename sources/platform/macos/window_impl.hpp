@@ -27,7 +27,7 @@ struct WindowImpl: NonCopyable{
 
     void SetTitle(const char *title);
 
-    Size2u Size()const;
+    Vector2u Size()const;
 
     void SetSize(u32 width, u32 height);
 

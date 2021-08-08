@@ -30,35 +30,35 @@ bool IsButtonPressed(Mouse::Button button){
     }
 }
 
-Point2i GlobalPosition(){
+Vector2i GlobalPosition(){
     ::Window root,child;
-    Point2i choosen,global;
+    Vector2i choosen,global;
     unsigned int mask;
     
     XQueryPointer(DisplayServer::Handle, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
 
-	global.y = PlatformWindow::Screen().Size.height - global.y;
+	global.y = PlatformWindow::Screen().Size.y - global.y;
 
     return global;
 }
 
-Point2i RelativePosition(){
+Vector2i RelativePosition(){
     ::Window root,child;
-    Point2i choosen,global;
+    Vector2i choosen,global;
     unsigned int mask;
 
     XQueryPointer(DisplayServer::Handle, WindowImpl::s_MainWindow.Handle,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
     
-	i32 window_height = (i32)WindowImpl::s_MainWindow.Size().height;
+	i32 window_height = (i32)WindowImpl::s_MainWindow.Size().y;
 
 	choosen.y = window_height - choosen.y;
     return choosen;
 }
 
-void SetGlobalPosition(const Point2i &position){
-    Point2i new_position;
+void SetGlobalPosition(const Vector2i &position){
+    Vector2i new_position;
     new_position.x = position.x;
-    new_position.y = PlatformWindow::Screen().Size.height - position.y;
+    new_position.y = PlatformWindow::Screen().Size.y - position.y;
 
     XWarpPointer(DisplayServer::Handle, 0, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)),0,0,0,0,new_position.x, new_position.y);
 }

@@ -3,11 +3,12 @@
 
 #include "core/env/os.hpp"
 #include "core/types.hpp"
+#include "core/math/vector2.hpp"
 
 struct PlatformScreen{
 	void *Handle = nullptr;
-	Size2f DPI = {};
-	Size2i Size = {};
+	Vector2f DPI = {};
+	Vector2i Size = {};
 };
 
 #endif // STRAITX_SCREEN_HPP

@@ -45,8 +45,8 @@ void WindowImpl::SetTitle(const char *title){
     [(SXWindow*)Handle setTitle: [NSString stringWithUTF8String: title]];
 }
 
-Size2u WindowImpl::Size()const{
-    Size2u size = {(u32)((SXWindow*)Handle).contentView.frame.size.width, (u32)((SXWindow*)Handle).contentView.frame.size.height};
+Vector2u WindowImpl::Size()const{
+    Vector2u size = {(u32)((SXWindow*)Handle).contentView.frame.size.width, (u32)((SXWindow*)Handle).contentView.frame.size.height};
     
     size.width = LinearUnitsToPixels(size.width, [(SXWindow*)Handle screen]);
     size.height = LinearUnitsToPixels(size.height, [(SXWindow*)Handle screen]);

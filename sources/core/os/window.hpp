@@ -22,11 +22,11 @@ class PlatformWindow{
 public:
     static void SetTitle(const char *title);
 
-    static Size2u Size();
+    static Vector2u Size();
 
 	static void SetSize(u32 width, u32 height);
 
-	static void SetSize(Size2u size);
+	static void SetSize(Vector2u size);
 
 	static const PlatformScreen &Screen();
 
@@ -37,7 +37,7 @@ SX_INLINE void PlatformWindow::SetTitle(const char *title){
 	PlatformWindowImpl::s_MainWindow.SetTitle(title);
 }
 
-SX_INLINE Size2u PlatformWindow::Size(){
+SX_INLINE Vector2u PlatformWindow::Size(){
 	return PlatformWindowImpl::s_MainWindow.Size();
 }
 
@@ -45,8 +45,8 @@ SX_INLINE void PlatformWindow::SetSize(u32 width, u32 height){
 	PlatformWindowImpl::s_MainWindow.SetSize(width, height);
 }
 
-SX_INLINE void PlatformWindow::SetSize(Size2u size){
-	PlatformWindowImpl::s_MainWindow.SetSize(size.width, size.height);
+SX_INLINE void PlatformWindow::SetSize(Vector2u size){
+	PlatformWindowImpl::s_MainWindow.SetSize(size.x, size.y);
 }
 
 SX_INLINE const PlatformScreen &PlatformWindow::Screen(){

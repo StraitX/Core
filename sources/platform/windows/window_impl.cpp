@@ -34,7 +34,7 @@ void WindowImpl::SetTitle(const char* title) {
     (void)SetWindowText(m_Handle, title);
 }
 
-Size2u WindowImpl::Size()const{
+Vector2u WindowImpl::Size()const{
     return GetSizeFromHandle(m_Handle);
 }
 
@@ -60,7 +60,7 @@ const PlatformScreen& WindowImpl::Screen(){
 }
 
 
-Size2u WindowImpl::GetSizeFromHandle(HWND__* handle) {
+Vector2u WindowImpl::GetSizeFromHandle(HWND__* handle) {
     RECT currentWindowDimens = { 0 };
     GetClientRect(handle, &currentWindowDimens);
 

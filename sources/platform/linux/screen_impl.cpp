@@ -7,11 +7,11 @@ ScreenImpl::ScreenImpl(void *screen_handle, unsigned int screen_index){
 	Handle = screen_handle;
 	Index = screen_index;
 
-    Size.width = XWidthOfScreen((::Screen*)Handle);
-    Size.height = XHeightOfScreen((::Screen*)Handle);
+    Size.x = XWidthOfScreen((::Screen*)Handle);
+    Size.y = XHeightOfScreen((::Screen*)Handle);
 
-    DPI.width  = float(Size.width) / (float(XWidthMMOfScreen((::Screen*)Handle)) / 25.4f);
-   	DPI.height = float(Size.height) / (float(XHeightMMOfScreen((::Screen*)Handle)) / 25.4f);
+    DPI.x  = float(Size.x) / (float(XWidthMMOfScreen((::Screen*)Handle)) / 25.4f);
+   	DPI.y = float(Size.y) / (float(XHeightMMOfScreen((::Screen*)Handle)) / 25.4f);
 }
 
 } // namespace Linux::

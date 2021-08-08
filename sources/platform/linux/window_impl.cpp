@@ -107,7 +107,7 @@ void WindowImpl::SetSize(int width, int height){
 	XFlush(DisplayServer::Handle);
 }
 
-Size2u WindowImpl::Size()const{
+Vector2u WindowImpl::Size()const{
 	return GetSizeFromHandle(Handle);
 }
 
@@ -116,17 +116,17 @@ const PlatformScreen &WindowImpl::Screen(){
 	if(CurrentScreen.Handle == nullptr){
 		CurrentScreen.Handle = DefaultScreenOfDisplay(DisplayServer::Handle);
 
-		CurrentScreen.Size.width = XWidthOfScreen((::Screen*)CurrentScreen.Handle);
-		CurrentScreen.Size.height = XHeightOfScreen((::Screen*)CurrentScreen.Handle);
+		CurrentScreen.Size.x = XWidthOfScreen((::Screen*)CurrentScreen.Handle);
+		CurrentScreen.Size.y = XHeightOfScreen((::Screen*)CurrentScreen.Handle);
 
-		CurrentScreen.DPI.width  = float(CurrentScreen.Size.width) / (float(XWidthMMOfScreen((::Screen*)CurrentScreen.Handle)) / 25.4f);
-		CurrentScreen.DPI.height = float(CurrentScreen.Size.height) / (float(XHeightMMOfScreen((::Screen*)CurrentScreen.Handle)) / 25.4f);
+		CurrentScreen.DPI.x  = float(CurrentScreen.Size.x) / (float(XWidthMMOfScreen((::Screen*)CurrentScreen.Handle)) / 25.4f);
+		CurrentScreen.DPI.y = float(CurrentScreen.Size.y) / (float(XHeightMMOfScreen((::Screen*)CurrentScreen.Handle)) / 25.4f);
 	}
 
 	return CurrentScreen;
 }
 
-Size2u WindowImpl::GetSizeFromHandle(unsigned long handle){
+Vector2u WindowImpl::GetSizeFromHandle(unsigned long handle){
     XWindowAttributes attributes;
     XGetWindowAttributes(DisplayServer::Handle, handle, &attributes);
 

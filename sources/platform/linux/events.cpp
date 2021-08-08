@@ -103,7 +103,7 @@ void PollEvents(const WindowImpl &window, void (*handler)(const Event &e)){
 				e.Type = EventType::MouseButtonPress;
 				e.MouseButtonPress.Button = XButtonToMouseButton(in_event.xbutton.button);
 				e.MouseButtonPress.x = in_event.xbutton.x;
-				e.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(in_event.xany.window).height - in_event.xbutton.y;
+				e.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(in_event.xany.window).y - in_event.xbutton.y;
 			}
 			handler(e);
 		}break;
@@ -113,7 +113,7 @@ void PollEvents(const WindowImpl &window, void (*handler)(const Event &e)){
 			e.Type = EventType::MouseButtonRelease;
 			e.MouseButtonRelease.Button = XButtonToMouseButton(in_event.xbutton.button);
 			e.MouseButtonRelease.x = in_event.xbutton.x;
-			e.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(in_event.xany.window).height - in_event.xbutton.y;
+			e.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(in_event.xany.window).y - in_event.xbutton.y;
 			handler(e);
 		}break;
 		case FocusIn:

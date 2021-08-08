@@ -33,11 +33,11 @@ struct WindowImpl: NonCopyable{
 
     void SetSize(int width, int height);
 
-    Size2u Size()const;
+    Vector2u Size()const;
 
 	const PlatformScreen &Screen();
 
-	static Size2u GetSizeFromHandle(unsigned long handle);
+	static Vector2u GetSizeFromHandle(unsigned long handle);
 
     static __GLXFBConfigRec *PickBestFBConfig(int screen_index);
 };

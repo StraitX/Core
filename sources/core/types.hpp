@@ -50,19 +50,6 @@ constexpr size_t lengthof(T (&)[N]){
     return N;
 }
 
-struct Point2i{
-    i32 x;
-    i32 y;
-};
-template <typename T>
-struct Size2{
-    T width;
-    T height;
-};
-typedef Size2<i32> Size2i;
-typedef Size2<u32> Size2u;
-typedef Size2<float> Size2f;
-
 struct Version{
     u16 Major;
     u16 Minor;

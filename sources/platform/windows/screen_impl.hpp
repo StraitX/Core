@@ -8,8 +8,8 @@ namespace Windows {
 struct ScreenImpl {
 	void* Handle = nullptr;
 	bool IsPrimary = true;
-	Size2i Size = {};
-    Size2f DPI = {};
+	Vector2i Size = {};
+    Vector2f DPI = {};
 };
 
 }//namespace Windows::
