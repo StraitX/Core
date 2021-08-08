@@ -204,7 +204,7 @@ constexpr Vector2<T> &operator/=(Vector2<T> &left, const Vector2<T> &right){
     return left;
 }
 
-typedef Vector2<i32> Vector2i;
+typedef Vector2<s32> Vector2s;
 typedef Vector2<u32> Vector2u;
 typedef Vector2<float> Vector2f;
 typedef Vector2<double> Vector2d;

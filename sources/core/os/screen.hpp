@@ -8,7 +8,7 @@
 struct PlatformScreen{
 	void *Handle = nullptr;
 	Vector2f DPI = {};
-	Vector2i Size = {};
+	Vector2s Size = {};
 };
 
 #endif // STRAITX_SCREEN_HPP

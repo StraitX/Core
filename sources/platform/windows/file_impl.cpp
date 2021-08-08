@@ -47,9 +47,9 @@ size_t File::Write(const void* buffer, size_t size) {
 	return write;
 }
 
-i64 File::Seek(SeekPos position, i64 offset) {
+s64 File::Seek(SeekPos position, s64 offset) {
 	union {
-		i64 Offset;
+		s64 Offset;
 		struct {
 			long Low;
 			long High;
@@ -59,7 +59,7 @@ i64 File::Seek(SeekPos position, i64 offset) {
 	return SetFilePointer(reinterpret_cast<HANDLE>(m_FD), off.Low, &off.High, (DWORD)position);
 }
 
-i64 File::Tell() {
+s64 File::Tell() {
 	return Seek(SeekPos::Current, 0);
 }
 

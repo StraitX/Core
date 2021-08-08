@@ -14,20 +14,20 @@ const u32 GraphicsPipeline::s_VertexAttributeSizeTable[]={
 	3 * sizeof(u8),
 	4 * sizeof(u8),
 
-	1 * sizeof(i8),
-	2 * sizeof(i8),
-	3 * sizeof(i8),
-	4 * sizeof(i8),
+	1 * sizeof(s8),
+	2 * sizeof(s8),
+	3 * sizeof(s8),
+	4 * sizeof(s8),
 
     1 * sizeof(u32),
     2 * sizeof(u32),
     3 * sizeof(u32),
     4 * sizeof(u32),
 
-	1 * sizeof(i32),
-    2 * sizeof(i32),
-    3 * sizeof(i32),
-    4 * sizeof(i32),
+	1 * sizeof(s32),
+    2 * sizeof(s32),
+    3 * sizeof(s32),
+    4 * sizeof(s32),
 };
 
 u32 GraphicsPipeline::AttributeSize(VertexAttribute attribute){

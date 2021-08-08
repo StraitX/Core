@@ -17,7 +17,7 @@ public:
     //nil or \n characters are included
     static size_t LineLength(const char *string);
 
-    static i32 Compare(const char *first, const char *second);
+    static s32 Compare(const char *first, const char *second);
 
     static bool Equals(const char *first, const char *second);
 

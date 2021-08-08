@@ -28,15 +28,15 @@ void Renderer2D::OnEndFrame(){
 	s_Renderer2DImpl->EndScene();
 }
 
-void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color, const Texture2D &texture, const Vector2f (&texture_coords)[4]){
+void Renderer2D::DrawRect(Vector2s position, Vector2s size, const Color &color, const Texture2D &texture, const Vector2f (&texture_coords)[4]){
 	s_Renderer2DImpl->DrawRect(position, size, color, texture, texture_coords);
 }
 
-void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color){
+void Renderer2D::DrawRect(Vector2s position, Vector2s size, const Color &color){
 	s_Renderer2DImpl->DrawRect(position, size, color);
 }
 
-void Renderer2D::DrawRect(Vector2i position, Vector2i size, const Texture2D &texture, const Vector2f (&texture_coords)[4]){
+void Renderer2D::DrawRect(Vector2s position, Vector2s size, const Texture2D &texture, const Vector2f (&texture_coords)[4]){
 	s_Renderer2DImpl->DrawRect(position, size, texture, texture_coords);
 }
 

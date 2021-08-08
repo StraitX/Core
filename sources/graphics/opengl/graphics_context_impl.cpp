@@ -222,7 +222,7 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		{
 			const GL::FramebufferImpl *target_framebuffer = static_cast<const GL::FramebufferImpl *>(cmd.ClearFramebufferColorAttachments.Framebuffer);
 			
-			i32 current_framebuffer_handle = 0;
+			s32 current_framebuffer_handle = 0;
 			glGetIntegerv(GL_FRAMEBUFFER_BINDING, &current_framebuffer_handle);
 
 			u32 target_framebuffer_handle = target_framebuffer->Handle;
@@ -244,7 +244,7 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		{
 			const GL::FramebufferImpl *target_framebuffer = static_cast<const GL::FramebufferImpl *>(cmd.ClearFramebufferDepthAttachments.Framebuffer);
 			
-			i32 current_framebuffer_handle = 0;
+			s32 current_framebuffer_handle = 0;
 			glGetIntegerv(GL_FRAMEBUFFER_BINDING, &current_framebuffer_handle);
 
 			u32 target_framebuffer_handle = target_framebuffer->Handle;

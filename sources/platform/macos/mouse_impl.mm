@@ -9,25 +9,25 @@ bool Mouse::IsButtonPressed(Mouse::Button button){
     return MacOS::InputManager::s_MouseState[(size_t)button];
 }
 
-Vector2i Mouse::GlobalPosition(){
+Vector2s Mouse::GlobalPosition(){
     CGEventRef event = CGEventCreate(NULL);
     CGPoint cursor = CGEventGetLocation(event);
     CFRelease(event);
 
     auto screen_size = MacOS::WindowImpl::s_MainWindow.Screen().Size;
     NSScreen* screen = ((SXWindow*)MacOS::WindowImpl::s_MainWindow.Handle).screen;
-    return {LinearUnitsToPixels((i32)cursor.x, screen), screen_size.height - LinearUnitsToPixels((i32)cursor.y, screen)};
+    return {LinearUnitsToPixels((s32)cursor.x, screen), screen_size.height - LinearUnitsToPixels((s32)cursor.y, screen)};
 }
 
-Vector2i Mouse::RelativePosition(){
+Vector2s Mouse::RelativePosition(){
     auto global_pos = GlobalPosition();
     SXWindow* win_impl = (SXWindow*)MacOS::WindowImpl::s_MainWindow.Handle;
     NSScreen* screen = win_impl.screen;
-    Vector2i win_pos = {(i32)[win_impl frame].origin.x, (i32)[win_impl frame].origin.y};
+    Vector2s win_pos = {(s32)[win_impl frame].origin.x, (s32)[win_impl frame].origin.y};
     return {global_pos.x - LinearUnitsToPixels(win_pos.x, screen), global_pos.y - LinearUnitsToPixels(win_pos.y, screen)};
 }
 
-void Mouse::SetGlobalPosition(const Vector2i &position){
+void Mouse::SetGlobalPosition(const Vector2s &position){
     CGWarpMouseCursorPosition(CGPointMake(position.x, position.y));
 }
 

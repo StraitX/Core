@@ -32,7 +32,7 @@ size_t String::LineLength(const char *string){
 }
 
 
-i32 String::Compare(const char *first, const char *second){
+s32 String::Compare(const char *first, const char *second){
     while(*first && (*first == *second)){
         ++first;
         ++second;

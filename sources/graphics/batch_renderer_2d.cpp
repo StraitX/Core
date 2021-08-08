@@ -123,7 +123,7 @@ BatchRenderer2D::~BatchRenderer2D(){
 	m_WhiteTexture.Delete();
 }
 
-void BatchRenderer2D::BeginScene(const Framebuffer *framebuffer, Vector2i camera_position){
+void BatchRenderer2D::BeginScene(const Framebuffer *framebuffer, Vector2s camera_position){
     m_CurrentFramebuffer = framebuffer;
     m_CameraPosition = camera_position;
 
@@ -150,7 +150,7 @@ void BatchRenderer2D::EndScene(){
     //LogInfo("DrawCalls: %, QuadsCount: %",DrawCallsCount, QuadsCount);
 }
 
-void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color, const Texture2D &texture, const Vector2f (&texture_coords)[4]){
+void BatchRenderer2D::DrawRect(Vector2s position, Vector2s size, const Color &color, const Texture2D &texture, const Vector2f (&texture_coords)[4]){
     m_QuadsCount++;
     
     if(m_VerticesCount + 4 > MaxVerticesCount || m_IndicesCount + 6 > MaxIndicesCount || m_Textures.Size() == m_Textures.Capacity()){
@@ -186,11 +186,11 @@ void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Color &co
     m_IndicesCount += 6;
 }
 
-void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Color &color){
+void BatchRenderer2D::DrawRect(Vector2s position, Vector2s size, const Color &color){
     DrawRect(position,size, color, m_WhiteTexture);
 }
 
-void BatchRenderer2D::DrawRect(Vector2i position, Vector2i size, const Texture2D &texture, const Vector2f (&texture_coords)[4]){
+void BatchRenderer2D::DrawRect(Vector2s position, Vector2s size, const Texture2D &texture, const Vector2f (&texture_coords)[4]){
     DrawRect(position,size, Color::White, texture, texture_coords);
 }
 

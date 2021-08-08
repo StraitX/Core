@@ -9,7 +9,7 @@ namespace Linux{
 struct ScreenImpl{
     void *Handle = nullptr;
     unsigned int Index = -1;
-    Vector2i Size = {};
+    Vector2s Size = {};
     Vector2f DPI = {};
 
 	ScreenImpl() = default;

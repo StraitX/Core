@@ -76,7 +76,7 @@ const PlatformScreen &WindowImpl::Screen(){
         NSSize displayPixelSize = [[description objectForKey:NSDeviceSize] sizeValue];
         CGSize displayPhysicalSize = CGDisplayScreenSize([[description objectForKey:@"NSScreenNumber"] unsignedIntValue]);
 
-        CurrentScreen.Size = {(i32)size.size.width, (i32)size.size.height};
+        CurrentScreen.Size = {(s32)size.size.width, (s32)size.size.height};
         CurrentScreen.DPI = {LinearUnitsToPixels(float(displayPixelSize.width / displayPhysicalSize.width) * 25.4f, ((NSScreen*)CurrentScreen.Handle)), 
         LinearUnitsToPixels(float(displayPixelSize.height / displayPhysicalSize.height) * 25.4f, ((NSScreen*)CurrentScreen.Handle))};
     }

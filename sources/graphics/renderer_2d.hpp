@@ -22,11 +22,11 @@ private:
 
 	void OnEndFrame()override;
 public:
-	static void DrawRect(Vector2i position, Vector2i size, const Color &color, const Texture2D &texture, const Vector2f (&texture_coords)[4] = s_DefaultTextureCoords);
+	static void DrawRect(Vector2s position, Vector2s size, const Color &color, const Texture2D &texture, const Vector2f (&texture_coords)[4] = s_DefaultTextureCoords);
 
-    static void DrawRect(Vector2i position, Vector2i size, const Color &color);
+    static void DrawRect(Vector2s position, Vector2s size, const Color &color);
 
-    static void DrawRect(Vector2i position, Vector2i size, const Texture2D &texture, const Vector2f (&texture_coords)[4] = s_DefaultTextureCoords);
+    static void DrawRect(Vector2s position, Vector2s size, const Texture2D &texture, const Vector2f (&texture_coords)[4] = s_DefaultTextureCoords);
 
 	static void Clear(const Color &color);
 };

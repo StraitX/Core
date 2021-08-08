@@ -31,9 +31,9 @@ struct CommandBufferExectuionState{
 
 	void CheckAndUpdateViewportAndScissor(VkCommandBuffer cmd_buffer);
 
-	void UpdateViewport(i32 x, i32 y, u32 width, u32 height);
+	void UpdateViewport(s32 x, s32 y, u32 width, u32 height);
 
-	void UpdateScissor(i32 x, i32 y, u32 width, u32 height);
+	void UpdateScissor(s32 x, s32 y, u32 width, u32 height);
 };
 
 class GraphicsContextImpl: public GraphicsContext{

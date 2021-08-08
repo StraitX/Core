@@ -30,9 +30,9 @@ bool IsButtonPressed(Mouse::Button button){
     }
 }
 
-Vector2i GlobalPosition(){
+Vector2s GlobalPosition(){
     ::Window root,child;
-    Vector2i choosen,global;
+    Vector2s choosen,global;
     unsigned int mask;
     
     XQueryPointer(DisplayServer::Handle, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
@@ -42,21 +42,21 @@ Vector2i GlobalPosition(){
     return global;
 }
 
-Vector2i RelativePosition(){
+Vector2s RelativePosition(){
     ::Window root,child;
-    Vector2i choosen,global;
+    Vector2s choosen,global;
     unsigned int mask;
 
     XQueryPointer(DisplayServer::Handle, WindowImpl::s_MainWindow.Handle,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
     
-	i32 window_height = (i32)WindowImpl::s_MainWindow.Size().y;
+	s32 window_height = (s32)WindowImpl::s_MainWindow.Size().y;
 
 	choosen.y = window_height - choosen.y;
     return choosen;
 }
 
-void SetGlobalPosition(const Vector2i &position){
-    Vector2i new_position;
+void SetGlobalPosition(const Vector2s &position){
+    Vector2s new_position;
     new_position.x = position.x;
     new_position.y = PlatformWindow::Screen().Size.y - position.y;
 

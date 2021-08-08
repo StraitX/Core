@@ -32,13 +32,13 @@ struct WindowDrawEvent{
 };
 
 struct MouseWheelEvent {
-    i32 Delta;
+    s32 Delta;
 };
 
 struct MouseButtonEvent{
     Mouse::Button Button;
-    i32 x;
-    i32 y;
+    s32 x;
+    s32 y;
 };
 
 struct KeyEvent{

@@ -1,7 +1,7 @@
 #include <time.h>
 #include "core/os/clock.hpp"
 
-static constexpr Time Nanoseconds(i64 nanoseconds){
+static constexpr Time Nanoseconds(s64 nanoseconds){
     return Microseconds(nanoseconds/1000);
 }
 

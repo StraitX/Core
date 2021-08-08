@@ -82,7 +82,7 @@ constexpr Vector4<T> operator*(const Matrix4<T> &l, const Vector4<T> &r){
 }
 
 typedef Matrix4<float> Matrix4f;
-typedef Matrix4<i32> Matrix4i;
+typedef Matrix4<s32> Matrix4s;
 typedef Matrix4<u32> Matrix4u;    
 
 

@@ -31,7 +31,7 @@ private:
 public:
     static const Vector2f s_DefaultTextureCoords[4];
 private:
-    static constexpr i32 MaxTextures = DescriptorSetLayout::s_MaxTexturesBindings;
+    static constexpr s32 MaxTextures = DescriptorSetLayout::s_MaxTexturesBindings;
     static constexpr size_t MaxVerticesCount = 400000;
     static constexpr size_t MaxIndicesCount  = 600000;
 
@@ -72,22 +72,22 @@ private:
     GPUBuffer m_IndexBuffer;
     GPUBuffer m_UniformBuffer;
 
-    Vector2i m_CameraPosition;
+    Vector2s m_CameraPosition;
     Vector2u m_WindowSize;
 public:
     BatchRenderer2D(const RenderPass *pass);
 
     ~BatchRenderer2D();
 
-    void BeginScene(const Framebuffer *framebuffer, Vector2i camera_position = {});
+    void BeginScene(const Framebuffer *framebuffer, Vector2s camera_position = {});
 
     void EndScene();
 
-    void DrawRect(Vector2i position, Vector2i size, const Color &color, const Texture2D &texture, const Vector2f (&texture_coords)[4] = s_DefaultTextureCoords);
+    void DrawRect(Vector2s position, Vector2s size, const Color &color, const Texture2D &texture, const Vector2f (&texture_coords)[4] = s_DefaultTextureCoords);
 
-    void DrawRect(Vector2i position, Vector2i size, const Color &color);
+    void DrawRect(Vector2s position, Vector2s size, const Color &color);
 
-    void DrawRect(Vector2i position, Vector2i size, const Texture2D &texture, const Vector2f (&texture_coords)[4] = s_DefaultTextureCoords);
+    void DrawRect(Vector2s position, Vector2s size, const Texture2D &texture, const Vector2f (&texture_coords)[4] = s_DefaultTextureCoords);
 
 	void Clear(const Color &color);
 
