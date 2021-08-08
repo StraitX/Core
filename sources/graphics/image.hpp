@@ -37,6 +37,8 @@ public:
 
     Result SaveToFile(const char *filename);
 
+    void Fill(const Color &color);
+
     u8 *Data()const;
 
     u32 Width()const;
