@@ -1,6 +1,6 @@
 #include <windows.h>
 #include "core/os/keyboard.hpp"
-#include "core/os/windows/virtual_keys.hpp"
+#include "platform/windows/virtual_keys.hpp"
 
 namespace Keyboard{
 

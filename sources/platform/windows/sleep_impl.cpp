@@ -1,6 +1,6 @@
 #include <Windows.h>
 #include <thread>
-#include "platform/sleep.hpp"
+#include "core/os/sleep.hpp"
 
 void Sleep(Time time){
     TIMECAPS tc;

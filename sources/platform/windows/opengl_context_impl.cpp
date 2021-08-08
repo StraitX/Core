@@ -1,8 +1,8 @@
 #include <Windows.h>
 #undef min
 #include <limits>
-#include "core/os/windows/opengl_context_impl.hpp"
-#include "core/os/windows/wgl.hpp"
+#include "platform/windows/opengl_context_impl.hpp"
+#include "platform/windows/wgl.hpp"
 
 namespace Windows{
 

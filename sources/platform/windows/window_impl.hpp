@@ -3,7 +3,7 @@
 
 #include "core/os/events.hpp"
 #include "core/result.hpp"
-#include "platform/screen.hpp"
+#include "core/os/screen.hpp"
 #include "core/noncopyable.hpp"
 
 struct HWND__;

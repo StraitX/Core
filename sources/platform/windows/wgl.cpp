@@ -1,4 +1,4 @@
-#include "core/os/windows/wgl.hpp"
+#include "platform/windows/wgl.hpp"
 
 namespace Windows {
 

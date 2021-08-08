@@ -1,6 +1,6 @@
-#include "core/os/windows/window_impl.hpp"
-#include "core/os/windows/events.hpp"
-#include "core/os/windows/virtual_keys.hpp"
+#include "platform/windows/window_impl.hpp"
+#include "platform/windows/events.hpp"
+#include "platform/windows/virtual_keys.hpp"
 #include <windows.h>
 
 namespace Windows{
@@ -49,12 +49,12 @@ const PlatformScreen& WindowImpl::Screen(){
     //TODO: For now windows does not support multiple screens 
     if (m_Screen.Handle == nullptr) {
         m_Screen.Handle = (void*)0xAA;
-        m_Screen.Size.width = GetSystemMetrics(SM_CXSCREEN);
-        m_Screen.Size.height = GetSystemMetrics(SM_CYSCREEN);
+        m_Screen.Size.x = GetSystemMetrics(SM_CXSCREEN);
+        m_Screen.Size.y = GetSystemMetrics(SM_CYSCREEN);
         
         float dpi = GetDpiForWindow(m_Handle);
-        m_Screen.DPI.width = dpi;
-        m_Screen.DPI.height = dpi;
+        m_Screen.DPI.x = dpi;
+        m_Screen.DPI.y = dpi;
     }
     return m_Screen;
 }

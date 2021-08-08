@@ -1,6 +1,6 @@
-#include "core/os/windows/events.hpp"
-#include "core/os/windows/virtual_keys.hpp"
-#include "core/os/windows/window_impl.hpp"
+#include "platform/windows/events.hpp"
+#include "platform/windows/virtual_keys.hpp"
+#include "platform/windows/window_impl.hpp"
 
 namespace Windows{
 
@@ -28,56 +28,56 @@ bool ToStraitXEvent(MSG& message, Event& event) {
 		event.Type = EventType::MouseButtonPress;
 		event.MouseButtonPress.Button = Mouse::Left;
 		event.MouseButtonPress.x = LOWORD(message.lParam);
-		event.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(message.hwnd).height - HIWORD(message.lParam);
+		event.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(message.hwnd).y - HIWORD(message.lParam);
 		return true;
 
 	case WM_MBUTTONDOWN:
 		event.Type = EventType::MouseButtonPress;
 		event.MouseButtonPress.Button = Mouse::Middle;
 		event.MouseButtonPress.x = LOWORD(message.lParam);
-		event.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(message.hwnd).height - HIWORD(message.lParam);
+		event.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(message.hwnd).y - HIWORD(message.lParam);
 		return true;
 
 	case WM_RBUTTONDOWN:
 		event.Type = EventType::MouseButtonPress;
 		event.MouseButtonPress.Button = Mouse::Right;
 		event.MouseButtonPress.x = LOWORD(message.lParam);
-		event.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(message.hwnd).height - HIWORD(message.lParam);
+		event.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(message.hwnd).y - HIWORD(message.lParam);
 		return true;
 
 	case WM_XBUTTONDOWN:
 		event.Type = EventType::MouseButtonPress;
 		event.MouseButtonPress.Button = HIWORD(message.wParam) == XBUTTON1 ? Mouse::XButton1 : Mouse::XButton2;
 		event.MouseButtonPress.x = LOWORD(message.lParam);
-		event.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(message.hwnd).height - HIWORD(message.lParam);
+		event.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(message.hwnd).y - HIWORD(message.lParam);
 		return true;
 
 	case WM_LBUTTONUP:
 		event.Type = EventType::MouseButtonRelease;
 		event.MouseButtonRelease.Button = Mouse::Left;
 		event.MouseButtonRelease.x = LOWORD(message.lParam);
-		event.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(message.hwnd).height - HIWORD(message.lParam);
+		event.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(message.hwnd).y - HIWORD(message.lParam);
 		return true;
 
 	case WM_RBUTTONUP:
 		event.Type = EventType::MouseButtonRelease;
 		event.MouseButtonRelease.Button = Mouse::Right;
 		event.MouseButtonRelease.x = LOWORD(message.lParam);
-		event.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(message.hwnd).height - HIWORD(message.lParam);
+		event.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(message.hwnd).y - HIWORD(message.lParam);
 		return true;
 
 	case WM_MBUTTONUP:
 		event.Type = EventType::MouseButtonRelease;
 		event.MouseButtonRelease.Button = Mouse::Middle;
 		event.MouseButtonRelease.x = LOWORD(message.lParam);
-		event.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(message.hwnd).height - HIWORD(message.lParam);
+		event.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(message.hwnd).y - HIWORD(message.lParam);
 		return true;
 
 	case WM_XBUTTONUP:
 		event.Type = EventType::MouseButtonRelease;
 		event.MouseButtonRelease.Button = HIWORD(message.wParam) == XBUTTON1 ? Mouse::XButton1 : Mouse::XButton2;
 		event.MouseButtonRelease.x = LOWORD(message.lParam);
-		event.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(message.hwnd).height - HIWORD(message.lParam);
+		event.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(message.hwnd).y - HIWORD(message.lParam);
 		return true;
 
 	case WM_KEYDOWN:

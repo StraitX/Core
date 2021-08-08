@@ -9,7 +9,7 @@
     #include "platform/linux/opengl_context_impl.hpp"
     typedef Linux::OpenGLContextImpl PlatformGLContextImpl;
 #elif defined(SX_OS_WINDOWS)
-    #include "core/os/windows/opengl_context_impl.hpp"
+    #include "platform/windows/opengl_context_impl.hpp"
     typedef Windows::OpenGLContextImpl PlatformGLContextImpl;
 #elif defined(SX_OS_MACOS)
     #include "platform/macos/opengl_context_impl.hpp"

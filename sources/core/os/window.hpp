@@ -9,7 +9,7 @@
     #include "platform/linux/window_impl.hpp"
     typedef Linux::WindowImpl PlatformWindowImpl;
 #elif defined(SX_OS_WINDOWS)
-    #include "core/os/windows/window_impl.hpp"
+    #include "platform/windows/window_impl.hpp"
     typedef Windows::WindowImpl PlatformWindowImpl;
 #elif defined(SX_OS_MACOS)
     #include "platform/macos/window_impl.hpp"
