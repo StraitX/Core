@@ -110,11 +110,15 @@ private:
 public:
 	Texture2D() = default;
 
+    Texture2D(Texture2D&& other)noexcept;
+
 	Texture2D(const char *filename, const SamplerProperties &props = {});
 
     Texture2D(const Image &image, const SamplerProperties &props = {});
 
 	~Texture2D();
+
+    Texture2D& operator=(Texture2D&& other)noexcept;
 
 	Result New(const char *filename, const SamplerProperties &props = {});
 
@@ -156,6 +160,7 @@ SX_INLINE Texture &Texture::operator=(Texture &&other)noexcept{
     m_Layout = other.m_Layout;
     m_Format = other.m_Format;
     m_Usage = other.m_Usage;
+
     other.SetZero();
     return *this;
 }

@@ -7,12 +7,29 @@
 
 Texture2D::VTable Texture2D::s_VTable;
 
+Texture2D::Texture2D(Texture2D&& other)noexcept {
+    *this = Move(other);
+}
+
 Texture2D::Texture2D(const char *filename, const SamplerProperties &props){
 	SX_CORE_CALL_ASSERT(New(filename, props), Result::Success, "Can't load image from file");
 }
 
 Texture2D::Texture2D(const Image &image, const SamplerProperties &props){
 	New(image, props);
+}
+
+Texture2D& Texture2D::operator=(Texture2D&& other) noexcept{
+    SX_CORE_ASSERT(IsEmpty(), "Texture2D: Can't move into non-empty object");
+    Texture::operator=(Move(other));
+    m_Width = other.m_Width;
+    m_Height = other.m_Height;
+    m_Sampler = Move(other.m_Sampler);
+
+    other.m_Width = 0;
+    other.m_Height = 0;
+
+    return *this;
 }
 
 Result Texture2D::New(const char *filename, const SamplerProperties &props){
