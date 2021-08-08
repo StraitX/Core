@@ -46,11 +46,11 @@ public:
 
     CPUBuffer(u32 size, const void *data);
 
-    CPUBuffer(CPUBuffer &&other);
+    CPUBuffer(CPUBuffer &&other)noexcept;
 
     ~CPUBuffer();
 
-    CPUBuffer &operator=(CPUBuffer &&other);
+    CPUBuffer &operator=(CPUBuffer &&other)noexcept;
 
     void New(u32 size);
 
@@ -79,7 +79,7 @@ SX_INLINE CPUBuffer::CPUBuffer(u32 size, const void *data){
     New(size, data);
 }
 
-SX_INLINE CPUBuffer::CPUBuffer(CPUBuffer &&other){
+SX_INLINE CPUBuffer::CPUBuffer(CPUBuffer &&other)noexcept{
     *this = Move(other);
 }
 
@@ -88,7 +88,7 @@ SX_INLINE CPUBuffer::~CPUBuffer(){
         Delete();
 }
 
-SX_INLINE CPUBuffer &CPUBuffer::operator=(CPUBuffer &&other){
+SX_INLINE CPUBuffer &CPUBuffer::operator=(CPUBuffer &&other)noexcept{
     SX_CORE_ASSERT(IsEmpty(), "CPUBuffer: Can't move into non-empty object");
     m_Handle = other.m_Handle;
     m_BackingMemory = other.m_BackingMemory;

@@ -56,11 +56,11 @@ private:
 public:
     Sampler() = default;
 
-    Sampler(Sampler &&other);
+    Sampler(Sampler &&other)noexcept;
 
     ~Sampler();
 
-    Sampler &operator=(Sampler &&other);
+    Sampler &operator=(Sampler &&other)noexcept;
 
     void New(SamplerProperties props);
 
@@ -71,7 +71,7 @@ public:
     bool IsEmpty()const;
 };
 
-SX_INLINE Sampler::Sampler(Sampler &&other){
+SX_INLINE Sampler::Sampler(Sampler &&other)noexcept{
     *this = Move(other);
 }
 
@@ -80,7 +80,7 @@ SX_INLINE Sampler::~Sampler(){
         Delete();
 }
 
-SX_INLINE Sampler &Sampler::operator=(Sampler &&other){
+SX_INLINE Sampler &Sampler::operator=(Sampler &&other)noexcept{
     SX_CORE_ASSERT(IsEmpty(), "Sampler: Can't move into non-empty object");
     m_Handle = other.m_Handle;
     other.m_Handle = {};

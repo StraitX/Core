@@ -13,9 +13,13 @@ private:
 public:
     CPUTexture() = default;
 
+    CPUTexture(CPUTexture&&) = default;
+
     CPUTexture(u32 width, u32 height, TextureFormat format);
 
     CPUTexture(u32 width, u32 height, TextureFormat format, const void *pixels);
+
+    CPUTexture& operator=(CPUTexture&&) = default;
 
     void New(u32 width, u32 height, TextureFormat format);
 

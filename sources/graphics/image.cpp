@@ -9,7 +9,7 @@ Image::Image(u32 width, u32 height, const Color &color){
     Create(width, height, color);
 }
 
-Image::Image(Image &&other){
+Image::Image(Image &&other)noexcept{
     *this = Move(other);
 }
 
@@ -17,7 +17,7 @@ Image::~Image(){
     std::free(m_Data); 
 }
 
-Image &Image::operator=(Image &&other){
+Image &Image::operator=(Image &&other)noexcept{
     SX_CORE_ASSERT(IsEmpty(), "Image: can't move into non-empty object");
     m_Data = other.m_Data;
     m_Width = other.m_Width;
@@ -39,17 +39,7 @@ void Image::Create(u32 width, u32 height, const Color &color){
 
     m_Data = (u8*)std::malloc(GetPixelSize(m_Format) * m_Width * m_Height);
 
-
-    u32 *pixels = (u32*)m_Data;
-    // we use here ABGR because of little-endian cpu assumption 
-    u32 pixel = color.ABGR8();
-
-    for(u32 i = 0; i<m_Height; i++){
-        u32 offset = i * m_Width;
-        for(u32 j = 0; j<m_Width; j++){
-            pixels[offset + j] = pixel;
-        }
-    }
+    Fill(color);
 }
 
 Result Image::LoadFromFile(const char *filename, PixelFormat format){
@@ -106,4 +96,18 @@ Result Image::SaveToFile(const char *filename){
         return res;
     }
     return Result::Failure;
+}
+
+void Image::Fill(const Color &color){
+    
+    u32 *pixels = (u32*)m_Data;
+    // we use here ABGR because of little-endian cpu assumption 
+    u32 pixel = color.ABGR8();
+
+    for(u32 i = 0; i<m_Height; i++){
+        u32 offset = i * m_Width;
+        for(u32 j = 0; j<m_Width; j++){
+            pixels[offset + j] = pixel;
+        }
+    }
 }
