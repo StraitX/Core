@@ -5,13 +5,13 @@
 #include "core/os/events.hpp"
 #include "core/os/screen.hpp"
 
-#if defined(SX_PLATFORM_LINUX)
+#if defined(SX_OS_LINUX)
     #include "platform/linux/window_impl.hpp"
     typedef Linux::WindowImpl PlatformWindowImpl;
-#elif defined(SX_PLATFORM_WINDOWS)
+#elif defined(SX_OS_WINDOWS)
     #include "core/os/windows/window_impl.hpp"
     typedef Windows::WindowImpl PlatformWindowImpl;
-#elif defined(SX_PLATFORM_MACOS)
+#elif defined(SX_OS_MACOS)
     #include "platform/macos/window_impl.hpp"
     typedef MacOS::WindowImpl PlatformWindowImpl;
 #else

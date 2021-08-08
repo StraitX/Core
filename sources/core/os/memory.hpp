@@ -5,9 +5,9 @@
 #include "core/types.hpp"
 #include "core/env/os.hpp"
 
-#if defined(SX_PLATFORM_LINUX) || defined(SX_PLATFORM_MACOS)
+#if defined(SX_OS_LINUX) || defined(SX_OS_MACOS)
     #include <alloca.h>
-#elif defined(SX_PLATFORM_WINDOWS)
+#elif defined(SX_OS_WINDOWS)
     #include <malloc.h>
 #else
     #error "Alloca.h on your platform is not supported yet"

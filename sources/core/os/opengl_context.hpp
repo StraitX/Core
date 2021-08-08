@@ -5,13 +5,13 @@
 #include "core/os/window.hpp"
 #include "core/noncopyable.hpp"
 
-#ifdef SX_PLATFORM_LINUX
+#ifdef SX_OS_LINUX
     #include "platform/linux/opengl_context_impl.hpp"
     typedef Linux::OpenGLContextImpl PlatformGLContextImpl;
-#elif defined(SX_PLATFORM_WINDOWS)
+#elif defined(SX_OS_WINDOWS)
     #include "core/os/windows/opengl_context_impl.hpp"
     typedef Windows::OpenGLContextImpl PlatformGLContextImpl;
-#elif defined(SX_PLATFORM_MACOS)
+#elif defined(SX_OS_MACOS)
     #include "platform/macos/opengl_context_impl.hpp"
     typedef MacOS::OpenGLContextImpl PlatformGLContextImpl;
 #else

@@ -3,7 +3,7 @@
 
 #include "core/env/os.hpp"
 
-#if defined(SX_PLATFORM_LINUX) || defined (SX_PLATFORM_WINDOWS) || defined(SX_PLATFORM_MACOS)
+#if defined(SX_OS_LINUX) || defined (SX_OS_WINDOWS) || defined(SX_OS_MACOS)
     #define SX_OPENGL_SUPPORTED
     #include <glad/glad.h>
 #endif
