@@ -21,11 +21,11 @@ public:
 
     Image(u32 width, u32 height, const Color &color = Color::Black);
 
-    Image(Image &&other);
+    Image(Image &&other)noexcept;
 
     ~Image();
 
-    Image &operator=(Image &&other);
+    Image &operator=(Image &&other)noexcept;
 
     void Create(u32 width, u32 height, const Color &color = Color::Black);
 

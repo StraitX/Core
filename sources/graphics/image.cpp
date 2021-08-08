@@ -9,7 +9,7 @@ Image::Image(u32 width, u32 height, const Color &color){
     Create(width, height, color);
 }
 
-Image::Image(Image &&other){
+Image::Image(Image &&other)noexcept{
     *this = Move(other);
 }
 
@@ -17,7 +17,7 @@ Image::~Image(){
     std::free(m_Data); 
 }
 
-Image &Image::operator=(Image &&other){
+Image &Image::operator=(Image &&other)noexcept{
     SX_CORE_ASSERT(IsEmpty(), "Image: can't move into non-empty object");
     m_Data = other.m_Data;
     m_Width = other.m_Width;

@@ -67,11 +67,11 @@ protected:
 public:
     Texture() = default;
 
-    Texture(Texture &&other);
+    Texture(Texture &&other)noexcept;
 
     ~Texture() = default;
 
-    Texture &operator=(Texture &&other);
+    Texture &operator=(Texture &&other)noexcept;
 
     GPUResourceHandle Handle()const;
 
@@ -143,12 +143,12 @@ public:
 };
 */
 
-SX_INLINE Texture::Texture(Texture &&other){
+SX_INLINE Texture::Texture(Texture &&other)noexcept{
     *this = Move(other);
 }
 
 
-SX_INLINE Texture &Texture::operator=(Texture &&other){
+SX_INLINE Texture &Texture::operator=(Texture &&other)noexcept{
     SX_CORE_ASSERT(IsEmpty(), "Texture: Can't move into non-empty object");
     m_Handle = other.m_Handle;
     m_ViewHandle = other.m_ViewHandle;

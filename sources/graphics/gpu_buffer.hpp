@@ -53,11 +53,11 @@ private:
 public:
     GPUBuffer() = default;
 
-    GPUBuffer(GPUBuffer &&other);
+    GPUBuffer(GPUBuffer &&other)noexcept;
 
     ~GPUBuffer();
 
-    GPUBuffer &operator=(GPUBuffer &&other);
+    GPUBuffer &operator=(GPUBuffer &&other)noexcept;
 
     void New(u32 size, GPUMemoryType mem_type, UsageType usage);
 
@@ -80,7 +80,7 @@ private:
     void SetZero();
 };
 
-SX_INLINE GPUBuffer::GPUBuffer(GPUBuffer &&other){
+SX_INLINE GPUBuffer::GPUBuffer(GPUBuffer &&other)noexcept{
     *this = Move(other);
 }
 
@@ -89,7 +89,7 @@ SX_INLINE GPUBuffer::~GPUBuffer(){
         Delete();
 }
 
-SX_INLINE GPUBuffer &GPUBuffer::operator=(GPUBuffer &&other){
+SX_INLINE GPUBuffer &GPUBuffer::operator=(GPUBuffer &&other)noexcept{
     SX_CORE_ASSERT(IsEmpty(), "GPUBuffer: Can't move into non-empty object");
     m_Size = other.m_Size;
     m_Handle = other.m_Handle;
