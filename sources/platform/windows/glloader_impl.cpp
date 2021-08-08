@@ -1,7 +1,7 @@
 #include <Windows.h>
 #include <string.h>
-#include "platform/glloader.hpp"
-#include "platform/windows/wgl.hpp"
+#include "core/os/glloader.hpp"
+#include "core/os/windows/wgl.hpp"
 
 bool OpenGLLoader::LoadPlatformExtensions() {
     Windows::wglChoosePixelFormatARB = (Windows::wglChoosePixelFormatARBProc)wglGetProcAddress("wglChoosePixelFormatARB");

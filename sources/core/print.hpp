@@ -1,7 +1,7 @@
 #ifndef STRAITX_IO_HPP
 #define STRAITX_IO_HPP
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 #include "core/printer.hpp"
 
 void STDOutWriter(char ch, void *data = nullptr);

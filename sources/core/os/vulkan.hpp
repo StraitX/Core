@@ -1,14 +1,14 @@
 #ifndef STRAITX_VULKAN_HPP
 #define STRAITX_VULKAN_HPP
 
-#include "platform/platform_detection.hpp"
+#include "core/env/os.hpp"
 
 #if defined(SX_PLATFORM_LINUX) || defined(SX_PLATFORM_WINDOWS)
     #define SX_VULKAN_SUPPORTED
     #include <vulkan/vulkan.h>
 #endif
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 
 namespace Vk{
 

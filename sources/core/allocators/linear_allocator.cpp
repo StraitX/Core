@@ -1,5 +1,5 @@
-#include "core/memory/linear_allocator.hpp"
-#include "platform/memory.hpp"
+#include "core/allocators/linear_allocator.hpp"
+#include "core/os/memory.hpp"
 #include "core/assert.hpp"
 
 LinearAllocator::LinearAllocator(size_t size):

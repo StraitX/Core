@@ -1,4 +1,4 @@
-#include "platform/opengl.hpp"
+#include "core/os/opengl.hpp"
 #include "graphics/opengl/gpu_buffer_impl.hpp"
 
 namespace GL{

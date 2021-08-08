@@ -1,7 +1,7 @@
 #ifndef STRAITX_DESCRIPTOR_SET_HPP
 #define STRAITX_DESCRIPTOR_SET_HPP
 
-#include "platform/compiler.hpp"
+#include "core/env/compiler.hpp"
 #include "core/push_array.hpp"
 #include "graphics/shader.hpp"
 #include "graphics/gpu_configuration.hpp"

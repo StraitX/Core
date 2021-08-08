@@ -1,9 +1,9 @@
 #include <cstdlib>
 #include <cstdio>
-#include "platform/platform_runtime.hpp"
+#include "core/os/platform_runtime.hpp"
 #include "platform/linux/window_impl.hpp"
 #include "platform/linux/display_server.hpp"
-#include "platform/clock.hpp"
+#include "core/os/clock.hpp"
 
 namespace Linux{
 extern void PollEvents(const WindowImpl &window, void (*handler)(const Event &e));

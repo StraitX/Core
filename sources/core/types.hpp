@@ -1,8 +1,8 @@
 #ifndef STRAITX_TYPES_HPP
 #define STRAITX_TYPES_HPP
 
-#include "platform/compiler.hpp"
-#include "platform/arch.hpp"
+#include "core/env/compiler.hpp"
+#include "core/env/arch.hpp"
 #include <cstddef>
 
 typedef signed   char i8;

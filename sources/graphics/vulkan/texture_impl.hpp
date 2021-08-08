@@ -1,7 +1,7 @@
 #ifndef STRAITX_VULKAN_GPU_TEXTURE_IMPL_HPP
 #define STRAITX_VULKAN_GPU_TEXTURE_IMPL_HPP
 
-#include "platform/vulkan.hpp"
+#include "core/os/vulkan.hpp"
 #include "graphics/texture.hpp"
 
 namespace Vk{

@@ -1,7 +1,7 @@
 #ifndef STRAITX_COLOR_HPP
 #define STRAITX_COLOR_HPP
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 #include "core/math/vector4.hpp"
 
 struct Color{

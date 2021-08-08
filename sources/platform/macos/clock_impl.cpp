@@ -1,6 +1,6 @@
 #include <mach/clock.h>
 #include <mach/mach_time.h>
-#include "platform/clock.hpp"
+#include "core/os/clock.hpp"
 
 namespace MacOS {
 

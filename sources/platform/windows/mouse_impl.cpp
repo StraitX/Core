@@ -1,7 +1,7 @@
-#include "platform/mouse.hpp"
-#include "platform/windows/virtual_keys.hpp"
-#include "platform/windows/window_impl.hpp"
-#include "platform/windows/window_impl.hpp"
+#include "core/os/mouse.hpp"
+#include "core/os/windows/virtual_keys.hpp"
+#include "core/os/windows/window_impl.hpp"
+#include "core/os/windows/window_impl.hpp"
 
 bool Mouse::IsButtonPressed(Mouse::Button button) {
     return (GetAsyncKeyState(Windows::MouseButtonToVirtualKey(button)) & 0x8000) != 0;

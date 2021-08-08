@@ -1,7 +1,7 @@
 #ifndef STRAITX_VULKAN_FRAMEBUFFER_IMPL_HPP
 #define STRAITX_VULKAN_FRAMEBUFFER_IMPL_HPP
 
-#include "platform/vulkan.hpp"
+#include "core/os/vulkan.hpp"
 #include "core/push_array.hpp"
 #include "graphics/framebuffer.hpp"
 

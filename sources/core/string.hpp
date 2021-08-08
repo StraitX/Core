@@ -1,7 +1,7 @@
 #ifndef STRAITX_STRING_HPP
 #define STRAITX_STRING_HPP
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 
 class String{
 public:

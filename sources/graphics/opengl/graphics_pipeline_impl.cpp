@@ -1,6 +1,6 @@
 #include <new>
 #include <cstdio>
-#include "platform/memory.hpp"
+#include "core/os/memory.hpp"
 #include "core/log.hpp"
 #include "core/string.hpp"
 #include "core/pair.hpp"

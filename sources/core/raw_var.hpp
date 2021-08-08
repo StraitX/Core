@@ -1,8 +1,8 @@
 #ifndef STRAITX_RAW_VAR_HPP
 #define STRAITX_RAW_VAR_HPP
 
-#include "platform/types.hpp"
-#include "platform/memory.hpp"
+#include "core/types.hpp"
+#include "core/os/memory.hpp"
 #include "core/move.hpp"
 #include "core/noncopyable.hpp"
 

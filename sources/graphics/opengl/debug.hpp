@@ -1,9 +1,9 @@
 #ifndef STRAITX_OPENGL_DEBUG_HPP
 #define STRAITX_OPENGL_DEBUG_HPP
 
-#include "platform/opengl.hpp"
+#include "core/os/opengl.hpp"
 #include "core/log.hpp"
-#include "platform/compiler.hpp"
+#include "core/env/compiler.hpp"
 
 static inline void glClearErrors(){
     while(glGetError() != GL_NO_ERROR);

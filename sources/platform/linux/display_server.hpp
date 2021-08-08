@@ -5,7 +5,7 @@ struct _XDisplay;
 
 #undef Success
 #undef None
-#include "platform/result.hpp"
+#include "core/result.hpp"
 
 namespace Linux{
 

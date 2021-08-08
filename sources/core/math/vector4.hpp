@@ -1,7 +1,7 @@
 #ifndef STRAITX_VECTOR4_HPP
 #define STRAITX_VECTOR4_HPP
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 #include "core/assert.hpp"
 #include "core/printer.hpp"
 

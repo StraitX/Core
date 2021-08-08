@@ -1,7 +1,7 @@
 #ifndef STRAITX_LINUX_SCREEN_IMPL_HPP
 #define STRAITX_LINUX_SCREEN_IMPL_HPP
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 
 
 namespace Linux{

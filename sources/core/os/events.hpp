@@ -1,9 +1,9 @@
 #ifndef STRAITX_EVENTS_HPP
 #define STRAITX_EVENTS_HPP
 
-#include "platform/compiler.hpp"
-#include "platform/keyboard.hpp"
-#include "platform/mouse.hpp"
+#include "core/env/compiler.hpp"
+#include "core/os/keyboard.hpp"
+#include "core/os/mouse.hpp"
 
 enum class EventType{
     Unknown = 0,

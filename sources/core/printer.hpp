@@ -1,7 +1,7 @@
 #ifndef STRAITX_PRINTER_HPP
 #define STRAITX_PRINTER_HPP
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 
 template<typename T>
 struct Printer{

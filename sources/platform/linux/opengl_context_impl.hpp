@@ -2,7 +2,7 @@
 #define STRAITX_LINUX_GLCONTEXT_IMPL_HPP
 
 #include "platform/linux/window_impl.hpp"
-#include "platform/types.hpp"
+#include "core/types.hpp"
 
 struct __GLXcontextRec;
 

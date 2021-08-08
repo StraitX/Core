@@ -1,7 +1,7 @@
 #ifndef STRAITX_SLEEP_HPP
 #define STRAITX_SLEEP_HPP
 
-#include "platform/time.hpp"
+#include "core/os/time.hpp"
 
 void Sleep(Time time);
 

@@ -1,8 +1,8 @@
 #ifndef STRAITX_MACOS_OPENGL_CONTEXT_IMPL_HPP
 #define STRAITX_MACOS_OPENGL_CONTEXT_IMPL_HPP
 
-#include "platform/types.hpp"
-#include "platform/result.hpp"
+#include "core/types.hpp"
+#include "core/result.hpp"
 #include "platform/macos/window_impl.hpp"
 
 namespace MacOS{

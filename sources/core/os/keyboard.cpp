@@ -1,6 +1,6 @@
 #include <assert.h>
-#include "platform/types.hpp"
-#include "platform/keyboard.hpp"
+#include "core/types.hpp"
+#include "core/os/keyboard.hpp"
 
 
 namespace Keyboard {

@@ -1,7 +1,7 @@
 #ifndef STRAITX_VULKAN_GRAPHICS_PIPELINE_IMPL_HPP
 #define STRAITX_VULKAN_GRAPHICS_PIPELINE_IMPL_HPP
 
-#include "platform/vulkan.hpp"
+#include "core/os/vulkan.hpp"
 #include "graphics/graphics_pipeline.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"
 

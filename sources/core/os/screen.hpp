@@ -1,8 +1,8 @@
 #ifndef STRAITX_SCREEN_HPP
 #define STRAITX_SCREEN_HPP
 
-#include "platform/platform_detection.hpp"
-#include "platform/types.hpp"
+#include "core/env/os.hpp"
+#include "core/types.hpp"
 
 struct PlatformScreen{
 	void *Handle = nullptr;

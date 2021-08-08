@@ -1,7 +1,7 @@
 #ifndef STRAITX_FORMAT_HPP
 #define STRAITX_FORMAT_HPP
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 
 enum class PixelFormat: u8{
     RGBA8 = 1 

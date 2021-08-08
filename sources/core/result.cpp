@@ -1,5 +1,5 @@
-#include "platform/result.hpp"
-#include "platform/defs.hpp"
+#include "core/result.hpp"
+#include "core/defs.hpp"
 
 const char *Result::s_ResultNamesTable[(int)Result::ResultCodesCount] = {
     S(Success),

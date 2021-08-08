@@ -1,15 +1,15 @@
 #ifndef STRAITX_WINDOW_HPP
 #define STRAITX_WINDOW_HPP
 
-#include "platform/platform_detection.hpp"
-#include "platform/events.hpp"
-#include "platform/screen.hpp"
+#include "core/env/os.hpp"
+#include "core/os/events.hpp"
+#include "core/os/screen.hpp"
 
 #if defined(SX_PLATFORM_LINUX)
     #include "platform/linux/window_impl.hpp"
     typedef Linux::WindowImpl PlatformWindowImpl;
 #elif defined(SX_PLATFORM_WINDOWS)
-    #include "platform/windows/window_impl.hpp"
+    #include "core/os/windows/window_impl.hpp"
     typedef Windows::WindowImpl PlatformWindowImpl;
 #elif defined(SX_PLATFORM_MACOS)
     #include "platform/macos/window_impl.hpp"

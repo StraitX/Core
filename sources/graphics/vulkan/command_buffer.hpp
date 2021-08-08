@@ -1,7 +1,7 @@
 #ifndef STRAITX_VULKAN_COMMAND_BUFFER_HPP
 #define STRAITX_VULKAN_COMMAND_BUFFER_HPP
 
-#include "platform/vulkan.hpp"
+#include "core/os/vulkan.hpp"
 #include "core/span.hpp"
 #include "graphics/vulkan/queue.hpp"
 

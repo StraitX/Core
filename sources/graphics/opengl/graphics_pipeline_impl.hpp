@@ -1,7 +1,7 @@
 #ifndef STRAITX_OPENGL_GRAPHICS_PIPELINE_IMPL_HPP
 #define STRAITX_OPENGL_GRAPHICS_PIPELINE_IMPL_HPP
 
-#include "platform/opengl.hpp"
+#include "core/os/opengl.hpp"
 #include "graphics/graphics_pipeline.hpp"
 #include "graphics/opengl/descriptor_set_impl.hpp"
 

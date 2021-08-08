@@ -1,10 +1,10 @@
 #ifndef STRAITX_MACOS_WINDOW_IMPL_HPP
 #define STRAITX_MACOS_WINDOW_IMPL_HPP
 
-#include "platform/result.hpp"
-#include "platform/events.hpp"
+#include "core/result.hpp"
+#include "core/os/events.hpp"
 #include "platform/screen.hpp"
-#include "platform/noncopyable.hpp"
+#include "core/noncopyable.hpp"
 
 namespace MacOS{
 

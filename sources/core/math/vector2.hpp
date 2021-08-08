@@ -1,10 +1,10 @@
 #ifndef STRAITX_VECTOR2_HPP
 #define STRAITX_VECTOR2_HPP
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 #include "core/assert.hpp"
 #include "core/printer.hpp"
-#include "platform/compiler.hpp"
+#include "core/env/compiler.hpp"
 
 template<typename T>
 struct Vector2{

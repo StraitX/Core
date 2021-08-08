@@ -1,15 +1,15 @@
 #ifndef STRAITX_OPENGL_CONTEXT_HPP
 #define STRAITX_OPENGL_CONTEXT_HPP
 
-#include "platform/platform_detection.hpp"
-#include "platform/window.hpp"
-#include "platform/noncopyable.hpp"
+#include "core/env/os.hpp"
+#include "core/os/window.hpp"
+#include "core/noncopyable.hpp"
 
 #ifdef SX_PLATFORM_LINUX
     #include "platform/linux/opengl_context_impl.hpp"
     typedef Linux::OpenGLContextImpl PlatformGLContextImpl;
 #elif defined(SX_PLATFORM_WINDOWS)
-    #include "platform/windows/opengl_context_impl.hpp"
+    #include "core/os/windows/opengl_context_impl.hpp"
     typedef Windows::OpenGLContextImpl PlatformGLContextImpl;
 #elif defined(SX_PLATFORM_MACOS)
     #include "platform/macos/opengl_context_impl.hpp"

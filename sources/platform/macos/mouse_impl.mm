@@ -1,5 +1,5 @@
 #import <Cocoa/Cocoa.h>
-#include "platform/mouse.hpp"
+#include "core/os/mouse.hpp"
 #include "platform/macos/sx_window.h"
 #include "platform/macos/linear_units.h"
 #include "platform/macos/input_manager.hpp"

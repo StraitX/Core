@@ -1,8 +1,8 @@
 #ifndef STRAITX_VULKAN_SWAPCHAIN_IMPL_HPP
 #define STRAITX_VULKAN_SWAPCHAIN_IMPL_HPP
 
-#include "platform/vulkan.hpp"
-#include "platform/vulkan_surface.hpp"
+#include "core/os/vulkan.hpp"
+#include "core/os/vulkan_surface.hpp"
 #include "core/math/vector2.hpp"
 #include "core/push_array.hpp"
 #include "graphics/vulkan/fence.hpp"

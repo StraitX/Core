@@ -1,5 +1,5 @@
 #define VK_USE_PLATFORM_XLIB_KHR
-#include "platform/vulkan.hpp"
+#include "core/os/vulkan.hpp"
 // undef to prevent X11 macros collapse
 #undef Success
 #undef None
@@ -7,7 +7,7 @@
 #undef KeyPress
 #undef FocusIn
 #undef FocusOut
-#include "platform/vulkan_surface.hpp"
+#include "core/os/vulkan_surface.hpp"
 #include "platform/linux/display_server.hpp"
 
 Result VulkanSurface::Create(VkInstance owner, const PlatformWindowImpl &window){

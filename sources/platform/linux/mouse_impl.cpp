@@ -5,8 +5,8 @@
 #undef KeyRelease
 #undef FocusIn
 #undef FocusOut
-#include "platform/mouse.hpp"
-#include "platform/window.hpp"
+#include "core/os/mouse.hpp"
+#include "core/os/window.hpp"
 #include "platform/linux/display_server.hpp"
 
 namespace Mouse{

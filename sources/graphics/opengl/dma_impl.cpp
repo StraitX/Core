@@ -1,4 +1,4 @@
-#include "platform/opengl.hpp"
+#include "core/os/opengl.hpp"
 #include "graphics/opengl/dma_impl.hpp"
 #include "graphics/opengl/texture_impl.hpp"
 

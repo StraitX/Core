@@ -1,9 +1,9 @@
 #ifndef STRAITX_VULKAN_SURFACE_HPP
 #define STRAITX_VULKAN_SURFACE_HPP
 
-#include "platform/vulkan.hpp"
-#include "platform/result.hpp"
-#include "platform/window.hpp"
+#include "core/os/vulkan.hpp"
+#include "core/result.hpp"
+#include "core/os/window.hpp"
 
 struct VulkanSurface{
     VkSurfaceKHR Handle = VK_NULL_HANDLE;

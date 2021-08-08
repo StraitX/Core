@@ -1,9 +1,9 @@
 #ifndef STRAITX_WINDOWS_OPENGL_CONTEXT_IMPL_HPP
 #define STRAITX_WINDOWS_OPENGL_CONTEXT_IMPL_HPP
 
-#include "platform/windows/window_impl.hpp"
-#include "platform/result.hpp"
-#include "platform/types.hpp"
+#include "core/os/windows/window_impl.hpp"
+#include "core/result.hpp"
+#include "core/types.hpp"
 
 struct HGLRC__;
 struct HDC__;

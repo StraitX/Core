@@ -1,10 +1,10 @@
 #ifndef STRAITX_VULKAN_QUEUE_HPP
 #define STRAITX_VULKAN_QUEUE_HPP
 
-#include "platform/vulkan.hpp"
-#include "platform/result.hpp"
-#include "platform/types.hpp"
-#include "platform/defs.hpp"
+#include "core/os/vulkan.hpp"
+#include "core/result.hpp"
+#include "core/types.hpp"
+#include "core/defs.hpp"
 
 namespace Vk{
 

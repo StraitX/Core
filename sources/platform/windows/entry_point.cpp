@@ -1,9 +1,9 @@
 #include <Windows.h>
 #include <cstdlib>
-#include "platform/windows/window_impl.hpp"
-#include "platform/windows/events.hpp"
-#include "platform/clock.hpp"
-#include "platform/platform_runtime.hpp"
+#include "core/os/windows/window_impl.hpp"
+#include "core/os/windows/events.hpp"
+#include "core/os/clock.hpp"
+#include "core/os/platform_runtime.hpp"
 
 using namespace Windows;
 

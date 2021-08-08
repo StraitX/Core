@@ -1,5 +1,5 @@
-#include "platform/memory.hpp"
-#include "platform/opengl.hpp"
+#include "core/os/memory.hpp"
+#include "core/os/opengl.hpp"
 #include "core/algorithm.hpp"
 #include "graphics/opengl/descriptor_set_impl.hpp"
 

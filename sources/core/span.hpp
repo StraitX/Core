@@ -1,7 +1,7 @@
 #ifndef STRAITX_SPAN_HPP
 #define STRAITX_SPAN_HPP 
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 #include "core/assert.hpp"
 
 // it has no idea about allocations, object lifetime and stuff

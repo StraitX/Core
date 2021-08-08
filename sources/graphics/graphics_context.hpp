@@ -1,7 +1,7 @@
 #ifndef STRAITX_GRAPHICS_CONTEXT_HPP
 #define STRAITX_GRAPHICS_CONTEXT_HPP
 
-#include "platform/window.hpp"
+#include "core/os/window.hpp"
 #include "graphics/gpu_command_buffer.hpp"
 
 class GraphicsAPI{

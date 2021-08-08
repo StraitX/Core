@@ -1,8 +1,8 @@
 #ifndef STRAITX_ENTRY_POINT_HPP
 #define STRAITX_ENTRY_POINT_HPP
 
-#include "platform/result.hpp"
-#include "platform/events.hpp"
+#include "core/result.hpp"
+#include "core/os/events.hpp"
 
 struct PlatformRuntime{
 

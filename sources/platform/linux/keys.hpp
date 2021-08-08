@@ -1,8 +1,8 @@
 #ifndef STRAITX_LINUX_KEYS_HPP
 #define STRAITX_LINUX_KEYS_HPP
 
-#include "platform/keyboard.hpp"
-#include "platform/mouse.hpp"
+#include "core/os/keyboard.hpp"
+#include "core/os/mouse.hpp"
 #include <X11/Xlib.h>
 
 namespace Linux{

@@ -3,8 +3,8 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <assert.h>
-#include "platform/file.hpp"
-#include "platform/platform_detection.hpp"
+#include "core/os/file.hpp"
+#include "core/env/os.hpp"
 
 #if defined(SX_ARCH_64_BIT)
     #define lseek64(fd, offset, whence) (off_t)lseek(fd, (off_t)offset, whence)

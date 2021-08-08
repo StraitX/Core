@@ -1,5 +1,5 @@
 #include <Windows.h>
-#include "platform/memory.hpp"
+#include "core/os/memory.hpp"
 
 void* Memory::AlignedAllocImpl(size_t size, size_t alignment) {
 	return _aligned_malloc(size, alignment);

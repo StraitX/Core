@@ -1,7 +1,7 @@
 #ifndef STRAITX_LINEAT_ALLOCATOR_HPP
 #define STRAITX_LINEAT_ALLOCATOR_HPP
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 
 class LinearAllocator{
 private:

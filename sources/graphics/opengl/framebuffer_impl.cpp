@@ -1,6 +1,6 @@
 #include <new>
-#include "platform/memory.hpp"
-#include "platform/opengl.hpp"
+#include "core/os/memory.hpp"
+#include "core/os/opengl.hpp"
 #include "graphics/opengl/framebuffer_impl.hpp"
 
 namespace GL{

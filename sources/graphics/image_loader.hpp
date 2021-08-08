@@ -1,8 +1,8 @@
 #ifndef STRAITX_IMAGE_LOADER_HPP
 #define STRAITX_IMAGE_LOADER_HPP
 
-#include "platform/file.hpp"
-#include "platform/result.hpp"
+#include "core/os/file.hpp"
+#include "core/result.hpp"
 #include "graphics/format.hpp"
 
 enum class ImageFileFormat{

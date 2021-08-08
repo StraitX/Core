@@ -1,8 +1,8 @@
 #ifndef STRAITX_OPENGL_GRAPHICS_CONTEXT_IMPL_HPP
 #define STRAITX_OPENGL_GRAPHICS_CONTEXT_IMPL_HPP
 
-#include "platform/opengl_context.hpp"
-#include "platform/opengl.hpp"
+#include "core/os/opengl_context.hpp"
+#include "core/os/opengl.hpp"
 #include "core/raw_var.hpp"
 #include "graphics/graphics_context.hpp"
 #include "graphics/opengl/render_pass_impl.hpp"

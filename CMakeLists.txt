@@ -1,13 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
-
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 02)
-set(VERSION_PATCH 09)
-
 project(
     StraitXEngine 
-    VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH} 
     DESCRIPTION "StraitXEngine project"
     LANGUAGES CXX
 )
@@ -20,20 +14,19 @@ set(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/thirdparty)
 
 include(Config)
 
-set(SOURCES_PLATFORM_I
-    ${SOURCES_DIR}/platform/memory.cpp
-    ${SOURCES_DIR}/platform/result.cpp
-    ${SOURCES_DIR}/platform/glloader.cpp
-    ${SOURCES_DIR}/platform/keyboard.cpp
-)
-
 set(SOURCES_CORE
     ${SOURCES_DIR}/core/assert.cpp
-    ${SOURCES_DIR}/core/memory/linear_allocator.cpp
-    ${SOURCES_DIR}/core/string.cpp
-	${SOURCES_DIR}/core/print.cpp
 	${SOURCES_DIR}/core/basic_types_printer.cpp
+	${SOURCES_DIR}/core/print.cpp
+    ${SOURCES_DIR}/core/result.cpp
+    ${SOURCES_DIR}/core/string.cpp
 	${SOURCES_DIR}/core/subsystem.cpp
+
+    ${SOURCES_DIR}/core/allocators/linear_allocator.cpp
+
+    ${SOURCES_DIR}/core/os/glloader.cpp
+    ${SOURCES_DIR}/core/os/keyboard.cpp
+    ${SOURCES_DIR}/core/os/memory.cpp
 )
 
 set(SOURCES_GRAPHICS_VULKAN
@@ -130,7 +123,7 @@ set(SOURCES_MAIN
 
 if(STRAITX_PLATFORM_LINUX)
 
-    set(SOURCES_PLATFORM_D
+    set(SOURCES_PLATFORM
 		${SOURCES_DIR}/platform/linux/entry_point.cpp
 
         ${SOURCES_DIR}/platform/linux/display_server.cpp
@@ -162,7 +155,7 @@ if(STRAITX_PLATFORM_LINUX)
     )
 
 elseif(STRAITX_PLATFORM_WINDOWS)
-    set(SOURCES_PLATFORM_D
+    set(SOURCES_PLATFORM
        ${SOURCES_DIR}/platform/windows/entry_point.cpp
 
        ${SOURCES_DIR}/platform/windows/mouse_impl.cpp
@@ -192,7 +185,7 @@ elseif(STRAITX_PLATFORM_WINDOWS)
     )
 
 elseif(STRAITX_PLATFORM_MACOS)
-    set(SOURCES_PLATFORM_D
+    set(SOURCES_PLATFORM
 		${SOURCES_DIR}/platform/macos/entry_point.mm
 
         ${SOURCES_DIR}/platform/macos/sx_application.mm
@@ -256,8 +249,7 @@ if(STRAITX_SUPPORT_VULKAN)
 endif()
 
 add_library(StraitX STATIC 
-    ${SOURCES_PLATFORM_D} 
-    ${SOURCES_PLATFORM_I}
+    ${SOURCES_PLATFORM} 
     ${SOURCES_CORE}
     ${SOURCES_GRAPHICS}
 	${SOURCES_SUBSYSTEMS}

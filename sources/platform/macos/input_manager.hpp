@@ -1,8 +1,8 @@
 #ifndef STRAITX_MACOS_INPUT_MANAGER_HPP
 #define STRAITX_MACOS_INPUT_MANAGER_HPP
 
-#include "platform/keyboard.hpp"
-#include "platform/mouse.hpp"
+#include "core/os/keyboard.hpp"
+#include "core/os/mouse.hpp"
 
 namespace MacOS{
 

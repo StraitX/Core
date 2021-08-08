@@ -1,4 +1,4 @@
-#include "platform/glloader.hpp"
+#include "core/os/glloader.hpp"
 #include <GL/glx.h>
 #include <GL/gl.h>
 #undef Success

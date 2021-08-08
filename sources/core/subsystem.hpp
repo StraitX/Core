@@ -1,8 +1,8 @@
 #ifndef STRAITX_SUBSYSTEM_HPP
 #define STRAITX_SUBSYSTEM_HPP
 
-#include "platform/events.hpp"
-#include "platform/result.hpp"
+#include "core/os/events.hpp"
+#include "core/result.hpp"
 #include "core/push_array.hpp"
 #include "core/assert.hpp"
 

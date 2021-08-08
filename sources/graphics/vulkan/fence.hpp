@@ -1,7 +1,7 @@
 #ifndef STRAITX_VULKAN_FENCE_HPP
 #define STRAITX_VULKAN_FENCE_HPP
 
-#include "platform/vulkan.hpp"
+#include "core/os/vulkan.hpp"
 #include "core/assert.hpp"
 #include "core/noncopyable.hpp"
 

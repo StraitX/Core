@@ -1,7 +1,7 @@
 #ifndef STRAITX_ASSERT_HPP
 #define STRAITX_ASSERT_HPP 
 
-#include "platform/compiler.hpp"
+#include "core/env/compiler.hpp"
 
 extern void _AssertFail(const char *assertion, const char *filename, unsigned int line, const char * function);
 extern void _AssertFail(const char *assertion, const char *message, const char *filename, unsigned int line, const char * function);

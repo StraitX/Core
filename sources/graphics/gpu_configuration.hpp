@@ -1,7 +1,7 @@
 #ifndef STRAITX_GPU_CONFIGURATION_HPP
 #define STRAITX_GPU_CONFIGURATION_HPP
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 
 #define GPU_VENDOR_ID_NVIDIA    0x10DE
 #define GPU_VENDOR_ID_AMD       0x1002

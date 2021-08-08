@@ -1,7 +1,7 @@
 #ifndef STRAITX_OPENGL_SHADER_IMPL_HPP
 #define STRAITX_OPENGL_SHADER_IMPL_HPP 
 
-#include "platform/opengl.hpp"
+#include "core/os/opengl.hpp"
 #include "core/push_array.hpp"
 #include "graphics/shader.hpp"
 

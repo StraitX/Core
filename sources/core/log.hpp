@@ -1,9 +1,9 @@
 #ifndef STRAITX_LOG_HPP
 #define STRAITX_LOG_HPP
 
-#include "platform/result.hpp"
+#include "core/result.hpp"
 #include "core/print.hpp"
-#include "platform/compiler.hpp"
+#include "core/env/compiler.hpp"
 
 #ifdef SX_DEBUG
 

@@ -1,5 +1,5 @@
 #include <new>
-#include "platform/memory.hpp"
+#include "core/os/memory.hpp"
 #include "graphics/opengl/render_pass_impl.hpp"
 
 namespace GL{

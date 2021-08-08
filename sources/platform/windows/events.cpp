@@ -1,6 +1,6 @@
-#include "platform/windows/events.hpp"
-#include "platform/windows/virtual_keys.hpp"
-#include "platform/windows/window_impl.hpp"
+#include "core/os/windows/events.hpp"
+#include "core/os/windows/virtual_keys.hpp"
+#include "core/os/windows/window_impl.hpp"
 
 namespace Windows{
 

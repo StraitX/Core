@@ -1,5 +1,5 @@
-#include "platform/memory.hpp"
-#include "platform/clock.hpp"
+#include "core/os/memory.hpp"
+#include "core/os/clock.hpp"
 #include "core/log.hpp"
 #include "core/subsystem.hpp"
 #include "core/print.hpp"

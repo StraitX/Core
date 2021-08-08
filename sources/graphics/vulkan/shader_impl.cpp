@@ -1,6 +1,6 @@
 #include "glsl2spv.hpp"
 #include "core/assert.hpp"
-#include "platform/memory.hpp"
+#include "core/os/memory.hpp"
 #include "graphics/vulkan/shader_impl.hpp"
 #include "graphics/vulkan/gpu.hpp"
 

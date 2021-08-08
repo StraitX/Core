@@ -1,4 +1,4 @@
-#include "platform/glloader.hpp"
+#include "core/os/glloader.hpp"
 #include <glad/glad.h>
 #include <cstdio>
 #include <string.h>

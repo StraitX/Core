@@ -1,7 +1,7 @@
 #ifndef STRAITX_ERROR_HPP
 #define STRAITX_ERROR_HPP
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 
 class Result{
 public:

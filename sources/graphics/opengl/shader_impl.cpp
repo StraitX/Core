@@ -1,8 +1,8 @@
 #include <new>
 #include <cstdio>
-#include "platform/memory.hpp"
-#include "platform/opengl.hpp"
-#include "platform/compiler.hpp"
+#include "core/os/memory.hpp"
+#include "core/os/opengl.hpp"
+#include "core/env/compiler.hpp"
 #include "core/log.hpp"
 #include "core/string.hpp"
 #include "graphics/opengl/shader_impl.hpp"

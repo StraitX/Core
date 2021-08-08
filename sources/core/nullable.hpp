@@ -1,8 +1,8 @@
 #ifndef STRAITX_NULLABLE_HPP
 #define STRAITX_NULLABLE_HPP
 
-#include "platform/types.hpp"
-#include "platform/compiler.hpp"
+#include "core/types.hpp"
+#include "core/env/compiler.hpp"
 
 class Nullable{
 public:

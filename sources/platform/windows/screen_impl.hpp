@@ -1,7 +1,7 @@
 #ifndef STRAITX_WINDOWS_SCREEN_HPP
 #define STRAITX_WINDOWS_SCREEN_HPP
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 
 namespace Windows {
 

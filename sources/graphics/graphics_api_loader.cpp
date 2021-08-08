@@ -1,5 +1,5 @@
-#include "platform/opengl.hpp"
-#include "platform/vulkan.hpp"
+#include "core/os/opengl.hpp"
+#include "core/os/vulkan.hpp"
 #include "core/log.hpp"
 #include "graphics/graphics_api_loader.hpp"
 #include "graphics/graphics_api_vtable.hpp"

@@ -1,5 +1,5 @@
-#include "platform/opengl.hpp"
-#include "platform/glloader.hpp"
+#include "core/os/opengl.hpp"
+#include "core/os/glloader.hpp"
 #include "core/log.hpp"
 #include "core/string.hpp"
 #include "graphics/opengl/graphics_context_impl.hpp"

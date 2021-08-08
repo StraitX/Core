@@ -1,6 +1,6 @@
 #include <new>
-#include "platform/memory.hpp"
-#include "platform/vulkan.hpp"
+#include "core/os/memory.hpp"
+#include "core/os/vulkan.hpp"
 #include "core/algorithm.hpp"
 #include "graphics/vulkan/gpu.hpp"
 #include "graphics/vulkan/render_pass_impl.hpp"

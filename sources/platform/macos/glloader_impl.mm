@@ -1,7 +1,7 @@
 #include <OpenGL/gl.h>
 #include <assert.h>
 #import <Foundation/Foundation.h>
-#include "platform/glloader.hpp"
+#include "core/os/glloader.hpp"
 
 bool OpenGLLoader::LoadPlatformExtensions(){
     return true;

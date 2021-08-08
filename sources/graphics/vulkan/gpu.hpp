@@ -1,7 +1,7 @@
 #ifndef STRAITX_VULKAN_LOGICAL_GPU_IMPL_HPP
 #define STRAITX_VULKAN_LOGICAL_GPU_IMPL_HPP
 
-#include "platform/vulkan.hpp"
+#include "core/os/vulkan.hpp"
 #include "core/span.hpp"
 #include "graphics/vulkan/queue.hpp"
 #include "graphics/vulkan/memory.hpp"

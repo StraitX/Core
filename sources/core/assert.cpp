@@ -1,6 +1,6 @@
 #include "core/assert.hpp"
 #include "core/print.hpp"
-#include "platform/memory.hpp"
+#include "core/os/memory.hpp"
 #include <cstdlib>
 
 void _AssertFail(const char *assertion, const char *filename, unsigned int line, const char * function){

@@ -2,7 +2,7 @@
 #define STRAITX_ARCH_HPP
 
 
-#include "platform/compiler.hpp"
+#include "core/env/compiler.hpp"
 
 #if defined(SX_COMPILER_GCC) || defined(SX_COMPILER_CLANG)
     #if defined(__i386__)

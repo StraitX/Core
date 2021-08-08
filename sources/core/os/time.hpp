@@ -1,7 +1,7 @@
 #ifndef STRAITX_TIME_HPP
 #define STRAITX_TIME_HPP
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 
 class Time{
 private:

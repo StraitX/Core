@@ -1,10 +1,10 @@
 #ifndef STRAITX_WINDOWS_WINDOW_HPP
 #define STRAITX_WINDOWS_WINDOW_HPP
 
-#include "platform/events.hpp"
-#include "platform/result.hpp"
+#include "core/os/events.hpp"
+#include "core/result.hpp"
 #include "platform/screen.hpp"
-#include "platform/noncopyable.hpp"
+#include "core/noncopyable.hpp"
 
 struct HWND__;
 

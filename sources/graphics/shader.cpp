@@ -1,5 +1,5 @@
-#include "platform/file.hpp"
-#include "platform/memory.hpp"
+#include "core/os/file.hpp"
+#include "core/os/memory.hpp"
 #include "core/log.hpp"
 #include "graphics/shader.hpp"
 

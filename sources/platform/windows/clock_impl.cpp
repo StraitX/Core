@@ -1,5 +1,5 @@
 #include <Windows.h>
-#include "platform/clock.hpp"
+#include "core/os/clock.hpp"
 
 namespace Windows {
 

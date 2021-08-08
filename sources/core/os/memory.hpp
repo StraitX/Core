@@ -2,8 +2,8 @@
 #define STRAITX_MEMORY_HPP
 
 #include <new>
-#include "platform/types.hpp"
-#include "platform/platform_detection.hpp"
+#include "core/types.hpp"
+#include "core/env/os.hpp"
 
 #if defined(SX_PLATFORM_LINUX) || defined(SX_PLATFORM_MACOS)
     #include <alloca.h>

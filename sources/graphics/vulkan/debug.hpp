@@ -1,7 +1,7 @@
 #ifndef STRAITX_VULKAN_DEBUG_HPP
 #define STRAITX_VULKAN_DEBUG_HPP
 
-#include "platform/vulkan.hpp"
+#include "core/os/vulkan.hpp"
 #include "core/assert.hpp"
 
 #define SX_VK_ASSERT(func, msg) SX_CORE_CALL_ASSERT(func, VK_SUCCESS, msg)

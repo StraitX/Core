@@ -1,7 +1,7 @@
 #ifndef STRAITX_MACOS_KEYS_HPP
 #define STRAITX_MACOS_KEYS_HPP
 
-#include "platform/keyboard.hpp"
+#include "core/os/keyboard.hpp"
 
 namespace MacOS{
 

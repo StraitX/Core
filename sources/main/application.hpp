@@ -1,7 +1,7 @@
 #ifndef STRAITX_APPLICATION_HPP
 #define STRAITX_APPLICATION_HPP
 
-#include "platform/events.hpp"
+#include "core/os/events.hpp"
 #include "core/math/vector2.hpp"
 #include "graphics/graphics_context.hpp"
 

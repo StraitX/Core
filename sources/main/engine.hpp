@@ -1,8 +1,8 @@
 #ifndef STRAITX_ENGINE_HPP
 #define STRAITX_ENGINE_HPP
 
-#include "platform/result.hpp"
-#include "platform/platform_runtime.hpp"
+#include "core/result.hpp"
+#include "core/os/platform_runtime.hpp"
 #include "main/application.hpp"
 
 class Application;

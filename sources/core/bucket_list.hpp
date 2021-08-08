@@ -2,9 +2,9 @@
 #define STRAITX_BUCKET_LIST_HPP
 
 #include <new>
-#include "platform/types.hpp"
+#include "core/types.hpp"
 #include "core/assert.hpp"
-#include "core/memory/allocator.hpp"
+#include "core/allocators/allocator.hpp"
 #include "core/type_traits.hpp"
 #include "core/move.hpp"
 //for now

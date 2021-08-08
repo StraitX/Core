@@ -1,5 +1,5 @@
 #include "platform/macos/input_manager.hpp"
-#include "platform/memory.hpp"
+#include "core/os/memory.hpp"
 namespace MacOS{
 
 bool InputManager::s_KeyboardState[(size_t)Key::KeysCount] = {};

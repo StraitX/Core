@@ -1,8 +1,8 @@
 #ifndef STRAITX_CLOCK_HPP
 #define STRAITX_CLOCK_HPP
 
-#include "platform/time.hpp"
-#include "platform/compiler.hpp"
+#include "core/os/time.hpp"
+#include "core/env/compiler.hpp"
 
 
 

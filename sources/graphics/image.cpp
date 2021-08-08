@@ -1,5 +1,5 @@
 #include <cstdlib>
-#include "platform/memory.hpp"
+#include "core/os/memory.hpp"
 #include "core/string.hpp"
 #include "core/move.hpp"
 #include "graphics/image.hpp"

@@ -1,8 +1,8 @@
 #import <Cocoa/Cocoa.h>
 #include <cstdlib>
 #include <cstdio>
-#include "platform/platform_runtime.hpp"
-#include "platform/clock.hpp"
+#include "core/os/platform_runtime.hpp"
+#include "core/os/clock.hpp"
 #include "platform/macos/sx_application.h"
 #include "platform/macos/window_impl.hpp"
 

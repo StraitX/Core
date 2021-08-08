@@ -1,7 +1,7 @@
 #ifndef STRAITX_LINUX_EVENTS_HPP
 #define STRAITX_LINUX_EVENTS_HPP
 
-#include "platform/events.hpp"
+#include "core/os/events.hpp"
 #include <X11/Xlib.h>
 
 namespace Linux{

@@ -1,8 +1,8 @@
 #ifndef STRAITX_VULKAN_RENDER_PASS_IMPL_HPP
 #define STRAITX_VULKAN_RENDER_PASS_IMPL_HPP
 
-#include "platform/vulkan.hpp"
-#include "platform/defs.hpp"
+#include "core/os/vulkan.hpp"
+#include "core/defs.hpp"
 #include "graphics/render_pass.hpp"
 
 namespace Vk{

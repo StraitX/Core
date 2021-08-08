@@ -1,8 +1,8 @@
 #ifndef STRAITX_SAMPLER_HPP
 #define STRAITX_SAMPLER_HPP
 
-#include "platform/types.hpp"
-#include "platform/compiler.hpp"
+#include "core/types.hpp"
+#include "core/env/compiler.hpp"
 #include "core/assert.hpp"
 #include "core/move.hpp"
 #include "graphics/gpu_configuration.hpp"

@@ -1,8 +1,8 @@
 #ifndef STRAITX_IMAGE_HPP
 #define STRAITX_IMAGE_HPP
 
-#include "platform/types.hpp"
-#include "platform/file.hpp"
+#include "core/types.hpp"
+#include "core/os/file.hpp"
 #include "core/math/vector2.hpp"
 #include "core/noncopyable.hpp"
 #include "graphics/format.hpp"

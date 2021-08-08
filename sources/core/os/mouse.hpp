@@ -1,7 +1,7 @@
 #ifndef STRAITX_MOUSE_HPP
 #define STRAITX_MOUSE_HPP
 
-#include "platform/types.hpp"
+#include "core/types.hpp"
 
 class PlatformWindow;
 

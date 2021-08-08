@@ -2,9 +2,9 @@
 #define STRAITX_FILE_HPP
 
 
-#include "platform/types.hpp"
-#include "platform/result.hpp"
-#include "platform/noncopyable.hpp"
+#include "core/types.hpp"
+#include "core/result.hpp"
+#include "core/noncopyable.hpp"
 
 class File: public NonCopyable{
 public:

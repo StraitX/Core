@@ -1,5 +1,5 @@
 #include "core/printer.hpp"
-#include "platform/types.hpp"
+#include "core/types.hpp"
 #include <cstdio>
 
 template<>

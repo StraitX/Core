@@ -1,9 +1,9 @@
 #ifndef STRAITX_VULKAN_MEMORY_HPP
 #define STRAITX_VULKAN_MEMORY_HPP
 
-#include "platform/vulkan.hpp"
-#include "platform/types.hpp"
-#include "platform/defs.hpp"
+#include "core/os/vulkan.hpp"
+#include "core/types.hpp"
+#include "core/defs.hpp"
 #include "core/assert.hpp"
 #include "graphics/gpu_configuration.hpp"
 

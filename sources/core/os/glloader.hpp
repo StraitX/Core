@@ -1,8 +1,8 @@
 #ifndef STRAITX_GLLOADER_HPP
 #define STRAITX_GLLOADER_HPP 
 
-#include "platform/result.hpp"
-#include "platform/types.hpp"
+#include "core/result.hpp"
+#include "core/types.hpp"
 
 class OpenGLLoader{
 public:

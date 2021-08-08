@@ -1,10 +1,10 @@
 #ifndef STRAITX_LINUX_WINDOW_IMPL_HPP
 #define STRAITX_LINUX_WINDOW_IMPL_HPP
 
-#include "platform/events.hpp"
-#include "platform/result.hpp"
-#include "platform/noncopyable.hpp"
-#include "platform/screen.hpp"
+#include "core/os/events.hpp"
+#include "core/result.hpp"
+#include "core/noncopyable.hpp"
+#include "core/os/screen.hpp"
 
 struct _XIM;
 struct _XIC;

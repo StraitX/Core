@@ -1,5 +1,5 @@
 #include "main/engine.hpp"
-#include "platform/platform_runtime.hpp"
+#include "core/os/platform_runtime.hpp"
 
 Result PlatformRuntime::Initialize(){
 	static Engine s_Engine;

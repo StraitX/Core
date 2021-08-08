@@ -1,9 +1,9 @@
 #ifndef DEFAULT_ALLOCATOR_HPP
 #define DEFAULT_ALLOCATOR_HPP
 
-#include "platform/types.hpp"
-#include "platform/compiler.hpp"
-#include "platform/memory.hpp"
+#include "core/types.hpp"
+#include "core/env/compiler.hpp"
+#include "core/os/memory.hpp"
 
 struct DefaultGeneralAllocator{
 	void *Alloc(size_t size);

@@ -1,7 +1,7 @@
 #ifndef STRAITX_VULKAN_DESCRIPTOR_SET_IMPL_HPP
 #define STRAITX_VULKAN_DESCRIPTOR_SET_IMPL_HPP
 
-#include "platform/vulkan.hpp"
+#include "core/os/vulkan.hpp"
 #include "graphics/descriptor_set.hpp"
 
 namespace Vk{

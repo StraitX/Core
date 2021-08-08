@@ -3,7 +3,7 @@
 
 #include <new>
 #include <initializer_list>
-#include "platform/types.hpp"
+#include "core/types.hpp"
 #include "core/assert.hpp"
 #include "core/move.hpp"
 #include "core/span.hpp"
