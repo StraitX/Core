@@ -48,8 +48,8 @@ void WindowImpl::SetTitle(const char *title){
 Vector2u WindowImpl::Size()const{
     Vector2u size = {(u32)((SXWindow*)Handle).contentView.frame.size.width, (u32)((SXWindow*)Handle).contentView.frame.size.height};
     
-    size.width = LinearUnitsToPixels(size.width, [(SXWindow*)Handle screen]);
-    size.height = LinearUnitsToPixels(size.height, [(SXWindow*)Handle screen]);
+    size.x = LinearUnitsToPixels(size.x, [(SXWindow*)Handle screen]);
+    size.y = LinearUnitsToPixels(size.y, [(SXWindow*)Handle screen]);
 
     return size;
 }

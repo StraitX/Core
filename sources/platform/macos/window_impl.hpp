@@ -3,7 +3,7 @@
 
 #include "core/result.hpp"
 #include "core/os/events.hpp"
-#include "platform/screen.hpp"
+#include "core/os/screen.hpp"
 #include "core/noncopyable.hpp"
 
 namespace MacOS{

@@ -16,7 +16,7 @@ Vector2s Mouse::GlobalPosition(){
 
     auto screen_size = MacOS::WindowImpl::s_MainWindow.Screen().Size;
     NSScreen* screen = ((SXWindow*)MacOS::WindowImpl::s_MainWindow.Handle).screen;
-    return {LinearUnitsToPixels((s32)cursor.x, screen), screen_size.height - LinearUnitsToPixels((s32)cursor.y, screen)};
+    return {LinearUnitsToPixels((s32)cursor.x, screen), screen_size.y - LinearUnitsToPixels((s32)cursor.y, screen)};
 }
 
 Vector2s Mouse::RelativePosition(){

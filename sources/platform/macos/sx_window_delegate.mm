@@ -23,8 +23,8 @@
 
     Event e;
     e.Type = EventType::WindowResized;
-    e.WindowResized.x = size.width;
-    e.WindowResized.y = size.height;
+    e.WindowResized.x = size.x;
+    e.WindowResized.y = size.y;
 
     WindowImpl->EventHandler(e);
 }
