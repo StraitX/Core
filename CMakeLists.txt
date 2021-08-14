@@ -20,7 +20,6 @@ set(SOURCES_CORE
 	${SOURCES_DIR}/core/print.cpp
     ${SOURCES_DIR}/core/result.cpp
     ${SOURCES_DIR}/core/string.cpp
-	${SOURCES_DIR}/core/subsystem.cpp
 
     ${SOURCES_DIR}/core/allocators/linear_allocator.cpp
 

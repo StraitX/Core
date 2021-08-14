@@ -51,11 +51,19 @@ void main()
 }
 )";
 
-ImGuiBackend::ImGuiBackend():
-	Subsystem("ImGuiBackend")
-{}
+static ImGuiBackend s_ImGuiBackend;
 
-Result ImGuiBackend::OnInitialize(){
+void ImGuiBackend::Register(EngineDelegates &delegates){
+	delegates.OnBeginFrame.Bind<ImGuiBackend, &ImGuiBackend::OnBeginFrame>(&s_ImGuiBackend);
+	delegates.OnUpdate.Bind<ImGuiBackend, &ImGuiBackend::OnUpdate>(&s_ImGuiBackend);
+	delegates.OnEvent.Bind<ImGuiBackend, &ImGuiBackend::OnEvent>(&s_ImGuiBackend);
+	delegates.OnEndFrame.Bind<ImGuiBackend, &ImGuiBackend::OnEndFrame>(&s_ImGuiBackend);
+	delegates.OnFinalize.Bind<ImGuiBackend, &ImGuiBackend::OnFinalize>(&s_ImGuiBackend);
+
+	s_ImGuiBackend.Initialize();
+}
+
+void ImGuiBackend::Initialize(){
 	ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO();
@@ -155,8 +163,6 @@ Result ImGuiBackend::OnInitialize(){
 
 	m_VertexBuffer.New(40*sizeof(ImDrawVert), GPUMemoryType::DynamicVRAM, GPUBuffer::VertexBuffer | GPUBuffer::TransferDestination);
 	m_IndexBuffer.New(40*sizeof(ImDrawIdx), GPUMemoryType::DynamicVRAM, GPUBuffer::IndexBuffer | GPUBuffer::TransferDestination);
-
-	return Result::Success;
 }
 
 void ImGuiBackend::OnBeginFrame(){

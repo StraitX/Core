@@ -1,7 +1,6 @@
 #include "core/os/memory.hpp"
 #include "core/os/clock.hpp"
 #include "core/log.hpp"
-#include "core/subsystem.hpp"
 #include "core/print.hpp"
 #include "graphics/graphics_api_loader.hpp"
 #include "graphics/graphics_context.hpp"
@@ -55,7 +54,7 @@ Result Engine::Initialize(){
 
     LogTrace("========= Second stage init =========");
 
-	SubsystemsManager::Register<Renderer2D>();
+	Renderer2D::Register(m_Delegates);
 	
     //Engine should be completely initialized at this moment
     LogTrace("StraitXMain: Begin");
@@ -83,8 +82,11 @@ Result Engine::Initialize(){
 void Engine::Finalize(){
 	if(m_Delegates.OnFinalize.Size()){
 		LogTrace("EngineDelegates: OnFinalize: Begin");
-		for(size_t i = m_Delegates.OnFinalize.Size() - 1; i>= 0; i--)
+		for(size_t i = m_Delegates.OnFinalize.Size() - 1; ; i--){
 			m_Delegates.OnFinalize[i].operator()();
+
+			if(i == 0)break;
+		}
 		LogTrace("EngineDelegates: OnFinalize: End");
 	}
 
@@ -102,12 +104,6 @@ void Engine::Finalize(){
         LogTrace("StraitXExit: End");
     }
 
-	LogTrace("SubsystemsManager::Finalize: Begin");
-	{
-		SubsystemsManager::Finalize();
-	}
-	LogTrace("SubsystemsManager::Finalize: End");
-
 	if(m_ErrorGraphicsContext == Result::Success){
 		LogTrace("GraphicsContext::Finalize: Begin");
 		GraphicsContext::Get().Finalize();
@@ -116,15 +112,12 @@ void Engine::Finalize(){
 }
 
 bool Engine::Tick(float dt){
-	SubsystemsManager::BeginFrame();
 	m_Delegates.OnBeginFrame();
 
 	m_Delegates.OnUpdate(dt);
-	SubsystemsManager::Update(dt);
 	m_Application->OnUpdate(dt);
 
 	m_Delegates.OnEndFrame();
-	SubsystemsManager::EndFrame();
 
 	GraphicsContext::Get().SwapBuffers();
 
@@ -149,6 +142,5 @@ void Engine::HandleEvent(const Event &e){
 
 	m_Application->OnEvent(e);
 	m_Delegates.OnEvent(e);
-	SubsystemsManager::HandleEvent(e);
 }
 

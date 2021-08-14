@@ -7,13 +7,16 @@ const Vector2f (&Renderer2D::s_DefaultTextureCoords)[4] = BatchRenderer2D::s_Def
 
 static RawVar<BatchRenderer2D> s_Renderer2DImpl;
 
-Renderer2D::Renderer2D():
-	Subsystem("Renderer2D")
-{}
+void Renderer2D::Register(EngineDelegates &delegates){
+	delegates.OnBeginFrame.Bind(OnBeginFrame);
+	delegates.OnEndFrame.Bind(OnEndFrame);
+	delegates.OnFinalize.Bind(OnFinalize);
 
-Result Renderer2D::OnInitialize(){
+	Initialize();
+}
+
+void Renderer2D::Initialize(){
 	s_Renderer2DImpl.Construct(GraphicsContext::Get().FramebufferPass());
-	return Result::Success;
 }
 
 void Renderer2D::OnFinalize(){

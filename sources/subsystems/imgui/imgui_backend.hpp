@@ -1,14 +1,14 @@
 #ifndef STRAITX_IMGUI_BACKEND_HPP
 #define STRAITX_IMGUI_BACKEND_HPP
 
-#include "core/subsystem.hpp"
 #include "graphics/texture.hpp"
 #include "graphics/graphics_pipeline.hpp"
 #include "graphics/descriptor_set.hpp"
 #include "graphics/graphics_context.hpp"
 #include "graphics/gpu_command_buffer.hpp"
+#include "main/engine.hpp"
 
-class ImGuiBackend: public Subsystem{
+class ImGuiBackend{
 private:
 	static ShaderBinding s_Bindings[2];
 	static VertexAttribute s_Attributes[3];
@@ -36,19 +36,20 @@ private:
 	GPUCommandBuffer m_CmdBuffer;
 
 public:
-	ImGuiBackend();
 
-	Result OnInitialize()override;
+	static void Register(EngineDelegates &delegates);
 
-	void OnBeginFrame()override;
+	void Initialize();
 
-	void OnUpdate(float dt)override;
+	void OnBeginFrame();
 
-	void OnEndFrame()override;
+	void OnUpdate(float dt);
 
-	void OnEvent(const Event &e)override;
+	void OnEndFrame();
 
-	void OnFinalize()override;
+	void OnEvent(const Event &e);
+
+	void OnFinalize();
 };
 
 #endif//STRAITX_IMGUI_BACKEND_HPP
