@@ -25,48 +25,6 @@ void CommandBufferExectuionState::EndRenderPass(){
 	RenderPassFramebuffer = nullptr;
 }
 
-void CommandBufferExectuionState::CheckAndUpdateViewportAndScissor(VkCommandBuffer cmd_buffer){
-	if(ShouldSetScissor){
-		VkRect2D rect;
-		rect.offset.x = PendingScissor.offset.x;
-		rect.offset.y = RenderPassFramebuffer->Size().y - (PendingScissor.offset.y + PendingScissor.extent.height);
-		rect.extent.width = PendingScissor.extent.width;
-		rect.extent.height = PendingScissor.extent.height;
-		vkCmdSetScissor(cmd_buffer, 0, 1, &rect);
-	}
-
-	if(ShouldSetViewport){
-		VkViewport viewport;
-		viewport.minDepth = 0.0;
-		viewport.maxDepth = 1.0;
-		viewport.x = PendingViewport.x;
-		viewport.y = RenderPassFramebuffer->Size().y - PendingViewport.y;
-		viewport.width  = PendingViewport.width;
-		viewport.height = -PendingViewport.height;
-		vkCmdSetViewport(cmd_buffer, 0, 1, &viewport);
-	}
-}
-
-void CommandBufferExectuionState::UpdateViewport(s32 x, s32 y, u32 width, u32 height){
-	PendingViewport.x = x;
-	PendingViewport.y = y;
-	PendingViewport.width = width;
-	PendingViewport.height = height;
-	PendingViewport.minDepth = 0.0f;
-	PendingViewport.maxDepth = 1.0f;
-
-	ShouldSetViewport = true;
-}
-
-void CommandBufferExectuionState::UpdateScissor(s32 x, s32 y, u32 width, u32 height){
-	PendingScissor.offset.x = x;
-	PendingScissor.offset.y = y;
-	PendingScissor.extent.width = width;
-	PendingScissor.extent.height = height;
-
-	ShouldSetScissor = true;
-}
-
 static_assert(sizeof(GPUHandle) == sizeof(VkPhysicalDevice), "GPUHandle is not the same size as VkPhysicalDevice");
 static_assert(sizeof(GPUResourceHandle) == sizeof(VkBuffer), "Vulkan handle is not the same size as GPUResourceHandle");
 
@@ -259,7 +217,6 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		break;
 		case GPUCommandType::DrawIndexed: 
 		{
-			state.CheckAndUpdateViewportAndScissor(VkCmdBuffer);
     		vkCmdDrawIndexed(VkCmdBuffer, cmd.DrawIndexed.IndicesCount, 1, cmd.DrawIndexed.IndexOffset, 0, 0);
 		}		
 		break;
@@ -330,14 +287,29 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		case GPUCommandType::SetScissors:
 		{
 			auto &cmd_scissors = cmd.SetScissors;
-			state.UpdateScissor(cmd_scissors.x, cmd_scissors.y, cmd_scissors.Width, cmd_scissors.Height);
+
+			VkRect2D scissor;
+			scissor.offset.x = cmd_scissors.x; 
+			scissor.offset.y = cmd_scissors.y;
+			scissor.extent.width = cmd_scissors.Width;
+			scissor.extent.height= cmd_scissors.Height;
+
+			vkCmdSetScissor(m_CommandBuffer->Handle(), 0, 1, &scissor);
 		}
 		break;
 		case GPUCommandType::SetViewport:
 		{
 			auto &cmd_viewport = cmd.SetViewport;
 
-			state.UpdateViewport(cmd_viewport.x, cmd_viewport.y, cmd_viewport.Width, cmd_viewport.Height);
+			VkViewport viewport;
+			viewport.minDepth = 0.f;
+			viewport.maxDepth = 1.f;
+			viewport.x = cmd_viewport.x;
+			viewport.y = cmd_viewport.y + cmd_viewport.Height;
+			viewport.width  = cmd_viewport.Width;
+			viewport.height = -cmd_viewport.Height;
+
+			vkCmdSetViewport(m_CommandBuffer->Handle(), 0, 1, &viewport);
 		}
 		break;
 		}

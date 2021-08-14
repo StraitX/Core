@@ -17,23 +17,11 @@ struct CommandBufferExectuionState{
 	const Vk::FramebufferImpl *RenderPassFramebuffer = nullptr;
 	const Vk::RenderPassImpl *RenderPass = nullptr;
 
-	VkViewport PendingViewport = {};
-	VkRect2D PendingScissor = {};
-
-	bool ShouldSetViewport = false;
-	bool ShouldSetScissor = false;
-
 	void Bind(const GraphicsPipeline *pipeline);
 
 	void BeginRenderPass(const class RenderPass *render_pass, const Framebuffer *framebuffer);
 
 	void EndRenderPass();
-
-	void CheckAndUpdateViewportAndScissor(VkCommandBuffer cmd_buffer);
-
-	void UpdateViewport(s32 x, s32 y, u32 width, u32 height);
-
-	void UpdateScissor(s32 x, s32 y, u32 width, u32 height);
 };
 
 class GraphicsContextImpl: public GraphicsContext{
