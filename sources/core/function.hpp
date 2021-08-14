@@ -54,6 +54,8 @@ public:
         m_Proxy = other.m_Proxy;
 
         other.Unbind();
+
+        return *this;
     }
 
     bool operator==(const Function &other){
@@ -70,27 +72,35 @@ public:
         return m_Proxy(m_Ptr, Forward<ArgsType>(args)...);
     }
 
-    void Bind(Signature function_pointer){
+    Function &Bind(Signature function_pointer){
         m_Ptr = reinterpret_cast<void*>(function_pointer);
         m_Proxy = FunctionProxy; 
+
+        return *this;
     }
 
     template<typename ObjectType, ReturnType(ObjectType::*Method)(ArgsType...)>
-    void Bind(ObjectType *object){
+    Function &Bind(ObjectType *object){
         m_Ptr = object;
         m_Proxy = TemplateMethodProxy<ObjectType, Method>;
+
+        return *this;
     }
 
     template<typename ObjectType, ReturnType(ObjectType::*Method)(ArgsType...)const>
-    void Bind(ObjectType *object){
+    Function &Bind(ObjectType *object){
         m_Ptr = object;
         m_Proxy = TemplateMethodProxy<ObjectType, Method>;
+
+        return *this;
     }
 
-    template<Signature Function>
-    void Bind(){
+    template<Signature FunctionType>
+    Function &Bind(){
         m_Ptr = nullptr;
-        m_Proxy = TemplateFunctionProxy<Function>;
+        m_Proxy = TemplateFunctionProxy<FunctionType>;
+
+        return *this;
     }
 
     void Unbind(){
