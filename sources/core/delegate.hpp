@@ -6,11 +6,9 @@
 #include "core/array.hpp"
 
 template<typename...ArgsType>
-class Delegate{
+class Delegate: public Array<Function<void(ArgsType...)>>{
 public:
     using Subscriber = Function<void(ArgsType...)>;
-private:
-    Array<Subscriber> m_Subscribers;
 public:
     Delegate() = default;
 
@@ -36,11 +34,11 @@ public:
     }
 
     void Bind(Function<void(ArgsType...)> subscriber){
-        m_Subscribers.Add(subscriber);
+        Add(subscriber);
     }
 
     void operator()(ArgsType...args){
-        for(auto &sub: m_Subscribers)
+        for(auto &sub: *this)
             sub(Forward<ArgsType>(args)...);
     }
 };
