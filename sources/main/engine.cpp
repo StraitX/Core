@@ -34,21 +34,22 @@ void Engine::Stop(){
 }
 
 Result Engine::Initialize(){
-    m_ApplicationConfig = GetApplicationConfig();
-    SX_CORE_ASSERT(m_ApplicationConfig.ApplicationName, "ApplicationConfig::ApplicationName should be valid string pointer");
+    m_AppConfig = GetApplicationConfig();
+    SX_CORE_ASSERT(m_AppConfig.ApplicationName, "ApplicationConfig::ApplicationName should be valid string pointer");
 
     LogTrace("========= First stage init =========");
 
-	PlatformWindow::SetTitle(m_ApplicationConfig.ApplicationName);
-	PlatformWindow::SetSize(m_ApplicationConfig.WindowSize.x, m_ApplicationConfig.WindowSize.y);
+	Result w = m_RenderWindow.Open(m_AppConfig.WindowSize.x, m_AppConfig.WindowSize.y, m_AppConfig.ApplicationName);
+	//XXX
+	SX_CORE_ASSERT(w, "Can't open a window");
 
     LogTrace("GraphicsAPILoader::Load: Begin");
-	auto error_api_load = GraphicsAPILoader::Load(m_ApplicationConfig.DesiredAPI);
+	auto error_api_load = GraphicsAPILoader::Load(m_AppConfig.DesiredAPI);
     InitAssert("GraphicsAPILoader::Load", error_api_load);
 
 	LogTrace("GraphicsContext::New: Begin");
 	{
-		m_ErrorGraphicsContext = GraphicsContext::Get().Initialize();
+		m_ErrorGraphicsContext = GraphicsContext::Get().Initialize(&m_RenderWindow);
 	}
 	InitAssert("GraphicsContext::New", m_ErrorGraphicsContext);
 
@@ -70,10 +71,24 @@ Result Engine::Initialize(){
     }
     InitAssert("Application::OnInitialize",m_ErrorApplication);
 
+	if(m_Delegates.OnInitialize.Size()){
+		LogTrace("EngineDelegates: OnInitialize: Begin");
+		m_Delegates.OnInitialize();
+		LogTrace("EngineDelegates: OnInitialize: End");
+	}
+
     return Result::Success;
 }
 
 void Engine::Finalize(){
+	if(m_Delegates.OnFinalize.Size()){
+		LogTrace("EngineDelegates: OnFinalize: Begin");
+		for(size_t i = m_Delegates.OnFinalize.Size() - 1; i>= 0; i--)
+			m_Delegates.OnFinalize[i].operator()();
+		LogTrace("EngineDelegates: OnFinalize: End");
+	}
+
+	m_RenderWindow.Close();
 
     if(m_ErrorApplication==Result::Success){
         LogTrace("Application::OnFinalize: Begin");
@@ -102,10 +117,13 @@ void Engine::Finalize(){
 
 bool Engine::Tick(float dt){
 	SubsystemsManager::BeginFrame();
+	m_Delegates.OnBeginFrame();
 
+	m_Delegates.OnUpdate(dt);
 	SubsystemsManager::Update(dt);
 	m_Application->OnUpdate(dt);
 
+	m_Delegates.OnEndFrame();
 	SubsystemsManager::EndFrame();
 
 	GraphicsContext::Get().SwapBuffers();
@@ -119,7 +137,7 @@ bool Engine::Tick(float dt){
 	m_FrameFreeCalls = m_FreeCalls - m_PrevFreeCalls;
 	m_PrevFreeCalls = m_FreeCalls;
 
-	return m_Running;
+	return m_Running && m_RenderWindow.IsOpen();
 }
 
 void Engine::HandleEvent(const Event &e){
@@ -130,6 +148,7 @@ void Engine::HandleEvent(const Event &e){
 		GraphicsContext::Get().ResizeSwapchain(e.WindowResized.x, e.WindowResized.y);
 
 	m_Application->OnEvent(e);
+	m_Delegates.OnEvent(e);
 	SubsystemsManager::HandleEvent(e);
 }
 

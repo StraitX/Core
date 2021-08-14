@@ -2,18 +2,32 @@
 #define STRAITX_ENGINE_HPP
 
 #include "core/result.hpp"
-#include "core/os/platform_runtime.hpp"
+#include "core/delegate.hpp"
 #include "main/application.hpp"
 
 class Application;
+
+struct EngineDelegates{
+    Delegate<> OnInitialize;
+    Delegate<> OnBeginFrame;
+    Delegate<float> OnUpdate;
+    Delegate<const Event &> OnEvent; 
+    Delegate<> OnEndFrame;
+    Delegate<> OnFinalize;
+};
 
 class Engine{
 private:
     static Engine *s_Instance;
 
     Application *m_Application = nullptr;
-    ApplicationConfig m_ApplicationConfig = {};
+    Window m_RenderWindow;
+
+    ApplicationConfig m_AppConfig = {};
     bool m_Running = true;
+
+    EngineDelegates m_Delegates;
+
 	Result M_ErrorGraphicsAPI = Result::None;
 	Result m_ErrorGraphicsContext = Result::None;
     Result m_ErrorApplication = Result::None;
@@ -41,6 +55,14 @@ public:
 
     u64 FrameFreeCalls()const{
         return m_FrameFreeCalls;
+    }
+
+    const Window &RenderWindow()const{
+        return m_RenderWindow;
+    }
+
+    EngineDelegates &Delegates(){
+        return m_Delegates;
     }
 
     static Engine &Get();
