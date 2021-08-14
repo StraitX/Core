@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <cstdio>
+#include "main/engine.hpp"
 #include "core/os/platform_runtime.hpp"
 #include "platform/linux/window_impl.hpp"
 #include "platform/linux/display_server.hpp"
@@ -18,11 +19,6 @@ int main(int argc, char **argv){
 		return EXIT_FAILURE;
 	}
 
-	if(!Linux::WindowImpl::s_MainWindow.Open(1280, 720)){
-		fputs("PlatformRuntime: Linux: Can't open a window", stderr);
-		return EXIT_FAILURE;
-	}
-
 	Result init = Result::None;
 	if((init = PlatformRuntime::Initialize())){
 
@@ -30,8 +26,9 @@ int main(int argc, char **argv){
 		float dt = 1.f/60.f;
 		for(;;){
 			frame_clock.Restart();
-
-			Linux::PollEvents(Linux::WindowImpl::s_MainWindow, PlatformRuntime::HandleEvent);
+			// XXX:
+			// Extremely temporary thing
+			Linux::PollEvents(Engine::Get().RenderWindow().Impl(), PlatformRuntime::HandleEvent);
 
 			if(!PlatformRuntime::Tick(dt))
 				break;
@@ -42,8 +39,6 @@ int main(int argc, char **argv){
 	}
 
 	PlatformRuntime::Finalize();
-
-	Linux::WindowImpl::s_MainWindow.Close();
 
 	Linux::DisplayServer::Close();
 

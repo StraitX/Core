@@ -5,8 +5,6 @@
 
 namespace Linux{
 
-WindowImpl WindowImpl::s_MainWindow;
-
 struct PixelFormat{
     int Red = 0;
     int Green = 0;
@@ -17,7 +15,7 @@ struct PixelFormat{
     int Samples = 0;
 };
 
-Result WindowImpl::Open(int width, int height){
+Result WindowImpl::Open(int width, int height, const char *title){
 	Width = width;
 	Height = height;
 
@@ -73,6 +71,8 @@ Result WindowImpl::Open(int width, int height){
 
 	X11::XSetICFocus(InputContext);
 
+    SetTitle(title);
+
     return Result::Success;
 }
 
@@ -87,6 +87,10 @@ Result WindowImpl::Close(){
 
     Handle = 0;
     return Result::Success;
+}
+
+bool WindowImpl::IsOpen()const{
+    return Handle != 0;
 }
 
 void WindowImpl::SetTitle(const char *title){
@@ -108,7 +112,7 @@ Vector2u WindowImpl::Size()const{
 	return GetSizeFromHandle(Handle);
 }
 
-const PlatformScreen &WindowImpl::Screen(){
+const PlatformScreen &WindowImpl::Screen()const{
 	// XXX: linux does not support multiple screens for now
 	if(CurrentScreen.Handle == nullptr){
 		CurrentScreen.Handle = X11::XDefaultScreenOfDisplay(DisplayServer::Handle);

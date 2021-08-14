@@ -21,15 +21,15 @@ struct WindowImpl: NonCopyable{
 	int Height = 0;
 	X11::_XIM *InputMethod = nullptr;
 	X11::_XIC *InputContext = 0;
-	PlatformScreen CurrentScreen;
-
-	static WindowImpl s_MainWindow;
+	mutable PlatformScreen CurrentScreen;
 
     WindowImpl() = default;
 
-    Result Open(int width, int height);
+    Result Open(int width, int height, const char *title);
 
     Result Close();
+
+    bool IsOpen()const;
 
     void SetTitle(const char *title);
 
@@ -37,7 +37,7 @@ struct WindowImpl: NonCopyable{
 
     Vector2u Size()const;
 
-	const PlatformScreen &Screen();
+	const PlatformScreen &Screen()const;
 
 	static Vector2u GetSizeFromHandle(unsigned long handle);
 

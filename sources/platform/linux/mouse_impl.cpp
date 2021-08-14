@@ -31,30 +31,24 @@ Vector2s GlobalPosition(){
     
     X11::XQueryPointer(DisplayServer::Handle, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
 
-	global.y = PlatformWindow::Screen().Size.y - global.y;
-
     return global;
 }
 
-Vector2s RelativePosition(){
+Vector2s RelativePosition(const Window &window){
     X11::Window root,child;
     Vector2s choosen,global;
     unsigned int mask;
 
-    X11::XQueryPointer(DisplayServer::Handle, WindowImpl::s_MainWindow.Handle,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
+    X11::XQueryPointer(DisplayServer::Handle, window.Impl().Handle ,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
     
-	s32 window_height = (s32)WindowImpl::s_MainWindow.Size().y;
+	s32 window_height = (s32)window.Size().y;
 
 	choosen.y = window_height - choosen.y;
     return choosen;
 }
 
 void SetGlobalPosition(const Vector2s &position){
-    Vector2s new_position;
-    new_position.x = position.x;
-    new_position.y = PlatformWindow::Screen().Size.y - position.y;
-
-    X11::XWarpPointer(DisplayServer::Handle, 0, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)),0,0,0,0,new_position.x, new_position.y);
+    X11::XWarpPointer(DisplayServer::Handle, 0, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)),0,0,0,0,position.x, position.y);
 }
 
 static X11::Cursor BlankCursor(){
