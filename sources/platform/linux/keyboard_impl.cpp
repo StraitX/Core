@@ -7,8 +7,8 @@ namespace Keyboard{
 using namespace Linux;
 
 bool IsKeyPressed(Key code){
-    KeySym sym = KeyCodeToXKeySym(code);
-    ::KeyCode keyCode = XKeysymToKeycode(DisplayServer::Handle, sym);  
+    X11::KeySym sym = KeyCodeToXKeySym(code);
+    X11::KeyCode keyCode = XKeysymToKeycode(DisplayServer::Handle, sym);  
 
     if(keyCode != 0){
         char keymap[32];

@@ -16,7 +16,7 @@ Result VulkanSurface::Create(VkInstance owner, const PlatformWindowImpl &window)
     info.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
     info.pNext = nullptr;
     info.flags = 0;
-    info.dpy = Linux::DisplayServer::Handle;
+    info.dpy = (Display*)Linux::DisplayServer::Handle;
     info.window = window.Handle;
 
     return ResultError(vkCreateXlibSurfaceKHR(Owner, &info, nullptr, &Handle) != VK_SUCCESS);

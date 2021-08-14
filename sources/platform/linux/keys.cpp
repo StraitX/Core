@@ -1,9 +1,8 @@
 #include "platform/linux/keys.hpp"
-#include <X11/keysym.h>
 
 namespace Linux{
 
-KeySym KeyCodeToXKeySym(Key code){
+X11::KeySym KeyCodeToXKeySym(Key code){
     switch (code){
         case Key::Unknown: return 0;
         case Key::Space: return XK_space;

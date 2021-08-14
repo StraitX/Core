@@ -2,15 +2,15 @@
 #define STRAITX_LINUX_EVENTS_HPP
 
 #include "core/os/events.hpp"
-#include <X11/Xlib.h>
+#include "platform/linux/x11.hpp"
 
 namespace Linux{
 
 struct WindowImpl;
 
-Bool CheckEvent(::Display*, XEvent* event, XPointer userData);
+Bool CheckEvent(X11::Display*, X11::XEvent* event, X11::XPointer userData);
 
-bool ToStraitXEvent(XEvent &in_event, Event &out_event, WindowImpl *window);
+bool ToStraitXEvent(X11::XEvent &in_event, Event &out_event, WindowImpl *window);
 
 }//namespace Linux::
 

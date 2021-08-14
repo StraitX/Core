@@ -1,17 +1,16 @@
 #include "platform/linux/display_server.hpp"
-#include <X11/Xlib.h>
 
 namespace Linux{
 
-::Display *DisplayServer::Handle = nullptr;
+X11::Display *DisplayServer::Handle = nullptr;
 
 Result DisplayServer::Open(){
-	Handle = XOpenDisplay(nullptr);
+	Handle = X11::XOpenDisplay(nullptr);
 	return Result(IsOpen());
 }
 
 void DisplayServer::Close(){
-	XCloseDisplay(Handle);
+	X11::XCloseDisplay(Handle);
 	Handle = nullptr;
 }
 

@@ -3,11 +3,11 @@
 
 #include "core/os/keyboard.hpp"
 #include "core/os/mouse.hpp"
-#include <X11/Xlib.h>
+#include "platform/linux/x11.hpp"
 
 namespace Linux{
 
-KeySym KeyCodeToXKeySym(Key code);
+X11::KeySym KeyCodeToXKeySym(Key code);
 
 Key XKeyCodeToKeyCode(unsigned int key);
 

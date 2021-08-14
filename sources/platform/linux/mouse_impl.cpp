@@ -1,23 +1,17 @@
-#include <X11/Xlib.h>
-#undef Success
-#undef None
-#undef KeyPress
-#undef KeyRelease
-#undef FocusIn
-#undef FocusOut
 #include "core/os/mouse.hpp"
 #include "core/os/window.hpp"
 #include "platform/linux/display_server.hpp"
+#include "platform/linux/x11.hpp"
 
 namespace Mouse{
 
 using namespace Linux;	
 
 bool IsButtonPressed(Mouse::Button button){
-    ::Window root,child;
+    X11::Window root,child;
     int x,y;
     unsigned int button_mask;
-    XQueryPointer(DisplayServer::Handle, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)),&root,&child,&x,&y,&x,&y,&button_mask);
+    X11::XQueryPointer(DisplayServer::Handle, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)),&root,&child,&x,&y,&x,&y,&button_mask);
 
     switch (button)
     {
@@ -31,11 +25,11 @@ bool IsButtonPressed(Mouse::Button button){
 }
 
 Vector2s GlobalPosition(){
-    ::Window root,child;
+    X11::Window root,child;
     Vector2s choosen,global;
     unsigned int mask;
     
-    XQueryPointer(DisplayServer::Handle, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
+    X11::XQueryPointer(DisplayServer::Handle, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
 
 	global.y = PlatformWindow::Screen().Size.y - global.y;
 
@@ -43,11 +37,11 @@ Vector2s GlobalPosition(){
 }
 
 Vector2s RelativePosition(){
-    ::Window root,child;
+    X11::Window root,child;
     Vector2s choosen,global;
     unsigned int mask;
 
-    XQueryPointer(DisplayServer::Handle, WindowImpl::s_MainWindow.Handle,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
+    X11::XQueryPointer(DisplayServer::Handle, WindowImpl::s_MainWindow.Handle,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
     
 	s32 window_height = (s32)WindowImpl::s_MainWindow.Size().y;
 
@@ -60,34 +54,34 @@ void SetGlobalPosition(const Vector2s &position){
     new_position.x = position.x;
     new_position.y = PlatformWindow::Screen().Size.y - position.y;
 
-    XWarpPointer(DisplayServer::Handle, 0, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)),0,0,0,0,new_position.x, new_position.y);
+    X11::XWarpPointer(DisplayServer::Handle, 0, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)),0,0,0,0,new_position.x, new_position.y);
 }
 
-static Cursor BlankCursor(){
+static X11::Cursor BlankCursor(){
     static bool is_created;
-    static Cursor cursor;
+    static X11::Cursor cursor;
 
     if(!is_created){
         is_created = true;
 
         char data[1] = {0};
-        Pixmap blank;
-        XColor dummy;
+        X11::Pixmap blank;
+        X11::XColor dummy;
 
-        blank = XCreateBitmapFromData(DisplayServer::Handle, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)), data, 1, 1);
+        blank = X11::XCreateBitmapFromData(DisplayServer::Handle, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)), data, 1, 1);
         if(blank == 0)
             is_created = false;
-        cursor = XCreatePixmapCursor(DisplayServer::Handle, blank, blank, &dummy, &dummy, 0, 0);
-        XFreePixmap(DisplayServer::Handle, blank);
+        cursor = X11::XCreatePixmapCursor(DisplayServer::Handle, blank, blank, &dummy, &dummy, 0, 0);
+        X11::XFreePixmap(DisplayServer::Handle, blank);
     }
     return cursor;
 }
 
 void SetVisible(bool is_visible){
     if(is_visible){
-        XUndefineCursor(DisplayServer::Handle, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)));
+        X11::XUndefineCursor(DisplayServer::Handle, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)));
     }else{
-        XDefineCursor(DisplayServer::Handle, RootWindow(DisplayServer::Handle, DefaultScreen(DisplayServer::Handle)), BlankCursor());
+        X11::XDefineCursor(DisplayServer::Handle, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)), BlankCursor());
     }
 }
 

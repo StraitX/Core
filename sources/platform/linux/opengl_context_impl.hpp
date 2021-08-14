@@ -4,13 +4,15 @@
 #include "platform/linux/window_impl.hpp"
 #include "core/types.hpp"
 
+namespace X11{
 struct __GLXcontextRec;
+}//namespace X11::
 
 namespace Linux{
 
 class OpenGLContextImpl{
 private:
-    __GLXcontextRec *m_Handle = nullptr;
+    X11::__GLXcontextRec *m_Handle = nullptr;
     unsigned long m_WindowHandle = 0;
 public:
     OpenGLContextImpl() = default;

@@ -1,27 +1,26 @@
-#include "platform/linux/opengl_context_impl.hpp"
-#include <X11/Xlib.h>
 #include <stdlib.h>
-#include <GL/glx.h>
-#include "platform/linux/display_server.hpp"
 #include <unistd.h>
+#include "platform/linux/opengl_context_impl.hpp"
+#include "platform/linux/display_server.hpp"
+#include "platform/linux/x11.hpp"
 
 namespace Linux{
 
 static bool ctxErrorOccurred = false;
-static int ctxErrorHandler( ::Display *dpy, XErrorEvent *ev )
+static int ctxErrorHandler( X11::Display *dpy, X11::XErrorEvent *ev )
 {
     ctxErrorOccurred = true;
     return 0;
 }
 
-typedef GLXContext (*glXCreateContextAttribsARBProc)(::Display*, GLXFBConfig, GLXContext, Bool, const int*);
+typedef X11::GLXContext (*glXCreateContextAttribsARBProc)(X11::Display*, X11::GLXFBConfig, X11::GLXContext, Bool, const int*);
 
 Result OpenGLContextImpl::Create(const WindowImpl &window, const Version &version){
     m_WindowHandle = window.Handle;
 
     
     glXCreateContextAttribsARBProc glXCreateContextAttribsARB = nullptr;
-    glXCreateContextAttribsARB = (glXCreateContextAttribsARBProc)glXGetProcAddressARB((const GLubyte *)"glXCreateContextAttribsARB");
+    glXCreateContextAttribsARB = (glXCreateContextAttribsARBProc)X11::glXGetProcAddressARB((const X11::GLubyte *)"glXCreateContextAttribsARB");
 
     if(glXCreateContextAttribsARB == nullptr)
         return Result::Unsupported;
@@ -35,14 +34,14 @@ Result OpenGLContextImpl::Create(const WindowImpl &window, const Version &versio
 	};
     // OpenGL 3.0 requires context error handler
     if(version.Major >= 3)
-        XSetErrorHandler(&ctxErrorHandler);
+        X11::XSetErrorHandler(&ctxErrorHandler);
     
-    m_Handle = glXCreateContextAttribsARB(DisplayServer::Handle,(GLXFBConfig)window.FBConfig, 0, true, contextAttribs);
+    m_Handle = glXCreateContextAttribsARB(DisplayServer::Handle,(X11::GLXFBConfig)window.FBConfig, 0, true, contextAttribs);
 
     if(m_Handle == nullptr)
         return Result::Unsupported;
 
-	if (!glXIsDirect (DisplayServer::Handle, m_Handle)){
+	if (!X11::glXIsDirect (DisplayServer::Handle, m_Handle)){
         Destroy();
         return Result::Failure;
     }
@@ -55,7 +54,7 @@ Result OpenGLContextImpl::CreateLegacy(const WindowImpl &window){
 }
 
 void OpenGLContextImpl::Destroy(){
-    glXDestroyContext(DisplayServer::Handle, m_Handle);
+    X11::glXDestroyContext(DisplayServer::Handle, m_Handle);
     m_WindowHandle = 0;
     m_Handle = nullptr;
 }
@@ -65,11 +64,11 @@ void OpenGLContextImpl::DestroyLegacy(){
 }
 
 Result OpenGLContextImpl::MakeCurrent(){
-    return ResultError(glXMakeCurrent(DisplayServer::Handle, m_WindowHandle, m_Handle) != True);
+    return ResultError(X11::glXMakeCurrent(DisplayServer::Handle, m_WindowHandle, m_Handle) != True);
 }
 
 void OpenGLContextImpl::SwapBuffers(){
-    glXSwapBuffers(DisplayServer::Handle, m_WindowHandle);
+    X11::glXSwapBuffers(DisplayServer::Handle, m_WindowHandle);
 }
 
 void OpenGLContextImpl::Resize(u32 width, u32 height){

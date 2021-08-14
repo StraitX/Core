@@ -6,19 +6,21 @@
 #include "core/noncopyable.hpp"
 #include "core/os/screen.hpp"
 
+namespace X11{
 struct _XIM;
 struct _XIC;
 struct __GLXFBConfigRec;
+}//namespace X11::
 
 namespace Linux{
 
 struct WindowImpl: NonCopyable{
     unsigned long Handle = 0;
-    struct __GLXFBConfigRec *FBConfig = nullptr;
+    X11::__GLXFBConfigRec *FBConfig = nullptr;
 	int Width = 0;
 	int Height = 0;
-	struct _XIM *InputMethod = nullptr;
-	struct _XIC *InputContext = 0;
+	X11::_XIM *InputMethod = nullptr;
+	X11::_XIC *InputContext = 0;
 	PlatformScreen CurrentScreen;
 
 	static WindowImpl s_MainWindow;
@@ -39,7 +41,7 @@ struct WindowImpl: NonCopyable{
 
 	static Vector2u GetSizeFromHandle(unsigned long handle);
 
-    static __GLXFBConfigRec *PickBestFBConfig(int screen_index);
+    static X11::__GLXFBConfigRec *PickBestFBConfig(int screen_index);
 };
 
 }//namespace Linux::

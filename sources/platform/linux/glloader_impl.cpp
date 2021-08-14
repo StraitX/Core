@@ -1,12 +1,10 @@
 #include "core/os/glloader.hpp"
-#include <GL/glx.h>
-#include <GL/gl.h>
-#undef Success
+#include "platform/linux/x11.hpp"
 
 bool OpenGLLoader::LoadPlatformExtensions(){
     return true;
 }
 
 void *OpenGLLoader::GetOpenGLProc(const char *name){
-    return (void*)glXGetProcAddress((const GLubyte *)name);
+    return (void*)X11::glXGetProcAddress((const X11::GLubyte *)name);
 }

@@ -2,31 +2,32 @@
 #include "platform/linux/events.hpp"
 #include "platform/linux/keys.hpp"
 #include "platform/linux/display_server.hpp"
+#include "platform/linux/x11.hpp"
 
 namespace Linux{
 
 
-Bool CheckEvent(::Display *display, XEvent *event, XPointer userData){
-    return event->xany.window == reinterpret_cast< ::Window >(userData);
+Bool CheckEvent(X11::Display *display, X11::XEvent *event, X11::XPointer userData){
+    return event->xany.window == reinterpret_cast<X11::Window>(userData);
 }
 
 void PollEvents(const WindowImpl &window, void (*handler)(const Event &e)){
-	XEvent in_event;
+	X11::XEvent in_event;
 
-	while(XCheckIfEvent(DisplayServer::Handle, &in_event, &CheckEvent,reinterpret_cast<XPointer>(window.Handle))){
+	while(XCheckIfEvent(DisplayServer::Handle, &in_event, &CheckEvent,reinterpret_cast<X11::XPointer>(window.Handle))){
 		switch (in_event.type)
 		{
 		// Event recieved on window Close button 
-		case ClientMessage:
+		case X11::ClientMessage:
 		{
 			Event e;
-			Atom close_atom = XInternAtom(in_event.xany.display,"WM_DELETE_WINDOW",0);
+			X11::Atom close_atom = X11::XInternAtom(in_event.xany.display,"WM_DELETE_WINDOW",0);
 			if (in_event.xclient.data.l[0] == close_atom) {
 				e.Type = EventType::WindowClose;
 				handler(e);
 			}
 		}break;
-		case ConfigureNotify:
+		case X11::ConfigureNotify:
 		{
 			Event e;
 			if(in_event.xconfigure.width != window.Width || in_event.xconfigure.height != window.Height){
@@ -38,20 +39,19 @@ void PollEvents(const WindowImpl &window, void (*handler)(const Event &e)){
 			}
 
 		}break;
-		case Expose:
+		case X11::Expose:
 		{
 			Event e;
 			e.Type = EventType::WindowDraw;
 			handler(e);
 		}break;
-		case KeyPress:
-		#undef KeyPress
+		case X11::KeyPress:
 		{
 			int count = 0;
-			KeySym keysym = 0;
+			X11::KeySym keysym = 0;
 			char buf[20] = {};
 			Status status = 0;
-			count = Xutf8LookupString(window.InputContext, (XKeyPressedEvent*)&in_event, buf, 20, &keysym, &status);
+			count = X11::Xutf8LookupString(window.InputContext, (X11::XKeyPressedEvent*)&in_event, buf, 20, &keysym, &status);
 
 			if (status==XBufferOverflow)
 				break;
@@ -70,27 +70,26 @@ void PollEvents(const WindowImpl &window, void (*handler)(const Event &e)){
 				e.Type = EventType::KeyPress;
 				e.KeyPress.KeyCode = Key::Unknown;
 				for(int i = 0; i<4; i++){
-					e.KeyPress.KeyCode = XKeyCodeToKeyCode(XLookupKeysym((XKeyEvent*)&in_event.xkey,i));
+					e.KeyPress.KeyCode = XKeyCodeToKeyCode(X11::XLookupKeysym((X11::XKeyEvent*)&in_event.xkey,i));
 					if(e.KeyPress.KeyCode != Key::Unknown)
 						break;
 				}
 				handler(e);
 			}
 		}break;
-		case KeyRelease:
-		#undef KeyRelease
+		case X11::KeyRelease:
 		{
 			Event e;
 			e.Type = EventType::KeyRelease;
 			e.KeyRelease.KeyCode = Key::Unknown;
 			for(int i = 0; i<4; i++){
-				e.KeyRelease.KeyCode = XKeyCodeToKeyCode(XLookupKeysym((XKeyEvent*)&in_event.xkey,i));
+				e.KeyRelease.KeyCode = XKeyCodeToKeyCode(X11::XLookupKeysym((X11::XKeyEvent*)&in_event.xkey,i));
 				if(e.KeyRelease.KeyCode != Key::Unknown)
 					break;
 			}
 			handler(e);
 		}break;
-		case ButtonPress:
+		case X11::ButtonPress:
 		{
 			Event e;
 			if(in_event.xbutton.button == Button4){
@@ -107,7 +106,7 @@ void PollEvents(const WindowImpl &window, void (*handler)(const Event &e)){
 			}
 			handler(e);
 		}break;
-		case ButtonRelease:
+		case X11::ButtonRelease:
 		{
 			Event e;
 			e.Type = EventType::MouseButtonRelease;
@@ -116,15 +115,13 @@ void PollEvents(const WindowImpl &window, void (*handler)(const Event &e)){
 			e.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(in_event.xany.window).y - in_event.xbutton.y;
 			handler(e);
 		}break;
-		case FocusIn:
-		#undef FocusIn
+		case X11::FocusIn:
 		{
 			Event e;
 			e.Type = EventType::FocusIn;
 			handler(e);
 		}break;
-		case FocusOut:
-		#undef FocusOut
+		case X11::FocusOut:
 		{
 			Event e;
 			e.Type = EventType::FocusOut;
