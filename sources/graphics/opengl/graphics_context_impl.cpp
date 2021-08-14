@@ -59,8 +59,12 @@ static RenderPassProperties GetFramebufferProperties(){
     return {{SwapchainAttachments, 2}};
 }
 
-Result GraphicsContextImpl::Initialize(){
-	if (!m_OpenGLContext.CreateLegacy(PlatformWindow::Impl())) {
+Result GraphicsContextImpl::Initialize(Window *window){
+	SX_CORE_ASSERT(window && window->IsOpen(), "GraphicsContext requires a valid window");
+
+	m_RenderWindow = window;
+
+	if (!m_OpenGLContext.CreateLegacy(*m_RenderWindow)) {
         LogError("OpenGLLoader: Can't create dummy OpenGL context");
         return Result::Unsupported;
     }
@@ -71,7 +75,7 @@ Result GraphicsContextImpl::Initialize(){
     }
     m_OpenGLContext.DestroyLegacy();
 
-    if(m_OpenGLContext.Create(PlatformWindow::Impl(), OpenGLVersion) != Result::Success)
+    if(m_OpenGLContext.Create(*m_RenderWindow, OpenGLVersion) != Result::Success)
         return Result::Failure;
     if(m_OpenGLContext.MakeCurrent() != Result::Success)
         return Result::Unavailable;
@@ -109,7 +113,7 @@ Result GraphicsContextImpl::Initialize(){
 
 	m_FramebufferPass.Construct(GetFramebufferProperties());
 
-	auto window_size = PlatformWindow::Size();
+	auto window_size = m_RenderWindow->Size();
 	m_DefaultFramebuffer.Construct(0, &m_FramebufferPass, FramebufferProperties{ {window_size.x, window_size.y}, {&FakeFramebufferTexturePtr, 1} });
 
 	return Result::Success;

@@ -72,7 +72,9 @@ static_assert(sizeof(GPUResourceHandle) == sizeof(VkBuffer), "Vulkan handle is n
 
 GraphicsContextImpl GraphicsContextImpl::s_Instance;
 
-Result GraphicsContextImpl::Initialize(){
+Result GraphicsContextImpl::Initialize(Window *window){
+	SX_CORE_ASSERT(window && window->IsOpen(), "GraphicsContext requires a valid window");
+
     Version version = VulkanVersion;
     Span<const char *>extensions = {RequiredPlatformExtensions, RequiredPlatformExtensionsCount};
     Span<const char *>layers     = {RequiredPlatformLayers, RequiredPlatformLayersCount};
@@ -121,7 +123,7 @@ Result GraphicsContextImpl::Initialize(){
 
     DMAImpl::Initialize();
 
-	m_Swapchain.Construct();
+	m_Swapchain.Construct(window);
 	m_PresentSemaphore.Construct();
 
 	m_CommandBuffer.Construct(QueueFamily::Graphics);
@@ -353,10 +355,11 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 void GraphicsContextImpl::SwapBuffers(){
 	m_PrevOpFence->WaitAndReset();
 
-	if(m_Swapchain->Size() != Vector2u(PlatformWindow::Size())){
-
+	if(m_Swapchain->Size() != m_Swapchain->DisplayWindow()->Size()){
+		Window *display_window = m_Swapchain->DisplayWindow();
+		
 		m_Swapchain.Destruct();
-		m_Swapchain.Construct();
+		m_Swapchain.Construct(display_window);
 		//recreate semaphore to reset it
 		m_PresentSemaphore.Destruct();
 		m_PresentSemaphore.Construct();

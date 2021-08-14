@@ -43,7 +43,8 @@ private:
 public:
 	GraphicsAPI API()const;
 private:
-	virtual Result Initialize() = 0;
+	//For now we do not support multicontext rendering
+	virtual Result Initialize(Window *window) = 0;
 
 	virtual void Finalize() = 0;
 public:

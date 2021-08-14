@@ -7,27 +7,26 @@
 
 #ifdef SX_OS_LINUX
     #include "platform/linux/opengl_context_impl.hpp"
-    typedef Linux::OpenGLContextImpl PlatformGLContextImpl;
+    typedef Linux::OpenGLContextImpl OSOpenGLContextImpl;
 #elif defined(SX_OS_WINDOWS)
     #include "platform/windows/opengl_context_impl.hpp"
-    typedef Windows::OpenGLContextImpl PlatformGLContextImpl;
+    typedef Windows::OpenGLContextImpl OSOpenGLContextImpl;
 #elif defined(SX_OS_MACOS)
     #include "platform/macos/opengl_context_impl.hpp"
-    typedef MacOS::OpenGLContextImpl PlatformGLContextImpl;
+    typedef MacOS::OpenGLContextImpl OSOpenGLContextImpl;
 #else
     #error "Your platform does not support OpenGL context"
 #endif
 
-class OpenGLContext: public NonCopyable{
+class OpenGLContext: private OSOpenGLContextImpl, public NonCopyable{
 private:
-    PlatformGLContextImpl m_Impl;
+    using Super = OSOpenGLContextImpl;
 public:
-
     OpenGLContext() = default;
 
-    Result Create(const PlatformWindowImpl &window, const Version &version);
+    Result Create(const Window &window, const Version &version);
 
-    Result CreateLegacy(const PlatformWindowImpl &window);
+    Result CreateLegacy(const Window &window);
 
     void Destroy();
 
@@ -40,32 +39,32 @@ public:
     void Resize(u32 width, u32 height);
 };
 
-SX_INLINE Result OpenGLContext::Create(const PlatformWindowImpl &window, const Version &version){
-    return m_Impl.Create(window, version);
+SX_INLINE Result OpenGLContext::Create(const Window &window, const Version &version){
+    return Super::Create(window.Impl(), version);
 }
 
-SX_INLINE Result OpenGLContext::CreateLegacy(const PlatformWindowImpl &window){
-    return m_Impl.CreateLegacy(window);
+SX_INLINE Result OpenGLContext::CreateLegacy(const Window &window){
+    return Super::CreateLegacy(window.Impl());
 }
 
 SX_INLINE void OpenGLContext::DestroyLegacy(){
-    m_Impl.DestroyLegacy();
+    Super::DestroyLegacy();
 }
 
 SX_INLINE void OpenGLContext::Destroy(){
-    m_Impl.Destroy();
+    Super::Destroy();
 }
 
 SX_INLINE Result OpenGLContext::MakeCurrent(){
-    return m_Impl.MakeCurrent();
+    return Super::MakeCurrent();
 }
 
 SX_INLINE void OpenGLContext::SwapBuffers(){
-    m_Impl.SwapBuffers();
+    Super::SwapBuffers();
 }
 
 SX_INLINE void OpenGLContext::Resize(u32 width, u32 height){
-    m_Impl.Resize(width, height);
+    Super::Resize(width, height);
 }
 
 #endif // STRAITX_OPENGL_CONTEXT_HPP

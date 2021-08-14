@@ -9,7 +9,7 @@ struct VulkanSurface{
     VkSurfaceKHR Handle = VK_NULL_HANDLE;
     VkInstance Owner = VK_NULL_HANDLE;
 
-    Result Create(VkInstance owner, const PlatformWindowImpl &window);
+    Result Create(VkInstance owner, const OSWindowImpl &window);
 
     void Destroy();
 };

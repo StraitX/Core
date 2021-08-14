@@ -4,7 +4,7 @@
 #include "core/types.hpp"
 #include "core/math/vector2.hpp"
 
-class PlatformWindow;
+class Window;
 
 namespace Mouse{
 
@@ -23,7 +23,7 @@ namespace Mouse{
 
     Vector2s GlobalPosition();
 
-    Vector2s RelativePosition();
+    Vector2s RelativePosition(const Window &window);
 
     void SetGlobalPosition(const Vector2s &position);
 

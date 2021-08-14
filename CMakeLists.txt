@@ -27,6 +27,7 @@ set(SOURCES_CORE
     ${SOURCES_DIR}/core/os/glloader.cpp
     ${SOURCES_DIR}/core/os/keyboard.cpp
     ${SOURCES_DIR}/core/os/memory.cpp
+    ${SOURCES_DIR}/core/os/window.cpp
 )
 
 set(SOURCES_GRAPHICS_VULKAN

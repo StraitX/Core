@@ -51,15 +51,16 @@ static RenderPassProperties GetFramebufferProperties(){
 }
 
 
-Swapchain::Swapchain():
+Swapchain::Swapchain(Window *window):
     m_ImagesCount(s_MaxFramebuffers),
     m_FramebufferPass(GetFramebufferProperties()),
     m_TargetQueueFamily(QueueFamily::Graphics),
     m_TargetQueue(GPU::Get().Queue(m_TargetQueueFamily)),
-    m_TargetQueueIndex(GPU::Get().QueueIndex(m_TargetQueueFamily))
+    m_TargetQueueIndex(GPU::Get().QueueIndex(m_TargetQueueFamily)),
+    m_DisplayWindow(window)
 {
     
-    SX_CORE_CALL_ASSERT(m_Surface.Create(Vk::GraphicsContextImpl::s_Instance.Instance(), PlatformWindow::Impl()),Result::Success, "Vk: Swapchain: Can't obtain surface");
+    SX_CORE_CALL_ASSERT(m_Surface.Create(Vk::GraphicsContextImpl::s_Instance.Instance(), m_DisplayWindow->Impl()),Result::Success, "Vk: Swapchain: Can't obtain surface");
     
     {
         VkBool32 supported;

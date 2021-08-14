@@ -26,10 +26,12 @@ private:
 
 	RawVar<GL::RenderPassImpl> m_FramebufferPass;
     RawVar<GL::FramebufferImpl> m_DefaultFramebuffer;
+
+	Window *m_RenderWindow = nullptr;
 public:
 	static GraphicsContextImpl s_Instance;
 
-	virtual Result Initialize()override;
+	virtual Result Initialize(Window *window)override;
 
 	virtual void Finalize()override;
 

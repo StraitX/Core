@@ -35,8 +35,10 @@ private:
     QueueFamily::Type m_TargetQueueFamily;
     VkQueue m_TargetQueue = VK_NULL_HANDLE;
     u32 m_TargetQueueIndex = InvalidIndex;
+
+    Window *m_DisplayWindow = nullptr;
 public:
-    Swapchain();
+    Swapchain(Window *window);
 
     ~Swapchain();
 
@@ -47,6 +49,10 @@ public:
 	Vector2u Size()const{
 		return m_Size;
 	}
+
+    Window *DisplayWindow()const{
+        return m_DisplayWindow;
+    }
 
 private:
     void InitializeFramebuffers(VkFormat images_format);

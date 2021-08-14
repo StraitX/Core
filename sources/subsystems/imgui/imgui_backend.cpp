@@ -4,6 +4,7 @@
 #include "graphics/dma.hpp"
 #include "core/string.hpp"
 #include "core/os/keyboard.hpp"
+#include "main/engine.hpp"
 
 ShaderBinding ImGuiBackend::s_Bindings[2] = {
 	{0, 1, ShaderBindingType::Texture, Shader::Fragment},
@@ -60,7 +61,7 @@ Result ImGuiBackend::OnInitialize(){
 	ImGuiIO& io = ImGui::GetIO();
 
 	static constexpr float s_BaseDPI = 93;
-	auto screen_dpi = PlatformWindow::Screen().DPI;
+	auto screen_dpi = Engine::Get().RenderWindow().Screen().DPI;
 
 	ImGui::StyleColorsDark();
 	ImGui::GetStyle().WindowRounding = 8;
@@ -161,12 +162,12 @@ Result ImGuiBackend::OnInitialize(){
 void ImGuiBackend::OnBeginFrame(){
 	ImGuiIO& io = ImGui::GetIO();
 
-	auto window_size = PlatformWindow::Size();
+	auto window_size = Engine::Get().RenderWindow().Size();
 
 	io.DisplaySize = ImVec2((float)window_size.x, (float)window_size.y);
 	io.DeltaTime = 0.016;
 
-	auto mouse_pos = Mouse::RelativePosition();
+	auto mouse_pos = Mouse::RelativePosition(Engine::Get().RenderWindow());
 
 	mouse_pos.y = window_size.y - mouse_pos.y;
 
@@ -193,7 +194,7 @@ void ImGuiBackend::OnEndFrame(){
 
 	const ImDrawData *data = ImGui::GetDrawData();
 
-	auto window_size = PlatformWindow::Size();
+	auto window_size = Engine::Get().RenderWindow().Size();
 	ImVec2 clip_off = data->DisplayPos;         // (0,0) unless using multi-viewports
     ImVec2 clip_scale = data->FramebufferScale;
 
