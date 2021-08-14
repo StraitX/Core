@@ -1,6 +1,0 @@
-#ifndef STRAITX_CORE_HPP
-#define STRAITX_CORE_HPP
-
-
-
-#endif //STRAITX_CORE_HPP
