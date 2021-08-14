@@ -5,6 +5,7 @@
 #include "core/result.hpp"
 #include "core/noncopyable.hpp"
 #include "core/os/screen.hpp"
+#include "core/function.hpp"
 
 namespace X11{
 struct _XIM;
@@ -30,6 +31,8 @@ struct WindowImpl: NonCopyable{
     Result Close();
 
     bool IsOpen()const;
+
+    void DispatchEvents(Function<void(const Event &e)> handler);
 
     void SetTitle(const char *title);
 

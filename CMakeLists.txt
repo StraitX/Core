@@ -131,7 +131,6 @@ if(STRAITX_PLATFORM_LINUX)
         ${SOURCES_DIR}/platform/linux/keyboard_impl.cpp
         ${SOURCES_DIR}/platform/linux/keys.cpp
         ${SOURCES_DIR}/platform/linux/window_impl.cpp
-        ${SOURCES_DIR}/platform/linux/events.cpp
         ${SOURCES_DIR}/platform/linux/screen_impl.cpp
         ${SOURCES_DIR}/platform/linux/glloader_impl.cpp
         ${SOURCES_DIR}/platform/linux/opengl_context_impl.cpp

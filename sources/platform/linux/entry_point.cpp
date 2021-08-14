@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include <cstdio>
-#include "main/engine.hpp"
 #include "core/os/platform_runtime.hpp"
 #include "platform/linux/window_impl.hpp"
 #include "platform/linux/display_server.hpp"
@@ -26,9 +25,6 @@ int main(int argc, char **argv){
 		float dt = 1.f/60.f;
 		for(;;){
 			frame_clock.Restart();
-			// XXX:
-			// Extremely temporary thing
-			Linux::PollEvents(Engine::Get().RenderWindow().Impl(), PlatformRuntime::HandleEvent);
 
 			if(!PlatformRuntime::Tick(dt))
 				break;
