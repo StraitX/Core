@@ -140,8 +140,6 @@ void BatchRenderer2D::BeginScene(const Framebuffer *framebuffer, Vector2s camera
     };
 
     BeginBatch();
-	m_CmdBuffer.SetViewport(m_WindowSize.x, m_WindowSize.y, 0, 0);
-	m_CmdBuffer.SetScissors(m_WindowSize.x, m_WindowSize.y, 0, 0);
 	m_CmdBuffer.CopyCPUToGPUBuffer(m_StagingUniform, m_UniformBuffer, m_UniformBuffer.Size());
 }
 
@@ -205,6 +203,8 @@ void BatchRenderer2D::BeginBatch(){
     m_IndicesCount = 0;
 
 	m_Textures.Clear();
+    m_CmdBuffer.SetViewport(m_WindowSize.x, m_WindowSize.y, 0, 0);
+	m_CmdBuffer.SetScissors(m_WindowSize.x, m_WindowSize.y, 0, 0);
 }
 
 void BatchRenderer2D::EndBatch(){
