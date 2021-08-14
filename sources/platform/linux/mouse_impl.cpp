@@ -41,9 +41,6 @@ Vector2s RelativePosition(const Window &window){
 
     X11::XQueryPointer(DisplayServer::Handle, window.Impl().Handle ,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
     
-	s32 window_height = (s32)window.Size().y;
-
-	choosen.y = window_height - choosen.y;
     return choosen;
 }
 

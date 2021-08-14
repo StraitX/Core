@@ -266,11 +266,13 @@ void GraphicsContextImpl::ExecuteCmdBuffer(const GPUCommandBuffer &cmd_buffer){
 		break;
 		case GPUCommandType::SetScissors:
 		{
+			auto fb_size_y = m_DefaultFramebuffer->AttachmentsSize.y;
 			glScissor(cmd.SetScissors.x, cmd.SetScissors.y, cmd.SetScissors.Width, cmd.SetScissors.Height);
 		}
 		break;
 		case GPUCommandType::SetViewport:
 		{
+			auto fb_size_y = m_DefaultFramebuffer->AttachmentsSize.y;
 			glViewport(cmd.SetViewport.x, cmd.SetViewport.y, cmd.SetViewport.Width, cmd.SetViewport.Height);
 		}
 		break;
