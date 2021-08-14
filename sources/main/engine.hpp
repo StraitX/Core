@@ -27,6 +27,7 @@ private:
     bool m_Running = true;
 
     EngineDelegates m_Delegates;
+    Function<void(const Event &)> m_EventsHandler;
 
 	Result M_ErrorGraphicsAPI = Result::None;
 	Result m_ErrorGraphicsContext = Result::None;

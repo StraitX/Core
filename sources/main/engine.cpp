@@ -21,6 +21,8 @@ extern void StraitXExit(Application *);
 Engine *Engine::s_Instance = nullptr;
 
 Engine::Engine(){
+	m_EventsHandler.Bind<Engine, &Engine::HandleEvent>(this);
+
 	s_Instance = this;
 }
 
@@ -113,6 +115,8 @@ void Engine::Finalize(){
 
 bool Engine::Tick(float dt){
 	m_Delegates.OnBeginFrame();
+
+	m_RenderWindow.DispatchEvents(m_EventsHandler);
 
 	m_Delegates.OnUpdate(dt);
 	m_Application->OnUpdate(dt);
