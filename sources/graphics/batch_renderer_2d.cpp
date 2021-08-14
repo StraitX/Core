@@ -43,10 +43,10 @@ void main(){
 })";
 
 const Vector2f BatchRenderer2D::s_DefaultTextureCoords[4] = {
-    {0.f, 1.f},
     {0.f, 0.f},
-    {1.f, 0.f},
-    {1.f, 1.f}
+    {0.f, 1.f},
+    {1.f, 1.f},
+    {1.f, 0.f}
 };
 
 ShaderBinding BatchRenderer2D::s_Bindings[] = {
@@ -163,14 +163,14 @@ void BatchRenderer2D::DrawRect(Vector2s position, Vector2s size, const Color &co
     }
 
     position.x -= m_WindowSize.x/2;
-    position.y -= m_WindowSize.y/2;
+    position.y = m_WindowSize.y/2 - position.y;
 
     position.x -= m_CameraPosition.x;
     position.y -= m_CameraPosition.y;
 
     m_Vertices[m_VerticesCount + 0] = {Vector2f(position.x,          position.y          ),texture_coords[0],float(index),color};
-    m_Vertices[m_VerticesCount + 1] = {Vector2f(position.x,          position.y + size.y ),texture_coords[1],float(index),color};
-    m_Vertices[m_VerticesCount + 2] = {Vector2f(position.x + size.x, position.y + size.y ),texture_coords[2],float(index),color};
+    m_Vertices[m_VerticesCount + 1] = {Vector2f(position.x,          position.y - size.y ),texture_coords[1],float(index),color};
+    m_Vertices[m_VerticesCount + 2] = {Vector2f(position.x + size.x, position.y - size.y ),texture_coords[2],float(index),color};
     m_Vertices[m_VerticesCount + 3] = {Vector2f(position.x + size.x, position.y          ),texture_coords[3],float(index),color};
 
     m_Indices[m_IndicesCount + 0] = m_VerticesCount + 0;
