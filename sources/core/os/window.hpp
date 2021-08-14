@@ -20,13 +20,10 @@
     #error "Your platform does not support window creation"
 #endif
 
-//Window has two EventHandlers, first for a user, second
 class Window: private OSWindowImpl{
 private:
 	using Super = OSWindowImpl;
 public:
-	//static Window Main;
-
 	Result Open(u32 width, u32 height, const char *title);
 
 	void Close();
