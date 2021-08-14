@@ -10,8 +10,6 @@ struct PlatformRuntime{
 
 	static bool Tick(float dt);
 
-	static void HandleEvent(const Event &e);
-
 	static void Finalize();
 
 };
