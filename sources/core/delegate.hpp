@@ -34,7 +34,7 @@ public:
     }
 
     void Bind(Function<void(ArgsType...)> subscriber){
-        Add(subscriber);
+        Array<Function<void(ArgsType...)>>::Add(subscriber);
     }
 
     void operator()(ArgsType...args){
