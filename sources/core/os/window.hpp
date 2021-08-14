@@ -43,7 +43,7 @@ public:
 
 	void SetSize(Vector2u size);
 
-	const PlatformScreen &Screen()const;
+	const Screen &CurrentScreen()const;
 
 	const OSWindowImpl &Impl()const;
 };
@@ -80,8 +80,8 @@ SX_INLINE void Window::SetSize(Vector2u size){
 	Super::SetSize(size.x, size.y);
 }
 
-SX_INLINE const PlatformScreen &Window::Screen()const{
-	return Super::Screen();
+SX_INLINE const Screen &Window::CurrentScreen()const{
+	return Super::CurrentScreen();
 }
 
 SX_INLINE const OSWindowImpl &Window::Impl()const{

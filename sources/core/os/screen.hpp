@@ -5,7 +5,7 @@
 #include "core/types.hpp"
 #include "core/math/vector2.hpp"
 
-struct PlatformScreen{
+struct Screen{
 	void *Handle = nullptr;
 	Vector2f DPI = {};
 	Vector2s Size = {};
