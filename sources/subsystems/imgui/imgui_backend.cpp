@@ -69,7 +69,7 @@ void ImGuiBackend::Initialize(){
 	ImGuiIO& io = ImGui::GetIO();
 
 	static constexpr float s_BaseDPI = 93;
-	auto screen_dpi = Engine::Get().RenderWindow().Screen().DPI;
+	auto screen_dpi = Engine::Get().MainWindow().Screen().DPI;
 
 	ImGui::StyleColorsDark();
 	ImGui::GetStyle().WindowRounding = 8;
@@ -168,12 +168,12 @@ void ImGuiBackend::Initialize(){
 void ImGuiBackend::OnBeginFrame(){
 	ImGuiIO& io = ImGui::GetIO();
 
-	auto window_size = Engine::Get().RenderWindow().Size();
+	auto window_size = Engine::Get().MainWindow().Size();
 
 	io.DisplaySize = ImVec2((float)window_size.x, (float)window_size.y);
 	io.DeltaTime = 0.016;
 
-	auto mouse_pos = Mouse::RelativePosition(Engine::Get().RenderWindow());
+	auto mouse_pos = Mouse::RelativePosition(Engine::Get().MainWindow());
 
 	io.MousePos = ImVec2((float)mouse_pos.x/io.DisplayFramebufferScale.x, (float)mouse_pos.y/io.DisplayFramebufferScale.y);
 
@@ -198,7 +198,7 @@ void ImGuiBackend::OnEndFrame(){
 
 	const ImDrawData *data = ImGui::GetDrawData();
 
-	auto window_size = Engine::Get().RenderWindow().Size();
+	auto window_size = Engine::Get().MainWindow().Size();
 	ImVec2 clip_off = data->DisplayPos;         // (0,0) unless using multi-viewports
     ImVec2 clip_scale = data->FramebufferScale;
 

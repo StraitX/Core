@@ -21,7 +21,7 @@ private:
     static Engine *s_Instance;
 
     Application *m_Application = nullptr;
-    Window m_RenderWindow;
+    Window m_MainWindow;
 
     ApplicationConfig m_AppConfig = {};
     bool m_Running = true;
@@ -58,8 +58,8 @@ public:
         return m_FrameFreeCalls;
     }
 
-    const Window &RenderWindow()const{
-        return m_RenderWindow;
+    const Window &MainWindow()const{
+        return m_MainWindow;
     }
 
     EngineDelegates &Delegates(){

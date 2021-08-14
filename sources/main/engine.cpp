@@ -40,7 +40,7 @@ Result Engine::Initialize(){
 
     LogTrace("========= First stage init =========");
 
-	Result w = m_RenderWindow.Open(m_AppConfig.WindowSize.x, m_AppConfig.WindowSize.y, m_AppConfig.ApplicationName);
+	Result w = m_MainWindow.Open(m_AppConfig.WindowSize.x, m_AppConfig.WindowSize.y, m_AppConfig.ApplicationName);
 	//XXX
 	SX_CORE_ASSERT(w, "Can't open a window");
 
@@ -50,7 +50,7 @@ Result Engine::Initialize(){
 
 	LogTrace("GraphicsContext::New: Begin");
 	{
-		m_ErrorGraphicsContext = GraphicsContext::Get().Initialize(&m_RenderWindow);
+		m_ErrorGraphicsContext = GraphicsContext::Get().Initialize(&m_MainWindow);
 	}
 	InitAssert("GraphicsContext::New", m_ErrorGraphicsContext);
 
@@ -92,7 +92,7 @@ void Engine::Finalize(){
 		LogTrace("EngineDelegates: OnFinalize: End");
 	}
 
-	m_RenderWindow.Close();
+	m_MainWindow.Close();
 
     if(m_ErrorApplication==Result::Success){
         LogTrace("Application::OnFinalize: Begin");
@@ -116,7 +116,7 @@ void Engine::Finalize(){
 bool Engine::Tick(float dt){
 	m_Delegates.OnBeginFrame();
 
-	m_RenderWindow.DispatchEvents(m_EventsHandler);
+	m_MainWindow.DispatchEvents(m_EventsHandler);
 
 	m_Delegates.OnUpdate(dt);
 	m_Application->OnUpdate(dt);
@@ -134,7 +134,7 @@ bool Engine::Tick(float dt){
 	m_FrameFreeCalls = m_FreeCalls - m_PrevFreeCalls;
 	m_PrevFreeCalls = m_FreeCalls;
 
-	return m_Running && m_RenderWindow.IsOpen();
+	return m_Running && m_MainWindow.IsOpen();
 }
 
 void Engine::HandleEvent(const Event &e){
