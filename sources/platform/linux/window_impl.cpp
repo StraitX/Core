@@ -16,16 +16,16 @@ struct PixelFormat{
 };
 
 Result WindowImpl::Open(int width, int height, const char *title){
-	Width = width;
-	Height = height;
+	m_Width = width;
+	m_Height = height;
 
 	int screen_index = X11::XDefaultScreen(DisplayServer::Handle);
 
-    FBConfig = PickBestFBConfig(screen_index);
-    if(FBConfig == nullptr)
+    m_FBConfig = PickBestFBConfig(screen_index);
+    if(m_FBConfig == nullptr)
         return Result::Unsupported;
 
-    X11::XVisualInfo *visualInfo = X11::glXGetVisualFromFBConfig(DisplayServer::Handle, (X11::GLXFBConfig)FBConfig);
+    X11::XVisualInfo *visualInfo = X11::glXGetVisualFromFBConfig(DisplayServer::Handle, (X11::GLXFBConfig)m_FBConfig);
 
     if(visualInfo == nullptr)
         return Result::Failure;
@@ -41,35 +41,35 @@ Result WindowImpl::Open(int width, int height, const char *title){
 							| StructureNotifyMask
 							| FocusChangeMask;
 
-    Handle = X11::XCreateWindow(DisplayServer::Handle, X11::XRootWindow(DisplayServer::Handle,screen_index), 0, 0, width, height, 0, visualInfo->depth,
+    m_Handle = X11::XCreateWindow(DisplayServer::Handle, X11::XRootWindow(DisplayServer::Handle,screen_index), 0, 0, width, height, 0, visualInfo->depth,
         InputOutput, visualInfo->visual, CWBackPixel | CWColormap | CWEventMask, &attributes);
 
     X11::XFree(visualInfo);
 
-    if(Handle == 0)
+    if(m_Handle == 0)
         return Result::Failure;
     
     //intercept close event
     X11::Atom close_atom = X11::XInternAtom(DisplayServer::Handle,"WM_DELETE_WINDOW",0);
-    X11::XSetWMProtocols(DisplayServer::Handle,Handle,&close_atom,1);
+    X11::XSetWMProtocols(DisplayServer::Handle,m_Handle,&close_atom,1);
 
 
-    X11::XMapWindow(DisplayServer::Handle,Handle);
+    X11::XMapWindow(DisplayServer::Handle,m_Handle);
 
-	InputMethod = X11::XOpenIM(DisplayServer::Handle, nullptr, nullptr, nullptr);
+	m_InputMethod = X11::XOpenIM(DisplayServer::Handle, nullptr, nullptr, nullptr);
 
-	if(!InputMethod){
+	if(!m_InputMethod){
 		Close();
 		return Result::Failure;
 	}
 
-	InputContext = X11::XCreateIC(InputMethod,
+	m_InputContext = X11::XCreateIC(m_InputMethod,
                         XNInputStyle,   XIMPreeditNothing | XIMStatusNothing,
-                        XNClientWindow, Handle,
-                        XNFocusWindow,  Handle,
+                        XNClientWindow, m_Handle,
+                        XNFocusWindow,  m_Handle,
                         NULL);
 
-	X11::XSetICFocus(InputContext);
+	X11::XSetICFocus(m_InputContext);
 
     SetTitle(title);
 
@@ -79,18 +79,18 @@ Result WindowImpl::Open(int width, int height, const char *title){
 
 
 Result WindowImpl::Close(){
-	X11::XDestroyIC(InputContext);
+	X11::XDestroyIC(m_InputContext);
 	
-	X11::XCloseIM(InputMethod);
+	X11::XCloseIM(m_InputMethod);
 
-    X11::XDestroyWindow(DisplayServer::Handle,Handle);
+    X11::XDestroyWindow(DisplayServer::Handle, m_Handle);
 
-    Handle = 0;
+    m_Handle = 0;
     return Result::Success;
 }
 
 bool WindowImpl::IsOpen()const{
-    return Handle != 0;
+    return m_Handle != 0;
 }
 
 static Bool CheckEvent(X11::Display *display, X11::XEvent *event, X11::XPointer userData){
@@ -100,7 +100,7 @@ static Bool CheckEvent(X11::Display *display, X11::XEvent *event, X11::XPointer 
 void WindowImpl::DispatchEvents(Function<void(const Event &e)> handler){
 	X11::XEvent in_event;
 
-	while(XCheckIfEvent(DisplayServer::Handle, &in_event, &CheckEvent,reinterpret_cast<X11::XPointer>(Handle))){
+	while(XCheckIfEvent(DisplayServer::Handle, &in_event, &CheckEvent,reinterpret_cast<X11::XPointer>(m_Handle))){
 		switch (in_event.type)
 		{
 		// Event recieved on window Close button 
@@ -116,7 +116,7 @@ void WindowImpl::DispatchEvents(Function<void(const Event &e)> handler){
 		case X11::ConfigureNotify:
 		{
 			Event e;
-			if(in_event.xconfigure.width != Width || in_event.xconfigure.height != Height){
+			if(in_event.xconfigure.width != m_Width || in_event.xconfigure.height != m_Height){
 				e.Type = EventType::WindowResized;
 				e.WindowResized.x = in_event.xconfigure.width;
 				e.WindowResized.y = in_event.xconfigure.height;
@@ -137,7 +137,7 @@ void WindowImpl::DispatchEvents(Function<void(const Event &e)> handler){
 			X11::KeySym keysym = 0;
 			char buf[20] = {};
 			Status status = 0;
-			count = X11::Xutf8LookupString(InputContext, (X11::XKeyPressedEvent*)&in_event, buf, 20, &keysym, &status);
+			count = X11::Xutf8LookupString(m_InputContext, (X11::XKeyPressedEvent*)&in_event, buf, 20, &keysym, &status);
 
 			if (status==XBufferOverflow)
 				break;
@@ -227,31 +227,31 @@ void WindowImpl::SetTitle(const char *title){
     X11::XTextProperty titleText;
     char * pTitle = (char *)title;
     X11::XStringListToTextProperty(&pTitle,1,&titleText);
-    X11::XSetTextProperty(DisplayServer::Handle,Handle,&titleText,atom);
+    X11::XSetTextProperty(DisplayServer::Handle,m_Handle,&titleText,atom);
 }
 
 void WindowImpl::SetSize(int width, int height){
-    X11::XResizeWindow(DisplayServer::Handle,Handle,width,height);
+    X11::XResizeWindow(DisplayServer::Handle,m_Handle,width,height);
 	X11::XFlush(DisplayServer::Handle);
 }
 
 Vector2u WindowImpl::Size()const{
-	return GetSizeFromHandle(Handle);
+	return GetSizeFromHandle(m_Handle);
 }
 
-const PlatformScreen &WindowImpl::Screen()const{
+const Screen &WindowImpl::CurrentScreen()const{
 	// XXX: linux does not support multiple screens for now
-	if(CurrentScreen.Handle == nullptr){
-		CurrentScreen.Handle = X11::XDefaultScreenOfDisplay(DisplayServer::Handle);
+	if(m_CurrentScreen.Handle == nullptr){
+		m_CurrentScreen.Handle = X11::XDefaultScreenOfDisplay(DisplayServer::Handle);
 
-		CurrentScreen.Size.x = X11::XWidthOfScreen((X11::Screen*)CurrentScreen.Handle);
-		CurrentScreen.Size.y = X11::XHeightOfScreen((X11::Screen*)CurrentScreen.Handle);
+		m_CurrentScreen.Size.x = X11::XWidthOfScreen((X11::Screen*)m_CurrentScreen.Handle);
+		m_CurrentScreen.Size.y = X11::XHeightOfScreen((X11::Screen*)m_CurrentScreen.Handle);
 
-		CurrentScreen.DPI.x  = float(CurrentScreen.Size.x) / (float(X11::XWidthMMOfScreen((X11::Screen*)CurrentScreen.Handle)) / 25.4f);
-		CurrentScreen.DPI.y = float(CurrentScreen.Size.y) / (float(X11::XHeightMMOfScreen((X11::Screen*)CurrentScreen.Handle)) / 25.4f);
+		m_CurrentScreen.DPI.x  = float(m_CurrentScreen.Size.x) / (float(X11::XWidthMMOfScreen((X11::Screen*)m_CurrentScreen.Handle)) / 25.4f);
+		m_CurrentScreen.DPI.y = float(m_CurrentScreen.Size.y) / (float(X11::XHeightMMOfScreen((X11::Screen*)m_CurrentScreen.Handle)) / 25.4f);
 	}
 
-	return CurrentScreen;
+	return m_CurrentScreen;
 }
 
 Vector2u WindowImpl::GetSizeFromHandle(unsigned long handle){

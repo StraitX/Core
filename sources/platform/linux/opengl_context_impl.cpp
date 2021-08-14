@@ -16,7 +16,7 @@ static int ctxErrorHandler( X11::Display *dpy, X11::XErrorEvent *ev )
 typedef X11::GLXContext (*glXCreateContextAttribsARBProc)(X11::Display*, X11::GLXFBConfig, X11::GLXContext, Bool, const int*);
 
 Result OpenGLContextImpl::Create(const WindowImpl &window, const Version &version){
-    m_WindowHandle = window.Handle;
+    m_WindowHandle = window.Handle();
 
     
     glXCreateContextAttribsARBProc glXCreateContextAttribsARB = nullptr;
@@ -36,7 +36,7 @@ Result OpenGLContextImpl::Create(const WindowImpl &window, const Version &versio
     if(version.Major >= 3)
         X11::XSetErrorHandler(&ctxErrorHandler);
     
-    m_Handle = glXCreateContextAttribsARB(DisplayServer::Handle,(X11::GLXFBConfig)window.FBConfig, 0, true, contextAttribs);
+    m_Handle = glXCreateContextAttribsARB(DisplayServer::Handle,(X11::GLXFBConfig)window.FBConfig(), 0, true, contextAttribs);
 
     if(m_Handle == nullptr)
         return Result::Unsupported;

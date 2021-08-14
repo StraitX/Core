@@ -13,7 +13,7 @@ Result VulkanSurface::Create(VkInstance owner, const OSWindowImpl &window){
     info.pNext = nullptr;
     info.flags = 0;
     info.dpy = Linux::DisplayServer::Handle;
-    info.window = window.Handle;
+    info.window = window.Handle();
 
     return ResultError(vkCreateXlibSurfaceKHR(Owner, &info, nullptr, &Handle) != VK_SUCCESS);
 }

@@ -15,15 +15,16 @@ struct __GLXFBConfigRec;
 
 namespace Linux{
 
-struct WindowImpl: NonCopyable{
-    unsigned long Handle = 0;
-    X11::__GLXFBConfigRec *FBConfig = nullptr;
-	int Width = 0;
-	int Height = 0;
-	X11::_XIM *InputMethod = nullptr;
-	X11::_XIC *InputContext = 0;
-	mutable PlatformScreen CurrentScreen;
-
+class WindowImpl: NonCopyable{
+private:
+    unsigned long m_Handle = 0;
+    X11::__GLXFBConfigRec *m_FBConfig = nullptr;
+	int m_Width = 0;
+	int m_Height = 0;
+	X11::_XIM *m_InputMethod = nullptr;
+	X11::_XIC *m_InputContext = 0;
+	mutable Screen m_CurrentScreen;
+public:
     WindowImpl() = default;
 
     Result Open(int width, int height, const char *title);
@@ -40,7 +41,15 @@ struct WindowImpl: NonCopyable{
 
     Vector2u Size()const;
 
-	const PlatformScreen &Screen()const;
+    unsigned long Handle()const{
+        return m_Handle;
+    }
+
+    X11::__GLXFBConfigRec *FBConfig()const{
+        return m_FBConfig;
+    }
+
+	const Screen &CurrentScreen()const;
 
 	static Vector2u GetSizeFromHandle(unsigned long handle);
 

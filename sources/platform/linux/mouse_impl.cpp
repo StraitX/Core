@@ -39,7 +39,7 @@ Vector2s RelativePosition(const Window &window){
     Vector2s choosen,global;
     unsigned int mask;
 
-    X11::XQueryPointer(DisplayServer::Handle, window.Impl().Handle ,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
+    X11::XQueryPointer(DisplayServer::Handle, window.Impl().Handle() ,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
     
     return choosen;
 }

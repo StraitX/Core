@@ -69,7 +69,7 @@ void ImGuiBackend::Initialize(){
 	ImGuiIO& io = ImGui::GetIO();
 
 	static constexpr float s_BaseDPI = 93;
-	auto screen_dpi = Engine::Get().MainWindow().Screen().DPI;
+	auto screen_dpi = Engine::Get().MainWindow().CurrentScreen().DPI;
 
 	ImGui::StyleColorsDark();
 	ImGui::GetStyle().WindowRounding = 8;
