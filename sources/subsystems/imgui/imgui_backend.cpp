@@ -249,11 +249,8 @@ void ImGuiBackend::OnEndFrame(){
 				clip_rect.y = 0.0f;
 
 
-			Vector2f offset_original(clip_rect.x, clip_rect.y);
-			Vector2f extent_original(clip_rect.z - clip_rect.x, clip_rect.w - clip_rect.y);
-
-			Vector2f offset(offset_original.x, window_size.y - extent_original.y - offset_original.y);
-			Vector2f extent = extent_original;
+			Vector2f offset(clip_rect.x, clip_rect.y);
+			Vector2f extent(clip_rect.z - clip_rect.x, clip_rect.w - clip_rect.y);
 
 			m_CmdBuffer.SetScissors(extent.x, extent.y, offset.x, offset.y);
 
