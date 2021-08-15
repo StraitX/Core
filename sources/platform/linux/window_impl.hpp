@@ -23,6 +23,7 @@ private:
 	int m_Height = 0;
 	X11::_XIM *m_InputMethod = nullptr;
 	X11::_XIC *m_InputContext = 0;
+    Function<void(const Event &e)> m_EventsHandler;
 	mutable Screen m_CurrentScreen;
 public:
     WindowImpl() = default;
@@ -33,7 +34,9 @@ public:
 
     bool IsOpen()const;
 
-    void DispatchEvents(Function<void(const Event &e)> handler);
+    void SetEventsHandler(Function<void(const Event &e)> handler);
+
+    void DispatchEvents();
 
     void SetTitle(const char *title);
 

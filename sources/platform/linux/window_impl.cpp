@@ -97,7 +97,11 @@ static Bool CheckEvent(X11::Display *display, X11::XEvent *event, X11::XPointer 
     return event->xany.window == reinterpret_cast<X11::Window>(userData);
 }
 
-void WindowImpl::DispatchEvents(Function<void(const Event &e)> handler){
+void WindowImpl::SetEventsHandler(Function<void (const Event &)> handler){
+	m_EventsHandler = handler;
+}
+
+void WindowImpl::DispatchEvents(){
 	X11::XEvent in_event;
 
 	while(XCheckIfEvent(DisplayServer::Handle, &in_event, &CheckEvent,reinterpret_cast<X11::XPointer>(m_Handle))){
@@ -110,7 +114,7 @@ void WindowImpl::DispatchEvents(Function<void(const Event &e)> handler){
 			X11::Atom close_atom = X11::XInternAtom(in_event.xany.display,"WM_DELETE_WINDOW",0);
 			if (in_event.xclient.data.l[0] == close_atom) {
 				e.Type = EventType::WindowClose;
-				handler(e);
+				m_EventsHandler.TryCall(e);
 			}
 		}break;
 		case X11::ConfigureNotify:
@@ -121,7 +125,7 @@ void WindowImpl::DispatchEvents(Function<void(const Event &e)> handler){
 				e.WindowResized.x = in_event.xconfigure.width;
 				e.WindowResized.y = in_event.xconfigure.height;
 
-				handler(e);
+				m_EventsHandler.TryCall(e);
 			}
 
 		}break;
@@ -129,7 +133,7 @@ void WindowImpl::DispatchEvents(Function<void(const Event &e)> handler){
 		{
 			Event e;
 			e.Type = EventType::WindowDraw;
-			handler(e);
+			m_EventsHandler.TryCall(e);
 		}break;
 		case X11::KeyPress:
 		{
@@ -148,7 +152,7 @@ void WindowImpl::DispatchEvents(Function<void(const Event &e)> handler){
 					Event e;
 					e.Type = EventType::TextEntered;
 					e.TextEntered.Unicode = buf[0];
-					handler(e);
+					m_EventsHandler.TryCall(e);
 				}//TODO else handle utf-8 to utf-32 conversion
 			}
 			if(status == XLookupKeySym || status == XLookupBoth){
@@ -160,7 +164,7 @@ void WindowImpl::DispatchEvents(Function<void(const Event &e)> handler){
 					if(e.KeyPress.KeyCode != Key::Unknown)
 						break;
 				}
-				handler(e);
+				m_EventsHandler.TryCall(e);
 			}
 		}break;
 		case X11::KeyRelease:
@@ -173,7 +177,7 @@ void WindowImpl::DispatchEvents(Function<void(const Event &e)> handler){
 				if(e.KeyRelease.KeyCode != Key::Unknown)
 					break;
 			}
-			handler(e);
+			m_EventsHandler.TryCall(e);
 		}break;
 		case X11::ButtonPress:
 		{
@@ -190,7 +194,7 @@ void WindowImpl::DispatchEvents(Function<void(const Event &e)> handler){
 				e.MouseButtonPress.x = in_event.xbutton.x;
 				e.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(in_event.xany.window).y - in_event.xbutton.y;
 			}
-			handler(e);
+			m_EventsHandler.TryCall(e);
 		}break;
 		case X11::ButtonRelease:
 		{
@@ -199,19 +203,19 @@ void WindowImpl::DispatchEvents(Function<void(const Event &e)> handler){
 			e.MouseButtonRelease.Button = XButtonToMouseButton(in_event.xbutton.button);
 			e.MouseButtonRelease.x = in_event.xbutton.x;
 			e.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(in_event.xany.window).y - in_event.xbutton.y;
-			handler(e);
+			m_EventsHandler.TryCall(e);
 		}break;
 		case X11::FocusIn:
 		{
 			Event e;
 			e.Type = EventType::FocusIn;
-			handler(e);
+			m_EventsHandler.TryCall(e);
 		}break;
 		case X11::FocusOut:
 		{
 			Event e;
 			e.Type = EventType::FocusOut;
-			handler(e);
+			m_EventsHandler.TryCall(e);
 		}break;
 		default:
 			(void)0;
