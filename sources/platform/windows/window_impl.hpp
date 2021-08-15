@@ -4,6 +4,7 @@
 #include "core/os/events.hpp"
 #include "core/result.hpp"
 #include "core/os/screen.hpp"
+#include "core/function.hpp"
 #include "core/noncopyable.hpp"
 
 struct HWND__;
@@ -14,13 +15,23 @@ class WindowImpl: public NonCopyable{
 private:
     HWND__ *m_Handle = nullptr;
     bool m_UnhandledResize = false;
-    PlatformScreen m_Screen;
+    Function<void(const Event& e)> m_EventsHandler;
+    mutable Screen m_CurrentScreen;
 public:
-    static WindowImpl s_MainWindow;
 
-    Result Open(int width, int height);
+    Result Open(int width, int height, const char *title);
 
     Result Close();
+
+    bool IsOpen()const;
+
+    void SetEventsHandler(Function<void(const Event& e)> handler);
+
+    Function<void(const Event& e)> EventsHandler()const {
+        return m_EventsHandler;
+    }
+
+    void DispatchEvents();
 
     void SetTitle(const char *title);
 
@@ -28,7 +39,7 @@ public:
 
     void SetSize(int width, int height);
 
-    const PlatformScreen& Screen();
+    const Screen& CurrentScreen()const;
 
     SX_INLINE HWND__ *Handle()const;
 

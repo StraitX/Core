@@ -2,7 +2,7 @@
 #include "core/os/vulkan.hpp"
 #include "core/os/vulkan_surface.hpp"
 
-Result VulkanSurface::Create(VkInstance owner, const PlatformWindowImpl& window) {
+Result VulkanSurface::Create(VkInstance owner, const OSWindowImpl& window) {
     Owner = owner;
     VkWin32SurfaceCreateInfoKHR info;
     info.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;

@@ -5,14 +5,10 @@
 
 namespace Windows{
 
-extern LRESULT CALLBACK StraitXWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-const char *s_WindowClassName = "StraitXWindow";
-const char *s_WindowTitle = "";
-DWORD s_WindowStyle = WS_OVERLAPPEDWINDOW;
+const char * const s_WindowClassName = "StraitXWindow";
+const DWORD s_WindowStyle = WS_OVERLAPPEDWINDOW;
 
-WindowImpl WindowImpl::s_MainWindow;
-
-Result WindowImpl::Open(int width, int height) {
+Result WindowImpl::Open(int width, int height, const char *title) {
     RECT dimensions = { 0, 0, width, height};
 
     AdjustWindowRect(&dimensions, s_WindowStyle, false);
@@ -21,13 +17,61 @@ Result WindowImpl::Open(int width, int height) {
     width = dimensions.right - dimensions.left;
     height = dimensions.bottom - dimensions.top;
 
-    m_Handle = CreateWindow(s_WindowClassName, s_WindowTitle, s_WindowStyle, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, (HINSTANCE)GetModuleHandle(nullptr), nullptr);
+    m_Handle = CreateWindow(s_WindowClassName, title , s_WindowStyle, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, (HINSTANCE)GetModuleHandle(nullptr), this);
     ShowWindow(m_Handle, SW_SHOW);
-    return ResultError(m_Handle == nullptr);
+
+    return Result(m_Handle != nullptr);
 }
 
 Result WindowImpl::Close() {
-    return ResultError(DestroyWindow(m_Handle) == 0);
+    auto res = DestroyWindow(m_Handle);
+
+    m_Handle = nullptr;
+
+    return Result(res != 0);
+}
+
+bool WindowImpl::IsOpen()const {
+    return m_Handle != nullptr;
+}
+
+void WindowImpl::SetEventsHandler(Function<void(const Event& e)> handler) {
+    m_EventsHandler = handler;
+}
+
+LRESULT CALLBACK StraitXWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
+    if (uMsg == WM_CREATE){
+        LONG_PTR window = (LONG_PTR)reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams;
+
+        SetWindowLongPtrA(hwnd, GWLP_USERDATA, window);
+    }
+
+    WindowImpl* window = hwnd ? reinterpret_cast<WindowImpl*>(GetWindowLongPtr(hwnd, GWLP_USERDATA)) : nullptr;
+    
+    if (window) {
+        MSG msg = {};
+        msg.message = uMsg;
+        msg.hwnd = hwnd;
+        msg.lParam = lParam;
+        msg.wParam = wParam;
+
+        Event e;
+        if (ToStraitXEvent(msg, e))
+            window->EventsHandler().TryCall(e);
+    }
+
+    if (uMsg != WM_CLOSE)
+        return DefWindowProc(hwnd, uMsg, wParam, lParam);
+    return 0;
+}
+
+void WindowImpl::DispatchEvents() {
+    MSG message = { 0 };
+	while (::PeekMessage(&message, (HWND)m_Handle, 0, 0, PM_REMOVE)) {
+	    TranslateMessage(&message);
+	    DispatchMessage(&message);
+	}
 }
 
 void WindowImpl::SetTitle(const char* title) {
@@ -45,18 +89,18 @@ void WindowImpl::SetSize(int width, int height) {
     SetWindowPos(m_Handle, HWND_TOP, currentWindowDimens.left, currentWindowDimens.top, width, height, 0);
 }
 
-const PlatformScreen& WindowImpl::Screen(){
+const Screen& WindowImpl::CurrentScreen()const{
     //TODO: For now windows does not support multiple screens 
-    if (m_Screen.Handle == nullptr) {
-        m_Screen.Handle = (void*)0xAA;
-        m_Screen.Size.x = GetSystemMetrics(SM_CXSCREEN);
-        m_Screen.Size.y = GetSystemMetrics(SM_CYSCREEN);
+    if (m_CurrentScreen.Handle == nullptr) {
+        m_CurrentScreen.Handle = (void*)0xAA;
+        m_CurrentScreen.Size.x = GetSystemMetrics(SM_CXSCREEN);
+        m_CurrentScreen.Size.y = GetSystemMetrics(SM_CYSCREEN);
         
         float dpi = GetDpiForWindow(m_Handle);
-        m_Screen.DPI.x = dpi;
-        m_Screen.DPI.y = dpi;
+        m_CurrentScreen.DPI.x = dpi;
+        m_CurrentScreen.DPI.y = dpi;
     }
-    return m_Screen;
+    return m_CurrentScreen;
 }
 
 
