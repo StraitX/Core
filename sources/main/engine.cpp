@@ -44,6 +44,8 @@ Result Engine::Initialize(){
 	//XXX
 	SX_CORE_ASSERT(w, "Can't open a window");
 
+	m_MainWindow.SetEventsHanlder(m_EventsHandler);
+
     LogTrace("GraphicsAPILoader::Load: Begin");
 	auto error_api_load = GraphicsAPILoader::Load(m_AppConfig.DesiredAPI);
     InitAssert("GraphicsAPILoader::Load", error_api_load);
@@ -114,9 +116,9 @@ void Engine::Finalize(){
 }
 
 bool Engine::Tick(float dt){
-	m_Delegates.OnBeginFrame();
+	m_MainWindow.DispatchEvents();
 
-	m_MainWindow.DispatchEvents(m_EventsHandler);
+	m_Delegates.OnBeginFrame();
 
 	m_Delegates.OnUpdate(dt);
 	m_Application->OnUpdate(dt);

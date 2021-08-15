@@ -30,7 +30,9 @@ public:
 
 	bool IsOpen()const;
 
-	void DispatchEvents(Function<void(const Event &e)> handler);
+	void SetEventsHanlder(Function<void(const Event &e)> handler);
+
+	void DispatchEvents();
 
 	void SetTitle(const char *title);
 
@@ -57,8 +59,12 @@ SX_INLINE bool Window::IsOpen()const{
 	return Super::IsOpen();
 }
 
-SX_INLINE void Window::DispatchEvents(Function<void(const Event &e)> handler){
-	Super::DispatchEvents(handler);
+SX_INLINE void Window::SetEventsHanlder(Function<void(const Event& e)> handler) {
+	Super::SetEventsHandler(handler);
+}
+
+SX_INLINE void Window::DispatchEvents(){
+	Super::DispatchEvents();
 }
 
 SX_INLINE void Window::SetTitle(const char *title){
