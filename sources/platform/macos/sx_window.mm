@@ -39,7 +39,7 @@
     Event e;
     e.Type = EventType::FocusIn;
 
-    WindowImpl->EventHandler(e);
+    WindowImpl->EventsHandler().TryCall(e);
 
 	MacOS::InputManager::ResetKeyboardState();
     MacOS::InputManager::ResetMouseState();
@@ -49,7 +49,7 @@
     Event e;
     e.Type = EventType::FocusOut;
 
-    WindowImpl->EventHandler(e);
+    WindowImpl->EventsHandler().TryCall(e);
 
     MacOS::InputManager::ResetKeyboardState();
     MacOS::InputManager::ResetMouseState();

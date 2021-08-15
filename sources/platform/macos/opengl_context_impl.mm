@@ -26,7 +26,7 @@ Result OpenGLContextImpl::Create(const WindowImpl &window, const Version &versio
 
     if(Handle == nil)return Result::Failure;
     
-    [(NSOpenGLContext*)Handle setView: (NSView*)window.View];
+    [(NSOpenGLContext*)Handle setView: (NSView*)window.View()];
 
     return Result::Success;
 }

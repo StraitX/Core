@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #include "core/os/mouse.hpp"
+#include "core/os/window.hpp"
 #include "platform/macos/sx_window.h"
 #include "platform/macos/linear_units.h"
 #include "platform/macos/input_manager.hpp"
@@ -14,17 +15,20 @@ Vector2s Mouse::GlobalPosition(){
     CGPoint cursor = CGEventGetLocation(event);
     CFRelease(event);
 
-    auto screen_size = MacOS::WindowImpl::s_MainWindow.Screen().Size;
-    NSScreen* screen = ((SXWindow*)MacOS::WindowImpl::s_MainWindow.Handle).screen;
-    return {LinearUnitsToPixels((s32)cursor.x, screen), screen_size.y - LinearUnitsToPixels((s32)cursor.y, screen)};
+    NSScreen* screen = [NSScreen mainScreen];
+
+    return {LinearUnitsToPixels((s32)cursor.x, screen), LinearUnitsToPixels((s32)cursor.y, screen)};
 }
 
-Vector2s Mouse::RelativePosition(){
+Vector2s Mouse::RelativePosition(const Window &window){
     auto global_pos = GlobalPosition();
-    SXWindow* win_impl = (SXWindow*)MacOS::WindowImpl::s_MainWindow.Handle;
+    SXWindow* win_impl = (SXWindow*)window.Impl().Handle();
     NSScreen* screen = win_impl.screen;
     Vector2s win_pos = {(s32)[win_impl frame].origin.x, (s32)[win_impl frame].origin.y};
-    return {global_pos.x - LinearUnitsToPixels(win_pos.x, screen), global_pos.y - LinearUnitsToPixels(win_pos.y, screen)};
+    win_pos.x = LinearUnitsToPixels(win_pos.x, screen);
+    win_pos.y = window.CurrentScreen().Size.y - (LinearUnitsToPixels(win_pos.y, screen) + window.Size().y) + 2;
+
+    return {global_pos.x - win_pos.x, global_pos.y - win_pos.y};
 }
 
 void Mouse::SetGlobalPosition(const Vector2s &position){

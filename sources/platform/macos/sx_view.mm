@@ -71,7 +71,7 @@
     e.Type = EventType::KeyPress;
     e.KeyPress.KeyCode = MacOS::ToStraitXKeyCode([event keyCode]);
 
-    WindowImpl->EventHandler(e);
+    WindowImpl->EventsHandler().TryCall(e);
 }
 
 -(void)keyUp:(NSEvent *)event{
@@ -79,7 +79,7 @@
     e.Type = EventType::KeyPress;
     e.KeyPress.KeyCode = MacOS::ToStraitXKeyCode([event keyCode]);
 
-    WindowImpl->EventHandler(e);
+    WindowImpl->EventsHandler().TryCall(e);
 }
 //Handles Ctrl shift alt and others
 -(void)flagsChanged:(NSEvent*)event{
@@ -89,12 +89,12 @@
         Event e;
         e.Type = EventType::KeyRelease;
         e.KeyRelease.KeyCode = MacOS::ToStraitXKeyCode([event keyCode]);
-        WindowImpl->EventHandler(e);
+        WindowImpl->EventsHandler().TryCall(e);
     }else{
         Event e;
         e.Type = EventType::KeyPress;
         e.KeyPress.KeyCode = MacOS::ToStraitXKeyCode([event keyCode]);
-        WindowImpl->EventHandler(e);
+        WindowImpl->EventsHandler().TryCall(e);
     }
 }
 
@@ -110,7 +110,7 @@
         e.Type = EventType::MouseWheel;
         e.MouseWheel.Delta = (int)deltaY;
 
-        WindowImpl->EventHandler(e);
+        WindowImpl->EventsHandler().TryCall(e);
     }
 }
 
@@ -127,27 +127,27 @@
 }
 
 -(void)onPressedButton:(Mouse::Button)button X: (int)x Y: (int)y{
-    x = LinearUnitsToPixels(x, ((NSWindow*)WindowImpl->Handle).screen);
-    y = LinearUnitsToPixels(y, ((NSWindow*)WindowImpl->Handle).screen);
+    x = LinearUnitsToPixels(x, ((NSWindow*)WindowImpl->Handle()).screen);
+    y = LinearUnitsToPixels(y, ((NSWindow*)WindowImpl->Handle()).screen);
 
     Event e;
     e.Type = EventType::MouseButtonPress;
     e.MouseButtonPress.x = x;
     e.MouseButtonPress.y = y;
 
-    WindowImpl->EventHandler(e);
+    WindowImpl->EventsHandler().TryCall(e);
 }
 
 -(void)onReleasedButton:(Mouse::Button)button X: (int)x Y: (int)y{
-    x = LinearUnitsToPixels(x, ((NSWindow*)WindowImpl->Handle).screen);
-    y = LinearUnitsToPixels(y, ((NSWindow*)WindowImpl->Handle).screen);
+    x = LinearUnitsToPixels(x, ((NSWindow*)WindowImpl->Handle()).screen);
+    y = LinearUnitsToPixels(y, ((NSWindow*)WindowImpl->Handle()).screen);
 
     Event e;
     e.Type = EventType::MouseButtonRelease;
     e.MouseButtonPress.x = x;
     e.MouseButtonPress.y = y;
 
-    WindowImpl->EventHandler(e);
+    WindowImpl->EventsHandler().TryCall(e);
 }
 
 @end

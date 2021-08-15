@@ -15,12 +15,6 @@ int main(int argc, char **argv){
 	    [app setActivationPolicy: NSApplicationActivationPolicyRegular];
 	    [app activateIgnoringOtherApps: YES];
 
-		if(!MacOS::WindowImpl::s_MainWindow.Open(1280, 720)){
-			fputs("MacOS: PlatformRuntime: Can't open a window", stderr);
-			return EXIT_FAILURE;
-		}
-		MacOS::WindowImpl::s_MainWindow.EventHandler = PlatformRuntime::HandleEvent;
-
 		Result init = PlatformRuntime::Initialize();
 
 		if(init){
@@ -29,8 +23,6 @@ int main(int argc, char **argv){
 			for(;;){
 				@autoreleasepool{
 					frame_clock.Restart();
-
-					[SXApplication poolEvents];
 
 					if(!PlatformRuntime::Tick(dt))
 						break;			
@@ -42,8 +34,6 @@ int main(int argc, char **argv){
 		}
 
 		PlatformRuntime::Finalize();
-
-		MacOS::WindowImpl::s_MainWindow.Close();
 
 		return !init;
 	}

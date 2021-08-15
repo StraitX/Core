@@ -13,7 +13,7 @@
     Event e;
     e.Type = EventType::WindowClose;
 
-    WindowImpl->EventHandler(e);
+    WindowImpl->EventsHandler().TryCall(e);
 
     return NO;
 }
@@ -26,7 +26,7 @@
     e.WindowResized.x = size.x;
     e.WindowResized.y = size.y;
 
-    WindowImpl->EventHandler(e);
+    WindowImpl->EventsHandler().TryCall(e);
 }
 
 @end
