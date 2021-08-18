@@ -16,7 +16,7 @@ public:
         Create();
     }
 
-    Semaphore(Semaphore &&other){
+    Semaphore(Semaphore &&other)noexcept{
         *this = Move(other);
     }
 
@@ -24,7 +24,7 @@ public:
         Destroy();
     }
 
-    Semaphore &operator=(Semaphore &&other){
+    Semaphore &operator=(Semaphore &&other)noexcept{
         if(!IsNull())
             Destroy();
         
