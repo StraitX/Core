@@ -6,9 +6,9 @@
 #include "core/move.hpp"
 
 class Semaphore: public NonCopyable{
-private:
-    u64 Handle;
     static constexpr u64 s_NullHandle = 0;
+private:
+    u64 m_Handle = s_NullHandle;
 public:
     static const Semaphore Null;
 
@@ -28,14 +28,18 @@ public:
         if(!IsNull())
             Destroy();
         
-        Handle = other.Handle;
-        other.Handle = s_NullHandle;
+        m_Handle = other.m_Handle;
+        other.m_Handle = s_NullHandle;
     
         return *this;
     }
 
     bool IsNull()const{
-        return Handle == s_NullHandle;
+        return m_Handle == s_NullHandle;
+    }
+
+    u64 Handle()const{
+        return m_Handle;
     }
 private:
     void Create();

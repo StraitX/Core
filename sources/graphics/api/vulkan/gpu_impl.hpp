@@ -21,6 +21,10 @@ public:
     Result Initialize();
 
     void Finalize();
+
+    VkDevice Handle()const{
+        return m_Handle;
+    }
 };
 
 }//namespace Vk::
