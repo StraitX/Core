@@ -39,6 +39,8 @@ set(SOURCES_GRAPHICS_API
 set(SOURCES_GRAPHICS_API_VULKAN
     ${SOURCES_DIR}/graphics/api/vulkan/debug.cpp
     ${SOURCES_DIR}/graphics/api/vulkan/graphics_api_impl.cpp
+    ${SOURCES_DIR}/graphics/api/vulkan/gpu_impl.cpp
+    ${SOURCES_DIR}/graphics/api/vulkan/queue.cpp
 )
 
 set(SOURCES_GRAPHICS

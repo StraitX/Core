@@ -2,10 +2,22 @@
 #include "graphics/api/graphics_api.hpp"
 #include "core/assert.hpp"
 
+#include "core/os/vulkan.hpp"
+
+#if defined(SX_VULKAN_SUPPORTED)
+    #include "graphics/api/vulkan/gpu_impl.hpp"
+#endif
+
+
 GPUImpl *GPU::s_Impl = nullptr;
 
 Result GPU::Initialize(){
     SX_CORE_ASSERT(GraphicsAPI::HasBackend(), "Can't initialize GPU without GraphicsAPI Backend");
+
+#if defined(SX_VULKAN_SUPPORTED)
+    if(GraphicsAPI::Backend() == GraphicsAPIBackend::Vulkan)
+        s_Impl = &Vk::GPUImpl::s_Instance;
+#endif
 
     if(s_Impl)
         return s_Impl->Initialize();

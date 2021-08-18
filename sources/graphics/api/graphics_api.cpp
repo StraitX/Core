@@ -14,8 +14,10 @@ Result GraphicsAPI::CreateBackend(GraphicsAPIBackend backend){
         s_Impl = &Vk::GraphicsAPIBackendImpl::s_Instance;
 #endif
 
-    if(s_Impl)
+    if(s_Impl){
+        s_Backend = backend;
         return s_Impl->Create();
+    }
     
     return Result::Unsupported;
 }

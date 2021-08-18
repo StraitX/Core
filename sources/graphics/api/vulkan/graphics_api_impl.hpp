@@ -17,6 +17,10 @@ public:
     Result Create()override;
 
     void Destroy()override;
+
+    VkInstance Instance()const{
+        return m_Instance;
+    }
 };
 
 }//namespace Vk::
