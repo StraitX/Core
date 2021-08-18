@@ -18,7 +18,3 @@ void Application::OnFinalize(){
 void Application::OnUpdate(float dt){
     (void)dt;
 }
-
-void Application::Stop(){
-    Engine::Get().Stop();
-}

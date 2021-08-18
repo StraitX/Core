@@ -3,6 +3,7 @@
 
 #include "core/result.hpp"
 #include "core/delegate.hpp"
+#include "core/os/window.hpp"
 #include "main/application.hpp"
 
 class Application;
@@ -29,10 +30,8 @@ private:
     EngineDelegates m_Delegates;
     Function<void(const Event &)> m_EventsHandler;
 
-	Result M_ErrorGraphicsAPI = Result::None;
-	Result m_ErrorGraphicsContext = Result::None;
     Result m_ErrorApplication = Result::None;
-	Result m_ErrorMX = Result::None;
+    Result m_ErrorMX = Result::None;
 
     u64 m_AllocCalls = 0;
     u64 m_PrevAllocCalls = 0;

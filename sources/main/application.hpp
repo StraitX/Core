@@ -3,14 +3,13 @@
 
 #include "core/os/events.hpp"
 #include "core/math/vector2.hpp"
-#include "graphics/graphics_context.hpp"
+#include "core/result.hpp"
 
 class Engine;
 
 struct ApplicationConfig{
     const char *ApplicationName = "StraitX Game";
-    GraphicsAPI DesiredAPI = GraphicsAPI::OpenGL;
-    Vector2u WindowSize{1280, 720};
+    Vector2u WindowSize = {1280, 720};
 };
 
 class Application{
@@ -26,8 +25,6 @@ public:
     virtual void OnFinalize();
 
     virtual void OnUpdate(float dt);
-
-    void Stop();
 };
 
 extern ApplicationConfig GetApplicationConfig();

@@ -2,9 +2,6 @@
 #include "core/os/clock.hpp"
 #include "core/log.hpp"
 #include "core/print.hpp"
-#include "graphics/graphics_api_loader.hpp"
-#include "graphics/graphics_context.hpp"
-#include "graphics/renderer_2d.hpp"
 #include "main/application.hpp"
 #include "main/engine.hpp"
 
@@ -46,20 +43,8 @@ Result Engine::Initialize(){
 
 	m_MainWindow.SetEventsHanlder(m_EventsHandler);
 
-    LogTrace("GraphicsAPILoader::Load: Begin");
-	auto error_api_load = GraphicsAPILoader::Load(m_AppConfig.DesiredAPI);
-    InitAssert("GraphicsAPILoader::Load", error_api_load);
-
-	LogTrace("GraphicsContext::New: Begin");
-	{
-		m_ErrorGraphicsContext = GraphicsContext::Get().Initialize(&m_MainWindow);
-	}
-	InitAssert("GraphicsContext::New", m_ErrorGraphicsContext);
-
     LogTrace("========= Second stage init =========");
 
-	Renderer2D::Register(m_Delegates);
-	
     //Engine should be completely initialized at this moment
     LogTrace("StraitXMain: Begin");
     {
@@ -107,12 +92,6 @@ void Engine::Finalize(){
         StraitXExit(m_Application);
         LogTrace("StraitXExit: End");
     }
-
-	if(m_ErrorGraphicsContext == Result::Success){
-		LogTrace("GraphicsContext::Finalize: Begin");
-		GraphicsContext::Get().Finalize();
-		LogTrace("GraphicsContext::Finalize: End");
-	}
 }
 
 bool Engine::Tick(float dt){
@@ -124,8 +103,6 @@ bool Engine::Tick(float dt){
 	m_Application->OnUpdate(dt);
 
 	m_Delegates.OnEndFrame();
-
-	GraphicsContext::Get().SwapBuffers();
 
 
 	m_AllocCalls = Memory::AllocCalls();
@@ -142,9 +119,6 @@ bool Engine::Tick(float dt){
 void Engine::HandleEvent(const Event &e){
 	if(e.Type == EventType::WindowClose)
 		Stop();
-
-	if(e.Type == EventType::WindowResized)
-		GraphicsContext::Get().ResizeSwapchain(e.WindowResized.x, e.WindowResized.y);
 
 	m_Application->OnEvent(e);
 	m_Delegates.OnEvent(e);

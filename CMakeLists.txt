@@ -28,90 +28,10 @@ set(SOURCES_CORE
     ${SOURCES_DIR}/core/os/memory.cpp
 )
 
-set(SOURCES_GRAPHICS_VULKAN
-    ${SOURCES_DIR}/graphics/vulkan/debug.cpp
-
-	${SOURCES_DIR}/graphics/vulkan/graphics_context_impl.cpp
-    ${SOURCES_DIR}/graphics/vulkan/queue.cpp
-    ${SOURCES_DIR}/graphics/vulkan/gpu.cpp
-    ${SOURCES_DIR}/graphics/vulkan/memory.cpp
-    ${SOURCES_DIR}/graphics/vulkan/fence.cpp
-    ${SOURCES_DIR}/graphics/vulkan/semaphore.cpp
-    ${SOURCES_DIR}/graphics/vulkan/memory_allocator.cpp
-    ${SOURCES_DIR}/graphics/vulkan/gpu_buffer_impl.cpp
-    ${SOURCES_DIR}/graphics/vulkan/command_buffer.cpp
-    ${SOURCES_DIR}/graphics/vulkan/swapchain.cpp
-    ${SOURCES_DIR}/graphics/vulkan/cpu_buffer_impl.cpp
-    ${SOURCES_DIR}/graphics/vulkan/texture_impl.cpp
-    ${SOURCES_DIR}/graphics/vulkan/sampler_impl.cpp
-    ${SOURCES_DIR}/graphics/vulkan/shader_impl.cpp
-    ${SOURCES_DIR}/graphics/vulkan/render_pass_impl.cpp
-	${SOURCES_DIR}/graphics/vulkan/descriptor_set_impl.cpp
-    ${SOURCES_DIR}/graphics/vulkan/graphics_pipeline_impl.cpp
-    ${SOURCES_DIR}/graphics/vulkan/framebuffer_impl.cpp
-    ${SOURCES_DIR}/graphics/vulkan/dma_impl.cpp
-
-    ${SOURCES_DIR}/graphics/vulkan/graphics_api_vtable.cpp
-)
-
-set(SOURCES_GRAPHICS_OPENGL
-    ${SOURCES_DIR}/graphics/opengl/graphics_context_impl.cpp
-    ${SOURCES_DIR}/graphics/opengl/gpu_buffer_impl.cpp
-    ${SOURCES_DIR}/graphics/opengl/cpu_buffer_impl.cpp
-    ${SOURCES_DIR}/graphics/opengl/texture_impl.cpp
-    ${SOURCES_DIR}/graphics/opengl/sampler_impl.cpp
-    ${SOURCES_DIR}/graphics/opengl/shader_impl.cpp
-    ${SOURCES_DIR}/graphics/opengl/render_pass_impl.cpp
-    ${SOURCES_DIR}/graphics/opengl/descriptor_set_impl.cpp
-    ${SOURCES_DIR}/graphics/opengl/graphics_pipeline_impl.cpp
-    ${SOURCES_DIR}/graphics/opengl/framebuffer_impl.cpp
-    ${SOURCES_DIR}/graphics/opengl/dma_impl.cpp
-
-    ${SOURCES_DIR}/graphics/opengl/graphics_api_vtable.cpp
-)
-
-set(SOURCES_GRAPHICS_API
-    ${SOURCES_DIR}/graphics/format.cpp
-    ${SOURCES_DIR}/graphics/graphics_api_loader.cpp
-	${SOURCES_DIR}/graphics/graphics_context.cpp
-	${SOURCES_DIR}/graphics/gpu_command_buffer.cpp
-    ${SOURCES_DIR}/graphics/gpu_configuration.cpp
-    ${SOURCES_DIR}/graphics/gpu_buffer.cpp
-    ${SOURCES_DIR}/graphics/cpu_buffer.cpp
-    ${SOURCES_DIR}/graphics/texture.cpp
-    ${SOURCES_DIR}/graphics/sampler.cpp
-    ${SOURCES_DIR}/graphics/shader.cpp
-    ${SOURCES_DIR}/graphics/render_pass.cpp
-    ${SOURCES_DIR}/graphics/descriptor_set.cpp
-    ${SOURCES_DIR}/graphics/graphics_pipeline.cpp
-    ${SOURCES_DIR}/graphics/framebuffer.cpp
-    ${SOURCES_DIR}/graphics/dma.cpp
-)
-
-if(STRAITX_SUPPORT_VULKAN)
-	message("Vulkan")
-
-	list(APPEND SOURCES_GRAPHICS_API_IMPL ${SOURCES_GRAPHICS_VULKAN})
-endif()
-
-if(STRAITX_SUPPORT_OPENGL)
-    message("OpenGL")
-
-    list(APPEND SOURCES_GRAPHICS_API_IMPL ${SOURCES_GRAPHICS_OPENGL})
-endif()
-
 set(SOURCES_GRAPHICS
-	${SOURCES_GRAPHICS_API_IMPL}
-    ${SOURCES_GRAPHICS_API}
     ${SOURCES_DIR}/graphics/color.cpp
     ${SOURCES_DIR}/graphics/image_loader.cpp
     ${SOURCES_DIR}/graphics/image.cpp
-    ${SOURCES_DIR}/graphics/batch_renderer_2d.cpp
-	${SOURCES_DIR}/graphics/renderer_2d.cpp
-)
-
-set(SOURCES_SUBSYSTEMS
-	${SOURCES_DIR}/subsystems/imgui/imgui_backend.cpp
 )
 
 set(SOURCES_MAIN
