@@ -32,6 +32,7 @@ set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/graphics_api.cpp
     ${SOURCES_DIR}/graphics/api/gpu.cpp
     ${SOURCES_DIR}/graphics/api/texture.cpp
+    ${SOURCES_DIR}/graphics/api/semaphore.cpp
 )
 
 set(SOURCES_GRAPHICS
