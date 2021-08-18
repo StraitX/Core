@@ -5,17 +5,16 @@
 #include "core/os/file.hpp"
 #include "core/math/vector2.hpp"
 #include "core/noncopyable.hpp"
-#include "graphics/format.hpp"
 #include "graphics/color.hpp"
 #include "graphics/image_loader.hpp"
 
 // image is NonCopyable just for now
 class Image: public NonCopyable{
 private:
-    u8 *m_Data = nullptr;
+    void *m_Data = nullptr;
     u32 m_Width = 0;
     u32 m_Height = 0;
-    PixelFormat m_Format = {};
+    u8 m_Channels = {};
 public:   
     Image() = default;
 
@@ -29,9 +28,11 @@ public:
 
     void Create(u32 width, u32 height, const Color &color = Color::Black);
 
-    Result LoadFromFile(const char *filename, PixelFormat desired_format = PixelFormat::RGBA8);
+    void Free();
 
-    Result LoadFromFile(File &file, PixelFormat desired_format = PixelFormat::RGBA8);
+    Result LoadFromFile(const char *filename, u8 desired_channels = 4);
+
+    Result LoadFromFile(File &file, u8 desired_format = 4);
 
     Result SaveToFile(File &file, ImageFileFormat save_format);
 
@@ -39,7 +40,7 @@ public:
 
     void Fill(const Color &color);
 
-    u8 *Data()const;
+    void *Data()const;
 
     u32 Width()const;
 
@@ -47,12 +48,12 @@ public:
 
     Vector2u Size()const;
 
-    PixelFormat Format()const;
+    u8 Channels()const;
 
     bool IsEmpty()const;
 };
 
-SX_INLINE u8 *Image::Data()const{
+SX_INLINE void *Image::Data()const{
     return m_Data;
 }
 
@@ -68,8 +69,8 @@ SX_INLINE Vector2u Image::Size()const{
     return {Width(), Height()};
 }
 
-SX_INLINE PixelFormat Image::Format()const{
-    return m_Format;
+SX_INLINE u8 Image::Channels()const{
+    return m_Channels;
 }
 
 SX_INLINE bool Image::IsEmpty()const{

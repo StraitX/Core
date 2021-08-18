@@ -14,19 +14,20 @@ Image::Image(Image &&other)noexcept{
 }
 
 Image::~Image(){
-    std::free(m_Data); 
+    Free();
 }
 
 Image &Image::operator=(Image &&other)noexcept{
-    SX_CORE_ASSERT(IsEmpty(), "Image: can't move into non-empty object");
+    Free();
+
     m_Data = other.m_Data;
     m_Width = other.m_Width;
     m_Height = other.m_Height;
-    m_Format = other.m_Format;
+    m_Channels = other.m_Channels;
     other.m_Data = nullptr;
     other.m_Width = 0;
     other.m_Height = 0;
-    other.m_Format = {};
+    other.m_Channels = {};
     return *this;
 }
 
@@ -35,33 +36,40 @@ void Image::Create(u32 width, u32 height, const Color &color){
 
     m_Width = width;
     m_Height = height;
-    m_Format = PixelFormat::RGBA8;
+    m_Channels = 4;
 
-    m_Data = (u8*)std::malloc(GetPixelSize(m_Format) * m_Width * m_Height);
+    m_Data = (u8*)std::malloc((sizeof(byte) * m_Channels) * m_Width * m_Height);
 
     Fill(color);
 }
 
-Result Image::LoadFromFile(const char *filename, PixelFormat format){
+void Image::Free(){
+    std::free(m_Data); 
+    m_Data = nullptr;
+    m_Width = 0;
+    m_Height = 0;
+    m_Channels = {};
+}
+
+Result Image::LoadFromFile(const char *filename, u8 desired_channels){
     if(!File::Exist(filename))return Result::NotFound;
 
     File file;
     if(!file.Open(filename, File::Mode::Read))return Result::Failure;
 
-    return LoadFromFile(file, format);
+    return LoadFromFile(file, desired_channels);
 }
 
-Result Image::LoadFromFile(File &file, PixelFormat format){
+Result Image::LoadFromFile(File &file, u8 desired_channels){
     SX_CORE_ASSERT(IsEmpty(), "Image::Load: object is not empty");
 
-    if(!ImageLoader::LoadImage(file, m_Width, m_Height, format, m_Data))return Result::Failure;
+    if(!ImageLoader::LoadImage(file, m_Width, m_Height, desired_channels, m_Channels, m_Data))return Result::Failure;
 
-    m_Format = format;
     return Result::Success;
 }
 
 Result Image::SaveToFile(File &file, ImageFileFormat save_format){
-    return ImageLoader::SaveImage(file, m_Width, m_Height, m_Format, save_format, m_Data);
+    return ImageLoader::SaveImage(file, m_Width, m_Height, m_Channels, save_format, m_Data);
 }
 
 Result Image::SaveToFile(const char *filename){

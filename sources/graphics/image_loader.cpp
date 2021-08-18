@@ -20,8 +20,7 @@ stbi_io_callbacks stb_callbacks = {
     stb_eof
 };
 
-Result ImageLoader::LoadImage(File &file, u32 &width, u32 &height, PixelFormat format, u8 *&pixels){
-    int desired_channels = GetPixelSize(format);
+Result ImageLoader::LoadImage(File &file, u32 &width, u32 &height, u8 desired_channels, u8 &loaded_channels, void *&pixels){
     int x, y, channels;
     auto data = stbi_load_from_callbacks(&stb_callbacks, &file, &x, &y, &channels, desired_channels);
 
@@ -31,14 +30,10 @@ Result ImageLoader::LoadImage(File &file, u32 &width, u32 &height, PixelFormat f
 
     if(data == nullptr)return Result::Failure;
 
-    if(channels != desired_channels){
-        stbi_image_free(data);
-        return Result::WrongFormat;
-    }
-
     width = x;
     height = y;
     pixels = data;
+    loaded_channels = (u8)channels;
 
     return Result::Success;
 }
@@ -48,16 +43,16 @@ static void stbi_write_function(void *context, void *data, int size){
     file->Write(data, size);
 }
 
-Result ImageLoader::SaveImage(File &file, u32 width, u32 height, PixelFormat p_format, ImageFileFormat i_format, u8 *pixels){
+Result ImageLoader::SaveImage(File &file, u32 width, u32 height, u8 channels, ImageFileFormat i_format, void *pixels){
     switch (i_format) {
     case ImageFileFormat::PNG:
-        return Result((bool)stbi_write_png_to_func(stbi_write_function, &file, width, height, GetPixelSize(p_format), pixels, width * GetPixelSize(p_format)));
+        return Result((bool)stbi_write_png_to_func(stbi_write_function, &file, width, height, channels, pixels, width * channels));
     case ImageFileFormat::JPG:
-        return Result((bool)stbi_write_jpg_to_func(stbi_write_function, &file, width, height, GetPixelSize(p_format), pixels, 100));
+        return Result((bool)stbi_write_jpg_to_func(stbi_write_function, &file, width, height, channels, pixels, 100));
     case ImageFileFormat::BMP:
-        return Result((bool)stbi_write_bmp_to_func(stbi_write_function, &file, width, height, GetPixelSize(p_format), pixels));
+        return Result((bool)stbi_write_bmp_to_func(stbi_write_function, &file, width, height, channels, pixels));
     case ImageFileFormat::TGA:
-        return Result((bool)stbi_write_tga_to_func(stbi_write_function, &file, width, height, GetPixelSize(p_format), pixels));
+        return Result((bool)stbi_write_tga_to_func(stbi_write_function, &file, width, height, channels, pixels));
     }
     return Result::Success;
 }
