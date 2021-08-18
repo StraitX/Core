@@ -22,6 +22,7 @@ typedef unsigned int u32;
     typedef unsigned long long u64;
 #endif
 
+typedef u8 byte;
 
 typedef std::size_t size_t;
 
