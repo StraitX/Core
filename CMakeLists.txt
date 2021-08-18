@@ -30,6 +30,7 @@ set(SOURCES_CORE
 
 set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/graphics_api.cpp
+    ${SOURCES_DIR}/graphics/api/gpu.cpp
 )
 
 set(SOURCES_GRAPHICS

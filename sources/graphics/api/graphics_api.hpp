@@ -23,6 +23,10 @@ public:
     static Result CreateBackend(GraphicsAPIBackend backend);
 
     static void DestroyBackend();
+
+    static bool HasBackend(){
+        return s_Backend;
+    }
 };
 
 #endif//STRAITX_GRAPHICS_API_HPP

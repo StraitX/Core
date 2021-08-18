@@ -3,6 +3,7 @@
 #include "core/log.hpp"
 #include "core/print.hpp"
 #include "graphics/api/graphics_api.hpp"
+#include "graphics/api/gpu.hpp"
 #include "main/application.hpp"
 #include "main/engine.hpp"
 
@@ -45,6 +46,7 @@ Result Engine::Initialize(){
 	m_MainWindow.SetEventsHanlder(m_EventsHandler);
 
 	GraphicsAPI::CreateBackend(GraphicsAPIBackend::Vulkan);
+	GPU::Initialize();
 
     LogTrace("========= Second stage init =========");
 
@@ -94,6 +96,7 @@ void Engine::Finalize(){
         LogTrace("StraitXExit: End");
     }
 
+	GPU::Finalize();
 	GraphicsAPI::DestroyBackend();
 
 	m_MainWindow.Close();
