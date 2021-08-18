@@ -1,9 +1,9 @@
 #include "graphics/api/semaphore.hpp"
 
-Semaphore::Semaphore(){
+void Semaphore::Create(){
 
 }
 
-Semaphore::~Semaphore(){
+void Semaphore::Destroy(){
 
 }

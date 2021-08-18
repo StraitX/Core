@@ -3,14 +3,45 @@
 
 #include "core/types.hpp"
 #include "core/noncopyable.hpp"
+#include "core/move.hpp"
 
-class Semaphore: public NonCopyable{   
+class Semaphore: public NonCopyable{
 private:
-    u64 Handle = 0;
+    u64 Handle;
+    static constexpr u64 s_NullHandle = 0;
 public:
-    Semaphore();
+    static const Semaphore Null;
 
-    ~Semaphore();
+    Semaphore(){
+        Create();
+    }
+
+    Semaphore(Semaphore &&other){
+        *this = Move(other);
+    }
+
+    ~Semaphore(){
+        Destroy();
+    }
+
+    Semaphore &operator=(Semaphore &&other){
+        if(!IsNull())
+            Destroy();
+        
+        Handle = other.Handle;
+        other.Handle = s_NullHandle;
+    
+        return *this;
+    }
+
+    bool IsNull()const{
+        return Handle == s_NullHandle;
+    }
+private:
+    void Create();
+
+    void Destroy();
 };
+
 
 #endif//STRAITX_SEMAPHORE_HPP
