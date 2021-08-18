@@ -2,6 +2,7 @@
 #include "core/os/clock.hpp"
 #include "core/log.hpp"
 #include "core/print.hpp"
+#include "graphics/api/graphics_api.hpp"
 #include "main/application.hpp"
 #include "main/engine.hpp"
 
@@ -43,6 +44,8 @@ Result Engine::Initialize(){
 
 	m_MainWindow.SetEventsHanlder(m_EventsHandler);
 
+	GraphicsAPI::CreateBackend(GraphicsAPIBackend::Vulkan);
+
     LogTrace("========= Second stage init =========");
 
     //Engine should be completely initialized at this moment
@@ -79,8 +82,6 @@ void Engine::Finalize(){
 		LogTrace("EngineDelegates: OnFinalize: End");
 	}
 
-	m_MainWindow.Close();
-
     if(m_ErrorApplication==Result::Success){
         LogTrace("Application::OnFinalize: Begin");
         m_Application->OnFinalize();
@@ -92,6 +93,10 @@ void Engine::Finalize(){
         StraitXExit(m_Application);
         LogTrace("StraitXExit: End");
     }
+
+	GraphicsAPI::DestroyBackend();
+
+	m_MainWindow.Close();
 }
 
 bool Engine::Tick(float dt){

@@ -28,6 +28,10 @@ set(SOURCES_CORE
     ${SOURCES_DIR}/core/os/memory.cpp
 )
 
+set(SOURCES_GRAPHICS_API
+    ${SOURCES_DIR}/graphics/api/graphics_api.cpp
+)
+
 set(SOURCES_GRAPHICS
     ${SOURCES_DIR}/graphics/color.cpp
     ${SOURCES_DIR}/graphics/image_loader.cpp
@@ -170,7 +174,7 @@ add_library(StraitX STATIC
     ${SOURCES_PLATFORM} 
     ${SOURCES_CORE}
     ${SOURCES_GRAPHICS}
-	${SOURCES_SUBSYSTEMS}
+    ${SOURCES_GRAPHICS_API}
     ${SOURCES_MAIN}
 )
 target_include_directories(StraitX PUBLIC 
