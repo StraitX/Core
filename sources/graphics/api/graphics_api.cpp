@@ -1,16 +1,17 @@
 #include "graphics/api/graphics_api.hpp"
 
-GraphicsAPIBackendImpl *GraphicsAPI::s_Backend = nullptr;
+GraphicsAPIBackendImpl *GraphicsAPI::s_Impl = nullptr;
+GraphicsAPIBackend GraphicsAPI::s_Backend = GraphicsAPIBackend::None;
 
 Result GraphicsAPI::CreateBackend(GraphicsAPIBackend backend){
-    if(s_Backend)
-        return s_Backend->Create();
+    if(s_Impl)
+        return s_Impl->Create();
     
     return Result::Unsupported;
 }
 
 void GraphicsAPI::DestroyBackend(){
-    if(s_Backend)
-        s_Backend->Destroy();
-    s_Backend = nullptr;
+    if(s_Impl)
+        s_Impl->Destroy();
+    s_Impl = nullptr;
 }

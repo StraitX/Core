@@ -18,13 +18,18 @@ public:
 
 class GraphicsAPI{
 private:
-    static GraphicsAPIBackendImpl *s_Backend;
+    static GraphicsAPIBackendImpl *s_Impl;
+    static GraphicsAPIBackend s_Backend;
 public:
     static Result CreateBackend(GraphicsAPIBackend backend);
 
     static void DestroyBackend();
 
     static bool HasBackend(){
+        return s_Impl;
+    }
+
+    static GraphicsAPIBackend Backend(){
         return s_Backend;
     }
 };
