@@ -36,6 +36,11 @@ set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/swapchain.cpp
 )
 
+set(SOURCES_GRAPHICS_API_VULKAN
+    ${SOURCES_DIR}/graphics/api/vulkan/debug.cpp
+    ${SOURCES_DIR}/graphics/api/vulkan/graphics_api_impl.cpp
+)
+
 set(SOURCES_GRAPHICS
     ${SOURCES_DIR}/graphics/color.cpp
     ${SOURCES_DIR}/graphics/image_loader.cpp
@@ -179,6 +184,7 @@ add_library(StraitX STATIC
     ${SOURCES_CORE}
     ${SOURCES_GRAPHICS}
     ${SOURCES_GRAPHICS_API}
+    ${SOURCES_GRAPHICS_API_VULKAN}
     ${SOURCES_MAIN}
 )
 target_include_directories(StraitX PUBLIC 
