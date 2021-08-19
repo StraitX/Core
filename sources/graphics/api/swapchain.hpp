@@ -10,6 +10,8 @@
 
 class Swapchain: public NonCopyable{
 public:
+    virtual ~Swapchain() = default;
+
     virtual void AcquireNext(const Semaphore &signal_semaphore) = 0;
 
     virtual void PresentCurrent(const Semaphore &wait_semaphore) = 0;
