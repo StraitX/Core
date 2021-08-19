@@ -35,6 +35,7 @@ set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/semaphore.cpp
     ${SOURCES_DIR}/graphics/api/swapchain.cpp
     ${SOURCES_DIR}/graphics/api/fence.cpp
+    ${SOURCES_DIR}/graphics/api/command_buffer.cpp
 )
 
 set(SOURCES_GRAPHICS_API_VULKAN
