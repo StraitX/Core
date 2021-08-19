@@ -15,13 +15,18 @@ public:
     Semaphore(){
         Create();
     }
-
+private:
+    Semaphore(u64 handle):
+        m_Handle(handle)
+    {}
+public:
     Semaphore(Semaphore &&other)noexcept{
         *this = Move(other);
     }
 
     ~Semaphore(){
-        Destroy();
+        if(!IsNull())
+            Destroy();
     }
 
     Semaphore &operator=(Semaphore &&other)noexcept{

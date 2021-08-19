@@ -6,6 +6,8 @@
     #include "graphics/api/vulkan/semaphore_impl.hpp"
 #endif
 
+const Semaphore Semaphore::Null(Semaphore::s_NullHandle);
+
 void Semaphore::Create(){
 #if defined(SX_VULKAN_SUPPORTED)
     if(GraphicsAPI::Backend() == GraphicsAPIBackend::Vulkan)

@@ -11,17 +11,21 @@ private:
     u64 m_Handle = s_NullHandle;
 public:
     static const Fence Null;
-
     Fence(){
         Create();
     }
-
+private:
+    Fence(u64 handle):
+        m_Handle(handle)
+    {}
+public:
     Fence(Fence &&other)noexcept{
         *this = Move(other);
     }
 
     ~Fence(){
-        Destroy();
+        if(!IsNull())
+            Destroy();
     }
 
     Fence &operator=(Fence &&other)noexcept{

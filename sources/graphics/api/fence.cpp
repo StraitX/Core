@@ -6,6 +6,8 @@
     #include "graphics/api/vulkan/fence_impl.hpp"
 #endif
 
+const Fence Fence::Null(Fence::s_NullHandle);
+
 void Fence::WaitFor(){
 #if defined(SX_VULKAN_SUPPORTED)
     if(GraphicsAPI::Backend() == GraphicsAPIBackend::Vulkan)
