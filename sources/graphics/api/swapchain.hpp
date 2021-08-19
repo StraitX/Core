@@ -4,6 +4,7 @@
 #include "core/noncopyable.hpp"
 #include "core/span.hpp"
 #include "graphics/api/semaphore.hpp"
+#include "graphics/api/fence.hpp"
 #include "graphics/api/texture.hpp"
 #include "core/os/window.hpp"
 
@@ -12,7 +13,7 @@ class Swapchain: public NonCopyable{
 public:
     virtual ~Swapchain() = default;
 
-    virtual void AcquireNext(const Semaphore &signal_semaphore) = 0;
+    virtual void AcquireNext(const Semaphore &signal_semaphore, const Fence &signal_fence) = 0;
 
     virtual void PresentCurrent(const Semaphore &wait_semaphore) = 0;
 
