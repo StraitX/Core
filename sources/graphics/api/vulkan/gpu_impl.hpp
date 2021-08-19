@@ -25,6 +25,18 @@ public:
     VkDevice Handle()const{
         return m_Handle;
     }
+
+    VkPhysicalDevice PhysicalHandle()const{
+        return m_PhysicalHandle;
+    }
+
+    VkQueue Queue(QueueFamily::Type type)const{
+        return m_Queues[type];
+    }
+
+    u32 QueueIndex(QueueFamily::Type type)const{
+        return m_QueueProperties.Family[type].Index;
+    }
 };
 
 }//namespace Vk::
