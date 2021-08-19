@@ -1,7 +1,7 @@
 #include "graphics/api/command_buffer.hpp"
 
-CommandBufferPool *CommandBufferPool::Create(){
+CommandPool *CommandPool::Create(){
 
-    
+
     return nullptr;
 }

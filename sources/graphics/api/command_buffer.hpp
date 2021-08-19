@@ -5,11 +5,11 @@
 
 class CommandBuffer;
 
-class CommandBufferPool: public NonCopyable{
+class CommandPool: public NonCopyable{
 public:
-    CommandBufferPool() = default;
+    CommandPool() = default;
 
-    virtual ~CommandBufferPool() = default;
+    virtual ~CommandPool() = default;
 
     virtual CommandBuffer *Alloc() = 0;
 
@@ -17,7 +17,7 @@ public:
 
     //virtual void Reset() = 0
 
-    static CommandBufferPool *Create();
+    static CommandPool *Create();
 };
 
 class CommandBuffer: public NonCopyable{
