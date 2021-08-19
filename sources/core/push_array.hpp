@@ -120,7 +120,7 @@ public:
         return *this;
     }
 
-    operator Span<Type>()const{
+    operator Span<Type>(){
         return Span<Type>(m_Array.Data(), Size());
     }
 
