@@ -115,10 +115,11 @@ void SwapchainImpl::PresentCurrent(const Semaphore &wait_semaphore){
     vkQueuePresentKHR(m_TargetQueue, &info);
 }
 
-void SwapchainImpl::AcquireNext(const Semaphore &signal_semaphore){
+void SwapchainImpl::AcquireNext(const Semaphore &signal_semaphore, const Fence &signal_fence){
     VkSemaphore signal_semaphore_handle = (VkSemaphore)signal_semaphore.Handle();
+    VkFence signal_fence_handle = (VkFence)signal_fence.Handle();
 
-    vkAcquireNextImageKHR(GPUImpl::s_Instance.Handle(), m_Handle, 0, signal_semaphore_handle, VK_NULL_HANDLE, &m_CurrentImage);
+    vkAcquireNextImageKHR(GPUImpl::s_Instance.Handle(), m_Handle, 0, signal_semaphore_handle, signal_fence_handle, &m_CurrentImage);
 }
 
 Span<const Texture2D *> SwapchainImpl::Images()const{

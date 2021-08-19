@@ -38,7 +38,7 @@ public:
 
     void PresentCurrent(const Semaphore &wait_semaphore)override;
 
-    void AcquireNext(const Semaphore &signal_semaphore)override;
+    void AcquireNext(const Semaphore &signal_semaphore, const Fence &signal_fence)override;
 
     Span<const Texture2D *> Images()const override;
 
