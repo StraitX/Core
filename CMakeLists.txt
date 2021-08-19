@@ -44,6 +44,7 @@ set(SOURCES_GRAPHICS_API_VULKAN
     ${SOURCES_DIR}/graphics/api/vulkan/queue.cpp
     ${SOURCES_DIR}/graphics/api/vulkan/semaphore_impl.cpp
     ${SOURCES_DIR}/graphics/api/vulkan/swapchain_impl.cpp
+    ${SOURCES_DIR}/graphics/api/vulkan/fence_impl.cpp
 )
 
 set(SOURCES_GRAPHICS
