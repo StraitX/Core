@@ -2,6 +2,7 @@
 #define STRAITX_COMMAND_BUFFER_HPP
 
 #include "core/noncopyable.hpp"
+#include "graphics/api/texture.hpp"
 
 class CommandBuffer;
 
@@ -31,6 +32,8 @@ public:
     virtual void End() = 0;
 
     virtual void Reset() = 0;
+
+    virtual void ChangeLayout(Texture2D *texture, TextureLayout new_layout) = 0;
 
 };
 
