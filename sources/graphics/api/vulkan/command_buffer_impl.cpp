@@ -1,5 +1,6 @@
 #include "graphics/api/vulkan/command_buffer_impl.hpp"
 #include "graphics/api/vulkan/debug.hpp"
+#include "graphics/api/vulkan/texture_impl.hpp"
 
 namespace Vk{
 
@@ -61,6 +62,26 @@ void CommandBufferImpl::End(){
 
 void CommandBufferImpl::Reset(){
     SX_VK_ASSERT(vkResetCommandBuffer(m_Handle, 0), "Vk: CommandBuffer: Failed to reset");
+}
+
+void CommandBufferImpl::ChangeLayout(Texture2D *texture, TextureLayout new_layout){
+    VkImageMemoryBarrier barrier;
+    barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    barrier.pNext = nullptr;
+    barrier.srcAccessMask = VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT;
+    barrier.dstAccessMask = VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT;
+    barrier.oldLayout = ToVkLayout(texture->Layout());
+    barrier.newLayout = ToVkLayout(new_layout);
+    barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    barrier.image = *(Vk::Texture2DImpl*)texture;
+    barrier.subresourceRange.aspectMask = IsDepthFormat(texture->Format()) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+    barrier.subresourceRange.baseArrayLayer = 0;
+    barrier.subresourceRange.baseMipLevel = 0;
+    barrier.subresourceRange.levelCount = 1;
+    barrier.subresourceRange.layerCount = 1;
+
+    vkCmdPipelineBarrier(m_Handle, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 }
 
 }//namespace Vk::

@@ -24,6 +24,10 @@ public:
 
     ~Texture2DImpl();
 
+    operator VkImage()const{
+        return m_Handle;
+    }
+
 private:
     void CreateImage();
 

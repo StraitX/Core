@@ -52,6 +52,8 @@ public:
     void End()override;
 
     void Reset()override;
+
+    void ChangeLayout(Texture2D *texture, TextureLayout new_layout)override;
 };
 
 }//namespace Vk::
