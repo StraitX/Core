@@ -12,7 +12,7 @@ u64 FenceImpl::Create(){
 
     VkFence fence = VK_NULL_HANDLE;
 
-    vkCreateFence(GPUImpl::s_Instance.Handle(), &info, nullptr, &fence);
+    vkCreateFence(GPUImpl::s_Instance, &info, nullptr, &fence);
 
     return reinterpret_cast<u64>(fence);
 }
@@ -20,19 +20,19 @@ u64 FenceImpl::Create(){
 void FenceImpl::Destroy(u64 handle){
     VkFence fence = reinterpret_cast<VkFence>(handle);
 
-    vkDestroyFence(GPUImpl::s_Instance.Handle(), fence, nullptr);
+    vkDestroyFence(GPUImpl::s_Instance, fence, nullptr);
 }
 
 void FenceImpl::WaitFor(u64 handle){
     VkFence fence = reinterpret_cast<VkFence>(handle);
 
-    vkWaitForFences(GPUImpl::s_Instance.Handle(), 1, &fence, true, u64(-1));
+    vkWaitForFences(GPUImpl::s_Instance, 1, &fence, true, u64(-1));
 }
 
 void FenceImpl::Reset(u64 handle){
     VkFence fence = reinterpret_cast<VkFence>(handle);
 
-    vkResetFences(GPUImpl::s_Instance.Handle(), 1, &fence);
+    vkResetFences(GPUImpl::s_Instance, 1, &fence);
 }
 
 }//namespace Vk::

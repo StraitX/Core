@@ -13,11 +13,11 @@ CommandPoolImpl::CommandPoolImpl(QueueFamily::Type target_queue_family):
     info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
     info.queueFamilyIndex = m_TargetQueueFamilyIndex;
 
-    vkCreateCommandPool(GPUImpl::s_Instance.Handle(), &info, nullptr, &m_Handle);
+    vkCreateCommandPool(GPUImpl::s_Instance, &info, nullptr, &m_Handle);
 }
 
 CommandPoolImpl::~CommandPoolImpl(){
-    vkDestroyCommandPool(GPUImpl::s_Instance.Handle(), m_Handle, nullptr);
+    vkDestroyCommandPool(GPUImpl::s_Instance, m_Handle, nullptr);
 }
 
 CommandBuffer *CommandPoolImpl::Alloc(){
@@ -38,11 +38,11 @@ CommandBufferImpl::CommandBufferImpl(CommandPoolImpl *pool):
     info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     info.commandBufferCount = 1;
 
-    vkAllocateCommandBuffers(GPUImpl::s_Instance.Handle(), &info, &m_Handle);
+    vkAllocateCommandBuffers(GPUImpl::s_Instance, &info, &m_Handle);
 }
 
 CommandBufferImpl::~CommandBufferImpl(){
-    vkFreeCommandBuffers(GPUImpl::s_Instance.Handle(), *m_Pool, 1, &m_Handle);
+    vkFreeCommandBuffers(GPUImpl::s_Instance, *m_Pool, 1, &m_Handle);
 }
 
 void CommandBufferImpl::Begin(){

@@ -85,14 +85,14 @@ SwapchainImpl::SwapchainImpl(const Window *window):
     info.imageArrayLayers = 1;
     info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
-    SX_VK_ASSERT(vkCreateSwapchainKHR(GPUImpl::s_Instance.Handle(), &info, nullptr, &m_Handle), "Vk: Swapchain: Can't create a swapchain");
+    SX_VK_ASSERT(vkCreateSwapchainKHR(GPUImpl::s_Instance, &info, nullptr, &m_Handle), "Vk: Swapchain: Can't create a swapchain");
 
 }
 
 SwapchainImpl::~SwapchainImpl(){
     vkQueueWaitIdle(m_TargetQueue);
 
-    vkDestroySwapchainKHR(GPUImpl::s_Instance.Handle(), m_Handle, nullptr);
+    vkDestroySwapchainKHR(GPUImpl::s_Instance, m_Handle, nullptr);
 
     m_Surface.Destroy();
 }
@@ -119,7 +119,7 @@ void SwapchainImpl::AcquireNext(const Semaphore &signal_semaphore, const Fence &
     VkSemaphore signal_semaphore_handle = (VkSemaphore)signal_semaphore.Handle();
     VkFence signal_fence_handle = (VkFence)signal_fence.Handle();
 
-    vkAcquireNextImageKHR(GPUImpl::s_Instance.Handle(), m_Handle, 0, signal_semaphore_handle, signal_fence_handle, &m_CurrentImage);
+    vkAcquireNextImageKHR(GPUImpl::s_Instance, m_Handle, 0, signal_semaphore_handle, signal_fence_handle, &m_CurrentImage);
 }
 
 Span<const Texture2D *> SwapchainImpl::Images()const{
