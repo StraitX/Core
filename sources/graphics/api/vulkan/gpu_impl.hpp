@@ -28,6 +28,10 @@ public:
         return m_Handle;
     }
 
+    operator VkDevice()const{
+        return Handle();
+    }
+
     VkPhysicalDevice PhysicalHandle()const{
         return m_PhysicalHandle;
     }

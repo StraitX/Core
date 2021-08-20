@@ -74,15 +74,15 @@ public:
 
 class Texture2D: public Texture{
 protected:
-    u32 Width = 0;
-    u32 Height = 0;
+    u32 m_Width = 0;
+    u32 m_Height = 0;
 public:
     //virtual void UploadData(void *pixels);
 
     //virtual void UploadImage(const Image &image);
 
     Vector2u Size()const{
-        return {Width, Height};
+        return {m_Width, m_Height};
     }
 public:
     static Texture2D *Create(u32 width, u32 height, TextureFormat format, TextureUsage usage, TextureLayout initial_layout = TextureLayout::Undefined);
