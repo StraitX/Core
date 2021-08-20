@@ -8,6 +8,7 @@
 #include "core/push_array.hpp"
 #include "graphics/api/swapchain.hpp"
 #include "graphics/api/vulkan/queue.hpp"
+#include "graphics/api/vulkan/texture_impl.hpp"
 
 namespace Vk{
 
@@ -26,6 +27,7 @@ private:
     u32 m_CurrentImage = 0;
     u32 m_ImagesCount = 0;
 
+    PushArray<Texture2DImpl, s_MaxImages> m_Images;
     PushArray<const Texture2D *, s_MaxImages> m_ImagesPointers;
 
     QueueFamily::Type m_TargetQueueFamily;

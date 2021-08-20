@@ -53,6 +53,8 @@ Texture2DImpl::Texture2DImpl(VkImage image, u32 width, u32 height, TextureFormat
     m_Layout = image_layout;
     m_Width = width;
     m_Height = height;
+    
+    m_Handle = image;
     CreateImageView();
 }
 

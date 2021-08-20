@@ -87,6 +87,13 @@ SwapchainImpl::SwapchainImpl(const Window *window):
 
     SX_VK_ASSERT(vkCreateSwapchainKHR(GPUImpl::s_Instance, &info, nullptr, &m_Handle), "Vk: Swapchain: Can't create a swapchain");
 
+    vkGetSwapchainImagesKHR(GPUImpl::s_Instance, m_Handle, &m_ImagesCount, nullptr);
+    VkImage *images = SX_STACK_ARRAY_ALLOC(VkImage, m_ImagesCount);
+    SX_VK_ASSERT(vkGetSwapchainImagesKHR(GPUImpl::s_Instance, m_Handle, &m_ImagesCount, images), "Vk: Swapchain: can't get images");
+
+    for(u32 i = 0; i<m_ImagesCount; i++)
+        m_Images.Emplace(images[i], m_Size.x, m_Size.y, TextureFormat::BGRA8, TextureUsageBits::TransferDst, TextureLayout::Undefined);
+
 }
 
 SwapchainImpl::~SwapchainImpl(){
