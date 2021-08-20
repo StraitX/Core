@@ -33,6 +33,8 @@ enum class TextureFormat : u8{
     Depth24Stencil8
 };
 
+bool IsDepthFormat(TextureFormat format);
+
 // NOTE: Don't mess them up, these are tied to vulkan spec
 
 using TextureUsage = u32;
