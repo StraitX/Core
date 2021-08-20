@@ -21,20 +21,20 @@ CommandPoolImpl::~CommandPoolImpl(){
 }
 
 CommandBuffer *CommandPoolImpl::Alloc(){
-    return new CommandBufferImpl(m_Handle);
+    return new CommandBufferImpl(this);
 }
 
 void CommandPoolImpl::Free(CommandBuffer *buffer){
     delete buffer;
 }
 
-CommandBufferImpl::CommandBufferImpl(VkCommandPool pool):
+CommandBufferImpl::CommandBufferImpl(CommandPoolImpl *pool):
     m_Pool(pool)
 {
     VkCommandBufferAllocateInfo info;
     info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     info.pNext = nullptr;
-    info.commandPool = m_Pool;
+    info.commandPool = *m_Pool;
     info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     info.commandBufferCount = 1;
 
@@ -42,7 +42,7 @@ CommandBufferImpl::CommandBufferImpl(VkCommandPool pool):
 }
 
 CommandBufferImpl::~CommandBufferImpl(){
-    vkFreeCommandBuffers(GPUImpl::s_Instance.Handle(), m_Pool, 1, &m_Handle);
+    vkFreeCommandBuffers(GPUImpl::s_Instance.Handle(), *m_Pool, 1, &m_Handle);
 }
 
 void CommandBufferImpl::Begin(){

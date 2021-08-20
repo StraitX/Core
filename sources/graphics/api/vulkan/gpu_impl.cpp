@@ -4,6 +4,7 @@
 #include "core/push_array.hpp"
 #include "graphics/api/vulkan/graphics_api_impl.hpp"
 #include "graphics/api/vulkan/gpu_impl.hpp"
+#include "graphics/api/vulkan/command_buffer_impl.hpp"
 
 namespace Vk{
 
@@ -130,5 +131,28 @@ void GPUImpl::Finalize(){
     vkDestroyDevice(m_Handle,nullptr);
 }
 
+void GPUImpl::Execute(CommandBuffer *buffer, Span<u64> wait_semaphore_handles, Span<u64> signal_semaphore_handles, const Fence &signal_fence){
+    Vk::CommandBufferImpl *buffer_impl = (Vk::CommandBufferImpl*)buffer;
+    VkCommandBuffer buffer_handle = *buffer_impl;
+
+    auto *stages = SX_STACK_ARRAY_ALLOC(VkPipelineStageFlags, wait_semaphore_handles.Size());
+
+    for(size_t i = 0; i<wait_semaphore_handles.Size(); ++i){
+        stages[i] = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+    }
+
+    VkSubmitInfo info;
+    info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    info.pNext = nullptr;
+    info.waitSemaphoreCount = wait_semaphore_handles.Size();
+    info.pWaitSemaphores = (VkSemaphore*)wait_semaphore_handles.Pointer();
+    info.pWaitDstStageMask = stages;
+    info.commandBufferCount = 1;
+    info.pCommandBuffers = &buffer_handle;
+    info.signalSemaphoreCount = signal_semaphore_handles.Size();
+    info.pSignalSemaphores = (VkSemaphore*)signal_semaphore_handles.Pointer();
+
+    vkQueueSubmit(GPUImpl::Queue(buffer_impl->Pool()->TargetQueueType()), 1, &info, (VkFence)signal_fence.Handle());
+}
 
 }//namespace Vk::

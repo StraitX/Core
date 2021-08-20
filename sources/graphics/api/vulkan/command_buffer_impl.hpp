@@ -20,16 +20,32 @@ public:
     CommandBuffer *Alloc()override;
 
     void Free(CommandBuffer *buffer)override;
+
+    operator VkCommandPool()const{
+        return m_Handle;
+    }
+
+    QueueFamily::Type TargetQueueType()const{
+        return m_TargetQueueFamily;
+    }
 };
 
 class CommandBufferImpl: public CommandBuffer{
 private:
-    VkCommandPool m_Pool = VK_NULL_HANDLE;
+    CommandPoolImpl *m_Pool = nullptr;
     VkCommandBuffer m_Handle = VK_NULL_HANDLE;
 public:
-    CommandBufferImpl(VkCommandPool pool);
+    CommandBufferImpl(CommandPoolImpl *pool);
 
     ~CommandBufferImpl();
+
+    operator VkCommandBuffer()const{
+        return m_Handle;
+    }
+
+    CommandPoolImpl* Pool()const{
+        return m_Pool;
+    }
 
     void Begin()override;
 

@@ -18,9 +18,11 @@ private:
 public:
     static GPUImpl s_Instance;
 
-    Result Initialize();
+    Result Initialize()override;
 
-    void Finalize();
+    void Finalize()override;
+
+    void Execute(CommandBuffer *buffer, Span<u64> wait_semaphore_handles, Span<u64> signal_semaphore_handles, const Fence &signal_fence)override;
 
     VkDevice Handle()const{
         return m_Handle;
