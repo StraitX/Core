@@ -146,7 +146,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     vertex_input_info.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     vertex_input_info.pNext = nullptr;
     vertex_input_info.flags = 0;
-    vertex_input_info.vertexBindingDescriptionCount = 1;
+    vertex_input_info.vertexBindingDescriptionCount = props.VertexAttributes.Size() ? 1 : 0;
     vertex_input_info.pVertexBindingDescriptions = &binding;
     vertex_input_info.vertexAttributeDescriptionCount = attributes.Size();
     vertex_input_info.pVertexAttributeDescriptions = attributes.Pointer();
