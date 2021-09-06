@@ -121,7 +121,11 @@ public:
     }
 
     operator Span<Type>(){
-        return Span<Type>(m_Array.Data(), Size());
+        return {m_Array.Data(), Size()};
+    }
+
+    operator ConstSpan<Type>()const{
+        return {m_Array.Data(), Size()};
     }
 
     size_t Size()const{
