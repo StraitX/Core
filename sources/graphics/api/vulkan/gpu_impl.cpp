@@ -5,6 +5,7 @@
 #include "graphics/api/vulkan/graphics_api_impl.hpp"
 #include "graphics/api/vulkan/gpu_impl.hpp"
 #include "graphics/api/vulkan/command_buffer_impl.hpp"
+#include "graphics/api/vulkan/immediate.hpp"
 
 namespace Vk{
 
@@ -128,10 +129,13 @@ Result GPUImpl::Initialize(){
     SX_ASSERT(m_MemoryProperties.MemoryTypes[MemoryType::RAM].Index != InvalidIndex);
     SX_ASSERT(m_MemoryProperties.MemoryTypes[MemoryType::UncachedRAM].Index != InvalidIndex);
 
+
+    Immediate::Initialize();
     return Result::Success;
 }
 
 void GPUImpl::Finalize(){
+    Immediate::Finalize();
     vkDeviceWaitIdle(m_Handle);
     
     vkDestroyDevice(m_Handle,nullptr);
