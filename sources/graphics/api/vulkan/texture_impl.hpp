@@ -12,6 +12,8 @@ VkImageLayout ToVkLayout(TextureLayout layout);
 
 VkImageUsageFlags ToVkImageUsage(TextureUsage usage);
 
+VkSampleCountFlags ToVkSamplesCount(SamplePoints points);
+
 class Texture2DImpl: public Texture2D{
 private:
     VkImage m_Handle = VK_NULL_HANDLE;

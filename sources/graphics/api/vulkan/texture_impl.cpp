@@ -35,6 +35,10 @@ VkImageUsageFlags ToVkImageUsage(TextureUsage usage){
     return VkImageUsageFlags(usage);
 }
 
+VkSampleCountFlags ToVkSamplesCount(SamplePoints points){
+    return 1 << (u32)points;
+}
+
 Texture2DImpl::Texture2DImpl(u32 width, u32 height, TextureFormat format, TextureUsage usage, TextureLayout initial_layout){
     m_Format = format;
     m_Usage = usage;
