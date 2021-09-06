@@ -37,6 +37,7 @@ set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/fence.cpp
     ${SOURCES_DIR}/graphics/api/command_buffer.cpp
     ${SOURCES_DIR}/graphics/api/render_pass.cpp
+    ${SOURCES_DIR}/graphics/api/framebuffer.cpp
 )
 
 set(SOURCES_GRAPHICS_API_VULKAN
