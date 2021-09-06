@@ -94,11 +94,17 @@ SwapchainImpl::SwapchainImpl(const Window *window):
     for(u32 i = 0; i<m_ImagesCount; i++)
         m_Images.Emplace(images[i], m_Size.x, m_Size.y, TextureFormat::BGRA8, TextureUsageBits::TransferDst, TextureLayout::Undefined);
 
+    for(u32 i = 0; i<m_ImagesCount; i++)
+        m_ImagesPointers.Push(&m_Images[i]);
+
 }
 
 SwapchainImpl::~SwapchainImpl(){
     vkQueueWaitIdle(m_TargetQueue);
 
+    m_ImagesPointers.Clear();
+    m_Images.Clear();
+    
     vkDestroySwapchainKHR(GPUImpl::s_Instance, m_Handle, nullptr);
 
     m_Surface.Destroy();
