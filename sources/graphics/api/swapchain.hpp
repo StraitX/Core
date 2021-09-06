@@ -25,6 +25,10 @@ public:
     Texture2D *CurrentImage()const{
         return Images()[Current()];
     }
+
+    TextureFormat Format()const{
+        return CurrentImage()->Format();
+    }
 public:
     static Swapchain *Create(const Window *window);
 };
