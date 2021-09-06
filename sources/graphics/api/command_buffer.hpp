@@ -3,6 +3,8 @@
 
 #include "core/noncopyable.hpp"
 #include "graphics/api/texture.hpp"
+#include "graphics/api/render_pass.hpp"
+#include "graphics/api/framebuffer.hpp"
 
 class CommandBuffer;
 
@@ -34,6 +36,10 @@ public:
     virtual void Reset() = 0;
 
     virtual void ChangeLayout(Texture2D *texture, TextureLayout new_layout) = 0;
+
+    virtual void BeginRenderPass(const RenderPass *rp, const Framebuffer *fb) = 0;
+
+    virtual void EndRenderPass() = 0;
 
 };
 
