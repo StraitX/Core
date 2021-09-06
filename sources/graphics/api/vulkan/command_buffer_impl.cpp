@@ -1,6 +1,8 @@
 #include "graphics/api/vulkan/command_buffer_impl.hpp"
 #include "graphics/api/vulkan/debug.hpp"
 #include "graphics/api/vulkan/texture_impl.hpp"
+#include "graphics/api/vulkan/render_pass_impl.hpp"
+#include "graphics/api/vulkan/framebuffer_impl.hpp"
 
 namespace Vk{
 
@@ -82,6 +84,24 @@ void CommandBufferImpl::ChangeLayout(Texture2D *texture, TextureLayout new_layou
     barrier.subresourceRange.layerCount = 1;
 
     vkCmdPipelineBarrier(m_Handle, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+}
+
+void CommandBufferImpl::BeginRenderPass(const RenderPass *rp, const Framebuffer *fb){
+    VkRenderPassBeginInfo info;
+    info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    info.pNext = nullptr;
+    info.renderPass = *(const Vk::RenderPassImpl*)rp;
+    info.framebuffer = *(const Vk::FramebufferImpl*)fb;
+    info.renderArea.offset = {0, 0};
+    info.renderArea.extent = {fb->Size().x, fb->Size().y};
+    info.clearValueCount = 0;
+    info.pClearValues = nullptr;
+    
+    vkCmdBeginRenderPass(m_Handle, &info, VK_SUBPASS_CONTENTS_INLINE);
+}
+
+void CommandBufferImpl::EndRenderPass(){
+    vkCmdEndRenderPass(m_Handle);
 }
 
 }//namespace Vk::

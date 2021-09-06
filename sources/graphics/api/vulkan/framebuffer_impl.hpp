@@ -21,6 +21,9 @@ public:
 
     ConstSpan<Texture2D *> Attachments()const override;
 
+    operator VkFramebuffer()const{
+        return m_Handle;
+    }
 };
 
 }//namespace Vk::

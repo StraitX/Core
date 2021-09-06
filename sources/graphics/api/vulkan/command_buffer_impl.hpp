@@ -54,6 +54,10 @@ public:
     void Reset()override;
 
     void ChangeLayout(Texture2D *texture, TextureLayout new_layout)override;
+
+    void BeginRenderPass(const RenderPass *rp, const Framebuffer *fb)override;
+
+    void EndRenderPass()override;
 };
 
 }//namespace Vk::
