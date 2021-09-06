@@ -66,7 +66,7 @@ void GPU::Execute(CommandBuffer *buffer, Span<const Semaphore> wait_semaphores, 
 }
 
 void GPU::Execute(CommandBuffer *buffer, const Fence &signal_fence){
-    Execute(nullptr, Span<u64>(), Span<u64>(), signal_fence);
+    Execute(buffer, Span<u64>(), Span<u64>(), signal_fence);
 }
 
 void GPU::Execute(CommandBuffer *buffer, const Semaphore &wait_semaphore, const Semaphore &signal_semaphore, const Fence &signal_fence){
