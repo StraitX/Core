@@ -72,6 +72,10 @@ public:
     void BindIndexBuffer(const Buffer *buffer, IndicesType type)override;
 
     void DrawIndexed(u32 indices_count)override;
+
+    void Copy(const Buffer *src, const Buffer *dst, size_t size, size_t src_offset, size_t dst_offset)override;
+
+    void Copy(const Buffer *src, const Texture2D *dst)override;
 };
 
 }//namespace Vk::

@@ -153,4 +153,30 @@ void CommandBufferImpl::DrawIndexed(u32 indices_count){
     vkCmdDrawIndexed(m_Handle, indices_count, 1, 0, 0, 0);
 }
 
+void CommandBufferImpl::Copy(const Buffer *src, const Buffer *dst, size_t size, size_t src_offset, size_t dst_offset){
+    VkBufferCopy region;
+    region.srcOffset = src_offset;
+    region.dstOffset = dst_offset;
+    region.size = size;
+
+    vkCmdCopyBuffer(m_Handle, *(const Vk::BufferImpl*)src, *(const Vk::BufferImpl*)dst, 1, &region);
+}
+
+void CommandBufferImpl::Copy(const Buffer *src, const Texture2D *dst){
+    VkBufferImageCopy copy;
+    copy.bufferImageHeight = dst->Size().y;
+    copy.bufferOffset = 0;
+    copy.bufferRowLength = dst->Size().x;
+    copy.imageOffset = {};
+    copy.imageExtent.depth = 1;
+    copy.imageExtent.width = dst->Size().x;
+    copy.imageExtent.height = dst->Size().y;
+    copy.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    copy.imageSubresource.baseArrayLayer = 0;
+    copy.imageSubresource.layerCount = 1;
+    copy.imageSubresource.mipLevel = 0;
+    
+    vkCmdCopyBufferToImage(m_Handle, *(const Vk::BufferImpl*)src, *(const Vk::Texture2DImpl*)src, ToVkLayout(dst->Layout()), 1, &copy);
+}
+
 }//namespace Vk::
