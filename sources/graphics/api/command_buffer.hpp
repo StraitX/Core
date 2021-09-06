@@ -7,6 +7,7 @@
 class RenderPass;
 class Framebuffer;
 class GraphicsPipeline;
+class Buffer;
 
 class CommandBuffer;
 
@@ -23,6 +24,11 @@ public:
     //virtual void Reset() = 0
 
     static CommandPool *Create();
+};
+
+enum class IndicesType{
+    Uint16,
+    Uint32
 };
 
 class CommandBuffer: public NonCopyable{
@@ -50,6 +56,12 @@ public:
     virtual void SetScissor(s32 x, s32 y, u32 width, u32 height) = 0;
 
     virtual void SetViewport(s32 x, s32 y, u32 width, u32 height) = 0;
+
+    virtual void BindVertexBuffer(const Buffer *buffer) = 0;
+
+    virtual void BindIndexBuffer(const Buffer *buffer, IndicesType type) = 0;
+
+    virtual void DrawIndexed(u32 indices_count) = 0;
 
 };
 
