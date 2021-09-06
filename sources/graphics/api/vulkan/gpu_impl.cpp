@@ -62,6 +62,7 @@ GPUImpl GPUImpl::s_Instance;
 Result GPUImpl::Initialize(){
     m_PhysicalHandle = PickBestPhysicalDevice(GraphicsAPIBackendImpl::s_Instance.Instance());
 
+    m_MemoryProperties = MemoryProperties::Get(m_PhysicalHandle);
     m_QueueProperties = QueueProperties::Get(m_PhysicalHandle);
 
     if(m_QueueProperties.Family[QueueFamily::Graphics].Index == InvalidIndex){
@@ -121,6 +122,11 @@ Result GPUImpl::Initialize(){
     SX_ASSERT(m_Queues[QueueFamily::Graphics] != VK_NULL_HANDLE);
     SX_ASSERT(m_Queues[QueueFamily::Compute] != VK_NULL_HANDLE);
     SX_ASSERT(m_Queues[QueueFamily::Transfer] != VK_NULL_HANDLE);
+
+    SX_ASSERT(m_MemoryProperties.MemoryTypes[MemoryType::VRAM].Index != InvalidIndex);
+    SX_ASSERT(m_MemoryProperties.MemoryTypes[MemoryType::DynamicVRAM].Index != InvalidIndex);
+    SX_ASSERT(m_MemoryProperties.MemoryTypes[MemoryType::RAM].Index != InvalidIndex);
+    SX_ASSERT(m_MemoryProperties.MemoryTypes[MemoryType::UncachedRAM].Index != InvalidIndex);
 
     return Result::Success;
 }

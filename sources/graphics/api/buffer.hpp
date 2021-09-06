@@ -5,10 +5,10 @@
 #include "core/noncopyable.hpp"
 
 enum class BufferMemoryType{
-    RAM,
-    UncachedRAM,
     VRAM,
-    DynamicVRAM
+    DynamicVRAM,
+    RAM,
+    UncachedRAM
 };
 
 using BufferUsage = u8;

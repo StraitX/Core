@@ -4,6 +4,7 @@
 #include "graphics/api/gpu.hpp"
 #include "core/os/vulkan.hpp"
 #include "graphics/api/vulkan/queue.hpp"
+#include "graphics/api/vulkan/memory.hpp"
 
 namespace Vk{
 
@@ -13,6 +14,7 @@ private:
     VkDevice m_Handle = VK_NULL_HANDLE;
 
     QueueProperties m_QueueProperties;
+    MemoryProperties m_MemoryProperties;
 
     VkQueue m_Queues[QueueFamily::FamilyCount] = {VK_NULL_HANDLE};
 public:

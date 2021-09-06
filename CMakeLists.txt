@@ -57,6 +57,7 @@ set(SOURCES_GRAPHICS_API_VULKAN
     ${SOURCES_DIR}/graphics/api/vulkan/framebuffer_impl.cpp
     ${SOURCES_DIR}/graphics/api/vulkan/shader_impl.cpp
     ${SOURCES_DIR}/graphics/api/vulkan/graphics_pipeline_impl.cpp
+    ${SOURCES_DIR}/graphics/api/vulkan/memory.cpp
 )
 
 set(SOURCES_GRAPHICS
