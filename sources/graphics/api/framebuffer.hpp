@@ -15,7 +15,7 @@ struct FramebufferProperties{
 
 class Framebuffer: public NonCopyable{
 public:
-    virtual ~Framebuffer();
+    virtual ~Framebuffer() = default;
 
     virtual Vector2u Size()const = 0;
 
