@@ -2,6 +2,7 @@
 #include "graphics/api/vulkan/buffer_impl.hpp"
 #include "graphics/api/vulkan/memory_allocator.hpp"
 #include "graphics/api/vulkan/debug.hpp"
+#include "graphics/api/vulkan/immediate.hpp"
 
 namespace Vk{
 
@@ -45,7 +46,11 @@ void BufferImpl::Copy(const void *data, size_t size, size_t offset){
 
         Memory::Copy(data, (u8*)m_Pointer + offset, size);
     }else{
-        SX_ASSERT(false, "DMA is not implemented");
+        // NOTE: Ram should map anyway, if it is not, there is a bug
+        BufferImpl tmp(size, BufferMemoryType::RAM, BufferUsageBits::TransferDestination | BufferUsageBits::TransferSource);
+        tmp.Copy(data, size, 0);
+
+        Immediate::Copy(&tmp, this, size, 0, offset);
     }
 }
 
