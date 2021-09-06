@@ -76,13 +76,16 @@ bool BufferImpl::IsMapped()const{
 }
 
 void *BufferImpl::Map(){
-    vkMapMemory(GPUImpl::s_Instance, m_Memory, 0, m_Size, 0, &m_Pointer);
+    if(!IsMapped())
+        vkMapMemory(GPUImpl::s_Instance, m_Memory, 0, m_Size, 0, &m_Pointer);
     return m_Pointer;
 }
 
 void BufferImpl::Unmap(){
-    vkUnmapMemory(GPUImpl::s_Instance, m_Memory);
-    m_Pointer = nullptr;
+    if(IsMapped()){
+        vkUnmapMemory(GPUImpl::s_Instance, m_Memory);
+        m_Pointer = nullptr;
+    }
 }
 
 size_t BufferImpl::Size()const{
