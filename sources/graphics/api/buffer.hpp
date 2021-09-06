@@ -30,7 +30,7 @@ class Buffer: public NonCopyable{
 public:
     virtual ~Buffer() = default;
 
-    virtual void Copy(const Buffer *src, size_t size, size_t src_offset = 0, size_t dst_offset = 0) = 0;
+    virtual void Copy(Buffer *src, size_t size, size_t src_offset = 0, size_t dst_offset = 0) = 0;
 
     virtual void Copy(const void *data, size_t size, size_t offset = 0) = 0;
 

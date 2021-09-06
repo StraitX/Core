@@ -20,6 +20,8 @@ public:
 
     ~BufferImpl();
 
+    void Copy(Buffer *src, size_t size, size_t src_offset, size_t dst_offset)override;
+
     void Copy(const void *data, size_t size, size_t offset)override;
 
     bool IsMappable()const override;

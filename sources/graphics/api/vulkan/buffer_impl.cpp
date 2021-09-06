@@ -40,11 +40,22 @@ BufferImpl::~BufferImpl(){
     vkDestroyBuffer(GPUImpl::s_Instance, m_Handle, nullptr);
 }
 
+void BufferImpl::Copy(Buffer *src, size_t size, size_t src_offset, size_t dst_offset){
+    if(src->IsMappable() && this->IsMappable()){
+        u8* src_ptr =    src->Map<u8>() + src_offset;
+        u8* dst_ptr = Buffer::Map<u8>() + dst_offset;
+
+        Memory::Copy(src_ptr, dst_ptr, size);
+    }else{
+        Immediate::Copy(src, this, size, src_offset, dst_offset);
+    }
+}
+
 void BufferImpl::Copy(const void *data, size_t size, size_t offset){
     if(IsMappable()){
-        if(!IsMapped())Map();
+        u8 *dst_ptr = Buffer::Map<u8>() + offset;
 
-        Memory::Copy(data, (u8*)m_Pointer + offset, size);
+        Memory::Copy(data, dst_ptr, size);
     }else{
         // NOTE: Ram should map anyway, if it is not, there is a bug
         BufferImpl tmp(size, BufferMemoryType::RAM, BufferUsageBits::TransferDestination | BufferUsageBits::TransferSource);
