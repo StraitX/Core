@@ -29,6 +29,10 @@ public:
     TextureFormat Format()const{
         return CurrentImage()->Format();
     }
+
+    Vector2u Size()const{
+        return CurrentImage()->Size();
+    }
 public:
     static Swapchain *Create(const Window *window);
 };
