@@ -42,7 +42,7 @@ public:
 
     void AcquireNext(const Semaphore &signal_semaphore, const Fence &signal_fence)override;
 
-    Span<const Texture2D *> Images()const override;
+    ConstSpan<const Texture2D *> Images()const override;
 
     u32 Current()const override;
 

@@ -129,8 +129,8 @@ void SwapchainImpl::AcquireNext(const Semaphore &signal_semaphore, const Fence &
     vkAcquireNextImageKHR(GPUImpl::s_Instance, m_Handle, 0, signal_semaphore_handle, signal_fence_handle, &m_CurrentImage);
 }
 
-Span<const Texture2D *> SwapchainImpl::Images()const{
-    return {nullptr, 0};
+ConstSpan<const Texture2D *> SwapchainImpl::Images()const{
+    return m_ImagesPointers;
 }
 
 u32 SwapchainImpl::Current()const{

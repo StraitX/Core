@@ -18,7 +18,7 @@ public:
     virtual void PresentCurrent(const Semaphore &wait_semaphore) = 0;
 
     //Span may be different after each PresentCurrent call
-    virtual Span<const Texture2D *> Images()const = 0;
+    virtual ConstSpan<const Texture2D *> Images()const = 0;
 
     virtual u32 Current()const = 0;
 public:
