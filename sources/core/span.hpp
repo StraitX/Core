@@ -53,4 +53,7 @@ public:
     }
 };
 
+template <typename Type, typename SizeType = size_t>
+using ConstSpan = Span<const Type, SizeType>;
+
 #endif //STRAITX_SPAN_HPP
