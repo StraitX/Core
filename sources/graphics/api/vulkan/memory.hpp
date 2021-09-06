@@ -24,6 +24,8 @@ struct MemoryType{
     };
 
     u32 Index = InvalidIndex;
+
+    static const char *Name(Type type);
 };
 
 struct MemoryProperties{

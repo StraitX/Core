@@ -58,6 +58,7 @@ set(SOURCES_GRAPHICS_API_VULKAN
     ${SOURCES_DIR}/graphics/api/vulkan/shader_impl.cpp
     ${SOURCES_DIR}/graphics/api/vulkan/graphics_pipeline_impl.cpp
     ${SOURCES_DIR}/graphics/api/vulkan/memory.cpp
+    ${SOURCES_DIR}/graphics/api/vulkan/memory_allocator.cpp
 )
 
 set(SOURCES_GRAPHICS

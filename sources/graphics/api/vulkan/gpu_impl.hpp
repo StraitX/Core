@@ -45,6 +45,10 @@ public:
     u32 QueueIndex(QueueFamily::Type type)const{
         return m_QueueProperties.Family[type].Index;
     }
+
+    u32 MemoryIndex(MemoryType::Type type)const{
+        return m_MemoryProperties.MemoryTypes[(size_t)type].Index;
+    }
 };
 
 }//namespace Vk::

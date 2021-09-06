@@ -4,6 +4,17 @@
 
 namespace Vk{
 
+const char *MemoryType::Name(Type type){
+    const char *s_Names[]={
+        "VRAM",
+        "DynamicVRAM",
+        "RAM",
+        "UncachedRAM"
+    };
+
+    return s_Names[(size_t)type];
+}
+
 static bool IsVRAM(VkMemoryPropertyFlags flags){
     return  (flags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
         && !(flags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
