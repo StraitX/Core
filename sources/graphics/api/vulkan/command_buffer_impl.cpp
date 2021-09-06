@@ -4,6 +4,7 @@
 #include "graphics/api/vulkan/render_pass_impl.hpp"
 #include "graphics/api/vulkan/framebuffer_impl.hpp"
 #include "graphics/api/vulkan/graphics_pipeline_impl.hpp"
+#include "graphics/api/vulkan/buffer_impl.hpp"
 
 namespace Vk{
 
@@ -131,6 +132,25 @@ void CommandBufferImpl::SetViewport(s32 x, s32 y, u32 width, u32 height){
     viewport.minDepth = 0;
     viewport.maxDepth = 1;
     vkCmdSetViewport(m_Handle, 0, 1, &viewport);
+}
+
+void CommandBufferImpl::BindVertexBuffer(const Buffer *buffer){
+    VkBuffer handle = *(const Vk::BufferImpl*)buffer;
+    VkDeviceSize offset = 0;
+    vkCmdBindVertexBuffers(m_Handle, 0, 1, &handle, &offset);
+}
+
+void CommandBufferImpl::BindIndexBuffer(const Buffer *buffer, IndicesType type){
+    static const VkIndexType s_IndicesType[]={
+        VK_INDEX_TYPE_UINT16,
+        VK_INDEX_TYPE_UINT32,
+    };
+
+    vkCmdBindIndexBuffer(m_Handle, *(const Vk::BufferImpl*)buffer, 0, s_IndicesType[(size_t)type]);
+}
+
+void CommandBufferImpl::DrawIndexed(u32 indices_count){
+    vkCmdDrawIndexed(m_Handle, indices_count, 1, 0, 0, 0);
 }
 
 }//namespace Vk::

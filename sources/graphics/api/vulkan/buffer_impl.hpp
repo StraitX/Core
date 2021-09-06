@@ -35,6 +35,10 @@ public:
     BufferMemoryType MemoryType()const override;
 
     BufferUsage Usage()const override;
+
+    operator VkBuffer()const{
+        return m_Handle;
+    }
 };
 
 }//namespace Vk::

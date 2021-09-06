@@ -66,6 +66,12 @@ public:
     void SetScissor(s32 x, s32 y, u32 width, u32 height)override;
 
     void SetViewport(s32 x, s32 y, u32 width, u32 height)override;
+
+    void BindVertexBuffer(const Buffer *buffer)override;
+
+    void BindIndexBuffer(const Buffer *buffer, IndicesType type)override;
+
+    void DrawIndexed(u32 indices_count)override;
 };
 
 }//namespace Vk::
