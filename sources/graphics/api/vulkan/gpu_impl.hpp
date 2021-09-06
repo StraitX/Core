@@ -49,6 +49,10 @@ public:
     u32 MemoryIndex(MemoryType::Type type)const{
         return m_MemoryProperties.MemoryTypes[(size_t)type].Index;
     }
+
+    MemoryType::Type ReadMemoryType(MemoryType::Type type)const{
+        return m_MemoryProperties.RealMemoryTypes[type];
+    }
 };
 
 }//namespace Vk::
