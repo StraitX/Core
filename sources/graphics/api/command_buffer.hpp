@@ -47,6 +47,10 @@ public:
 
     virtual void Draw(u32 vertices_count) = 0;
 
+    virtual void SetScissor(s32 x, s32 y, u32 width, u32 height) = 0;
+
+    virtual void SetViewport(s32 x, s32 y, u32 width, u32 height) = 0;
+
 };
 
 #endif//STRAITX_COMMAND_BUFFER_HPP
