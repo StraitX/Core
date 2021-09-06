@@ -63,11 +63,11 @@ public:
 
     virtual void DrawIndexed(u32 indices_count) = 0;
 
-    virtual void Copy(const Buffer *src, const Buffer *dst, size_t size, size_t src_offset = 0, size_t dst_offset = 0);
+    virtual void Copy(const Buffer *src, const Buffer *dst, size_t size, size_t src_offset = 0, size_t dst_offset = 0) = 0;
 
     void Copy(const Buffer *src, const Buffer *dst);
 
-    virtual void Copy(const Buffer *src, const Texture2D *dst);
+    virtual void Copy(const Buffer *src, const Texture2D *dst) = 0;
 
 };
 
