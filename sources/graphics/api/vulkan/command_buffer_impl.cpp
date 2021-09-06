@@ -113,4 +113,24 @@ void CommandBufferImpl::Draw(u32 vertices_count){
     vkCmdDraw(m_Handle, vertices_count, 1, 0, 0);
 }
 
+void CommandBufferImpl::SetScissor(s32 x, s32 y, u32 width, u32 height){
+    VkRect2D scissor;
+    scissor.offset.x = x;
+    scissor.offset.y = y;
+    scissor.extent.width = width;
+    scissor.extent.height = height;
+    vkCmdSetScissor(m_Handle, 0, 1, &scissor);
+}
+
+void CommandBufferImpl::SetViewport(s32 x, s32 y, u32 width, u32 height){
+    VkViewport viewport;
+    viewport.x = x;
+    viewport.y = y;
+    viewport.width = width;
+    viewport.height = height;
+    viewport.minDepth = 0;
+    viewport.maxDepth = 1;
+    vkCmdSetViewport(m_Handle, 0, 1, &viewport);
+}
+
 }//namespace Vk::

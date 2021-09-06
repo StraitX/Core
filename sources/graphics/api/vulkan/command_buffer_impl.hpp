@@ -62,6 +62,10 @@ public:
     void Bind(const GraphicsPipeline *pipeline)override;
 
     void Draw(u32 vertices_count)override;
+
+    void SetScissor(s32 x, s32 y, u32 width, u32 height)override;
+
+    void SetViewport(s32 x, s32 y, u32 width, u32 height)override;
 };
 
 }//namespace Vk::
