@@ -26,7 +26,7 @@ enum class ShaderLang: u8{
     GLSL,    
     //SPIRV,
 };
-
+//after creation of Pipeline shaders can be immediately destroyed
 class Shader: public NonCopyable{
 public:
     virtual ~Shader() = default;

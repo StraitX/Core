@@ -87,6 +87,10 @@ struct GraphicsPipelineProperties{
 //OpenGL said that
 constexpr size_t MaxVertexAttributes = 8;
 
+size_t GetVertexAttributeSize(VertexAttribute attribute);
+
+size_t CalculateStride(Span<VertexAttribute> attributes);
+
 class GraphicsPipeline: public NonCopyable{
 public:
     virtual ~GraphicsPipeline();
