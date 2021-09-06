@@ -28,7 +28,7 @@ private:
     u32 m_ImagesCount = 0;
 
     PushArray<Texture2DImpl, s_MaxImages> m_Images;
-    PushArray<const Texture2D *, s_MaxImages> m_ImagesPointers;
+    PushArray<Texture2D *, s_MaxImages> m_ImagesPointers;
 
     QueueFamily::Type m_TargetQueueFamily;
     VkQueue m_TargetQueue = VK_NULL_HANDLE;
@@ -42,7 +42,7 @@ public:
 
     void AcquireNext(const Semaphore &signal_semaphore, const Fence &signal_fence)override;
 
-    ConstSpan<const Texture2D *> Images()const override;
+    ConstSpan<Texture2D *> Images()const override;
 
     u32 Current()const override;
 

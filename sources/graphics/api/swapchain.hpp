@@ -18,9 +18,13 @@ public:
     virtual void PresentCurrent(const Semaphore &wait_semaphore) = 0;
 
     //Span may be different after each PresentCurrent call
-    virtual ConstSpan<const Texture2D *> Images()const = 0;
+    virtual ConstSpan<Texture2D *> Images()const = 0;
 
     virtual u32 Current()const = 0;
+
+    Texture2D *CurrentImage()const{
+        return Images()[Current()];
+    }
 public:
     static Swapchain *Create(const Window *window);
 };

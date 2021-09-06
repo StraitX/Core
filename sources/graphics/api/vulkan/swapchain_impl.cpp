@@ -104,7 +104,7 @@ SwapchainImpl::~SwapchainImpl(){
 
     m_ImagesPointers.Clear();
     m_Images.Clear();
-    
+
     vkDestroySwapchainKHR(GPUImpl::s_Instance, m_Handle, nullptr);
 
     m_Surface.Destroy();
@@ -135,7 +135,7 @@ void SwapchainImpl::AcquireNext(const Semaphore &signal_semaphore, const Fence &
     vkAcquireNextImageKHR(GPUImpl::s_Instance, m_Handle, 0, signal_semaphore_handle, signal_fence_handle, &m_CurrentImage);
 }
 
-ConstSpan<const Texture2D *> SwapchainImpl::Images()const{
+ConstSpan<Texture2D *> SwapchainImpl::Images()const{
     return m_ImagesPointers;
 }
 
