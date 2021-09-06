@@ -3,8 +3,10 @@
 
 #include "core/noncopyable.hpp"
 #include "graphics/api/texture.hpp"
-#include "graphics/api/render_pass.hpp"
-#include "graphics/api/framebuffer.hpp"
+
+class RenderPass;
+class Framebuffer;
+class GraphicsPipeline;
 
 class CommandBuffer;
 
@@ -40,6 +42,10 @@ public:
     virtual void BeginRenderPass(const RenderPass *rp, const Framebuffer *fb) = 0;
 
     virtual void EndRenderPass() = 0;
+
+    virtual void Bind(const GraphicsPipeline *pipeline) = 0;
+
+    virtual void Draw(u32 vertices_count) = 0;
 
 };
 
