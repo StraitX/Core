@@ -6,6 +6,8 @@
 
 namespace Vk{
 
+VkShaderStageFlagBits ToVkShaderStage(ShaderStageBits::Value stage);
+
 class ShaderImpl: public Shader{
 private:
     VkShaderModule m_Handle = VK_NULL_HANDLE;
@@ -15,6 +17,10 @@ public:
     ShaderImpl(ShaderLang lang, ShaderStageBits::Value stage, Span<const char> sources);
 
     ~ShaderImpl();
+
+    operator VkShaderModule()const{
+        return m_Handle;
+    }
 
     ShaderLang Lang()const override;
 

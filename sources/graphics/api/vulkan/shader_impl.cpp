@@ -23,6 +23,10 @@ glsl2spv::ShaderType ToShaderType(ShaderStageBits::Value stage){
     }
 }
 
+VkShaderStageFlagBits ToVkShaderStage(ShaderStageBits::Value stage){
+    return (VkShaderStageFlagBits)stage;
+}
+
 
 ShaderImpl::ShaderImpl(ShaderLang lang, ShaderStageBits::Value stage, Span<const char> sources):
     m_Lang(lang),

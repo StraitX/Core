@@ -1,5 +1,10 @@
 #include "graphics/api/graphics_pipeline.hpp"
 #include "graphics/api/graphics_api.hpp"
+#include "core/os/vulkan.hpp"
+
+#ifdef SX_VULKAN_SUPPORTED
+    #include "graphics/api/vulkan/graphics_pipeline_impl.hpp"
+#endif
 
 size_t GetVertexAttributeSize(VertexAttribute attribute){
     static const u32 s_VertexAttributeSizeTable[]={
@@ -43,7 +48,9 @@ size_t CalculateStride(Span<VertexAttribute> attributes){
 
 
 GraphicsPipeline *GraphicsPipeline::Create(const GraphicsPipelineProperties &props){
-
-
+#ifdef SX_VULKAN_SUPPORTED
+    if(GraphicsAPI::Backend() == GraphicsAPIBackend::Vulkan)
+        return new Vk::GraphicsPipelineImpl(props);
+#endif
     return nullptr;
 }

@@ -93,7 +93,7 @@ size_t CalculateStride(Span<VertexAttribute> attributes);
 
 class GraphicsPipeline: public NonCopyable{
 public:
-    virtual ~GraphicsPipeline();
+    virtual ~GraphicsPipeline() = default;
 
     virtual ConstSpan<VertexAttribute> VertexAttributes()const = 0;
 
