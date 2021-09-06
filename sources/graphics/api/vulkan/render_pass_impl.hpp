@@ -23,6 +23,10 @@ public:
     bool HasDepth()const{
         return m_DepthIndex != InvalidIndex;
     }
+
+    operator VkRenderPass()const{
+        return m_Handle;
+    }
 };
 
 }//namespace Vk::

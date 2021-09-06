@@ -27,7 +27,15 @@ public:
     ~Texture2DImpl();
 
     operator VkImage()const{
+        return Handle();
+    }
+
+    VkImage Handle()const{
         return m_Handle;
+    }
+
+    VkImageView ViewHandle()const{
+        return m_View;
     }
 
 private:

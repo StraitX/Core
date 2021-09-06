@@ -51,6 +51,7 @@ set(SOURCES_GRAPHICS_API_VULKAN
     ${SOURCES_DIR}/graphics/api/vulkan/command_buffer_impl.cpp
     ${SOURCES_DIR}/graphics/api/vulkan/texture_impl.cpp
     ${SOURCES_DIR}/graphics/api/vulkan/render_pass_impl.cpp
+    ${SOURCES_DIR}/graphics/api/vulkan/framebuffer_impl.cpp
 )
 
 set(SOURCES_GRAPHICS

@@ -5,10 +5,12 @@
 #include "core/span.hpp"
 #include "core/noncopyable.hpp"
 #include "graphics/api/texture.hpp"
+#include "graphics/api/render_pass.hpp"
 
 struct FramebufferProperties{
     Vector2u Size = {0, 0};
     ConstSpan<Texture2D *> Attachments = {};
+    const RenderPass *Pass = nullptr;
 };
 
 class Framebuffer: public NonCopyable{
