@@ -3,6 +3,7 @@
 #include "graphics/api/vulkan/texture_impl.hpp"
 #include "graphics/api/vulkan/render_pass_impl.hpp"
 #include "graphics/api/vulkan/framebuffer_impl.hpp"
+#include "graphics/api/vulkan/graphics_pipeline_impl.hpp"
 
 namespace Vk{
 
@@ -102,6 +103,14 @@ void CommandBufferImpl::BeginRenderPass(const RenderPass *rp, const Framebuffer 
 
 void CommandBufferImpl::EndRenderPass(){
     vkCmdEndRenderPass(m_Handle);
+}
+
+void CommandBufferImpl::Bind(const GraphicsPipeline *pipeline){
+    vkCmdBindPipeline(m_Handle, VK_PIPELINE_BIND_POINT_GRAPHICS, *(const Vk::GraphicsPipelineImpl*)pipeline);
+}
+
+void CommandBufferImpl::Draw(u32 vertices_count){
+    vkCmdDraw(m_Handle, vertices_count, 1, 0, 0);
 }
 
 }//namespace Vk::

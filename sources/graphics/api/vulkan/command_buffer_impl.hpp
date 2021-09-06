@@ -58,6 +58,10 @@ public:
     void BeginRenderPass(const RenderPass *rp, const Framebuffer *fb)override;
 
     void EndRenderPass()override;
+
+    void Bind(const GraphicsPipeline *pipeline)override;
+
+    void Draw(u32 vertices_count)override;
 };
 
 }//namespace Vk::

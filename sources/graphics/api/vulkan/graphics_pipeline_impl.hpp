@@ -30,6 +30,10 @@ public:
     ~GraphicsPipelineImpl();
 
     ConstSpan<VertexAttribute> VertexAttributes()const override;
+
+    operator VkPipeline()const{
+        return m_Handle;
+    }
 };
 
 }//namespace Vk::
