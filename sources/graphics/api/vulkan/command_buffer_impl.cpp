@@ -68,24 +68,54 @@ void CommandBufferImpl::Reset(){
     SX_VK_ASSERT(vkResetCommandBuffer(m_Handle, 0), "Vk: CommandBuffer: Failed to reset");
 }
 
-void CommandBufferImpl::ChangeLayout(Texture2D *texture, TextureLayout new_layout){
+void CommandBufferImpl::PipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst)const{
+    vkCmdPipelineBarrier(m_Handle, src, dst, 0, 0, nullptr, 0, nullptr, 0, nullptr);
+}
+
+void CommandBufferImpl::MemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_access, VkAccessFlags dst_access)const{
+    VkMemoryBarrier barrier;
+    barrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+    barrier.pNext = nullptr;
+    barrier.srcAccessMask = src_access;
+    barrier.dstAccessMask = dst_access;
+
+    vkCmdPipelineBarrier(m_Handle, src, dst, 0, 1, &barrier, 0, nullptr, 0, nullptr);
+}
+
+void CommandBufferImpl::ImageBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, 
+                                     VkAccessFlags src_acces, VkAccessFlags dst_access, 
+                                     VkImageLayout old, VkImageLayout next, VkImage img, VkImageAspectFlags aspect)const
+{
     VkImageMemoryBarrier barrier;
     barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
     barrier.pNext = nullptr;
-    barrier.srcAccessMask = VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT;
-    barrier.dstAccessMask = VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT;
-    barrier.oldLayout = ToVkLayout(texture->Layout());
-    barrier.newLayout = ToVkLayout(new_layout);
+    barrier.srcAccessMask = src_acces;
+    barrier.dstAccessMask = dst_access;
+    barrier.oldLayout = old;
+    barrier.newLayout = next;
     barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    barrier.image = *(Vk::Texture2DImpl*)texture;
-    barrier.subresourceRange.aspectMask = IsDepthFormat(texture->Format()) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+    barrier.image = img;
+    barrier.subresourceRange.aspectMask = aspect;
     barrier.subresourceRange.baseArrayLayer = 0;
     barrier.subresourceRange.baseMipLevel = 0;
     barrier.subresourceRange.levelCount = 1;
     barrier.subresourceRange.layerCount = 1;
 
-    vkCmdPipelineBarrier(m_Handle, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+    vkCmdPipelineBarrier(m_Handle, src, dst, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+}
+
+void CommandBufferImpl::ChangeLayout(Texture2D *texture, TextureLayout new_layout){
+    ImageBarrier(
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
+        VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+        VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+        ToVkLayout(texture->Layout()), 
+        ToVkLayout(new_layout), 
+        *(Vk::Texture2DImpl*)texture,
+        IsDepthFormat(texture->Format()) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT
+    );
 }
 
 void CommandBufferImpl::BeginRenderPass(const RenderPass *rp, const Framebuffer *fb){

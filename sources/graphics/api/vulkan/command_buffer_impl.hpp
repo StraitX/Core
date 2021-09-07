@@ -53,6 +53,12 @@ public:
 
     void Reset()override;
 
+    void PipelineBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst)const;
+
+    void MemoryBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_acces, VkAccessFlags dst_access)const;
+
+    void ImageBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_acces, VkAccessFlags dst_access, VkImageLayout old, VkImageLayout next, VkImage img, VkImageAspectFlags aspect = VK_IMAGE_ASPECT_COLOR_BIT)const;
+
     void ChangeLayout(Texture2D *texture, TextureLayout new_layout)override;
 
     void BeginRenderPass(const RenderPass *rp, const Framebuffer *fb)override;
