@@ -29,11 +29,13 @@ private:
 public:
 	DescriptorSetImpl(VkDescriptorSet handle);
 
-	~DescriptorSetImpl();
-
 	void UpdateUniformBinding(size_t binding, size_t index, const Buffer *buffer)override;
 	
 	void UpdateTextureBinding(size_t binding, size_t index, const Texture2D *texture, const Sampler *sampler)override;
+
+	operator VkDescriptorSet()const{
+		return m_Handle;
+	}
 };
 
 class DescriptorSetPoolImpl: public DescriptorSetPool{

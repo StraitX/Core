@@ -31,9 +31,6 @@ enum class VertexAttribute{
 	Sint32x4,
 };
 
-//TODO: Take value from docs
-constexpr size_t MaxShaderBindings = 14;
-
 enum class PrimitivesTopology{
     Points = 0,
     Lines,

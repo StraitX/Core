@@ -46,6 +46,10 @@ DescriptorSetLayoutImpl::~DescriptorSetLayoutImpl(){
 	vkDestroyDescriptorSetLayout(GPUImpl::s_Instance, m_Handle, nullptr);
 }
 
+ConstSpan<ShaderBinding> DescriptorSetLayoutImpl::Bindings()const{
+	return m_Bindings;
+}
+
 DescriptorSetImpl::DescriptorSetImpl(VkDescriptorSet handle):
 	m_Handle(handle)
 {}
@@ -109,7 +113,7 @@ DescriptorSetPoolImpl::DescriptorSetPoolImpl(const DescriptorSetPoolProperties &
 	VkDescriptorPoolCreateInfo info;
 	info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 	info.pNext = nullptr;
-	info.flags = 0;
+	info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
     info.maxSets = m_Capacity;
     info.poolSizeCount = m_Layout->Bindings().Size();
     info.pPoolSizes = sizes;
@@ -140,7 +144,17 @@ DescriptorSet *DescriptorSetPoolImpl::Alloc(){
 }
 
 void DescriptorSetPoolImpl::Free(DescriptorSet *set){
+	VkDescriptorSet handle = *(Vk::DescriptorSetImpl*)set;
+	vkFreeDescriptorSets(GPUImpl::s_Instance, m_Handle, 1, &handle);
 	delete set;
+}
+
+size_t DescriptorSetPoolImpl::Capacity()const{
+	return m_Capacity;
+}
+
+const DescriptorSetLayout *DescriptorSetPoolImpl::Layout()const{
+	return m_Layout;
 }
 
 }//namespace Vk::
