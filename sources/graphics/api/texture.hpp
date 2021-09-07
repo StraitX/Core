@@ -33,6 +33,8 @@ enum class TextureFormat : u8{
     Depth24Stencil8
 };
 
+namespace Vk{class CommandBufferImpl;}//namespace Vk::
+
 bool IsDepthFormat(TextureFormat format);
 
 // NOTE: Don't mess them up, these are tied to vulkan spec
@@ -56,6 +58,8 @@ protected:
     TextureFormat m_Format = TextureFormat::Unknown;
     TextureUsage m_Usage = 0;
     TextureLayout m_Layout = TextureLayout::Undefined;
+
+    friend class Vk::CommandBufferImpl;
 public:
     TextureFormat Format()const{
         return m_Format;
@@ -69,7 +73,7 @@ public:
         return m_Layout;
     }
 
-    //virtual void ChangeLayout(TextureLayout layout) = 0;
+    virtual void ChangeLayout(TextureLayout new_layout) = 0;
 };
 
 class Texture2D: public Texture{
