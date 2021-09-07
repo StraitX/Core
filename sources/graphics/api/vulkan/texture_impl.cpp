@@ -2,6 +2,7 @@
 #include "graphics/api/vulkan/gpu_impl.hpp"
 #include "graphics/api/vulkan/immediate.hpp"
 #include "graphics/api/vulkan/buffer_impl.hpp"
+#include "graphics/api/vulkan/memory_allocator.hpp"
 #include "core/print.hpp"
 
 namespace Vk{
@@ -45,13 +46,13 @@ VkSampleCountFlags ToVkSamplesCount(SamplePoints points){
 Texture2DImpl::Texture2DImpl(u32 width, u32 height, TextureFormat format, TextureUsage usage, TextureLayout initial_layout){
     m_Format = format;
     m_Usage = usage;
-    m_Layout = initial_layout;
+    m_Layout = TextureLayout::Undefined;
     m_Width = width;
     m_Height = height;
     CreateImage();
     CreateImageView();
 
-    // XXX If initial layout is not undefined, do DMA layout translation
+    ChangeLayout(initial_layout);
 }
 
 Texture2DImpl::Texture2DImpl(VkImage image, u32 width, u32 height, TextureFormat image_format, TextureUsage image_usage, TextureLayout image_layout){
@@ -75,8 +76,6 @@ void Texture2DImpl::Copy(void *src_data, Vector2u src_size){
     BufferImpl tmp(src_size.x * src_size.y * GetPixelSize(Format()), BufferMemoryType::UncachedRAM, BufferUsageBits::TransferDestination | BufferUsageBits::TransferSource);
     tmp.Copy(src_data, tmp.Size(), 0);
 
-    Println("Handle: %", (u64)m_Handle);
-
     Immediate::Copy(&tmp, this);
 }
 
@@ -85,7 +84,35 @@ void Texture2DImpl::ChangeLayout(TextureLayout new_layout){
 }
 
 void Texture2DImpl::CreateImage(){
-    SX_ASSERT(false);
+    SX_CORE_ASSERT(m_Format != TextureFormat::Unknown,"GPUTexture: Can't be created with Format::Unknown");
+
+    VkImageCreateInfo info;
+    info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    info.pNext = nullptr;
+    info.flags = 0;
+    info.imageType = VK_IMAGE_TYPE_2D;
+    info.format = ToVkFormat(m_Format);
+    info.extent.width = m_Width;
+    info.extent.height = m_Height;
+    info.extent.depth = 1;
+    info.mipLevels = 1;
+    info.arrayLayers = 1;
+    info.samples = VK_SAMPLE_COUNT_1_BIT;
+    info.tiling = VK_IMAGE_TILING_OPTIMAL;
+    info.usage = m_Usage;
+    info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    info.queueFamilyIndexCount = 0;
+    info.pQueueFamilyIndices = nullptr;
+    info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;// should be undefined by the spec
+
+    vkCreateImage(GPUImpl::s_Instance, &info, nullptr, &m_Handle);
+
+    VkMemoryRequirements req;
+    vkGetImageMemoryRequirements(GPUImpl::s_Instance, m_Handle, &req);
+
+    m_Memory = MemoryAllocator::Alloc(req.size, MemoryType::VRAM);
+
+    vkBindImageMemory(GPUImpl::s_Instance, m_Handle, m_Memory, 0);
 }
 
 void Texture2DImpl::CreateImageView(){
@@ -114,7 +141,9 @@ void Texture2DImpl::DestroyImageView(){
 }
 
 void Texture2DImpl::DestroyImage(){
-    SX_ASSERT(false);
+    vkDestroyImage(GPUImpl::s_Instance, m_Handle, nullptr);
+
+    MemoryAllocator::Free(m_Memory);
 }
 
 
