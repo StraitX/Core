@@ -64,6 +64,7 @@ set(SOURCES_GRAPHICS_API_VULKAN
     ${SOURCES_DIR}/graphics/api/vulkan/buffer_impl.cpp
     ${SOURCES_DIR}/graphics/api/vulkan/immediate.cpp
     ${SOURCES_DIR}/graphics/api/vulkan/sampler_impl.cpp
+    ${SOURCES_DIR}/graphics/api/vulkan/descriptor_set_impl.cpp
 )
 
 set(SOURCES_GRAPHICS

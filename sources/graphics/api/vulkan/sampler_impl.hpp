@@ -16,6 +16,10 @@ public:
     ~SamplerImpl();
 
     SamplerProperties Properties()const override;
+
+    operator VkSampler()const{
+        return m_Handle;
+    }
 };
 
 }//namespace Vk::
