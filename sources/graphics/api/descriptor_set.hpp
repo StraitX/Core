@@ -33,7 +33,7 @@ constexpr size_t MaxTexturesBindings = 16 - 1;
 // this value has nothing to do with the spec
 constexpr size_t MaxUniformBuffersBindings = 16;
 
-constexpr size_t MaxBindings = MaxTexturesBindings + MaxUniformBuffersBindings;
+constexpr size_t MaxShaderBindings = MaxTexturesBindings + MaxUniformBuffersBindings;
 
 class DescriptorSetLayout: public NonCopyable{
 public:
@@ -57,6 +57,11 @@ public:
 	virtual void UpdateTextureBinding(size_t binding, size_t index, const Texture2D *texture, const Sampler *sampler) = 0;
 };
 
+struct DescriptorSetPoolProperties{
+	size_t Capacity = 0;
+	const DescriptorSetLayout *Layout = nullptr;
+};
+
 class DescriptorSetPool: public NonCopyable{
 public:
 	DescriptorSetPool() = default;
@@ -67,7 +72,11 @@ public:
 
 	virtual void Free(DescriptorSet *set) = 0;
 
-	static DescriptorSetPool *Create(size_t capacity);
+	virtual size_t Capacity()const = 0;
+
+	virtual const DescriptorSetLayout *Layout()const = 0;
+
+	static DescriptorSetPool *Create(const DescriptorSetPoolProperties &props);
 };
 
 #endif//STRAITX_DESCRIPTOR_SET_HPP
