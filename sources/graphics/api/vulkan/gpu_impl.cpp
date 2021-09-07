@@ -145,6 +145,8 @@ void GPUImpl::Execute(CommandBuffer *buffer, Span<u64> wait_semaphore_handles, S
     Vk::CommandBufferImpl *buffer_impl = (Vk::CommandBufferImpl*)buffer;
     VkCommandBuffer buffer_handle = *buffer_impl;
 
+    buffer_impl->OnExecute();
+
     auto *stages = SX_STACK_ARRAY_ALLOC(VkPipelineStageFlags, wait_semaphore_handles.Size());
 
     for(size_t i = 0; i<wait_semaphore_handles.Size(); ++i){

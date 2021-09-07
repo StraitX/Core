@@ -38,6 +38,8 @@ public:
         return m_View;
     }
 
+    void ChangeLayout(TextureLayout new_layout)override;
+
 private:
     void CreateImage();
 

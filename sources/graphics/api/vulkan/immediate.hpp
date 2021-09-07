@@ -37,6 +37,15 @@ public:
         GPU::Execute(s_CmdBuffer, *s_OpFence);
         s_OpFence->WaitAndReset();
     }
+
+    static void ChangeLayout(Texture2D *texture, TextureLayout new_layout){
+        s_CmdBuffer->Begin();
+        s_CmdBuffer->ChangeLayout(texture, new_layout);
+        s_CmdBuffer->End();
+        
+        GPU::Execute(s_CmdBuffer, *s_OpFence);
+        s_OpFence->WaitAndReset();
+    }
 };
 
 }//namespace Vk::

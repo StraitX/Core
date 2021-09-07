@@ -97,6 +97,8 @@ SwapchainImpl::SwapchainImpl(const Window *window):
     for(u32 i = 0; i<m_ImagesCount; i++)
         m_ImagesPointers.Push(&m_Images[i]);
 
+    for(auto &image: m_Images)
+        image.ChangeLayout(TextureLayout::PresentSrcOptimal);
 }
 
 SwapchainImpl::~SwapchainImpl(){

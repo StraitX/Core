@@ -5,6 +5,7 @@
 #include "core/array.hpp"
 #include "graphics/api/command_buffer.hpp"
 #include "graphics/api/vulkan/gpu_impl.hpp"
+#include "graphics/api/vulkan/texture_impl.hpp"
 
 namespace Vk{
 
@@ -31,10 +32,39 @@ public:
     }
 };
 
+enum class ResourceOperationType{
+    Nop,
+    //BufferToBufferCopy,
+    //BufferToImageCopy,
+    LayoutChange,
+};
+
+struct LayoutChangeOp{
+    ::Texture *Texture;
+    TextureLayout NewLayout;
+};
+
+struct ResourceOperation{
+    ResourceOperationType Type = ResourceOperationType::Nop;
+    //bool IsSrcSynched = false;
+    //bool IsDstSynched = false;
+
+    union{
+        LayoutChangeOp LayoutChange;
+    };
+
+    ResourceOperation(Texture *texture, TextureLayout new_layout){
+        Type = ResourceOperationType::LayoutChange;
+        LayoutChange.Texture = texture;
+        LayoutChange.NewLayout = new_layout;
+    }
+};
+
 class CommandBufferImpl: public CommandBuffer{
 private:
     CommandPoolImpl *m_Pool = nullptr;
     VkCommandBuffer m_Handle = VK_NULL_HANDLE;
+    Array<ResourceOperation> m_Operations;
 public:
     CommandBufferImpl(CommandPoolImpl *pool);
 
@@ -47,6 +77,10 @@ public:
     CommandPoolImpl* Pool()const{
         return m_Pool;
     }
+
+    LayoutChangeOp *GetLastTextureLayoutChange(Texture *texture);
+
+    void OnExecute();
 
     void Begin()override;
 
