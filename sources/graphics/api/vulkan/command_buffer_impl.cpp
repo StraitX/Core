@@ -237,7 +237,7 @@ void CommandBufferImpl::Copy(const Buffer *src, const Buffer *dst, size_t size, 
     );
 }
 
-void CommandBufferImpl::Copy(const Buffer *src, const Texture2D *dst){
+void CommandBufferImpl::Copy(const Buffer *src, const Texture2D *dst, Vector2u src_size, Vector2u dst_offset){
     MemoryBarrier(
         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
         VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
@@ -246,10 +246,12 @@ void CommandBufferImpl::Copy(const Buffer *src, const Texture2D *dst){
     );
 
     VkBufferImageCopy copy;
-    copy.bufferImageHeight = dst->Size().y;
+    copy.bufferImageHeight = src_size.y;
     copy.bufferOffset = 0;
-    copy.bufferRowLength = dst->Size().x;
-    copy.imageOffset = {};
+    copy.bufferRowLength = src_size.x;
+    copy.imageOffset.x = dst_offset.x;
+    copy.imageOffset.y = dst_offset.y;
+    copy.imageOffset.z = 0;
     copy.imageExtent.depth = 1;
     copy.imageExtent.width = dst->Size().x;
     copy.imageExtent.height = dst->Size().y;

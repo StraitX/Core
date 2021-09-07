@@ -29,20 +29,24 @@ public:
         s_OpFence->WaitAndReset();
     }
 
-    static void Copy(const Buffer *src, const Texture2D *dst){
+    static void Copy(const Buffer *src, const Texture2D *dst, Vector2u src_size, Vector2u dst_offset = {0,0}){
         s_CmdBuffer->Begin();
-        s_CmdBuffer->Copy(src, dst);
+        s_CmdBuffer->Copy(src, dst, src_size, dst_offset);
         s_CmdBuffer->End();
 
         GPU::Execute(s_CmdBuffer, *s_OpFence);
         s_OpFence->WaitAndReset();
     }
 
+    static void Copy(const Buffer *src, const Texture2D *dst){
+        Copy(src, dst, dst->Size(), {0, 0});
+    }
+
     static void ChangeLayout(Texture2D *texture, TextureLayout new_layout){
         s_CmdBuffer->Begin();
         s_CmdBuffer->ChangeLayout(texture, new_layout);
         s_CmdBuffer->End();
-        
+
         GPU::Execute(s_CmdBuffer, *s_OpFence);
         s_OpFence->WaitAndReset();
     }

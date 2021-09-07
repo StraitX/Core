@@ -116,8 +116,10 @@ public:
 
     void Copy(const Buffer *src, const Buffer *dst, size_t size, size_t src_offset, size_t dst_offset)override;
 
-    void Copy(const Buffer *src, const Texture2D *dst)override;
+    //Expects Texture to be in either General or TransferDstOptimal layouts
+    void Copy(const Buffer *src, const Texture2D *dst, Vector2u src_size, Vector2u dst_offset)override;
 
+    //Expects Texture to be in either General or TransferDstOptimal layouts
     void ClearColor(const Texture2D *texture, const Color &color)override;
 };
 
