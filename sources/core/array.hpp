@@ -117,6 +117,14 @@ public:
     Type *end(){
         return Data() + Size();
     }
+
+    const Type *begin()const{
+        return Data();
+    }
+
+    const Type *end()const{
+        return Data() + Size();
+    }
 };
 
 #endif//STRAITX_ARRAY_HPP
