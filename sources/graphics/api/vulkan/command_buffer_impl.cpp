@@ -50,7 +50,7 @@ CommandBufferImpl::~CommandBufferImpl(){
     vkFreeCommandBuffers(GPUImpl::s_Instance, *m_Pool, 1, &m_Handle);
 }
 
-LayoutChangeOp *CommandBufferImpl::GetLastTextureLayoutChange(Texture *texture){
+LayoutChangeOp *CommandBufferImpl::GetLastTextureLayoutChange(const Texture *texture){
     if(!m_Operations.Size())return nullptr;
 
     for(size_t i = m_Operations.Size()-1; i>=0; i--){
@@ -60,6 +60,12 @@ LayoutChangeOp *CommandBufferImpl::GetLastTextureLayoutChange(Texture *texture){
         }
     }
     return nullptr;
+}
+
+VkImageLayout CommandBufferImpl::GetExecutionTextureLayout(const Texture *texture){
+    LayoutChangeOp *op = GetLastTextureLayoutChange(texture);
+
+    return ToVkLayout(op ? op->NewLayout : texture->Layout());
 }
 
 void CommandBufferImpl::OnExecute(){
@@ -131,16 +137,13 @@ void CommandBufferImpl::ImageBarrier(VkPipelineStageFlags src, VkPipelineStageFl
 }
 
 void CommandBufferImpl::ChangeLayout(Texture2D *texture, TextureLayout new_layout){
-    LayoutChangeOp *op = GetLastTextureLayoutChange(texture);
-
-    VkImageLayout current_layout = ToVkLayout(op ? op->NewLayout : texture->Layout());
 
     ImageBarrier(
         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
         VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
         VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
         VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
-        current_layout, 
+        GetExecutionTextureLayout(texture), 
         ToVkLayout(new_layout), 
         *(Vk::Texture2DImpl*)texture,
         IsDepthFormat(texture->Format()) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT
@@ -260,7 +263,7 @@ void CommandBufferImpl::Copy(const Buffer *src, const Texture2D *dst, Vector2u s
     copy.imageSubresource.layerCount = 1;
     copy.imageSubresource.mipLevel = 0;
     
-    vkCmdCopyBufferToImage(m_Handle, *(const Vk::BufferImpl*)src, *(const Vk::Texture2DImpl*)src, ToVkLayout(dst->Layout()), 1, &copy);
+    vkCmdCopyBufferToImage(m_Handle, *(const Vk::BufferImpl*)src, *(const Vk::Texture2DImpl*)src, GetExecutionTextureLayout(dst), 1, &copy);
 
     MemoryBarrier(
         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
@@ -271,7 +274,7 @@ void CommandBufferImpl::Copy(const Buffer *src, const Texture2D *dst, Vector2u s
 }
 
 void CommandBufferImpl::ClearColor(const Texture2D *texture, const Color &color){
-    VkImageLayout current_layout = ToVkLayout(texture->Layout());
+    VkImageLayout current_layout = GetExecutionTextureLayout(texture);
     VkImageLayout clear_layout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
     VkImageAspectFlags aspect = IsDepthFormat(texture->Format()) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
 

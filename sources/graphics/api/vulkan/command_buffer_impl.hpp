@@ -78,7 +78,9 @@ public:
         return m_Pool;
     }
 
-    LayoutChangeOp *GetLastTextureLayoutChange(Texture *texture);
+    LayoutChangeOp *GetLastTextureLayoutChange(const Texture *texture);
+
+    VkImageLayout GetExecutionTextureLayout(const Texture *texture);
 
     void OnExecute();
 
