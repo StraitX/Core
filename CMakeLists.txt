@@ -42,6 +42,7 @@ set(SOURCES_GRAPHICS_API
     ${SOURCES_DIR}/graphics/api/graphics_pipeline.cpp
     ${SOURCES_DIR}/graphics/api/buffer.cpp
     ${SOURCES_DIR}/graphics/api/sampler.cpp
+    ${SOURCES_DIR}/graphics/api/descriptor_set.cpp
 )
 
 set(SOURCES_GRAPHICS_API_VULKAN
