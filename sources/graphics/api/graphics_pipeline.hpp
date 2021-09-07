@@ -79,7 +79,7 @@ struct GraphicsPipelineProperties{
     BlendFactor SrcBlendFactor;
     BlendFactor DstBlendFactor;
     const RenderPass *Pass;
-	//const class DescriptorSetLayout *DescriptorSetLayout;
+	const class DescriptorSetLayout *Layout = nullptr;
 };
 //OpenGL said that
 constexpr size_t MaxVertexAttributes = 8;

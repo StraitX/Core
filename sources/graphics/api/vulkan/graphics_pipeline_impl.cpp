@@ -3,6 +3,7 @@
 #include "graphics/api/vulkan/debug.hpp"
 #include "graphics/api/vulkan/shader_impl.hpp"
 #include "graphics/api/vulkan/render_pass_impl.hpp"
+#include "graphics/api/vulkan/descriptor_set_impl.hpp"
 #include "core/os/memory.hpp"
 
 namespace Vk{
@@ -93,14 +94,14 @@ VkCompareOp ToVkDepthCompareOp(DepthFunction func){
 }
 
 GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &props){    
-
+    VkDescriptorSetLayout set_layout = props.Layout ? VkDescriptorSetLayout(*(Vk::DescriptorSetLayoutImpl*)props.Layout) : VkDescriptorSetLayout(VK_NULL_HANDLE);
 
     VkPipelineLayoutCreateInfo layout_info;
     layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     layout_info.pNext = nullptr;
     layout_info.flags = 0;
-    layout_info.setLayoutCount = 0;
-    layout_info.pSetLayouts = nullptr;
+    layout_info.setLayoutCount = (set_layout != VK_NULL_HANDLE);
+    layout_info.pSetLayouts = &set_layout;
     layout_info.pushConstantRangeCount = 0;
     layout_info.pPushConstantRanges = nullptr;
     VkShaderStageFlagBits n;
