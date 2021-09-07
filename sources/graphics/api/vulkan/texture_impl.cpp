@@ -1,6 +1,8 @@
 #include "graphics/api/vulkan/texture_impl.hpp"
 #include "graphics/api/vulkan/gpu_impl.hpp"
 #include "graphics/api/vulkan/immediate.hpp"
+#include "graphics/api/vulkan/buffer_impl.hpp"
+#include "core/print.hpp"
 
 namespace Vk{
 
@@ -68,6 +70,14 @@ Texture2DImpl::~Texture2DImpl(){
 
     if(!IsCreatedFromImage())
         DestroyImage();
+}
+void Texture2DImpl::Copy(void *src_data, Vector2u src_size){
+    BufferImpl tmp(src_size.x * src_size.y * GetPixelSize(Format()), BufferMemoryType::UncachedRAM, BufferUsageBits::TransferDestination | BufferUsageBits::TransferSource);
+    tmp.Copy(src_data, tmp.Size(), 0);
+
+    Println("Handle: %", (u64)m_Handle);
+
+    Immediate::Copy(&tmp, this);
 }
 
 void Texture2DImpl::ChangeLayout(TextureLayout new_layout){

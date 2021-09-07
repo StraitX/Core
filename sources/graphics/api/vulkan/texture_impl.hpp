@@ -39,7 +39,8 @@ public:
     }
 
     void ChangeLayout(TextureLayout new_layout)override;
-
+    
+    void Copy(void *src_data, Vector2u src_size)override;
 private:
     void CreateImage();
 
