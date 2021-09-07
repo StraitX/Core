@@ -83,6 +83,8 @@ public:
     void Copy(const Buffer *src, const Buffer *dst, size_t size, size_t src_offset, size_t dst_offset)override;
 
     void Copy(const Buffer *src, const Texture2D *dst)override;
+
+    void ClearColor(const Texture2D *texture, const Color &color)override;
 };
 
 }//namespace Vk::

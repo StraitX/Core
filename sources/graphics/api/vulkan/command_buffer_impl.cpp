@@ -64,7 +64,7 @@ void CommandBufferImpl::Begin(){
 
 void CommandBufferImpl::End(){
     PipelineBarrier(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT);
-    
+
     SX_VK_ASSERT(vkEndCommandBuffer(m_Handle), "Vk: CommandBuffer: Failed to end");
 }
 
@@ -211,6 +211,49 @@ void CommandBufferImpl::Copy(const Buffer *src, const Texture2D *dst){
     copy.imageSubresource.mipLevel = 0;
     
     vkCmdCopyBufferToImage(m_Handle, *(const Vk::BufferImpl*)src, *(const Vk::Texture2DImpl*)src, ToVkLayout(dst->Layout()), 1, &copy);
+}
+
+void CommandBufferImpl::ClearColor(const Texture2D *texture, const Color &color){
+    VkImageLayout current_layout = ToVkLayout(texture->Layout());
+    VkImageLayout clear_layout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    VkImageAspectFlags aspect = IsDepthFormat(texture->Format()) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+
+    ImageBarrier(
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
+        VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+        VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+        current_layout, 
+        clear_layout, 
+        *(Vk::Texture2DImpl*)texture,
+        aspect
+    );
+
+    VkClearColorValue value;
+    value.float32[0] = color.R;
+    value.float32[1] = color.G;
+    value.float32[2] = color.B;
+    value.float32[3] = color.A;
+
+    VkImageSubresourceRange range;
+    range.aspectMask = aspect;
+    range.baseMipLevel = 0;
+    range.levelCount = 1;
+    range.baseArrayLayer = 0;
+    range.layerCount = 1;
+
+    vkCmdClearColorImage(m_Handle, *(Vk::Texture2DImpl*)texture, clear_layout, &value, 1, &range);
+
+    ImageBarrier(
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
+        VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+        VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+        clear_layout, 
+        current_layout, 
+        *(Vk::Texture2DImpl*)texture,
+        aspect
+    );
 }
 
 }//namespace Vk::
