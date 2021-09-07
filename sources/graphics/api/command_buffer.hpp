@@ -2,6 +2,7 @@
 #define STRAITX_COMMAND_BUFFER_HPP
 
 #include "core/noncopyable.hpp"
+#include "graphics/color.hpp"
 #include "graphics/api/texture.hpp"
 
 class RenderPass;
@@ -68,6 +69,8 @@ public:
     void Copy(const Buffer *src, const Buffer *dst);
 
     virtual void Copy(const Buffer *src, const Texture2D *dst) = 0;
+
+    virtual void ClearColor(const Texture2D *texture, const Color &color) = 0; 
 
 };
 
