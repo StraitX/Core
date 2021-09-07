@@ -244,12 +244,21 @@ void CommandBufferImpl::Copy(const Buffer *src, const Buffer *dst, size_t size, 
     );
 }
 
-void CommandBufferImpl::Copy(const Buffer *src, const Texture2D *dst, Vector2u src_size, Vector2u dst_offset){
-    MemoryBarrier(
+void CommandBufferImpl::Copy(const Buffer *src, Texture2D *dst, Vector2u src_size, Vector2u dst_offset){
+    VkImageLayout current_layout = GetExecutionTextureLayout(dst);
+    TextureLayout copy_layout = TextureLayout::TransferDstOptimal;
+    VkImageAspectFlags aspect = IsDepthFormat(dst->Format()) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+
+
+    ImageBarrier(
         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
-        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT, 
-        VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
+        VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+        VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+        current_layout, 
+        ToVkLayout(copy_layout), 
+        *(Vk::Texture2DImpl*)dst,
+        aspect
     );
 
     VkBufferImageCopy copy;
@@ -262,24 +271,32 @@ void CommandBufferImpl::Copy(const Buffer *src, const Texture2D *dst, Vector2u s
     copy.imageExtent.depth = 1;
     copy.imageExtent.width = dst->Size().x;
     copy.imageExtent.height = dst->Size().y;
-    copy.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    copy.imageSubresource.aspectMask = aspect;
     copy.imageSubresource.baseArrayLayer = 0;
     copy.imageSubresource.layerCount = 1;
     copy.imageSubresource.mipLevel = 0;
     
-    vkCmdCopyBufferToImage(m_Handle, *(const Vk::BufferImpl*)src, *(const Vk::Texture2DImpl*)src, GetExecutionTextureLayout(dst), 1, &copy);
+    vkCmdCopyBufferToImage(m_Handle, *(const Vk::BufferImpl*)src, *(const Vk::Texture2DImpl*)dst, ToVkLayout(copy_layout), 1, &copy);
 
-    MemoryBarrier(
-        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
-        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT, 
-        VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT
-    );
+    if(current_layout != VK_IMAGE_LAYOUT_UNDEFINED){
+        ImageBarrier(
+            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
+            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
+            VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+            VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+            ToVkLayout(copy_layout), 
+            current_layout, 
+            *(Vk::Texture2DImpl*)dst,
+            aspect
+        );
+    }else{
+        m_Operations.Add({dst, TextureLayout::TransferDstOptimal});
+    }
 }
 
-void CommandBufferImpl::ClearColor(const Texture2D *texture, const Color &color){
+void CommandBufferImpl::ClearColor(Texture2D *texture, const Color &color){
     VkImageLayout current_layout = GetExecutionTextureLayout(texture);
-    VkImageLayout clear_layout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    TextureLayout clear_layout = TextureLayout::TransferDstOptimal;
     VkImageAspectFlags aspect = IsDepthFormat(texture->Format()) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
 
     ImageBarrier(
@@ -288,7 +305,7 @@ void CommandBufferImpl::ClearColor(const Texture2D *texture, const Color &color)
         VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
         VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
         current_layout, 
-        clear_layout, 
+        ToVkLayout(clear_layout), 
         *(Vk::Texture2DImpl*)texture,
         aspect
     );
@@ -306,18 +323,22 @@ void CommandBufferImpl::ClearColor(const Texture2D *texture, const Color &color)
     range.baseArrayLayer = 0;
     range.layerCount = 1;
 
-    vkCmdClearColorImage(m_Handle, *(Vk::Texture2DImpl*)texture, clear_layout, &value, 1, &range);
+    vkCmdClearColorImage(m_Handle, *(Vk::Texture2DImpl*)texture, ToVkLayout(clear_layout), &value, 1, &range);
 
-    ImageBarrier(
-        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
-        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
-        VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
-        VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
-        clear_layout, 
-        current_layout, 
-        *(Vk::Texture2DImpl*)texture,
-        aspect
-    );
+    if(current_layout != VK_IMAGE_LAYOUT_UNDEFINED){
+        ImageBarrier(
+            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
+            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
+            VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+            VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+            ToVkLayout(clear_layout), 
+            current_layout, 
+            *(Vk::Texture2DImpl*)texture,
+            aspect
+        );
+    }else{
+        m_Operations.Add({texture, clear_layout});
+    }
 }
 
 void CommandBufferImpl::Bind(const DescriptorSet *set){

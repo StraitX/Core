@@ -86,6 +86,10 @@ protected:
     u32 m_Width = 0;
     u32 m_Height = 0;
 public:
+    Texture2D() = default;
+    
+    virtual ~Texture2D() = default;
+
     virtual void Copy(void *src_data, Vector2u src_size) = 0;
 
     void Copy(const Image &src_image){
