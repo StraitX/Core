@@ -6,6 +6,7 @@
 #include "graphics/api/command_buffer.hpp"
 #include "graphics/api/vulkan/gpu_impl.hpp"
 #include "graphics/api/vulkan/texture_impl.hpp"
+#include "graphics/api/vulkan/graphics_pipeline_impl.hpp"
 
 namespace Vk{
 
@@ -60,11 +61,28 @@ struct ResourceOperation{
     }
 };
 
+struct CommandBufferBindings{
+    const Vk::GraphicsPipelineImpl* Pipeline;
+
+    CommandBufferBindings(){
+        Reset();
+    }
+
+    void Reset(){
+        Pipeline = nullptr;
+    }
+
+    void Bind(const GraphicsPipeline *pipeline){
+        Pipeline = (const Vk::GraphicsPipelineImpl*)pipeline;
+    }
+};
+
 class CommandBufferImpl: public CommandBuffer{
 private:
     CommandPoolImpl *m_Pool = nullptr;
     VkCommandBuffer m_Handle = VK_NULL_HANDLE;
     Array<ResourceOperation> m_Operations;
+    CommandBufferBindings m_Bindings;
 public:
     CommandBufferImpl(CommandPoolImpl *pool);
 
@@ -123,6 +141,8 @@ public:
 
     //Expects Texture to be in either General or TransferDstOptimal layouts
     void ClearColor(const Texture2D *texture, const Color &color)override;
+
+    void Bind(const DescriptorSet *set)override;
 };
 
 }//namespace Vk::

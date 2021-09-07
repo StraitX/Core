@@ -34,6 +34,10 @@ public:
     operator VkPipeline()const{
         return m_Handle;
     }
+
+    VkPipelineLayout Layout()const{
+        return m_Layout;
+    }
 };
 
 }//namespace Vk::

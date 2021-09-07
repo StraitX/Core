@@ -9,6 +9,7 @@ class RenderPass;
 class Framebuffer;
 class GraphicsPipeline;
 class Buffer;
+class DescriptorSet;
 
 class CommandBuffer;
 
@@ -77,6 +78,8 @@ public:
     }
 
     virtual void ClearColor(const Texture2D *texture, const Color &color) = 0; 
+
+    virtual void Bind(const DescriptorSet *set) = 0;
 
 };
 

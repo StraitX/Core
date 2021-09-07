@@ -5,6 +5,7 @@
 #include "graphics/api/vulkan/framebuffer_impl.hpp"
 #include "graphics/api/vulkan/graphics_pipeline_impl.hpp"
 #include "graphics/api/vulkan/buffer_impl.hpp"
+#include "graphics/api/vulkan/descriptor_set_impl.hpp"
 
 namespace Vk{
 
@@ -77,6 +78,7 @@ void CommandBufferImpl::OnExecute(){
 
 void CommandBufferImpl::Begin(){
     m_Operations.Clear();
+    m_Bindings.Reset();
 
     VkCommandBufferBeginInfo begin_info;
     begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -171,6 +173,8 @@ void CommandBufferImpl::EndRenderPass(){
 }
 
 void CommandBufferImpl::Bind(const GraphicsPipeline *pipeline){
+    m_Bindings.Bind(pipeline);
+
     vkCmdBindPipeline(m_Handle, VK_PIPELINE_BIND_POINT_GRAPHICS, *(const Vk::GraphicsPipelineImpl*)pipeline);
 }
 
@@ -314,6 +318,12 @@ void CommandBufferImpl::ClearColor(const Texture2D *texture, const Color &color)
         *(Vk::Texture2DImpl*)texture,
         aspect
     );
+}
+
+void CommandBufferImpl::Bind(const DescriptorSet *set){
+    VkDescriptorSet handle = *(const Vk::DescriptorSetImpl*)set;
+
+    vkCmdBindDescriptorSets(m_Handle, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Bindings.Pipeline->Layout(), 0, 1, &handle, 0, nullptr);
 }
 
 }//namespace Vk::
