@@ -33,6 +33,8 @@ public:
     Vector2u Size()const{
         return CurrentImage()->Size();
     }
+
+    virtual void Recreate() = 0;
 public:
     static Swapchain *Create(const Window *window);
 };

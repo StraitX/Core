@@ -46,6 +46,7 @@ public:
 
     u32 Current()const override;
 
+    void Recreate()override;
 };
 
 }//namespace Vk::

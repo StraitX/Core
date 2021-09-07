@@ -92,7 +92,7 @@ SwapchainImpl::SwapchainImpl(const Window *window):
     SX_VK_ASSERT(vkGetSwapchainImagesKHR(GPUImpl::s_Instance, m_Handle, &m_ImagesCount, images), "Vk: Swapchain: can't get images");
 
     for(u32 i = 0; i<m_ImagesCount; i++)
-        m_Images.Emplace(images[i], m_Size.x, m_Size.y, TextureFormat::BGRA8, TextureUsageBits::TransferDst, TextureLayout::Undefined);
+        m_Images.Emplace(images[i], m_Size.x, m_Size.y, TextureFormat::BGRA8, TextureUsageBits::TransferDst | TextureUsageBits::ColorAttachmentOptimal, TextureLayout::Undefined);
 
     for(u32 i = 0; i<m_ImagesCount; i++)
         m_ImagesPointers.Push(&m_Images[i]);
@@ -110,6 +110,13 @@ SwapchainImpl::~SwapchainImpl(){
     vkDestroySwapchainKHR(GPUImpl::s_Instance, m_Handle, nullptr);
 
     m_Surface.Destroy();
+}
+
+void SwapchainImpl::Recreate(){
+    const Window *window = m_SurfaceWindow;
+
+    this->~SwapchainImpl();
+    new(this) SwapchainImpl(window);
 }
 
 void SwapchainImpl::PresentCurrent(const Semaphore &wait_semaphore){
