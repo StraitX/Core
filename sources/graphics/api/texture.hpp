@@ -4,6 +4,7 @@
 #include "core/types.hpp"
 #include "core/math/vector2.hpp"
 #include "core/noncopyable.hpp"
+#include "graphics/image.hpp"
 
 enum class SamplePoints{
     Samples_1 = 0,
@@ -36,6 +37,10 @@ enum class TextureFormat : u8{
 namespace Vk{class CommandBufferImpl;}//namespace Vk::
 
 bool IsDepthFormat(TextureFormat format);
+
+bool IsImageFormat(TextureFormat format);
+
+size_t GetPixelSize(TextureFormat format);
 
 // NOTE: Don't mess them up, these are tied to vulkan spec
 
@@ -81,9 +86,11 @@ protected:
     u32 m_Width = 0;
     u32 m_Height = 0;
 public:
-    //virtual void UploadData(void *pixels);
+    virtual void Copy(void *src_data, Vector2u src_size) = 0;
 
-    //virtual void UploadImage(const Image &image);
+    void Copy(const Image &src_image){
+        Copy(src_image.Data(), {src_image.Width(), src_image.Height()});
+    }
 
     Vector2u Size()const{
         return {m_Width, m_Height};
