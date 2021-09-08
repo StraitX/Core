@@ -8,6 +8,7 @@
 #include "core/assert.hpp"
 #include "core/allocators/allocator.hpp"
 #include "core/span.hpp"
+#include <initializer_list>
 
 //TODO: 
 // [ ] Optimize for Types with move ctors
@@ -26,6 +27,21 @@ private:
     size_t m_Capacity = 0;
 public:
     Array() = default;
+
+    Array(ConstSpan<Type> span){
+        Reserve(span.size());
+
+        for(const Type &element: span)
+            Add(element);
+    }
+
+    Array(Span<Type> span):
+        Array(ConstSpan<Type>(span.Pointer(), span.Size())) 
+    {}
+
+    Array(std::initializer_list<Type> list):
+        Array(ConstSpan<Type>(list.begin(), list.size())) 
+    {}
 
     ~Array(){
         Free();
@@ -90,7 +106,11 @@ public:
         return Data()[index];
     }
 
-    operator Span<Type>()const{
+    operator Span<Type>(){
+        return {Data(), Size()};
+    }
+
+    operator ConstSpan<Type>()const{
         return {Data(), Size()};
     }
 
