@@ -70,15 +70,15 @@ enum class DepthFunction{
 };
 
 struct GraphicsPipelineProperties{
-    Span<const Shader*> Shaders;
-    Span<VertexAttribute> VertexAttributes;
-    enum PrimitivesTopology PrimitivesTopology;
-    enum RasterizationMode RasterizationMode;
-	enum DepthFunction DepthFunction;
-    enum BlendFunction BlendFunction;
-    BlendFactor SrcBlendFactor;
-    BlendFactor DstBlendFactor;
-    const RenderPass *Pass;
+    ConstSpan<Shader*> Shaders = {};
+    ConstSpan<VertexAttribute> VertexAttributes = {};
+    enum PrimitivesTopology PrimitivesTopology = PrimitivesTopology::Triangles;
+    enum RasterizationMode RasterizationMode = RasterizationMode::Fill;
+	enum DepthFunction DepthFunction = DepthFunction::Always;
+    enum BlendFunction BlendFunction = BlendFunction::Add;
+    BlendFactor SrcBlendFactor = BlendFactor::SrcAlpha;
+    BlendFactor DstBlendFactor = BlendFactor::OneMinusSrcAlpha;
+    const RenderPass *Pass = nullptr;
 	const class DescriptorSetLayout *Layout = nullptr;
 };
 //OpenGL said that
