@@ -16,8 +16,8 @@ public:
         Create();
     }
 private:
-    Semaphore(u64 handle):
-        m_Handle(handle)
+    Semaphore(nullptr_t):
+        m_Handle(s_NullHandle)
     {}
 public:
     Semaphore(Semaphore &&other)noexcept{

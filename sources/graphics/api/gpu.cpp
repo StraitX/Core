@@ -62,7 +62,7 @@ void GPU::Execute(CommandBuffer *buffer, Span<const Semaphore> wait_semaphores, 
     for(size_t i = 0; i<signal_semaphores.Size(); i++)
         signal_semaphore_handles[i] = signal_semaphores[i].Handle();
 
-    Execute(buffer, {wait_semaphore_handles, wait_semaphores.Size()}, {signal_semaphore_handles, signal_semaphores.Size()}, signal_fence);
+    Execute(buffer, Span<u64>{wait_semaphore_handles, wait_semaphores.Size()}, Span<u64>{signal_semaphore_handles, signal_semaphores.Size()}, signal_fence);
 }
 
 void GPU::Execute(CommandBuffer *buffer, const Fence &signal_fence){
@@ -73,5 +73,5 @@ void GPU::Execute(CommandBuffer *buffer, const Semaphore &wait_semaphore, const 
     u64 wait_semaphore_handle = wait_semaphore.Handle();
     u64 signal_semaphore_handle = signal_semaphore.Handle();
 
-    Execute(buffer, {&wait_semaphore_handle, 1}, {&signal_semaphore_handle, 1}, signal_fence);
+    Execute(buffer, Span<u64>{&wait_semaphore_handle, 1}, Span<u64>{&signal_semaphore_handle, 1}, signal_fence);
 }
