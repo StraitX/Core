@@ -70,7 +70,7 @@ enum class DepthFunction{
 };
 
 struct GraphicsPipelineProperties{
-    ConstSpan<Shader*> Shaders = {};
+    ConstSpan<const Shader*> Shaders = {};
     ConstSpan<VertexAttribute> VertexAttributes = {};
     enum PrimitivesTopology PrimitivesTopology = PrimitivesTopology::Triangles;
     enum RasterizationMode RasterizationMode = RasterizationMode::Fill;
