@@ -2,13 +2,15 @@
 #define STRAITX_SPAN_HPP 
 
 #include "core/types.hpp"
+#include "core/type_traits.hpp"
+#include "core/templates.hpp"
 #include "core/assert.hpp"
 
 // it has no idea about allocations, object lifetime and stuff
 template <typename Type, typename SizeType = size_t>
 class Span{
 public:
-    typedef Type* Iterator;
+    using Iterator = Type*;
 private:
     Type *m_Pointer = nullptr;
     SizeType m_Size = 0;
@@ -23,8 +25,25 @@ public:
         m_Size(size)
     {}
 
+    template<typename _Type = Type, 
+             typename NonConstType = typename RemoveConst<_Type>::Type,
+             EnableIfType<IsConst<_Type>::Value, bool> = true>
+    Span(NonConstType *pointer, SizeType size):
+        m_Pointer(pointer),
+        m_Size(size)
+    {}
+
     template<size_t ArraySize>
     Span(Type (&array)[ArraySize]):
+        m_Pointer(&array[0]),
+        m_Size(ArraySize)
+    {}
+
+    template<size_t ArraySize,
+             typename _Type = Type,
+             typename NonConstType = typename RemoveConst<_Type>::Type,
+             EnableIfType<IsConst<_Type>::Value, bool> = true>
+    Span(NonConstType (&array)[ArraySize]):
         m_Pointer(&array[0]),
         m_Size(ArraySize)
     {}
