@@ -29,7 +29,7 @@ public:
     Array() = default;
 
     Array(ConstSpan<Type> span){
-        Reserve(span.size());
+        Reserve(span.Size());
 
         for(const Type &element: span)
             Add(element);
