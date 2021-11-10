@@ -75,7 +75,7 @@ MemoryProperties MemoryProperties::Get(VkPhysicalDevice device){
         }
     }
 
-    if(props.memoryTypeCount == 0 || result.MemoryTypes[MemoryType::RAM].Index == InvalidIndex || result.MemoryTypes[MemoryType::VRAM].Index == InvalidIndex){
+    if(props.memoryTypeCount == 0){
         result.Layout = MemoryLayout::Unknown;
         return result;
     }
