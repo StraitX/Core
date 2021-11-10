@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_COMMAND_BUFFER_IMPL_HPP
 
 #include "core/os/vulkan.hpp"
-#include "core/array.hpp"
+#include "core/list.hpp"
 #include "graphics/api/command_buffer.hpp"
 #include "graphics/api/vulkan/gpu_impl.hpp"
 #include "graphics/api/vulkan/texture_impl.hpp"
@@ -81,7 +81,7 @@ class CommandBufferImpl: public CommandBuffer{
 private:
     CommandPoolImpl *m_Pool = nullptr;
     VkCommandBuffer m_Handle = VK_NULL_HANDLE;
-    Array<ResourceOperation> m_Operations;
+    List<ResourceOperation> m_Operations;
     CommandBufferBindings m_Bindings;
 public:
     CommandBufferImpl(CommandPoolImpl *pool);

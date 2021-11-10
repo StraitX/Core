@@ -1,5 +1,5 @@
-#ifndef STRAITX_ARRAY_HPP
-#define STRAITX_ARRAY_HPP
+#ifndef STRAITX_LIST_HPP
+#define STRAITX_LIST_HPP
 
 #include "core/type_traits.hpp"
 #include "core/types.hpp"
@@ -18,7 +18,7 @@
 // [ ] Get rid of NonCopyable include XD
 
 template<typename Type, typename GeneralAllocator = DefaultGeneralAllocator>
-class Array: private GeneralAllocator, public NonCopyable{
+class List: private GeneralAllocator, public NonCopyable{
 public:
     static_assert(!IsConst<Type>::Value && !IsVolatile<Type>::Value, "Type can't be const or volatile");
 private:
@@ -26,24 +26,24 @@ private:
     size_t m_Size = 0;
     size_t m_Capacity = 0;
 public:
-    Array() = default;
+    List() = default;
 
-    Array(ConstSpan<Type> span){
+    List(ConstSpan<Type> span){
         Reserve(span.Size());
 
         for(const Type &element: span)
             Add(element);
     }
 
-    Array(Span<Type> span):
-        Array(ConstSpan<Type>(span.Pointer(), span.Size())) 
+    List(Span<Type> span):
+        List(ConstSpan<Type>(span.Pointer(), span.Size())) 
     {}
 
-    Array(std::initializer_list<Type> list):
-        Array(ConstSpan<Type>(list.begin(), list.size())) 
+    List(std::initializer_list<Type> list):
+        List(ConstSpan<Type>(list.begin(), list.size())) 
     {}
 
-    ~Array(){
+    ~List(){
         Free();
     }
 
@@ -64,7 +64,7 @@ public:
     }
 
     void RemoveLast(){
-        SX_CORE_ASSERT(m_Size, "Can't remove last element from empty Array");
+        SX_CORE_ASSERT(m_Size, "Can't remove last element from empty List");
 
         Data()[--m_Size].~Type();
     }
@@ -97,7 +97,7 @@ public:
     }
 
     Type &operator[](size_t index){
-        return const_cast<Type&>(const_cast<const Array<Type, GeneralAllocator>*>(this)->operator[](index));
+        return const_cast<Type&>(const_cast<const List<Type, GeneralAllocator>*>(this)->operator[](index));
     }
 
     const Type &operator[](size_t index)const{
@@ -147,4 +147,4 @@ public:
     }
 };
 
-#endif//STRAITX_ARRAY_HPP
+#endif//STRAITX_LIST_HPP

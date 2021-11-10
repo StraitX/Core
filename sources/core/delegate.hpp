@@ -3,10 +3,10 @@
 
 #include "core/function.hpp"
 #include "core/allocators/allocator.hpp"
-#include "core/array.hpp"
+#include "core/list.hpp"
 
 template<typename...ArgsType>
-class Delegate: public Array<Function<void(ArgsType...)>>{
+class Delegate: public List<Function<void(ArgsType...)>>{
 public:
     using Subscriber = Function<void(ArgsType...)>;
 public:
@@ -34,7 +34,7 @@ public:
     }
 
     void Bind(Function<void(ArgsType...)> subscriber){
-        Array<Function<void(ArgsType...)>>::Add(subscriber);
+        List<Function<void(ArgsType...)>>::Add(subscriber);
     }
 
     void operator()(ArgsType...args){
