@@ -8,8 +8,8 @@ namespace Vk{
 
 BufferImpl::BufferImpl(size_t size, BufferMemoryType mem_type, BufferUsage usage):
     m_Size(size),
-    m_MemoryType(mem_type),
-    m_RealMemoryType(GPUImpl::s_Instance.ReadMemoryType(MemoryType::Type(mem_type)))
+    m_AbstractMemoryType(mem_type),
+    m_BackingMemoryType(GPUImpl::s_Instance.BackingMemoryType(MemoryType::Type(mem_type)))
 {
     VkBufferCreateInfo info;
     info.sType                  = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -66,9 +66,9 @@ void BufferImpl::Copy(const void *data, size_t size, size_t offset){
 }
 
 bool BufferImpl::IsMappable()const{
-    return m_RealMemoryType == Vk::MemoryType::DynamicVRAM
-        || m_RealMemoryType == Vk::MemoryType::RAM
-        || m_RealMemoryType == Vk::MemoryType::UncachedRAM;
+    return m_BackingMemoryType == Vk::MemoryType::DynamicVRAM
+        || m_BackingMemoryType == Vk::MemoryType::RAM
+        || m_BackingMemoryType == Vk::MemoryType::UncachedRAM;
 }
 
 bool BufferImpl::IsMapped()const{
@@ -93,7 +93,7 @@ size_t BufferImpl::Size()const{
 }
 
 BufferMemoryType BufferImpl::MemoryType()const{
-    return m_MemoryType;
+    return m_AbstractMemoryType;
 }
 
 BufferUsage BufferImpl::Usage()const{

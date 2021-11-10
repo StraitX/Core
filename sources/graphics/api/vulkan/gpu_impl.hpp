@@ -47,11 +47,11 @@ public:
     }
 
     u32 MemoryIndex(MemoryType::Type type)const{
-        return m_MemoryProperties.MemoryTypes[(size_t)type].Index;
+        return m_MemoryProperties.AbstractMemoryTypes[(size_t)type].Index;
     }
 
-    MemoryType::Type ReadMemoryType(MemoryType::Type type)const{
-        return m_MemoryProperties.RealMemoryTypes[type];
+    MemoryType::Type BackingMemoryType(MemoryType::Type type)const{
+        return m_MemoryProperties.AbstractMemoryTypes[type].BackingMemoryType;
     }
 };
 

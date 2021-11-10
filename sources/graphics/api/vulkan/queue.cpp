@@ -49,6 +49,9 @@ QueueProperties QueueProperties::Get(VkPhysicalDevice device){
             continue;
         }
     }
+
+
+    
     return result;
 }
 

@@ -12,8 +12,8 @@ private:
     VkDeviceMemory m_Memory = VK_NULL_HANDLE;
     void *m_Pointer = nullptr;
     size_t m_Size;
-    BufferMemoryType m_MemoryType;
-    MemoryType::Type m_RealMemoryType;
+    BufferMemoryType m_AbstractMemoryType;
+    MemoryType::Type m_BackingMemoryType;
     BufferUsage m_Usage;
 public:
     BufferImpl(size_t size, BufferMemoryType mem_type, BufferUsage usage);

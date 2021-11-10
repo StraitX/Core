@@ -124,10 +124,10 @@ Result GPUImpl::Initialize(){
     SX_ASSERT(m_Queues[QueueFamily::Compute] != VK_NULL_HANDLE);
     SX_ASSERT(m_Queues[QueueFamily::Transfer] != VK_NULL_HANDLE);
 
-    SX_ASSERT(m_MemoryProperties.MemoryTypes[MemoryType::VRAM].Index != InvalidIndex);
-    SX_ASSERT(m_MemoryProperties.MemoryTypes[MemoryType::DynamicVRAM].Index != InvalidIndex);
-    SX_ASSERT(m_MemoryProperties.MemoryTypes[MemoryType::RAM].Index != InvalidIndex);
-    SX_ASSERT(m_MemoryProperties.MemoryTypes[MemoryType::UncachedRAM].Index != InvalidIndex);
+    SX_ASSERT(m_MemoryProperties.AbstractMemoryTypes[MemoryType::VRAM].Index != InvalidIndex);
+    SX_ASSERT(m_MemoryProperties.AbstractMemoryTypes[MemoryType::DynamicVRAM].Index != InvalidIndex);
+    SX_ASSERT(m_MemoryProperties.AbstractMemoryTypes[MemoryType::RAM].Index != InvalidIndex);
+    SX_ASSERT(m_MemoryProperties.AbstractMemoryTypes[MemoryType::UncachedRAM].Index != InvalidIndex);
 
 
     Immediate::Initialize();

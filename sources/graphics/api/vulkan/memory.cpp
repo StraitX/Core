@@ -54,23 +54,23 @@ MemoryProperties MemoryProperties::Get(VkPhysicalDevice device){
 
     for(u32 i = 0; i<props.memoryTypeCount; i++){
         if(IsVRAM(props.memoryTypes[i].propertyFlags)){
-            result.MemoryTypes[MemoryType::VRAM].Index = i;
-            result.RealMemoryTypes[MemoryType::VRAM] = MemoryType::VRAM;
+            result.AbstractMemoryTypes[MemoryType::VRAM].Index = i;
+            result.AbstractMemoryTypes[MemoryType::VRAM].BackingMemoryType = MemoryType::VRAM;
             continue;
         }
         if(IsDynamicVRAM(props.memoryTypes[i].propertyFlags)){
-            result.MemoryTypes[MemoryType::DynamicVRAM].Index = i;
-            result.RealMemoryTypes[MemoryType::DynamicVRAM] = MemoryType::DynamicVRAM;
+            result.AbstractMemoryTypes[MemoryType::DynamicVRAM].Index = i;
+            result.AbstractMemoryTypes[MemoryType::DynamicVRAM].BackingMemoryType = MemoryType::DynamicVRAM;
             continue;
         }
         if(IsRAM(props.memoryTypes[i].propertyFlags)){ 
-            result.MemoryTypes[MemoryType::RAM].Index = i;
-            result.RealMemoryTypes[MemoryType::RAM] = MemoryType::RAM;
+            result.AbstractMemoryTypes[MemoryType::RAM].Index = i;
+            result.AbstractMemoryTypes[MemoryType::RAM].BackingMemoryType = MemoryType::RAM;
             continue;
         }
         if(IsUncachedRAM(props.memoryTypes[i].propertyFlags)){
-            result.MemoryTypes[MemoryType::UncachedRAM].Index = i;
-            result.RealMemoryTypes[MemoryType::UncachedRAM] = MemoryType::UncachedRAM;
+            result.AbstractMemoryTypes[MemoryType::UncachedRAM].Index = i;
+            result.AbstractMemoryTypes[MemoryType::UncachedRAM].BackingMemoryType = MemoryType::UncachedRAM;
             continue;
         }
     }
@@ -80,28 +80,26 @@ MemoryProperties MemoryProperties::Get(VkPhysicalDevice device){
         return result;
     }
     if(props.memoryTypeCount == 1 && IsUniform(props.memoryTypes[0].propertyFlags)){
-        result.MemoryTypes[MemoryType::VRAM].Index = 0;
-        result.MemoryTypes[MemoryType::DynamicVRAM].Index = 0;
-        result.MemoryTypes[MemoryType::RAM].Index = 0;
-        result.MemoryTypes[MemoryType::UncachedRAM].Index = 0;
+        result.AbstractMemoryTypes[MemoryType::VRAM].Index = 0;
+        result.AbstractMemoryTypes[MemoryType::DynamicVRAM].Index = 0;
+        result.AbstractMemoryTypes[MemoryType::RAM].Index = 0;
+        result.AbstractMemoryTypes[MemoryType::UncachedRAM].Index = 0;
 
         // uniform memory has the same capabilities as DynamicRAM
-        result.RealMemoryTypes[MemoryType::VRAM] = MemoryType::DynamicVRAM; 
-        result.RealMemoryTypes[MemoryType::DynamicVRAM] = MemoryType::DynamicVRAM; 
-        result.RealMemoryTypes[MemoryType::RAM] = MemoryType::DynamicVRAM; 
-        result.RealMemoryTypes[MemoryType::UncachedRAM] = MemoryType::DynamicVRAM; 
+        result.AbstractMemoryTypes[MemoryType::VRAM].BackingMemoryType = MemoryType::DynamicVRAM; 
+        result.AbstractMemoryTypes[MemoryType::DynamicVRAM].BackingMemoryType = MemoryType::DynamicVRAM; 
+        result.AbstractMemoryTypes[MemoryType::RAM].BackingMemoryType = MemoryType::DynamicVRAM; 
+        result.AbstractMemoryTypes[MemoryType::UncachedRAM].BackingMemoryType = MemoryType::DynamicVRAM; 
 
         result.Layout = MemoryLayout::Uniform;
         return result;
     }
     // first if statement assures that we have RAM and VRAM to fallback to
-    if(result.MemoryTypes[MemoryType::UncachedRAM].Index == InvalidIndex){
-        result.MemoryTypes[MemoryType::UncachedRAM] = result.MemoryTypes[MemoryType::RAM];
-        result.RealMemoryTypes[MemoryType::UncachedRAM] = MemoryType::RAM;
+    if(result.AbstractMemoryTypes[MemoryType::UncachedRAM].Index == InvalidIndex){
+        result.AbstractMemoryTypes[MemoryType::UncachedRAM] = result.AbstractMemoryTypes[MemoryType::RAM];
     }
-    if(result.MemoryTypes[MemoryType::DynamicVRAM].Index == InvalidIndex){
-        result.MemoryTypes[MemoryType::DynamicVRAM] = result.MemoryTypes[MemoryType::VRAM];
-        result.RealMemoryTypes[MemoryType::DynamicVRAM] = MemoryType::VRAM;
+    if(result.AbstractMemoryTypes[MemoryType::DynamicVRAM].Index == InvalidIndex){
+        result.AbstractMemoryTypes[MemoryType::DynamicVRAM] = result.AbstractMemoryTypes[MemoryType::VRAM];
         result.Layout = MemoryLayout::Dedicated; 
     }else{
         result.Layout = MemoryLayout::DedicatedWithDynamic;
@@ -109,21 +107,22 @@ MemoryProperties MemoryProperties::Get(VkPhysicalDevice device){
     return result;
 }
 
-bool MemoryProperties::IsMappable(MemoryType::Type type)const{
-    SX_ASSERT(Layout != MemoryLayout::Unknown);
+bool MemoryProperties::IsMappable(MemoryType::Type abstract_memory_type)const{
+    if(Layout == MemoryLayout::Unknown)
+        return false;
 
     if(Layout == MemoryLayout::Uniform)
         return true;
 
     if(Layout == MemoryLayout::DedicatedWithDynamic){
-        if(type == MemoryType::VRAM)
+        if(abstract_memory_type == MemoryType::VRAM)
             return false;
         else
             return true;
     }
 
     if(Layout == MemoryLayout::Dedicated){
-        if(type == MemoryType::VRAM || type == MemoryType::DynamicVRAM)
+        if(abstract_memory_type == MemoryType::VRAM || abstract_memory_type == MemoryType::DynamicVRAM)
             return false;
         else
             return true;

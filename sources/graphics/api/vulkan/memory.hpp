@@ -15,6 +15,7 @@ enum class MemoryLayout{
     Uniform
 };
 
+
 struct MemoryType{
     enum Type{
         VRAM = 0,
@@ -22,18 +23,17 @@ struct MemoryType{
         RAM = 2,
         UncachedRAM = 3
     };
-
+    Type BackingMemoryType;
     u32 Index = InvalidIndex;
 
-    static const char *Name(Type type);
+    static const char *Name(MemoryType::Type type);
 };
 
 struct MemoryProperties{
     MemoryLayout Layout;
-    MemoryType MemoryTypes[4];
-    MemoryType::Type RealMemoryTypes[4];
+    MemoryType AbstractMemoryTypes[4];
 
-    bool IsMappable(MemoryType::Type type)const;
+    bool IsMappable(MemoryType::Type abstract_memory_type)const;
 
     static MemoryProperties Get(VkPhysicalDevice device);
 };
