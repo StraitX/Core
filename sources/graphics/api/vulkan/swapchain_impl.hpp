@@ -5,7 +5,7 @@
 #include "core/os/vulkan_surface.hpp"
 #include "core/os/window.hpp"
 #include "core/math/vector2.hpp"
-#include "core/list.hpp"
+#include "core/push_array.hpp"
 #include "graphics/api/swapchain.hpp"
 #include "graphics/api/vulkan/queue.hpp"
 #include "graphics/api/vulkan/texture_impl.hpp"
@@ -14,6 +14,9 @@ namespace Vk{
 
 class SwapchainImpl: public Swapchain{
 private:
+    // XXX: vulkan can provide us with inf amount of images
+	static constexpr size_t s_MaxImages = 5;
+
     const Window *m_SurfaceWindow = nullptr;
     VulkanSurface  m_Surface;
     VkSwapchainKHR m_Handle = VK_NULL_HANDLE; 
@@ -25,8 +28,8 @@ private:
     u32 m_CurrentImage = 0;
     u32 m_ImagesCount = 0;
 
-    List<Texture2DImpl> m_Images;
-    List<Texture2D *> m_ImagesPointers;
+    PushArray<Texture2DImpl, s_MaxImages> m_Images;
+    PushArray<Texture2D *, s_MaxImages> m_ImagesPointers;
 
     QueueFamily::Type m_TargetQueueFamily;
     VkQueue m_TargetQueue = VK_NULL_HANDLE;
