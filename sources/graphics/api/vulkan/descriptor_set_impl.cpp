@@ -18,7 +18,7 @@ VkDescriptorType ToVkDescriptorType(ShaderBindingType type){
 
 DescriptorSetLayoutImpl::DescriptorSetLayoutImpl(ConstSpan<ShaderBinding> bindings){
 	for(const ShaderBinding &binding: bindings)
-		m_Bindings.Push(binding);
+		m_Bindings.Add(binding);
 	
 	VkDescriptorSetLayoutBinding *layout_bindings = SX_STACK_ARRAY_ALLOC(VkDescriptorSetLayoutBinding, bindings.Size());
 

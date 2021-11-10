@@ -57,21 +57,21 @@ public:
         Clear();
     }
 
-    void Push(const Type &element){
+    void Add(const Type &element){
         Emplace(element);
     }
 
-    void Push(Type &&element){
+    void Add(Type &&element){
         Emplace(Move(element));
     }
 
-    void Pop(){
+    void RemoveLast(){
         begin()[--m_Size].~Type();
     }
 
     void Clear(){
         while(Size())
-            Pop();
+            RemoveLast();
     }
 
     Iterator Find(const Type &element){
@@ -108,7 +108,7 @@ public:
     PushArray &operator=(const PushArray &other){
         Clear();
         for(auto &e: other)
-            Push(e);
+            Add(e);
         return *this;
     }
 

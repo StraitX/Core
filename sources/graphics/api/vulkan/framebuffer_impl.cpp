@@ -13,7 +13,7 @@ FramebufferImpl::FramebufferImpl(const FramebufferProperties &props):
 
     for(size_t i = 0; i < props.Attachments.Size(); ++i){
         //don't lose the opportunity to store attachment pointers in a single loop
-        m_Attachments.Push(props.Attachments[i]);
+        m_Attachments.Add(props.Attachments[i]);
 
         auto image = (Vk::Texture2DImpl*)props.Attachments[i];
 

@@ -85,7 +85,7 @@ Result GPUImpl::Initialize(){
             qinfo.queueCount = 1;
             qinfo.pQueuePriorities = &priority;
 
-            queues.Push(qinfo);
+            queues.Add(qinfo);
         }
     }
 

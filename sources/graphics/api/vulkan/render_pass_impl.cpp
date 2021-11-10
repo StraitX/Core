@@ -16,7 +16,7 @@ RenderPassImpl::RenderPassImpl(const RenderPassProperties &props){
 
     for(size_t i = 0; i<attachments.Size(); i++){
         //also fill attachment desctiptions array
-        m_Attachments.Push(props.Attachments[i]);
+        m_Attachments.Add(props.Attachments[i]);
 
         if(IsDepthFormat(props.Attachments[i].Format))
             m_DepthIndex = i;

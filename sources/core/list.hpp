@@ -56,7 +56,7 @@ public:
     }
 
     template<typename...ArgsType>
-    void Emplace(ArgsType...args){
+    void Emplace(ArgsType&&...args){
         if(m_Size == m_Capacity)
             Reserve(m_Size * 2 + (m_Size == 0));
 
@@ -75,7 +75,7 @@ public:
         Type *new_array = (Type*)GeneralAllocator::Alloc(capacity * sizeof(Type));
 
         for(size_t i = 0; i<Size(); i++){
-            new(&new_array[i]) Type(Data()[i]);
+            new(&new_array[i]) Type(Move(reinterpret_cast<Type*>(m_Memory)[i]));
             Data()[i].~Type();
         }
 
