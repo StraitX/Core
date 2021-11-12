@@ -13,8 +13,9 @@ struct QueueFamily{
         Graphics = 0,
         Compute  = 1,
         Transfer = 2,
-        FamilyCount = 3
     };
+
+    static constexpr size_t FamilyCount = 3;
 
     u32 Index;
     u32 Count;
@@ -29,6 +30,11 @@ struct QueueProperties{
     QueueFamily Family[QueueFamily::FamilyCount];
 
     static QueueProperties Get(VkPhysicalDevice device);
+};
+
+struct AbstractQueue{
+    QueueFamily *BackingQueueFamily = nullptr;
+    VkQueue Handle = VK_NULL_HANDLE;
 };
 
 }//namespace Vk::

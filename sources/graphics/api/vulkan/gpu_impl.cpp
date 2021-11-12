@@ -66,12 +66,13 @@ Result GPUImpl::Initialize(){
     m_MemoryProperties = MemoryProperties::Get(m_PhysicalHandle);
     m_QueueProperties = QueueProperties::Get(m_PhysicalHandle);
 
-    if(m_QueueProperties.Family[QueueFamily::Graphics].Index == InvalidIndex){
+    if(m_QueueProperties.Family[QueueFamily::Graphics].Index == InvalidIndex 
+    || m_QueueProperties.Family[QueueFamily::Graphics].Count == 0){
         LogError("Vk: GPU: this gpu does not support graphics queue");
         return Result::Unsupported;
     }
     
-    PushArray<VkDeviceQueueCreateInfo, QueueFamily::FamilyCount> queues;
+    PushArray<VkDeviceQueueCreateInfo, QueueFamily::FamilyCount> queue_creations_infos;
 
     float priority = 1.0;
 
@@ -85,7 +86,8 @@ Result GPUImpl::Initialize(){
             qinfo.queueCount = 1;
             qinfo.pQueuePriorities = &priority;
 
-            queues.Add(qinfo);
+            m_Queues[i].BackingQueueFamily = &m_QueueProperties.Family[i];
+            queue_creations_infos.Add(qinfo);
         }
     }
 
@@ -103,8 +105,8 @@ Result GPUImpl::Initialize(){
     info.enabledLayerCount      = 0;
     info.ppEnabledLayerNames    = nullptr;
     info.pEnabledFeatures       = &features;
-    info.queueCreateInfoCount   = queues.Size();
-    info.pQueueCreateInfos      = queues.Data();
+    info.queueCreateInfoCount   = queue_creations_infos.Size();
+    info.pQueueCreateInfos      = queue_creations_infos.Data();
 
     LogInfo("Vk: GPU: Creating device with % queues", info.queueCreateInfoCount);
 
@@ -112,17 +114,17 @@ Result GPUImpl::Initialize(){
         return Result::NullObject;
 
     for(int i = 0; i<QueueFamily::FamilyCount; i++){
-        if(m_QueueProperties.Family[i].Index != InvalidIndex)
-            vkGetDeviceQueue(m_Handle, m_QueueProperties.Family[i].Index, 0, &m_Queues[i]);
-    }
-
-    for(int i = 1; i<QueueFamily::FamilyCount; i++)
-        if(m_Queues[i] == VK_NULL_HANDLE)
+        if(m_Queues[i].BackingQueueFamily != nullptr){
+            vkGetDeviceQueue(m_Handle, m_Queues[i].BackingQueueFamily->Index, 0, &m_Queues[i].Handle);
+        }else{
+            SX_CORE_ASSERT(i != 0, "Vk: QueueFallbackOperation: Graphics queue has no backing queue family");
             m_Queues[i] = m_Queues[i - 1];
+        }
+    }
     
-    SX_ASSERT(m_Queues[QueueFamily::Graphics] != VK_NULL_HANDLE);
-    SX_ASSERT(m_Queues[QueueFamily::Compute] != VK_NULL_HANDLE);
-    SX_ASSERT(m_Queues[QueueFamily::Transfer] != VK_NULL_HANDLE);
+    SX_ASSERT(m_Queues[QueueFamily::Graphics].Handle != VK_NULL_HANDLE);
+    SX_ASSERT(m_Queues[QueueFamily::Compute ].Handle != VK_NULL_HANDLE);
+    SX_ASSERT(m_Queues[QueueFamily::Transfer].Handle != VK_NULL_HANDLE);
 
     SX_ASSERT(m_MemoryProperties.AbstractMemoryTypes[MemoryType::VRAM].Index != InvalidIndex);
     SX_ASSERT(m_MemoryProperties.AbstractMemoryTypes[MemoryType::DynamicVRAM].Index != InvalidIndex);

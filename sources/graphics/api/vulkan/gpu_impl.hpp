@@ -16,7 +16,7 @@ private:
     QueueProperties m_QueueProperties;
     MemoryProperties m_MemoryProperties;
 
-    VkQueue m_Queues[QueueFamily::FamilyCount] = {VK_NULL_HANDLE};
+    AbstractQueue m_Queues[QueueFamily::FamilyCount] = {};
 public:
     static GPUImpl s_Instance;
 
@@ -39,11 +39,11 @@ public:
     }
 
     VkQueue Queue(QueueFamily::Type type)const{
-        return m_Queues[type];
+        return m_Queues[type].Handle;
     }
 
     u32 QueueIndex(QueueFamily::Type type)const{
-        return m_QueueProperties.Family[type].Index;
+        return m_Queues[type].BackingQueueFamily->Index;
     }
 
     u32 MemoryIndex(MemoryType::Type type)const{
