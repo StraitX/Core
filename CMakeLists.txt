@@ -74,9 +74,7 @@ set(SOURCES_GRAPHICS
 )
 
 set(SOURCES_MAIN
-    ${SOURCES_DIR}/main/engine.cpp
-    ${SOURCES_DIR}/main/application.cpp
-    ${SOURCES_DIR}/main/runtime.cpp
+    ${SOURCES_DIR}/main/guarded_main.cpp
 )
 
 if(STRAITX_PLATFORM_LINUX)

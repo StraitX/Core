@@ -36,11 +36,13 @@ struct GPUImpl{
 class GPU{
 private:
     static GPUImpl *s_Impl;
-public:
+private:
     static Result Initialize();
 
     static void Finalize();
 
+    friend int GuardedMain(int argc, const char **argv);
+public:
     static GPUType Type();
 
     static GPUVendor Vendor();

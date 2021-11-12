@@ -1,15 +1,10 @@
 #include <cstdlib>
 #include <cstdio>
-#include "core/os/platform_runtime.hpp"
-#include "platform/linux/window_impl.hpp"
 #include "platform/linux/display_server.hpp"
-#include "core/os/clock.hpp"
+#include "core/span.hpp"
+#include "main/guarded_main.hpp"
 
-namespace Linux{
-extern void PollEvents(const WindowImpl &window, void (*handler)(const Event &e));
-}//namespace Linux::
-
-int main(int argc, char **argv){
+int main(int argc, const char **argv){
 	(void)argc;
 	(void)argv;
 
@@ -18,25 +13,9 @@ int main(int argc, char **argv){
 		return EXIT_FAILURE;
 	}
 
-	Result init = Result::None;
-	if((init = PlatformRuntime::Initialize())){
-
-		Clock frame_clock;
-		float dt = 1.f/60.f;
-		for(;;){
-			frame_clock.Restart();
-
-			if(!PlatformRuntime::Tick(dt))
-				break;
-			dt = frame_clock.GetElapsedTime().AsSeconds();	
-		}
-	}else{
-		fputs("PlatformRuntime: Initialization failed: exiting...", stderr);
-	}
-
-	PlatformRuntime::Finalize();
+	int result = GuardedMain(argc, argv);
 
 	Linux::DisplayServer::Close();
 
-	return !init;
+	return result;
 }
