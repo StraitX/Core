@@ -39,6 +39,16 @@ private:
 public:
     Function() = default;
 
+    Function(Signature fptr){
+        Bind(fptr);
+    }
+
+    template<typename Functor>
+    Function(Functor functor){
+        Signature fptr = functor;
+        Bind(fptr);
+    }
+
     Function(const Function &other) = default;
 
     Function(Function &&other){
@@ -46,6 +56,17 @@ public:
     }
 
     ~Function() = default;
+
+    Function &operator=(Signature fptr){
+        Bind(fptr);
+    }
+
+    template<typename Functor>
+    Function &operator=(Functor functor){
+        Signature fptr = functor;
+        Bind(fptr);
+        return *this;        
+    }
 
     Function &operator=(const Function &other) = default;
 
