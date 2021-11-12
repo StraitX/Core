@@ -77,7 +77,7 @@ Result GPUImpl::Initialize(){
     float priority = 1.0;
 
     for(int i = 0; i<QueueFamily::FamilyCount; i++){
-        if(m_QueueProperties.Family[i].Index != InvalidIndex){
+        if(m_QueueProperties.Family[i].Index != InvalidIndex && m_QueueProperties.Family[i].Count){
             VkDeviceQueueCreateInfo qinfo;
             qinfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
             qinfo.pNext = 0;
