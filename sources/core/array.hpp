@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include "core/types.hpp"
 #include "core/assert.hpp"
+#include "core/indexed_range.hpp"
 
 template<typename Type, size_t SizeValue>
 class Array{
@@ -24,6 +25,9 @@ private:
             return nullptr;
         }
     };
+public:
+    using Iterator = Type *;
+    using ConstIterator = const Type *;
 private:
     ArrayStorage<Type, SizeValue> m_Elements;
 public:
@@ -69,20 +73,32 @@ public:
         return m_Elements.Data();
     }
 
-    const Type *begin()const{
+    ConstIterator begin()const{
         return Data();
     }
 
-    const Type *end()const{
+    ConstIterator end()const{
         return Data() + Size();
     }
 
-    Type *begin(){
+    Iterator begin(){
         return Data();
     }
 
-    Type *end(){
+    Iterator end(){
         return Data() + Size();
+    }
+
+    IndexedRange<Iterator> Indexed(){
+        return {begin(), end()};
+    }
+
+    IndexedRange<ConstIterator> Indexed()const{
+        return ConstIndexed();
+    }
+
+    IndexedRange<ConstIterator> ConstIndexed()const{
+        return {begin(), end()};
     }
 };
 

@@ -7,6 +7,7 @@
 #include "core/allocators/allocator.hpp"
 #include "core/type_traits.hpp"
 #include "core/move.hpp"
+#include "core/indexed_range.hpp"
 //for now
 #include "core/noncopyable.hpp"
 
@@ -76,8 +77,8 @@ private:
 		}
 	};
 public:
-	typedef IteratorBase<Type> Iterator;
-	typedef IteratorBase<const Type> ConstIterator;
+	using Iterator = IteratorBase<Type>;
+	using ConstIterator = IteratorBase<const Type>;
 private:
 	Bucket *m_Begin = nullptr;
 	Bucket **m_End = &m_Begin;
@@ -150,6 +151,18 @@ public:
 	ConstIterator end()const{
 		return ConstIterator(nullptr, 0);
 	}
+
+    IndexedRange<Iterator> Indexed(){
+        return {begin(), end()};
+    }
+
+    IndexedRange<ConstIterator> Indexed()const{
+        return ConstIndexed();
+    }
+
+    IndexedRange<ConstIterator> ConstIndexed()const{
+        return {begin(), end()};
+    }
 private:
 	Bucket *AllocBucket(){
 		return new(PoolAllocator::Alloc())Bucket();

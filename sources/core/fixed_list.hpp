@@ -7,12 +7,14 @@
 #include "core/assert.hpp"
 #include "core/move.hpp"
 #include "core/span.hpp"
+#include "core/indexed_range.hpp"
 
 template<typename Type, size_t CapacityValue>
 class FixedList{
+    static_assert(!IsConst<Type>() && !IsVolatile<Type>(), "Type can't be cv-qualified");
 public:
-    typedef Type * Iterator;
-    typedef const Type * ConstIterator;
+    using Iterator = Type *;
+    using ConstIterator = const Type *;
 private:
     // we don't want c++ to construct objects for us
     size_t m_Size = 0;
@@ -29,7 +31,6 @@ private:
 		}
 	}m_Array;
 public:
-    static_assert(!IsConst<Type>() && !IsVolatile<Type>(), "Type can't be cv-qualified");
 
     FixedList() = default;
 
@@ -158,6 +159,18 @@ public:
 
     ConstIterator end()const{
         return Data() + Size();
+    }
+
+    IndexedRange<Iterator> Indexed(){
+        return {begin(), end()};
+    }
+
+    IndexedRange<ConstIterator> Indexed()const{
+        return ConstIndexed();
+    }
+
+    IndexedRange<ConstIterator> ConstIndexed()const{
+        return {begin(), end()};
     }
 };
 

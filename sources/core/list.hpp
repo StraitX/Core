@@ -8,6 +8,7 @@
 #include "core/assert.hpp"
 #include "core/allocators/allocator.hpp"
 #include "core/span.hpp"
+#include "core/indexed_range.hpp"
 #include <initializer_list>
 
 //TODO: 
@@ -21,6 +22,9 @@ template<typename Type, typename GeneralAllocator = DefaultGeneralAllocator>
 class List: private GeneralAllocator, public NonCopyable{
 public:
     static_assert(!IsConst<Type>::Value && !IsVolatile<Type>::Value, "Type can't be const or volatile");
+
+    using Iterator = Type *;
+    using ConstIterator = const Type *;
 private:
     void *m_Memory = nullptr;
     size_t m_Size = 0;
@@ -130,20 +134,32 @@ public:
         return m_Capacity;
     }
 
-    Type *begin(){
+    Iterator begin(){
         return Data();
     }
 
-    Type *end(){
+    Iterator end(){
         return Data() + Size();
     }
 
-    const Type *begin()const{
+    ConstIterator begin()const{
         return Data();
     }
 
-    const Type *end()const{
+    ConstIterator end()const{
         return Data() + Size();
+    }
+
+    IndexedRange<Iterator> Indexed(){
+        return {begin(), end()};
+    }
+
+    IndexedRange<ConstIterator> Indexed()const{
+        return ConstIndexed();
+    }
+
+    IndexedRange<ConstIterator> ConstIndexed()const{
+        return {begin(), end()};
     }
 };
 

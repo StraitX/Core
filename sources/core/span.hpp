@@ -5,6 +5,7 @@
 #include "core/type_traits.hpp"
 #include "core/templates.hpp"
 #include "core/assert.hpp"
+#include "indexed_range.hpp"
 
 // it has no idea about allocations, object lifetime and stuff
 template <typename Type, typename SizeType = size_t>
@@ -69,6 +70,14 @@ public:
 
     Iterator end()const{
         return Pointer() + Size();
+    }
+
+    IndexedRange<Iterator> Indexed()const{
+        return ConstIndexed();
+    }
+
+    IndexedRange<Iterator> ConstIndexed()const{
+        return {begin(), end()};
     }
 };
 
