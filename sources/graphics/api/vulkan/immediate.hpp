@@ -50,6 +50,18 @@ public:
         GPU::Execute(s_CmdBuffer, *s_OpFence);
         s_OpFence->WaitAndReset();
     }
+
+    static void SignalFence(u64 handle){
+        s_CmdBuffer->Begin();
+        s_CmdBuffer->End();
+        // XXX: dirty hack
+        static_assert(sizeof(Fence) == sizeof(handle), "Dirty hack is outdated");
+        Fence &fence = *(Fence*)&handle;
+
+        GPU::Execute(s_CmdBuffer, fence);
+
+        fence.WaitFor();
+    }
 };
 
 }//namespace Vk::

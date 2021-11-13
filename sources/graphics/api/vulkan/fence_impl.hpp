@@ -13,6 +13,8 @@ struct FenceImpl{
     static void WaitFor(u64 handle);
 
     static void Reset(u64 handle);
+
+    static void Signal(u64 handle);
 };
 
 }//namespace Vk::

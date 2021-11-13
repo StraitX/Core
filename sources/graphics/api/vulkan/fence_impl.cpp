@@ -1,6 +1,7 @@
 #include "core/os/vulkan.hpp"
 #include "graphics/api/vulkan/fence_impl.hpp"
 #include "graphics/api/vulkan/gpu_impl.hpp"
+#include "graphics/api/vulkan/immediate.hpp"
 
 namespace Vk{
 
@@ -33,6 +34,10 @@ void FenceImpl::Reset(u64 handle){
     VkFence fence = reinterpret_cast<VkFence>(handle);
 
     vkResetFences(GPUImpl::s_Instance, 1, &fence);
+}
+
+void FenceImpl::Signal(u64 handle){
+    Immediate::SignalFence(handle);
 }
 
 }//namespace Vk::

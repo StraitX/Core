@@ -54,6 +54,8 @@ public:
         WaitFor();
         Reset();
     }
+
+    void Signal();
 private:
     void Create();
 
