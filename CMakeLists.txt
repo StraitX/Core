@@ -208,14 +208,14 @@ add_library(StraitXBase STATIC
     ${SX_BASE_SOURCES_GRAPHICS_API_VULKAN}
     ${SX_BASE_SOURCES_MAIN}
 )
-target_include_directories(StraitXBase PUBLIC 
-    ${SX_BASE_INCLUDES}
+target_include_directories(StraitXBase 
+    PUBLIC ${SX_BASE_INCLUDES}
 )
-target_link_libraries(StraitXBase PUBLIC 
-    ${SX_BASE_LIBS_PLATFORM}
-    ${SX_BASE_LIBS}
-    ${CMAKE_DL_LIBS}
+target_link_libraries(StraitXBase 
+    PRIVATE ${SX_BASE_LIBS_PLATFORM}
+    PRIVATE ${SX_BASE_LIBS}
+    PRIVATE ${CMAKE_DL_LIBS}
 )
-target_link_directories(StraitXBase PUBLIC
-    ${SX_BASE_LIBS_DIRS_PLATFORM}
+target_link_directories(StraitXBase 
+    PRIVATE ${SX_BASE_LIBS_DIRS_PLATFORM}
 )
