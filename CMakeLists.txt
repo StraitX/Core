@@ -178,7 +178,6 @@ endif()
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/glad)
 add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/stb_image)
-add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/imgui)
 
 if(STRAITX_SUPPORT_VULKAN)
 	add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/glsl2spv)
@@ -191,13 +190,11 @@ set(SX_BASE_INCLUDES
     ${SX_BASE_THIRDPARTY_DIR}/vulkan-sdk/include
     ${SX_BASE_THIRDPARTY_DIR}/stb_image
     ${SX_BASE_THIRDPARTY_DIR}/glsl2spv
-    ${SX_BASE_THIRDPARTY_DIR}/imgui/include
 )
 
 set(SX_BASE_LIBS
     glad
     stb_image
-	imgui
 )
 if(STRAITX_SUPPORT_VULKAN)
 	list(APPEND SX_BASE_LIBS glsl2spv)
