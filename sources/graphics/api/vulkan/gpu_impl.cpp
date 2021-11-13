@@ -1,7 +1,7 @@
 #include "core/os/memory.hpp"
 #include "core/assert.hpp"
 #include "core/log.hpp"
-#include "core/push_array.hpp"
+#include "core/fixed_list.hpp"
 #include "graphics/api/vulkan/graphics_api_impl.hpp"
 #include "graphics/api/vulkan/gpu_impl.hpp"
 #include "graphics/api/vulkan/command_buffer_impl.hpp"
@@ -72,7 +72,7 @@ Result GPUImpl::Initialize(){
         return Result::Unsupported;
     }
     
-    PushArray<VkDeviceQueueCreateInfo, QueueFamily::FamilyCount> queue_creations_infos;
+    FixedList<VkDeviceQueueCreateInfo, QueueFamily::FamilyCount> queue_creations_infos;
 
     float priority = 1.0;
 

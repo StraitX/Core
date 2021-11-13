@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_RENDER_PASS_IMPL
 
 #include "core/os/vulkan.hpp"
-#include "core/push_array.hpp"
+#include "core/fixed_list.hpp"
 #include "core/defs.hpp"
 #include "graphics/api/render_pass.hpp"
 
@@ -11,7 +11,7 @@ namespace Vk{
 class RenderPassImpl: public RenderPass{
 private:
     VkRenderPass m_Handle = VK_NULL_HANDLE;
-    PushArray<AttachmentDescription, MaxAttachmentsCount> m_Attachments;
+    FixedList<AttachmentDescription, MaxAttachmentsCount> m_Attachments;
     u32 m_DepthIndex = InvalidIndex;
 public:
     RenderPassImpl(const RenderPassProperties &props);

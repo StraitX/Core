@@ -5,7 +5,7 @@
 #include "core/os/vulkan_surface.hpp"
 #include "core/os/window.hpp"
 #include "core/math/vector2.hpp"
-#include "core/push_array.hpp"
+#include "core/fixed_list.hpp"
 #include "graphics/api/swapchain.hpp"
 #include "graphics/api/vulkan/queue.hpp"
 #include "graphics/api/vulkan/texture_impl.hpp"
@@ -28,8 +28,8 @@ private:
     u32 m_CurrentImage = 0;
     u32 m_ImagesCount = 0;
 
-    PushArray<Texture2DImpl, s_MaxImages> m_Images;
-    PushArray<Texture2D *, s_MaxImages> m_ImagesPointers;
+    FixedList<Texture2DImpl, s_MaxImages> m_Images;
+    FixedList<Texture2D *, s_MaxImages> m_ImagesPointers;
 
     QueueFamily::Type m_TargetQueueFamily;
     VkQueue m_TargetQueue = VK_NULL_HANDLE;

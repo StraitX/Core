@@ -1,5 +1,5 @@
-#ifndef STRAITX_PUSH_ARRAY_HPP
-#define STRAITX_PUSH_ARRAY_HPP
+#ifndef STRAITX_FIXED_LIST_HPP
+#define STRAITX_FIXED_LIST_HPP
 
 #include <new>
 #include <initializer_list>
@@ -9,7 +9,7 @@
 #include "core/span.hpp"
 
 template<typename Type, size_t CapacityValue>
-class PushArray{
+class FixedList{
 public:
     typedef Type * Iterator;
     typedef const Type * ConstIterator;
@@ -31,20 +31,20 @@ private:
 public:
     static_assert(!IsConst<Type>() && !IsVolatile<Type>(), "Type can't be cv-qualified");
 
-    PushArray() = default;
+    FixedList() = default;
 
-    PushArray(const PushArray &other){
+    FixedList(const FixedList &other){
         *this = other;
     }
 
-    PushArray(PushArray &&other){
+    FixedList(FixedList &&other){
         *this = Move(other);
     }
 
-    PushArray(std::initializer_list<Type> initializer_list):
+    FixedList(std::initializer_list<Type> initializer_list):
         m_Size(initializer_list.size())
     {
-        SX_CORE_ASSERT(initializer_list.size() <= CapacityValue, "Initializer list is bigger than PushArray capacity");
+        SX_CORE_ASSERT(initializer_list.size() <= CapacityValue, "Initializer list is bigger than FixedList capacity");
 
         size_t i = 0;
         for(auto &e: initializer_list){
@@ -53,7 +53,7 @@ public:
         }
     }
 
-    ~PushArray(){
+    ~FixedList(){
         Clear();
     }
 
@@ -75,7 +75,7 @@ public:
     }
 
     Iterator Find(const Type &element){
-        return const_cast<Iterator>(const_cast<const PushArray<Type, CapacityValue>*>(this)->Find(element));
+        return const_cast<Iterator>(const_cast<const FixedList<Type, CapacityValue>*>(this)->Find(element));
     }
 
     ConstIterator Find(const Type &element)const{
@@ -90,29 +90,29 @@ public:
 
     template<typename ...ArgsType>
     Type &Emplace(ArgsType&&...args){
-        SX_CORE_ASSERT(m_Size < CapacityValue, "PushArray: Can't add an element, array is full");
+        SX_CORE_ASSERT(m_Size < CapacityValue, "FixedList: Can't add an element, array is full");
 
         return *new(&begin()[m_Size++])Type(Forward<ArgsType>(args)...);
     }
 
     Type &operator[](size_t index){
-        return const_cast<Type &>(const_cast<const PushArray<Type, CapacityValue>*>(this)->operator[](index));
+        return const_cast<Type &>(const_cast<const FixedList<Type, CapacityValue>*>(this)->operator[](index));
     }
 
     const Type &operator[](size_t index)const{
-        SX_CORE_ASSERT(index < m_Size, "PushArray: Can't index more than PushArray::Size() elements");
+        SX_CORE_ASSERT(index < m_Size, "FixedList: Can't index more than FixedList::Size() elements");
 
         return begin()[index];
     }
 
-    PushArray &operator=(const PushArray &other){
+    FixedList &operator=(const FixedList &other){
         Clear();
         for(auto &e: other)
             Add(e);
         return *this;
     }
 
-    PushArray &operator=(PushArray &&other){
+    FixedList &operator=(FixedList &&other){
         Clear();
         for(auto &e: other)
             Emplace(Move(e)); // We assume that moved stuff does not required to be destroyed
@@ -161,4 +161,4 @@ public:
     }
 };
 
-#endif//STRAITX_PUSH_ARRAY_HPP
+#endif//STRAITX_FIXED_LIST_HPP

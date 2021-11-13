@@ -2,7 +2,7 @@
 #define STRAITX_VULKAN_DESCRIPTOR_SET_IMPL_HPP
 
 #include "core/os/vulkan.hpp"
-#include "core/push_array.hpp"
+#include "core/fixed_list.hpp"
 #include "graphics/api/descriptor_set.hpp"
 
 namespace Vk{
@@ -10,7 +10,7 @@ namespace Vk{
 class DescriptorSetLayoutImpl: public DescriptorSetLayout{
 private:
 	VkDescriptorSetLayout m_Handle = VK_NULL_HANDLE;
-	PushArray<ShaderBinding, MaxShaderBindings> m_Bindings;
+	FixedList<ShaderBinding, MaxShaderBindings> m_Bindings;
 public:
 	DescriptorSetLayoutImpl(ConstSpan<ShaderBinding> bindings);
 
