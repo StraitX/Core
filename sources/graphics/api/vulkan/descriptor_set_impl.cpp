@@ -4,6 +4,7 @@
 #include "graphics/api/vulkan/gpu_impl.hpp"
 #include "graphics/api/vulkan/texture_impl.hpp"
 #include "graphics/api/vulkan/sampler_impl.hpp"
+#include "graphics/api/vulkan/buffer_impl.hpp"
 
 namespace Vk{
 
@@ -58,7 +59,7 @@ void DescriptorSetImpl::UpdateUniformBinding(size_t binding, size_t index, const
 	SX_CORE_ASSERT(uniform_buffer->MemoryType() == BufferMemoryType::DynamicVRAM || uniform_buffer->MemoryType() == BufferMemoryType::VRAM, "Can't use RAM-based buffer in descriptor set");
     
 	VkDescriptorBufferInfo buffer;
-    buffer.buffer = VkBuffer(uniform_buffer);
+    buffer.buffer = VkBuffer(*(Vk::BufferImpl*)uniform_buffer);
     buffer.offset = 0;
     buffer.range = VK_WHOLE_SIZE;
 
