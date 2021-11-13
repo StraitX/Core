@@ -5,15 +5,15 @@
 #include "core/types.hpp"
 #include "core/assert.hpp"
 #include "core/indexed_range.hpp"
+#include "core/span.hpp"
 
 template<typename Type, size_t SizeValue>
 class Array{
 private:
     template<typename StorageType, size_t StorageSizeValue>
-    class ArrayStorage{
-    private:
+    struct ArrayStorage{
         StorageType m_Data[StorageSizeValue];
-    public:
+
         StorageType *Data()const{
             return const_cast<StorageType*>(m_Data);
         }
@@ -28,18 +28,10 @@ private:
 public:
     using Iterator = Type *;
     using ConstIterator = const Type *;
-private:
-    ArrayStorage<Type, SizeValue> m_Elements;
+public:
+    ArrayStorage<Type, SizeValue> _Elements;
 public:
     Array() = default;
-
-    Array(std::initializer_list<Type> list){
-        SX_CORE_ASSERT(list.size() <= SizeValue, "Array: initializer list exceeding array's size");
-
-        for(size_t i = 0; i<list.size(); i++){
-            (*this)[i] = list.begin()[i];
-        }
-    }
 
     Array(const Array &other) = default;
 
@@ -54,11 +46,19 @@ public:
     const Type &operator[](size_t index)const{
         SX_CORE_ASSERT(index < SizeValue, "Array: Index out of range");
 
-        return m_Elements.Data()[index];
+        return _Elements.Data()[index];
     }
 
     Type &operator[](size_t index){
         return const_cast<Type&>(const_cast<const Array<Type, SizeValue>*>(this)->operator[](index));
+    }
+
+    operator Span<Type>(){
+        return {Data(), Size()};
+    }
+
+    operator ConstSpan<Type>()const{
+        return {Data(), Size()};
     }
 
     size_t Size()const{
@@ -66,11 +66,11 @@ public:
     }
 
     const Type *Data()const{
-        return m_Elements.Data();
+        return _Elements.Data();
     }
 
     Type *Data(){
-        return m_Elements.Data();
+        return _Elements.Data();
     }
 
     ConstIterator begin()const{
