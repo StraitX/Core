@@ -46,6 +46,8 @@ public:
     }
 
     virtual void Unmap() = 0;
+    // Can't realloc mapped buffer
+    virtual void Realloc(size_t new_size) = 0;
 
     virtual size_t Size()const = 0;
 

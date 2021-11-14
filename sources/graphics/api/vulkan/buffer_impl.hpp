@@ -32,6 +32,8 @@ public:
 
     void Unmap()override;
 
+    void Realloc(size_t new_size)override;
+
     size_t Size()const override;
 
     BufferMemoryType MemoryType()const override;

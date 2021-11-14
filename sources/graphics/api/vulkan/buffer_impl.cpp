@@ -88,6 +88,17 @@ void BufferImpl::Unmap(){
     }
 }
 
+void BufferImpl::Realloc(size_t new_size){
+    SX_CORE_ASSERT(!IsMapped(), "Can't Realloc Mapped buffer");
+
+    BufferUsage usage = m_Usage;
+    BufferMemoryType mem_type = m_AbstractMemoryType;
+
+    //XXX: Dirty hack
+    this->~BufferImpl();
+    new(this)BufferImpl(new_size, mem_type, usage);
+}
+
 size_t BufferImpl::Size()const{
     return m_Size;
 }
