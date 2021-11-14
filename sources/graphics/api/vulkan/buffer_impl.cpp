@@ -9,7 +9,8 @@ namespace Vk{
 BufferImpl::BufferImpl(size_t size, BufferMemoryType mem_type, BufferUsage usage):
     m_Size(size),
     m_AbstractMemoryType(mem_type),
-    m_BackingMemoryType(GPUImpl::s_Instance.BackingMemoryType(MemoryType::Type(mem_type)))
+    m_BackingMemoryType(GPUImpl::s_Instance.BackingMemoryType(MemoryType::Type(mem_type))),
+    m_Usage(usage)
 {
     VkBufferCreateInfo info;
     info.sType                  = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
