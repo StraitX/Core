@@ -217,8 +217,8 @@ void CommandBufferImpl::BindIndexBuffer(const Buffer *buffer, IndicesType type){
     vkCmdBindIndexBuffer(m_Handle, *(const Vk::BufferImpl*)buffer, 0, s_IndicesType[(size_t)type]);
 }
 
-void CommandBufferImpl::DrawIndexed(u32 indices_count){
-    vkCmdDrawIndexed(m_Handle, indices_count, 1, 0, 0, 0);
+void CommandBufferImpl::DrawIndexed(u32 indices_count, u32 indices_offset){
+    vkCmdDrawIndexed(m_Handle, indices_count, 1, indices_offset, 0, 0);
 }
 
 void CommandBufferImpl::Copy(const Buffer *src, const Buffer *dst, size_t size, size_t src_offset, size_t dst_offset){
