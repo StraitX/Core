@@ -89,7 +89,8 @@ void BufferImpl::Unmap(){
 }
 
 void BufferImpl::Realloc(size_t new_size){
-    SX_CORE_ASSERT(!IsMapped(), "Can't Realloc Mapped buffer");
+    if(IsMapped())
+        Unmap();
 
     BufferUsage usage = m_Usage;
     BufferMemoryType mem_type = m_AbstractMemoryType;
