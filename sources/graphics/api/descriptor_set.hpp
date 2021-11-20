@@ -3,6 +3,7 @@
 
 #include "core/env/compiler.hpp"
 #include "core/fixed_list.hpp"
+#include "core/list.hpp"
 #include "graphics/api/shader.hpp"
 #include "graphics/api/buffer.hpp"
 #include "graphics/api/texture.hpp"
@@ -77,6 +78,21 @@ public:
 	virtual const DescriptorSetLayout *Layout()const = 0;
 
 	static DescriptorSetPool *Create(const DescriptorSetPoolProperties &props);
+};
+
+class SingleFrameDescriptorSetPool{
+private:
+	DescriptorSetPool *m_Pool = nullptr;
+	List<DescriptorSet*> m_AllocatedSets;
+	size_t m_FreePointer = 0;
+public:
+	SingleFrameDescriptorSetPool(const DescriptorSetPoolProperties &props, size_t preallocate_sets = 0);
+
+	~SingleFrameDescriptorSetPool();
+
+	DescriptorSet *Alloc();
+
+	void NextFrame();
 };
 
 #endif//STRAITX_DESCRIPTOR_SET_HPP
