@@ -2,15 +2,23 @@
 #define STRAITX_RING_HPP
 
 #include "core/types.hpp"
+#include "core/move.hpp"
 #include "core/noncopyable.hpp"
 
 template<typename Type, size_t SizeValue>
-class Ring: public NonCopyable{
+struct Ring: public NonCopyable{
+public:
+    using Iterator = Type*;
+    using ConstIterator = const Type*;
 private:
     Type m_Array[SizeValue] = {};
     size_t m_CurrentIndex = 0;
 public:
-    Ring() = default;
+
+    template<typename ...ArgsType>
+    Ring(ArgsType&...args):
+        m_Array{Forward<ArgsType>(args)...} 
+    {}
 
     ~Ring() = default;
 
@@ -40,6 +48,35 @@ public:
 
     const Type &operator[](size_t index)const{
         return m_Array[WrapIndex(index)];
+    }
+
+    size_t Size()const{
+        return SizeValue;
+    }
+
+    Type *Data(){
+        return m_Array;
+    }
+
+    const Type *Data()const{
+        return m_Array;
+    }
+
+    Iterator begin(){
+        return Data();
+    }
+
+    Iterator end(){
+        return Data() + Size();
+    }
+
+
+    ConstIterator begin()const{
+        return Data();
+    }
+
+    ConstIterator end()const{
+        return Data() + Size();
     }
 private:
 
