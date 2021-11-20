@@ -217,5 +217,5 @@ target_link_libraries(StraitXBase
     PRIVATE ${CMAKE_DL_LIBS}
 )
 target_link_directories(StraitXBase 
-    PRIVATE ${SX_BASE_LIBS_DIRS_PLATFORM}
+    PUBLIC ${SX_BASE_LIBS_DIRS_PLATFORM}
 )
