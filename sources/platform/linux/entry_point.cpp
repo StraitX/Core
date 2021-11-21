@@ -12,6 +12,8 @@ int main(int argc, const char **argv){
 		fputs("PlatformRuntime: Linux: Can't connect to x11 display server", stderr);
 		return EXIT_FAILURE;
 	}
+	
+	X11::XInitThreads();
 
 	int result = GuardedMain(argc, argv);
 
