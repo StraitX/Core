@@ -9,7 +9,7 @@
 template<typename T>
 class alignas(T) RawVar: public NonCopyable{
 private:
-	u8 m_Memory[sizeof(T)];
+	byte m_Memory[sizeof(T)];
 public:
 	RawVar() = default;
 
@@ -24,11 +24,11 @@ public:
 		Pointer()->~T();
 	}
 
-	T *operator&(){
+	operator T*(){
 		return Pointer();
 	}
 
-	const T *operator&()const{
+	operator const T*()const{
 		return Pointer();	
 	}
 
