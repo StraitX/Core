@@ -95,17 +95,16 @@ class IsRange{
 private:
     using BaseType = typename RemoveReference<typename RemoveConstVolatile<T>::Type>::Type;
 
-    static constexpr BaseType &&Declval()noexcept;
+    template<typename Type>
+    static constexpr Type &&Declval()noexcept;
 
     template<typename Type>
     static constexpr bool Check(...){
         return false;
     }
 
-    template<typename Type>
+    template<typename Type, typename = decltype(Declval<Type>().begin()), typename = decltype(Declval<Type>().end())>
     static constexpr bool Check(void *){
-        using begin = decltype(Declval().begin());
-        using end = decltype(Declval().end());
         return true;
     }
 public:
@@ -113,6 +112,30 @@ public:
 
     static constexpr bool Value = Check<BaseType>(nullptr);
 };
+
+template<typename T>
+class IsReverseRange{
+private:
+    using BaseType = typename RemoveReference<typename RemoveConstVolatile<T>::Type>::Type;
+
+    template<typename Type>
+    static constexpr Type &&Declval()noexcept;
+
+    template<typename Type>
+    static constexpr bool Check(...){
+        return false;
+    }
+
+    template<typename Type, typename = decltype(Declval<Type>().rbegin()), typename = decltype(Declval<Type>().rend())>
+    static constexpr bool Check(void *){
+        return true;
+    }
+public:
+    static_assert(!IsPointer<BaseType>::Value, "Underlying type can't be a pointer");
+
+    static constexpr bool Value = Check<BaseType>(nullptr);
+};
+
 
 
 #endif //STRAITX_TYPE_TRAITS_HPP
