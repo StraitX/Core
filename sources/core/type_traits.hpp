@@ -16,12 +16,27 @@ struct IntegralConstant{
 
 template <typename T>
 struct RemoveConst{
-    typedef T Type;
+    using Type = T;
 };
 
 template <typename T>
 struct RemoveConst<const T>{
-    typedef T Type; 
+    using Type = T;
+};
+
+template<typename T>
+struct RemoveVolatile{
+    using Type = T;
+};
+
+template<typename T>
+struct RemoveVolatile<volatile T>{
+    using Type = T;
+};
+
+template<typename T>
+struct RemoveConstVolatile{
+    using Type = typename RemoveConst<typename RemoveVolatile<T>::Type>::Type;
 };
 
 template <typename T>
