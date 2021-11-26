@@ -40,6 +40,21 @@ struct RemoveConstVolatile{
 };
 
 template <typename T>
+struct RemoveReference{
+    typedef T Type;
+};
+
+template <typename T>
+struct RemoveReference<T&>{
+    typedef T Type;
+};
+
+template <typename T>
+struct RemoveReference<T&&>{
+    typedef T Type;
+};
+
+template <typename T>
 struct IsConst: IntegralConstant<bool, false>{};
 
 template <typename T>
@@ -50,6 +65,12 @@ struct IsVolatile: IntegralConstant<bool, false>{};
 
 template <typename T>
 struct IsVolatile<volatile T>: IntegralConstant<bool, true>{};
+
+template <typename T>
+struct IsPointer: IntegralConstant<bool, false>{};
+
+template <typename T>
+struct IsPointer<T *>: IntegralConstant<bool, true>{};
 
 template <typename Base, typename Derived>
 class IsBaseOf{
@@ -69,20 +90,25 @@ public:
 	static constexpr bool Value = Check(Pointer());
 };
 
+template<typename T>
+class IsRange{
+private:
+    using BaseType = typename RemoveReference<typename RemoveConstVolatile<T>::Type>::Type;
 
-template <typename T>
-struct RemoveReference{
-    typedef T Type;
+    template<typename Type>
+    static constexpr bool Check(...){
+        return false;
+    }
+
+    template<typename Type>
+    static constexpr bool Check(decltype(&Type::begin), decltype(&Type::end)){
+        return true;
+    }
+public:
+    static_assert(!IsPointer<BaseType>::Value, "Underlying type can't be a pointer");
+
+    static constexpr bool Value = Check<BaseType>(nullptr, nullptr);
 };
 
-template <typename T>
-struct RemoveReference<T&>{
-    typedef T Type;
-};
-
-template <typename T>
-struct RemoveReference<T&&>{
-    typedef T Type;
-};
 
 #endif //STRAITX_TYPE_TRAITS_HPP
