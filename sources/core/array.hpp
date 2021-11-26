@@ -72,6 +72,23 @@ public:
         return _Elements.Data();
     }
 
+    Type &First(){
+        return operator[](0);
+    }
+
+    const Type &First()const{
+        return operator[](0);
+    }
+
+    Type &Last(){
+        return operator[](Size() - 1);
+    }
+
+    const Type &Last()const{
+        return operator[](Size() - 1);
+    }
+
+
     ConstIterator begin()const{
         return Data();
     }

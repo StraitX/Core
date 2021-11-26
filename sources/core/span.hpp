@@ -63,6 +63,14 @@ public:
         return m_Pointer;
     }
 
+    Type &First(){
+        return operator[](0);
+    }
+
+    Type &Last(){
+        return operator[](Size() - 1);
+    }
+
     Iterator begin()const{
         return Pointer();
     }
