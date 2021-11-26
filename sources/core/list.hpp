@@ -8,7 +8,6 @@
 #include "core/assert.hpp"
 #include "core/allocators/allocator.hpp"
 #include "core/span.hpp"
-#include "core/indexed_range.hpp"
 #include <initializer_list>
 
 //TODO: 
@@ -148,18 +147,6 @@ public:
 
     ConstIterator end()const{
         return Data() + Size();
-    }
-
-    IndexedRange<Iterator> Indexed(){
-        return {begin(), end()};
-    }
-
-    IndexedRange<ConstIterator> Indexed()const{
-        return ConstIndexed();
-    }
-
-    IndexedRange<ConstIterator> ConstIndexed()const{
-        return {begin(), end()};
     }
 };
 

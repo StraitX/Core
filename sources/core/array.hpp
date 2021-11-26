@@ -4,7 +4,6 @@
 #include <initializer_list>
 #include "core/types.hpp"
 #include "core/assert.hpp"
-#include "core/indexed_range.hpp"
 #include "core/span.hpp"
 
 template<typename Type, size_t SizeValue>
@@ -87,18 +86,6 @@ public:
 
     Iterator end(){
         return Data() + Size();
-    }
-
-    IndexedRange<Iterator> Indexed(){
-        return {begin(), end()};
-    }
-
-    IndexedRange<ConstIterator> Indexed()const{
-        return ConstIndexed();
-    }
-
-    IndexedRange<ConstIterator> ConstIndexed()const{
-        return {begin(), end()};
     }
 };
 

@@ -7,7 +7,6 @@
 #include "core/assert.hpp"
 #include "core/move.hpp"
 #include "core/span.hpp"
-#include "core/indexed_range.hpp"
 
 template<typename Type, size_t CapacityValue>
 class FixedList{
@@ -159,18 +158,6 @@ public:
 
     ConstIterator end()const{
         return Data() + Size();
-    }
-
-    IndexedRange<Iterator> Indexed(){
-        return {begin(), end()};
-    }
-
-    IndexedRange<ConstIterator> Indexed()const{
-        return ConstIndexed();
-    }
-
-    IndexedRange<ConstIterator> ConstIndexed()const{
-        return {begin(), end()};
     }
 };
 
