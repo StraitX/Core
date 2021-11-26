@@ -95,19 +95,23 @@ class IsRange{
 private:
     using BaseType = typename RemoveReference<typename RemoveConstVolatile<T>::Type>::Type;
 
+    static constexpr BaseType &&Declval()noexcept;
+
     template<typename Type>
     static constexpr bool Check(...){
         return false;
     }
 
     template<typename Type>
-    static constexpr bool Check(decltype(&Type::begin), decltype(&Type::end)){
+    static constexpr bool Check(void *){
+        using begin = decltype(Declval().begin());
+        using end = decltype(Declval().end());
         return true;
     }
 public:
     static_assert(!IsPointer<BaseType>::Value, "Underlying type can't be a pointer");
 
-    static constexpr bool Value = Check<BaseType>(nullptr, nullptr);
+    static constexpr bool Value = Check<BaseType>(nullptr);
 };
 
 
