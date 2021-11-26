@@ -37,11 +37,11 @@ public:
         return *this;
     }
 
-    auto operator*(){
+    auto &operator*(){
         return *It;
     }
 
-    auto operator*()const{
+    auto &operator*()const{
         return *It;
     }
 
