@@ -26,7 +26,7 @@ struct Vector2{
     constexpr Vector2(Vector2 &&other) = default;
 
     template <typename O>
-    constexpr explicit Vector2(const Vector2<O> &other);
+    constexpr Vector2(const Vector2<O> &other);
 
     constexpr Vector2 &operator=(const Vector2 &other);
 
