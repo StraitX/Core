@@ -90,6 +90,25 @@ public:
 	static constexpr bool Value = Check(Pointer());
 };
 
+template<typename SrcType, typename DstType>
+class IsCastable{
+private:
+    template<typename Type>
+    static constexpr Type &&Declval()noexcept;
+
+    template<typename _SrcType, typename _DstType>
+    static constexpr bool Check(...){
+        return false;
+    }
+
+    template<typename _SrcType, typename _DstType>
+    static constexpr bool Check(decltype(static_cast<_DstType>(Declval<_SrcType>()))* ptr){
+        return true;
+    }
+public:
+    static constexpr bool Value = Check<SrcType, DstType>(nullptr);
+};
+
 template<typename T>
 class IsRange{
 private:
