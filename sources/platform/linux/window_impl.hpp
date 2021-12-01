@@ -54,8 +54,6 @@ public:
 
 	const Screen &CurrentScreen()const;
 
-	static Vector2u GetSizeFromHandle(unsigned long handle);
-
     static X11::__GLXFBConfigRec *PickBestFBConfig(int screen_index);
 };
 

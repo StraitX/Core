@@ -192,7 +192,7 @@ void WindowImpl::DispatchEvents(){
 				e.Type = EventType::MouseButtonPress;
 				e.MouseButtonPress.Button = XButtonToMouseButton(in_event.xbutton.button);
 				e.MouseButtonPress.x = in_event.xbutton.x;
-				e.MouseButtonPress.y = WindowImpl::GetSizeFromHandle(in_event.xany.window).y - in_event.xbutton.y;
+				e.MouseButtonPress.y = in_event.xbutton.y;
 			}
 			m_EventsHandler.TryCall(e);
 		}break;
@@ -202,7 +202,7 @@ void WindowImpl::DispatchEvents(){
 			e.Type = EventType::MouseButtonRelease;
 			e.MouseButtonRelease.Button = XButtonToMouseButton(in_event.xbutton.button);
 			e.MouseButtonRelease.x = in_event.xbutton.x;
-			e.MouseButtonRelease.y = WindowImpl::GetSizeFromHandle(in_event.xany.window).y - in_event.xbutton.y;
+			e.MouseButtonRelease.y = in_event.xbutton.y;
 			m_EventsHandler.TryCall(e);
 		}break;
 		case X11::FocusIn:
@@ -240,7 +240,10 @@ void WindowImpl::SetSize(int width, int height){
 }
 
 Vector2u WindowImpl::Size()const{
-	return GetSizeFromHandle(m_Handle);
+	X11::XWindowAttributes attributes;
+    X11::XGetWindowAttributes(DisplayServer::Handle, m_Handle, &attributes);
+
+    return {(u32)attributes.width, (u32)attributes.height};
 }
 
 const Screen &WindowImpl::CurrentScreen()const{
@@ -256,13 +259,6 @@ const Screen &WindowImpl::CurrentScreen()const{
 	}
 
 	return m_CurrentScreen;
-}
-
-Vector2u WindowImpl::GetSizeFromHandle(unsigned long handle){
-    X11::XWindowAttributes attributes;
-    X11::XGetWindowAttributes(DisplayServer::Handle, handle, &attributes);
-
-    return {(u32)attributes.width, (u32)attributes.height};
 }
 
 X11::__GLXFBConfigRec *WindowImpl::PickBestFBConfig(int screen_index){
