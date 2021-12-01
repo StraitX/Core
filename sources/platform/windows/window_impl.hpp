@@ -43,8 +43,6 @@ public:
 
     SX_INLINE HWND__ *Handle()const;
 
-    static Vector2u GetSizeFromHandle(HWND__* handle);
-
     static Result RegisterWindowClass();
 };
 

@@ -79,7 +79,10 @@ void WindowImpl::SetTitle(const char* title) {
 }
 
 Vector2u WindowImpl::Size()const{
-    return GetSizeFromHandle(m_Handle);
+    RECT currentWindowDimens = { 0 };
+    GetClientRect(m_Handle, &currentWindowDimens);
+
+    return {u32(currentWindowDimens.right - currentWindowDimens.left), u32(currentWindowDimens.bottom - currentWindowDimens.top)};
 }
 
 void WindowImpl::SetSize(int width, int height) {
@@ -101,14 +104,6 @@ const Screen& WindowImpl::CurrentScreen()const{
         m_CurrentScreen.DPI.y = dpi;
     }
     return m_CurrentScreen;
-}
-
-
-Vector2u WindowImpl::GetSizeFromHandle(HWND__* handle) {
-    RECT currentWindowDimens = { 0 };
-    GetClientRect(handle, &currentWindowDimens);
-
-    return {u32(currentWindowDimens.right - currentWindowDimens.left), u32(currentWindowDimens.bottom - currentWindowDimens.top)};
 }
 
 Result WindowImpl::RegisterWindowClass() {
