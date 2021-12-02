@@ -59,6 +59,8 @@ public:
 
     virtual void SetViewport(s32 x, s32 y, u32 width, u32 height) = 0;
 
+    virtual void SetLineWidth(u32 width) = 0;
+
     virtual void BindVertexBuffer(const Buffer *buffer) = 0;
 
     virtual void BindIndexBuffer(const Buffer *buffer, IndicesType type) = 0;

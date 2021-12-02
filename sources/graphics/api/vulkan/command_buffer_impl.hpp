@@ -128,6 +128,8 @@ public:
 
     void SetViewport(s32 x, s32 y, u32 width, u32 height)override;
 
+    void SetLineWidth(u32 width)override;
+
     void BindVertexBuffer(const Buffer *buffer)override;
 
     void BindIndexBuffer(const Buffer *buffer, IndicesType type)override;

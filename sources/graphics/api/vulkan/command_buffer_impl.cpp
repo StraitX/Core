@@ -202,6 +202,10 @@ void CommandBufferImpl::SetViewport(s32 x, s32 y, u32 width, u32 height){
     vkCmdSetViewport(m_Handle, 0, 1, &viewport);
 }
 
+void CommandBufferImpl::SetLineWidth(u32 width) {
+    vkCmdSetLineWidth(m_Handle, width);
+}
+
 void CommandBufferImpl::BindVertexBuffer(const Buffer *buffer){
     VkBuffer handle = *(const Vk::BufferImpl*)buffer;
     VkDeviceSize offset = 0;

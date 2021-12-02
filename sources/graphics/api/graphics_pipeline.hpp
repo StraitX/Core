@@ -73,6 +73,7 @@ struct GraphicsPipelineProperties{
     ConstSpan<const Shader*> Shaders = {};
     ConstSpan<VertexAttribute> VertexAttributes = {};
     enum PrimitivesTopology PrimitivesTopology = PrimitivesTopology::Triangles;
+    bool PrimitiveRestartEnable = false;
     enum RasterizationMode RasterizationMode = RasterizationMode::Fill;
 	enum DepthFunction DepthFunction = DepthFunction::Always;
     enum BlendFunction BlendFunction = BlendFunction::Add;

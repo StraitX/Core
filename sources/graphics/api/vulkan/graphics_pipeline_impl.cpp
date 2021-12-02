@@ -159,7 +159,7 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     input_assembly_info.pNext = nullptr;
     input_assembly_info.flags = 0;
     input_assembly_info.topology = ToVkPrimitiveTopology(props.PrimitivesTopology);
-    input_assembly_info.primitiveRestartEnable = VK_FALSE;
+    input_assembly_info.primitiveRestartEnable = props.PrimitiveRestartEnable;
 
     //===ViewportState===
 
@@ -249,14 +249,15 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
 
     VkDynamicState dynamic_states[] = {
         VK_DYNAMIC_STATE_VIEWPORT,
-        VK_DYNAMIC_STATE_SCISSOR
+        VK_DYNAMIC_STATE_SCISSOR,
+        VK_DYNAMIC_STATE_LINE_WIDTH
     };
 
     VkPipelineDynamicStateCreateInfo dynamic_info;
     dynamic_info.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
     dynamic_info.pNext = nullptr;
     dynamic_info.flags = 0;
-    dynamic_info.dynamicStateCount = sizeof(dynamic_states)/sizeof(VkDynamicState);
+    dynamic_info.dynamicStateCount = lengthof(dynamic_states);
     dynamic_info.pDynamicStates = dynamic_states;
 
     VkGraphicsPipelineCreateInfo info;
