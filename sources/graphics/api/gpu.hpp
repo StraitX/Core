@@ -31,6 +31,8 @@ struct GPUImpl{
     virtual void Finalize() = 0;
 
     virtual void Execute(CommandBuffer *buffer, Span<u64> wait_semaphore_handles, Span<u64> signal_semaphore_handles, const Fence &signal_fence) = 0;
+
+    virtual void SyncSemaphores(ConstSpan<Semaphore> wait, ConstSpan<Semaphore> signal) = 0;
 };
 
 class GPU{
@@ -53,11 +55,19 @@ public:
 
     static void Execute(CommandBuffer *buffer, Span<u64> wait_semaphore_handles = {}, Span<u64> signal_semaphore_handles = {}, const Fence &signal_fence = Fence::Null);
 
-    static void Execute(CommandBuffer *buffer, Span<const Semaphore> wait_semaphores = {}, Span<const Semaphore> signal_semaphores = {}, const Fence &signal_fence = Fence::Null);
+    static void Execute(CommandBuffer *buffer, ConstSpan<Semaphore> wait_semaphores = {}, ConstSpan<Semaphore> signal_semaphores = {}, const Fence &signal_fence = Fence::Null);
 
     static void Execute(CommandBuffer *buffer, const Fence &signal_fence = Fence::Null);
 
     static void Execute(CommandBuffer *buffer, const Semaphore &wait_semaphore, const Semaphore &signal_semaphore, const Fence &signal_fence = Fence::Null);
+
+    static void SyncSemaphores(ConstSpan<Semaphore> wait, ConstSpan<Semaphore> signal);
+
+    static void SyncSemaphores(const Semaphore &wait, ConstSpan<Semaphore> signal);
+
+    static void SyncSemaphores(ConstSpan<Semaphore> wait, const Semaphore &signal);
+
+    static void SyncSemaphores(const Semaphore &wait, const Semaphore &signal);
 };
 
 #endif//STRAITX_GPU_HPP

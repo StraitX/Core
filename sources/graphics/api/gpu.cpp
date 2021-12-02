@@ -75,3 +75,20 @@ void GPU::Execute(CommandBuffer *buffer, const Semaphore &wait_semaphore, const 
 
     Execute(buffer, Span<u64>{&wait_semaphore_handle, 1}, Span<u64>{&signal_semaphore_handle, 1}, signal_fence);
 }
+
+void GPU::SyncSemaphores(ConstSpan<Semaphore> wait, ConstSpan<Semaphore> signal){
+    SX_CORE_ASSERT(IsInitialized(), "GPU Is not initalized");
+
+     s_Impl->SyncSemaphores(wait, signal);
+}
+
+void GPU::SyncSemaphores(const Semaphore &wait, ConstSpan<Semaphore> signal){
+    GPU::SyncSemaphores({wait}, signal);
+}
+
+void GPU::SyncSemaphores(ConstSpan<Semaphore> wait, const Semaphore &signal){
+    GPU::SyncSemaphores(wait, {signal});
+}
+void GPU::SyncSemaphores(const Semaphore &wait, const Semaphore &signal){
+    GPU::SyncSemaphores({wait}, {signal});
+}
