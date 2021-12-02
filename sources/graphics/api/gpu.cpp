@@ -83,12 +83,12 @@ void GPU::SyncSemaphores(ConstSpan<Semaphore> wait, ConstSpan<Semaphore> signal)
 }
 
 void GPU::SyncSemaphores(const Semaphore &wait, ConstSpan<Semaphore> signal){
-    GPU::SyncSemaphores({wait}, signal);
+    GPU::SyncSemaphores({&wait, 1}, signal);
 }
 
 void GPU::SyncSemaphores(ConstSpan<Semaphore> wait, const Semaphore &signal){
-    GPU::SyncSemaphores(wait, {signal});
+    GPU::SyncSemaphores(wait, {&signal, 1});
 }
 void GPU::SyncSemaphores(const Semaphore &wait, const Semaphore &signal){
-    GPU::SyncSemaphores({wait}, {signal});
+    GPU::SyncSemaphores({&wait, 1}, {&signal, 1});
 }

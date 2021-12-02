@@ -133,10 +133,15 @@ Result GPUImpl::Initialize(){
 
 
     Immediate::Initialize();
+
+
+    m_SyncCommandBufferPool = CommandPool::Create();
     return Result::Success;
 }
 
 void GPUImpl::Finalize(){
+    delete m_SyncCommandBufferPool;
+
     Immediate::Finalize();
     vkDeviceWaitIdle(m_Handle);
     
@@ -167,6 +172,27 @@ void GPUImpl::Execute(CommandBuffer *buffer, Span<u64> wait_semaphore_handles, S
     info.pSignalSemaphores = (VkSemaphore*)signal_semaphore_handles.Pointer();
 
     vkQueueSubmit(GPUImpl::Queue(buffer_impl->Pool()->TargetQueueType()), 1, &info, (VkFence)signal_fence.Handle());
+}
+
+void GPUImpl::SyncSemaphores(ConstSpan<Semaphore> wait, ConstSpan<Semaphore> signal){
+    Pair<CommandBuffer*, Fence> *sync = nullptr;
+    for(auto &pair: m_SyncPairs){
+        if(pair.Second.IsSignaled()){
+            pair.Second.Reset();
+            sync = &pair;
+            break;
+        }
+    }
+
+    if(sync == nullptr){
+        CommandBuffer *buffer = m_SyncCommandBufferPool->Alloc();
+        buffer->Begin();
+        buffer->End();
+        m_SyncPairs.Emplace(Move(buffer), Fence());
+        sync = &m_SyncPairs.Last();
+    }
+
+    GPU::Execute(sync->First, wait, signal, sync->Second);
 }
 
 }//namespace Vk::
