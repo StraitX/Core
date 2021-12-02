@@ -20,6 +20,10 @@ public:
 
     Span(const Span &other) = default;
 
+    Span(Type &element):
+        Span(&element, 1)
+    {}
+
     Span(Type *pointer, SizeType size):
         m_Pointer(pointer),
         m_Size(size)
