@@ -14,6 +14,8 @@ struct FenceImpl{
 
     static void Reset(u64 handle);
 
+    static bool IsSignaled(u64 handle);
+
     static void Signal(u64 handle);
 };
 

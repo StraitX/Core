@@ -22,6 +22,14 @@ void Fence::Reset(){
 #endif
 }
 
+bool Fence::IsSignaled() const {
+#if defined(SX_VULKAN_SUPPORTED)
+    if(GraphicsAPI::Backend() == GraphicsAPIBackend::Vulkan)
+        return Vk::FenceImpl::IsSignaled(m_Handle);
+#endif
+    return false;
+}
+
 void Fence::Signal(){
 #if defined(SX_VULKAN_SUPPORTED)
     if(GraphicsAPI::Backend() == GraphicsAPIBackend::Vulkan)

@@ -55,6 +55,8 @@ public:
         Reset();
     }
 
+    bool IsSignaled()const;
+
     void Signal();
 private:
     void Create();

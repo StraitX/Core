@@ -36,6 +36,12 @@ void FenceImpl::Reset(u64 handle){
     vkResetFences(GPUImpl::s_Instance, 1, &fence);
 }
 
+bool FenceImpl::IsSignaled(u64 handle) {
+    VkFence fence = reinterpret_cast<VkFence>(handle);
+
+    return vkGetFenceStatus(GPUImpl::s_Instance, fence) == VK_SUCCESS;
+}
+
 void FenceImpl::Signal(u64 handle){
     Immediate::SignalFence(handle);
 }
