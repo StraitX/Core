@@ -12,6 +12,7 @@ const Color Color::Mint       = {0, 1.f, 0.5f, 1.f};
 const Color Color::LightBlue  = {0.2, 0.8f, 1.f, 1.f};
 const Color Color::Black      = {0, 0, 0, 1.f};
 const Color Color::White      = {1.f, 1.f, 1.f, 1.f};
+const Color Color::Transparent= {1.f, 1.f, 1.f, 0.f};
 
 template<>
 struct Printer<Color>{

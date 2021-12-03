@@ -40,6 +40,7 @@ struct Color{
     static const Color LightBlue;
     static const Color Black;
     static const Color White;
+    static const Color Transparent;
 };
 
 constexpr Color::Color(float r, float g, float b, float a):
