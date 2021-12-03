@@ -60,19 +60,19 @@ constexpr Color::Color(u32 rgba8):
 
 constexpr u32 Color::RGBA8()const{
     u32 color = 0;
-    color |= u8(R*u8(-1)) << 24;
-    color |= u8(G*u8(-1)) << 16;
-    color |= u8(B*u8(-1)) << 8;
-    color |= u8(A*u8(-1)) << 0;
+    color |= u8(R*u8(-1)) << 0;
+    color |= u8(G*u8(-1)) << 8;
+    color |= u8(B*u8(-1)) << 16;
+    color |= u8(A*u8(-1)) << 24;
     return color;
 }
 
 constexpr u32 Color::ABGR8()const {
     u32 color = 0;
-    color |= u8(R*u8(-1)) << 0;
-    color |= u8(G*u8(-1)) << 8;
-    color |= u8(B*u8(-1)) << 16;
-    color |= u8(A*u8(-1)) << 24;
+    color |= u8(R*u8(-1)) << 24;
+    color |= u8(G*u8(-1)) << 16;
+    color |= u8(B*u8(-1)) << 8;
+    color |= u8(A*u8(-1)) << 0;
     return color;
 }
 
