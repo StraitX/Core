@@ -93,6 +93,7 @@ if(STRAITX_PLATFORM_LINUX)
         ${SX_BASE_SOURCES_DIR}/platform/linux/vulkan_linux.cpp
         ${SX_BASE_SOURCES_DIR}/platform/linux/vulkan_surface_impl.cpp
         ${SX_BASE_SOURCES_DIR}/platform/linux/clock_impl.cpp
+        ${SX_BASE_SOURCES_DIR}/platform/linux/stacktrace_impl.cpp
         ${SX_BASE_SOURCES_DIR}/platform/unix/sleep_impl.cpp
 		${SX_BASE_SOURCES_DIR}/platform/unix/memory_impl.cpp
         ${SX_BASE_SOURCES_DIR}/platform/unix/file_impl.cpp
@@ -107,6 +108,10 @@ if(STRAITX_PLATFORM_LINUX)
 
     set(SX_BASE_LIBS_DIRS_PLATFORM
         ${SX_BASE_THIRDPARTY_DIR}/vulkan-sdk/linux/lib
+    )
+
+    set(SX_BASE_LINKER_FLAGS_PLATFORM
+        "-rdynamic"
     )
 
 elseif(STRAITX_PLATFORM_WINDOWS)
@@ -139,6 +144,10 @@ elseif(STRAITX_PLATFORM_WINDOWS)
         ${SX_BASE_THIRDPARTY_DIR}/vulkan-sdk/windows/lib
     )
 
+    set(SX_BASE_LINKER_FLAGS_PLATFORM
+
+    )
+
 elseif(STRAITX_PLATFORM_MACOS)
     set(SX_BASE_SOURCES_PLATFORM
 		${SX_BASE_SOURCES_DIR}/platform/macos/entry_point.mm
@@ -168,6 +177,10 @@ elseif(STRAITX_PLATFORM_MACOS)
     )
 
     set(SX_BASE_LIBS_DIRS_PLATFORM
+
+    )
+
+    set(SX_BASE_LINKER_FLAGS_PLATFORM
 
     )
 
@@ -208,6 +221,11 @@ add_library(StraitXBase STATIC
     ${SX_BASE_SOURCES_GRAPHICS_API_VULKAN}
     ${SX_BASE_SOURCES_MAIN}
 )
+
+target_link_options(StraitXBase 
+    PUBLIC ${SX_BASE_LINKER_FLAGS_PLATFORM}
+)
+
 target_include_directories(StraitXBase 
     PUBLIC ${SX_BASE_INCLUDES}
 )
