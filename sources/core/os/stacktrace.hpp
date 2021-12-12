@@ -10,10 +10,13 @@ class Stacktrace{
 private:
     void *m_FramePointers[MaxFramesCount];
     size_t m_CapturedFrames = 0;
+    size_t m_SkipFrames = 0;
 
     friend class Printer<Stacktrace>;
 public:
-    Stacktrace(){
+    Stacktrace(size_t skip_frames = 0):
+        m_SkipFrames(skip_frames)
+    {
         Capture(m_FramePointers, m_CapturedFrames);
     }
 private:
