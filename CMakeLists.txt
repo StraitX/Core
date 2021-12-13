@@ -132,12 +132,14 @@ elseif(STRAITX_PLATFORM_WINDOWS)
        ${SX_BASE_SOURCES_DIR}/platform/windows/sleep_impl.cpp
        ${SX_BASE_SOURCES_DIR}/platform/windows/file_impl.cpp
        ${SX_BASE_SOURCES_DIR}/platform/windows/memory_impl.cpp
+       ${SX_BASE_SOURCES_DIR}/platform/windows/stacktrace_impl.cpp
     )
 
     set(SX_BASE_LIBS_PLATFORM
         opengl32
         vulkan-1
         winmm
+        DbgHelp
     )
 
     set(SX_BASE_LIBS_DIRS_PLATFORM
