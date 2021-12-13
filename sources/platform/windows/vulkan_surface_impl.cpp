@@ -5,7 +5,7 @@
 Result VulkanSurface::Create(VkInstance owner, const OSWindowImpl& window) {
     Owner = owner;
     VkWin32SurfaceCreateInfoKHR info;
-    info.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
+    info.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
     info.pNext = nullptr;
     info.flags = 0;
     info.hinstance = (HINSTANCE)GetModuleHandle(nullptr);
