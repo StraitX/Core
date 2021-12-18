@@ -39,7 +39,7 @@ constexpr Matrix4<MatrixType> RotateX(AngleType radians){
 
 template<typename MatrixType, typename AngleType>
 constexpr Matrix4<MatrixType> Rotate(Vector3<AngleType> radians){
-    return RotateX(radians.x) * RotateY(radians.y) * RotateZ(radians.z);
+    return RotateX<MatrixType>(radians.x) * RotateY<MatrixType>(radians.y) * RotateZ<MatrixType>(radians.z);
 }
 
 }//namespace Transform::
