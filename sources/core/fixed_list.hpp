@@ -66,7 +66,23 @@ public:
     }
 
     void RemoveLast(){
-        begin()[--m_Size].~Type();
+        Data()[--m_Size].~Type();
+    }
+
+    void UnorderedRemove(size_t index){
+        SX_CORE_ASSERT(index < m_Size, "Index is out of range");
+
+        Data()[index] = Move(Last());
+        RemoveLast();
+    }
+
+    void UnorderedRemove(const Type &type){
+        for(size_t i = 0; i<Size(); i++){
+            if(Data()[i] == type){
+                UnorderedRemove(i);
+                break;
+            }
+        }
     }
 
     void Clear(){
