@@ -10,7 +10,7 @@ using namespace Windows;
 int main(int argc, char **argv){
 	(void)argc;
 	(void)argv;
-
+    SetProcessDPIAware();
     if (!WindowImpl::RegisterWindowClass()) {
         MessageBox(nullptr, "Windows: Can't register a window class", "PlatformRuntime", MB_ICONERROR);
         return EXIT_FAILURE;
