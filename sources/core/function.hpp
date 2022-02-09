@@ -10,31 +10,37 @@ class Function;
 template<typename ReturnType, typename ...ArgsType>
 class Function<ReturnType(ArgsType...)>{
 private:
+    struct Object{ };
+
     using Signature = ReturnType (*)(ArgsType...);
 
-    using ProxyFunction = ReturnType (*)(void *, ArgsType...);
+    using CallableUnion = union {
+        ReturnType (*Function)(ArgsType...);
+        ReturnType (Object::*Method)(ArgsType...);
+        ReturnType (Object::*ConstMethod)(ArgsType...)const;
+    };
 
-    static ReturnType FunctionProxy(void *ptr, ArgsType...args){
-        return reinterpret_cast<Signature>(ptr)(Forward<ArgsType>(args)...);
+    using ProxyFunction = ReturnType (*)(void *, CallableUnion &, ArgsType...);
+
+    static ReturnType FunctionProxy(void *, CallableUnion &callable, ArgsType...args){
+        return reinterpret_cast<Signature>(callable.Function)(Forward<ArgsType>(args)...);
     }
 
-    template<typename ObjectType, ReturnType(ObjectType::*Method)(ArgsType...)>
-    static ReturnType TemplateMethodProxy(void *ptr, ArgsType...args){
-        return (reinterpret_cast<ObjectType*>(ptr)->*Method)(Forward<ArgsType>(args)...);
+    template<typename ObjectType>
+    static ReturnType MethodProxy(void *obj, CallableUnion &callable, ArgsType...args){
+        auto method = reinterpret_cast<ReturnType(ObjectType::*)(ArgsType...)>(callable.Method);
+        return (reinterpret_cast<ObjectType*>(obj)->*method)(Forward<ArgsType>(args)...);
     }
 
-    template<typename ObjectType, ReturnType(ObjectType::*Method)(ArgsType...)const>
-    static ReturnType TemplateMethodProxy(void *ptr, ArgsType...args){
-        return (reinterpret_cast<const ObjectType*>(ptr)->*Method)(Forward<ArgsType>(args)...);
-    }
-
-    template<Signature Function>
-    static ReturnType TemplateFunctionProxy(void *, ArgsType...args){
-        return reinterpret_cast<Signature>(Function)(Forward<ArgsType>(args)...);
+    template<typename ObjectType>
+    static ReturnType ConstMethodProxy(void *obj, CallableUnion &callable, ArgsType...args){
+        auto method = reinterpret_cast<ReturnType(ObjectType::*)(ArgsType...)const>(callable.ConstMethod);
+        return (reinterpret_cast<ObjectType*>(obj)->*method)(Forward<ArgsType>(args)...);
     }
 
 private:
-    void *m_Ptr = nullptr;
+    CallableUnion m_Callable;
+    void *m_ObjectPtr = nullptr;
     ProxyFunction m_Proxy = nullptr;
 public:
     Function() = default;
@@ -47,6 +53,16 @@ public:
     Function(Functor functor){
         Signature fptr = functor;
         Bind(fptr);
+    }
+
+    template<typename ObjectType>
+    Function(ObjectType *obj, ReturnType (ObjectType::*method)(ArgsType...)){
+        Bind(obj, method);
+    }
+
+    template<typename ObjectType>
+    Function(ObjectType *obj, ReturnType (ObjectType::*method)(ArgsType...)const){
+        Bind(obj, method);
     }
 
     Function(const Function &other) = default;
@@ -71,7 +87,8 @@ public:
     Function &operator=(const Function &other) = default;
 
     Function &operator=(Function &&other){
-        m_Ptr = other.m_Ptr;
+        m_Callable = other.m_Callable;
+        m_ObjectPtr = other.m_ObjectPtr;
         m_Proxy = other.m_Proxy;
 
         other.Unbind();
@@ -80,52 +97,54 @@ public:
     }
 
     bool operator==(const Function &other){
-        return m_Proxy == other.m_Proxy && m_Ptr == other.m_Ptr;
+        return m_Proxy == other.m_Proxy && m_Callable == other.m_Callable && m_ObjectPtr == other.m_ObjectPtr;
     }
 
     bool operator!=(const Function &other){
-        return m_Proxy != other.m_Proxy || m_Ptr != other.m_Ptr;
+        return !(*this == other);
+    }
+
+    ReturnType Call(ArgsType...args){
+        SX_CORE_ASSERT(m_Proxy, "Can't call empty function");
+
+        return m_Proxy(m_ObjectPtr, m_Callable, Forward<ArgsType>(args)...);
     }
 
     ReturnType operator()(ArgsType...args){
-        SX_CORE_ASSERT(m_Proxy, "Can't call empty function");
-
-        return m_Proxy(m_Ptr, Forward<ArgsType>(args)...);
+        return Call(Forward<ArgsType>(args)...);
     }
 
     Function &Bind(Signature function_pointer){
-        m_Ptr = reinterpret_cast<void*>(function_pointer);
-        m_Proxy = FunctionProxy; 
+        m_ObjectPtr = nullptr;
+        m_Callable.Function = function_pointer;
+        m_Proxy = FunctionProxy;
 
         return *this;
     }
 
-    template<typename ObjectType, ReturnType(ObjectType::*Method)(ArgsType...)>
-    Function &Bind(ObjectType *object){
-        m_Ptr = object;
-        m_Proxy = TemplateMethodProxy<ObjectType, Method>;
+    template<typename ObjectType>
+    Function &Bind(ObjectType *object, ReturnType(ObjectType::*method)(ArgsType...)){
+        m_Callable.Method = reinterpret_cast<ReturnType(Object::*)(ArgsType...)>(method);
+        m_ObjectPtr = object;
+        m_Proxy = MethodProxy<ObjectType>;
 
         return *this;
     }
 
-    template<typename ObjectType, ReturnType(ObjectType::*Method)(ArgsType...)const>
-    Function &Bind(ObjectType *object){
-        m_Ptr = object;
-        m_Proxy = TemplateMethodProxy<ObjectType, Method>;
-
-        return *this;
-    }
-
-    template<Signature FunctionType>
-    Function &Bind(){
-        m_Ptr = nullptr;
-        m_Proxy = TemplateFunctionProxy<FunctionType>;
+    template<typename ObjectType>
+    Function &Bind(ObjectType *object, ReturnType(ObjectType::*method)(ArgsType...)const){
+        m_Callable.ConstMethod = reinterpret_cast<ReturnType(Object::*)(ArgsType...)const>(method);
+        m_ObjectPtr = object;
+        m_Proxy = ConstMethodProxy<ObjectType>;
 
         return *this;
     }
 
     void Unbind(){
-        m_Ptr = nullptr;
+        m_Callable.Method = nullptr;
+        m_Callable.ConstMethod = nullptr;
+        m_Callable.Function = nullptr;
+        m_ObjectPtr = nullptr;
         m_Proxy = nullptr;
     }
 
@@ -133,9 +152,13 @@ public:
         return m_Proxy != nullptr;
     }
 
+    operator bool()const{
+        return IsBound();
+    }
+    //XXX: use optional for return value
     void TryCall(ArgsType...args){
-        if(m_Proxy)
-            (void)operator()(Forward<ArgsType>(args)...);
+        if(IsBound())
+            (void)Call(Forward<ArgsType>(args)...);
     }
 };
 
