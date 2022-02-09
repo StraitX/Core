@@ -14,32 +14,28 @@ public:
 
     ~Delegate() = default;
 
-    void Bind(void (*function_pointer)(ArgsType...)){
-        Bind(Subscriber().Bind(function_pointer)); 
+    template<typename ObjectType>
+    Delegate &Bind(ObjectType *object, void(ObjectType::*method)(ArgsType...)){
+        return Bind(Subscriber(object, method));
     }
 
-    template<typename ObjectType, void(ObjectType::*Method)(ArgsType...)>
-    void Bind(ObjectType *object){
-        Bind(Subscriber().template Bind<ObjectType, Method>(object));
+    template<typename ObjectType>
+    Delegate &Bind(ObjectType *object, void(ObjectType::*method)(ArgsType...)const){
+        return Bind(Subscriber(object, method));
     }
 
-    template<typename ObjectType, void(ObjectType::*Method)(ArgsType...)const>
-    void Bind(ObjectType *object){
-        Bind(Subscriber().template Bind<ObjectType, Method>(object));
-    }
-
-    template<void(*FunctionValue)(ArgsType...)>
-    void Bind(){
-        Bind(Subscriber().template Bind<FunctionValue>());
-    }
-
-    void Bind(Function<void(ArgsType...)> subscriber){
+    Delegate &Bind(Function<void(ArgsType...)> subscriber){
         List<Function<void(ArgsType...)>>::Add(subscriber);
+        return *this;
+    }
+
+    void Call(ArgsType...args){
+        for(auto &sub: *this)
+            sub(Forward<ArgsType>(args)...);
     }
 
     void operator()(ArgsType...args){
-        for(auto &sub: *this)
-            sub(Forward<ArgsType>(args)...);
+        Call(Forward<ArgsType>(args)...);
     }
 };
 
