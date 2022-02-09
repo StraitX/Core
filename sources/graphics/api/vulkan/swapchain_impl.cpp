@@ -32,7 +32,7 @@ SwapchainImpl::SwapchainImpl(const Window *window):
     m_TargetQueue(GPUImpl::s_Instance.Queue(m_TargetQueueFamily)),
     m_TargetQueueIndex(GPUImpl::s_Instance.QueueIndex(m_TargetQueueFamily))
 {
-    SX_CORE_CALL_ASSERT(window && window->IsOpen(), "Can't create swapchain with a closed window");
+    SX_CORE_ASSERT(window && window->IsOpen(), "Can't create swapchain with a closed window");
 
     SX_CORE_CALL_ASSERT(
         m_Surface.Create(Vk::GraphicsAPIBackendImpl::s_Instance.Instance(), m_SurfaceWindow->Impl()), 
