@@ -39,9 +39,9 @@ public:
 
     ~SwapchainImpl();
 
-    void PresentCurrent(const Semaphore &wait_semaphore)override;
+    bool PresentCurrent(const Semaphore &wait_semaphore)override;
 
-    void AcquireNext(const Semaphore &signal_semaphore, const Fence &signal_fence)override;
+    bool AcquireNext(const Semaphore &signal_semaphore, const Fence &signal_fence)override;
 
     ConstSpan<Texture2D *> Images()const override;
 

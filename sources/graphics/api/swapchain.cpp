@@ -3,6 +3,8 @@
 #include "graphics/api/swapchain.hpp"
 #include "graphics/api/graphics_api.hpp"
 
+#include "core/print.hpp"
+
 #if defined(SX_VULKAN_SUPPORTED)
     #include "graphics/api/vulkan/swapchain_impl.hpp"
 #endif
@@ -16,8 +18,8 @@ Swapchain *Swapchain::Create(const Window *window){
 }
 
 
-FramebufferChain::FramebufferChain(const Window *window) {
-    m_Swapchain = Swapchain::Create(window);
+FramebufferChain::FramebufferChain(const Window *window){
+    m_Swapchain = UniquePtr<Swapchain>(Swapchain::Create(window));
 
     Array<AttachmentDescription, 1> s_Attachments = {
         {
@@ -29,23 +31,21 @@ FramebufferChain::FramebufferChain(const Window *window) {
         }
     };
 
-    m_SwapchainPass = RenderPass::Create({s_Attachments});
-
-    Recreate();
-}
-
-FramebufferChain::~FramebufferChain() {
-    for(auto fb: m_Framebuffers)
-        delete fb;
-    delete m_SwapchainPass;
-    delete m_Swapchain;
+    m_SwapchainPass = UniquePtr<RenderPass>(RenderPass::Create({s_Attachments}));
+    
+    CreateFramebuffers();
 }
 
 void FramebufferChain::Recreate() {
     m_Framebuffers.Clear();
+    m_Swapchain->Recreate();
+    CreateFramebuffers();
+}
+
+void FramebufferChain::CreateFramebuffers() {
     for(Texture2D *image: m_Swapchain->Images()){
         FramebufferProperties props;
-        props.Pass = m_SwapchainPass;
+        props.Pass = m_SwapchainPass.Get();
         props.Size = m_Swapchain->Size();
         props.Attachments = {&image, 1};
 

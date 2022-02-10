@@ -121,7 +121,7 @@ void SwapchainImpl::Recreate(){
     new(this) SwapchainImpl(window);
 }
 
-void SwapchainImpl::PresentCurrent(const Semaphore &wait_semaphore){
+bool SwapchainImpl::PresentCurrent(const Semaphore &wait_semaphore){
     VkResult result;
 
     VkSemaphore wait_semaphore_handle = (VkSemaphore)wait_semaphore.Handle();
@@ -136,14 +136,14 @@ void SwapchainImpl::PresentCurrent(const Semaphore &wait_semaphore){
     info.pImageIndices = &m_CurrentImage;
     info.pResults = &result;
 
-    vkQueuePresentKHR(m_TargetQueue, &info);
+    return vkQueuePresentKHR(m_TargetQueue, &info) == VK_SUCCESS;
 }
 
-void SwapchainImpl::AcquireNext(const Semaphore &signal_semaphore, const Fence &signal_fence){
+bool SwapchainImpl::AcquireNext(const Semaphore &signal_semaphore, const Fence &signal_fence){
     VkSemaphore signal_semaphore_handle = (VkSemaphore)signal_semaphore.Handle();
     VkFence signal_fence_handle = (VkFence)signal_fence.Handle();
 
-    vkAcquireNextImageKHR(GPUImpl::s_Instance, m_Handle, 0, signal_semaphore_handle, signal_fence_handle, &m_CurrentImage);
+    return vkAcquireNextImageKHR(GPUImpl::s_Instance, m_Handle, 0, signal_semaphore_handle, signal_fence_handle, &m_CurrentImage) == VK_SUCCESS;
 }
 
 ConstSpan<Texture2D *> SwapchainImpl::Images()const{
