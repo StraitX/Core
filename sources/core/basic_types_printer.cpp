@@ -51,6 +51,16 @@ void Printer<char *>::Print(char *const &string, void (*writer)(char, void*), vo
 }
 
 template<>
+struct Printer<bool> {
+	static void Print(const bool& b, void (*writer)(char, void*), void* writer_data);
+};
+
+void Printer<bool>::Print(const bool& b, void (*writer)(char, void*), void* writer_data) {
+	const char *string = b ? "true" : "false";
+	Printer<const char *>::Print(string, writer, writer_data);
+}
+
+template<>
 struct Printer<char>{
 	static void Print(const char &ch, void (*writer)(char, void*), void *writer_data);
 };
