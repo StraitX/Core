@@ -65,6 +65,12 @@ public:
 
         new(&Data()[m_Size++]) Type(Forward<ArgsType>(args)...);
     }
+    
+    template<typename OtherGeneralAllocator>
+    void Append(const List<Type, OtherGeneralAllocator>& other) {
+        for(const auto &element: other)
+            Add(element);
+    }
 
     void RemoveLast(){
         SX_CORE_ASSERT(m_Size, "Can't remove last element from empty List");
