@@ -67,7 +67,7 @@ public:
 
     Function(const Function &other) = default;
 
-    Function(Function &&other){
+    Function(Function &&other)noexcept{
         *this = Move(other);
     }
 
@@ -86,7 +86,7 @@ public:
 
     Function &operator=(const Function &other) = default;
 
-    Function &operator=(Function &&other){
+    Function &operator=(Function &&other)noexcept{
         m_Callable = other.m_Callable;
         m_ObjectPtr = other.m_ObjectPtr;
         m_Proxy = other.m_Proxy;
