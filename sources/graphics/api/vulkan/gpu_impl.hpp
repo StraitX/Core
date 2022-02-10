@@ -33,6 +33,8 @@ public:
 
     void SyncSemaphores(ConstSpan<Semaphore> wait, ConstSpan<Semaphore> signal)override;
 
+    void WaitIdle()override;
+
     VkDevice Handle()const{
         return m_Handle;
     }

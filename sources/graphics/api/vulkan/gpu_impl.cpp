@@ -195,4 +195,8 @@ void GPUImpl::SyncSemaphores(ConstSpan<Semaphore> wait, ConstSpan<Semaphore> sig
     GPU::Execute(sync->First, wait, signal, sync->Second);
 }
 
+void GPUImpl::WaitIdle() {
+    vkDeviceWaitIdle(m_Handle);
+}
+
 }//namespace Vk::
