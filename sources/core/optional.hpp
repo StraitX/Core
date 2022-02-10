@@ -114,4 +114,29 @@ private:
 	}
 };
 
+template<>
+class Optional<void> {
+public:
+	Optional(void) = default;
+
+	template<typename...ArgsType>
+	Optional(ArgsType...args) {
+		(void)0;
+	}
+
+	Optional(const Optional &) = default;
+
+	Optional(Optional &&) = default;
+
+	~Optional() = default;
+
+	Optional &operator=(const Optional &) = default;
+
+	Optional &operator=(Optional &&) = default;
+
+	bool HasValue()const {
+		return false;
+	}
+};
+
 #endif//STRAITX_OPTIONAL_HPP
