@@ -24,6 +24,10 @@ class Window: private OSWindowImpl{
 private:
 	using Super = OSWindowImpl;
 public:
+	Window(u32 width, u32 height, const char *title);
+
+	~Window();
+
 	Result Open(u32 width, u32 height, const char *title);
 
 	void Close();
@@ -46,6 +50,15 @@ public:
 
 	const OSWindowImpl &Impl()const;
 };
+
+SX_INLINE Window::Window(u32 width, u32 height, const char* title) {
+	(void)Open(width, height, title);
+}
+
+SX_INLINE Window::~Window() {
+	if(IsOpen())
+		Close();
+}
 
 SX_INLINE Result Window::Open(u32 width, u32 height, const char *title){
 	return Super::Open(width, height, title);
