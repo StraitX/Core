@@ -108,7 +108,7 @@ Result GPUImpl::Initialize(){
     info.queueCreateInfoCount   = queue_creations_infos.Size();
     info.pQueueCreateInfos      = queue_creations_infos.Data();
 
-    LogInfo("Vk: GPU: Creating device with % queues", info.queueCreateInfoCount);
+    //LogInfo("Vk: GPU: Creating device with % queues", info.queueCreateInfoCount);
 
     if(vkCreateDevice(m_PhysicalHandle, &info, nullptr, &m_Handle) != VK_SUCCESS)
         return Result::NullObject;
