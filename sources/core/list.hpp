@@ -95,7 +95,7 @@ public:
     }
 
     void UnorderedRemove(ConstIterator *iterator){
-        SX_CORE_ASSERT(object >= begin() && object < end(), "iterator is out of range");
+        SX_CORE_ASSERT(iterator >= begin() && iterator < end(), "iterator is out of range");
         UnorderedRemove(iterator - begin());
     }
 
