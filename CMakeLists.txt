@@ -71,6 +71,7 @@ set(SX_BASE_SOURCES_GRAPHICS
     ${SX_BASE_SOURCES_DIR}/graphics/color.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/image_loader.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/image.cpp
+    ${SX_BASE_SOURCES_DIR}/graphics/render_window.cpp
 )
 
 set(SX_BASE_SOURCES_MAIN
