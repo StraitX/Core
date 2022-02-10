@@ -88,6 +88,11 @@ public:
         }
     }
 
+    void UnorderedRemove(ConstIterator *iterator){
+        SX_CORE_ASSERT(object >= begin() && object < end(), "iterator is out of range");
+        UnorderedRemove(iterator - begin());
+    }
+
     void Reserve(size_t capacity){
         if(capacity <= m_Capacity)return;
 
