@@ -39,7 +39,7 @@ public:
     }
 
 	~UniquePtr() {
-		DeleterType::operator()(m_Ptr);
+        Release();
 	}
 
 	UniquePtr &operator=(const UniquePtr &) = delete;
@@ -57,6 +57,30 @@ public:
 
     Type &operator*() {
         return *m_Ptr;
+    }
+
+    const Type *operator->()const {
+        return m_Ptr;
+    }
+
+    const Type &operator*()const {
+        return *m_Ptr;
+    }
+
+    Type* Get() {
+        return m_Ptr;
+    }
+
+    const Type* Get()const {
+        return m_Ptr;
+    }
+
+    operator bool()const {
+        return m_Ptr;
+    }
+
+    void Release() {
+		DeleterType::operator()(m_Ptr);
     }
 };
 
@@ -76,7 +100,7 @@ public:
     }
 
     ~UniquePtr() {
-        DeleterType::operator()(m_Ptr);
+        Release();
     }
 
     UniquePtr& operator=(const UniquePtr&) = delete;
@@ -94,6 +118,30 @@ public:
 
     Type& operator*() {
         return *m_Ptr;
+    }
+
+    const Type* operator->()const {
+        return m_Ptr;
+    }
+
+    const Type& operator*()const {
+        return *m_Ptr;
+    }
+
+    operator bool()const {
+        return m_Ptr;
+    }
+    
+    Type* Get() {
+        return m_Ptr;
+    }
+
+    const Type* Get()const{
+        return m_Ptr;
+    }
+
+    void Release() {
+		DeleterType::operator()(m_Ptr);
     }
 
     Type &operator[](size_t index) {
