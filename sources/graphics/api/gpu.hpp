@@ -33,6 +33,8 @@ struct GPUImpl{
     virtual void Execute(CommandBuffer *buffer, Span<u64> wait_semaphore_handles, Span<u64> signal_semaphore_handles, const Fence &signal_fence) = 0;
 
     virtual void SyncSemaphores(ConstSpan<Semaphore> wait, ConstSpan<Semaphore> signal) = 0;
+
+    virtual void WaitIdle() = 0;
 };
 
 class GPU{
@@ -68,6 +70,8 @@ public:
     static void SyncSemaphores(ConstSpan<Semaphore> wait, const Semaphore &signal);
 
     static void SyncSemaphores(const Semaphore &wait, const Semaphore &signal);
+
+    static void WaitIdle();
 };
 
 #endif//STRAITX_GPU_HPP

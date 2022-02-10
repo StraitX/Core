@@ -92,3 +92,8 @@ void GPU::SyncSemaphores(ConstSpan<Semaphore> wait, const Semaphore &signal){
 void GPU::SyncSemaphores(const Semaphore &wait, const Semaphore &signal){
     GPU::SyncSemaphores({&wait, 1}, {&signal, 1});
 }
+
+void GPU::WaitIdle() {
+    SX_CORE_ASSERT(IsInitialized(), "GPU Is not initalized");
+    s_Impl->WaitIdle();
+}
