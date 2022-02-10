@@ -18,7 +18,7 @@ public:
 
     Time GetElapsedTime();
 
-    void Restart();
+    Time Restart();
     // platform specific implementation
     static Time GetMonotonicTime();
 };
@@ -32,8 +32,10 @@ SX_INLINE Time Clock::GetElapsedTime(){
     return GetMonotonicTime() - m_Epoch;
 }
 
-SX_INLINE void Clock::Restart(){
+SX_INLINE Time Clock::Restart(){
+    auto last_epoch = m_Epoch;
     m_Epoch = GetMonotonicTime();
+    return m_Epoch - last_epoch;
 }
 
 
