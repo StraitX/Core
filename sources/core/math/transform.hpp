@@ -3,7 +3,7 @@
 
 #include "core/math/vector3.hpp"
 #include "core/math/matrix4.hpp"
-#include "core/math/trig.hpp"
+#include "core/math/functions.hpp"
 
 namespace Transform{
 
