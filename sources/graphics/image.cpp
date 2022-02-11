@@ -82,7 +82,7 @@ Result Image::SaveToFile(const char *filename){
         auto length = String::Length(end) + 1;
         char *extension = (char*)alloca(length);
 
-        Memory::Copy(end+1, ++extension, length);
+        Memory::Copy(end+1, extension, length);
 
         String::ToLowerCase(extension);
 
