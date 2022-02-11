@@ -12,6 +12,10 @@ struct Codepoint {
 
 	Codepoint() = default;
 
+	Codepoint(const char* string) {
+		Decode((const u8*)string);
+	}
+
 	Codepoint(const u8* utf8) {
 		Decode(utf8);
 	}
@@ -24,11 +28,15 @@ struct Codepoint {
 		Decode(utf32);
 	}
 
+	size_t Encode(char *utf8)const;
+
 	size_t Encode(u8 *utf8)const;
 
 	size_t Encode(u16 *utf16)const;
 
 	size_t Encode(u32 *utf32)const;
+
+	size_t Decode(const char* utf8);
 
 	size_t Decode(const u8* utf8);
 
