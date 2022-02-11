@@ -1,7 +1,9 @@
 #ifndef STRAITX_TRIG_HPP
 #define STRAITX_TRIG_HPP
 
+namespace MathImpl{
 #include <math.h>
+}//namespace MathImpl::
 
 namespace Math{
 
@@ -25,6 +27,14 @@ constexpr NumberType Deg(NumberType radians){
 template<typename NumberType>
 constexpr NumberType Rad(NumberType degrees){
     return static_cast<NumberType>(degrees / 180.f * Pi);
+}
+
+constexpr double Sqrt(double number) {
+    return sqrt(number);
+}
+
+constexpr float Sqrt(float number) {
+    return sqrtf(number);
 }
 
 }//namespace Math::

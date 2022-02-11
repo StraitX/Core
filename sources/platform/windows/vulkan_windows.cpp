@@ -14,6 +14,6 @@ size_t RequiredPlatformExtensionsCount = sizeof(RequiredPlatformExtensions)/size
 const char *RequiredPlatformLayers[]={
         "VK_LAYER_KHRONOS_validation"
 };
-size_t RequiredPlatformLayersCount = sizeof(RequiredPlatformLayers)/sizeof(char*);
+size_t RequiredPlatformLayersCount = 0;
 
 }//namespace Vk::
