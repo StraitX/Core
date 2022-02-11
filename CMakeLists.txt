@@ -20,6 +20,7 @@ set(SX_BASE_SOURCES_CORE
 	${SX_BASE_SOURCES_DIR}/core/print.cpp
     ${SX_BASE_SOURCES_DIR}/core/result.cpp
     ${SX_BASE_SOURCES_DIR}/core/string.cpp
+    ${SX_BASE_SOURCES_DIR}/core/unicode.cpp
 
     ${SX_BASE_SOURCES_DIR}/core/allocators/linear_allocator.cpp
 
