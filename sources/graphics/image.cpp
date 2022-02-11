@@ -23,11 +23,9 @@ Image &Image::operator=(Image &&other)noexcept{
     m_Data = other.m_Data;
     m_Width = other.m_Width;
     m_Height = other.m_Height;
-    m_Channels = other.m_Channels;
     other.m_Data = nullptr;
     other.m_Width = 0;
     other.m_Height = 0;
-    other.m_Channels = {};
     return *this;
 }
 
@@ -36,40 +34,47 @@ void Image::Create(u32 width, u32 height, const Color &color){
 
     m_Width = width;
     m_Height = height;
-    m_Channels = 4;
 
-    m_Data = (u8*)std::malloc((sizeof(byte) * m_Channels) * m_Width * m_Height);
+    m_Data = (u32*)Memory::Alloc((sizeof(u32)) * m_Width * m_Height);
 
     Fill(color);
 }
 
 void Image::Free(){
-    std::free(m_Data); 
+    Memory::Free(m_Data); 
     m_Data = nullptr;
     m_Width = 0;
     m_Height = 0;
-    m_Channels = {};
 }
 
-Result Image::LoadFromFile(const char *filename, u8 desired_channels){
+Result Image::LoadFromFile(const char *filename){
     if(!File::Exist(filename))return Result::NotFound;
 
     File file;
     if(!file.Open(filename, File::Mode::Read))return Result::Failure;
 
-    return LoadFromFile(file, desired_channels);
+    return LoadFromFile(file);
 }
 
-Result Image::LoadFromFile(File &file, u8 desired_channels){
+Result Image::LoadFromFile(File &file){
     SX_CORE_ASSERT(IsEmpty(), "Image::Load: object is not empty");
+    
+    u8 channels = 0;
+    void *pointer = nullptr;
 
-    if(!ImageLoader::LoadImage(file, m_Width, m_Height, desired_channels, m_Channels, m_Data))return Result::Failure;
+    if(!ImageLoader::LoadImage(file, m_Width, m_Height, 4, channels, pointer))return Result::Failure;
+    m_Data = (u32*)pointer;
+
+    if (channels != 4){
+        Free();
+        return Result::WrongFormat;
+    }
 
     return Result::Success;
 }
 
 Result Image::SaveToFile(File &file, ImageFileFormat save_format){
-    return ImageLoader::SaveImage(file, m_Width, m_Height, m_Channels, save_format, m_Data);
+    return ImageLoader::SaveImage(file, m_Width, m_Height, 4, save_format, m_Data);
 }
 
 Result Image::SaveToFile(const char *filename){
