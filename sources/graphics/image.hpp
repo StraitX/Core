@@ -97,7 +97,7 @@ SX_INLINE Color Image::Get(size_t x, size_t y)
 SX_INLINE void Image::Set(const Color& color, size_t x, size_t y)
 {
     // we use here ABGR because of little-endian cpu assumption 
-    operator[](x + y * Width()) = color.ABGR8();
+    operator[](x + y * Width()) = color.RGBA8();
 }
 
 #endif//STRAITX_IMAGE_HPP
