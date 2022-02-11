@@ -27,7 +27,7 @@ public:
 
     void Create(u32 width, u32 height, const Color &color = Color::Black);
 
-    void Free();
+    void Clear();
 
     Result LoadFromFile(const char *filename);
 
@@ -48,6 +48,14 @@ public:
     Vector2u Size()const;
 
     bool IsEmpty()const;
+    
+    u32 &operator[](size_t index);
+
+    const u32 &operator[](size_t index)const ;
+
+    Color Get(size_t x, size_t y);
+
+    void Set(const Color &color, size_t x, size_t y);
 };
 
 SX_INLINE void *Image::Data()const{
@@ -68,6 +76,28 @@ SX_INLINE Vector2u Image::Size()const{
 
 SX_INLINE bool Image::IsEmpty()const{
     return m_Data == nullptr;
+}
+
+SX_INLINE u32& Image::operator[](size_t index)
+{
+    return const_cast<u32&>(const_cast<const Image*>(this)->operator[](index));
+}
+
+SX_INLINE const u32& Image::operator[](size_t index) const
+{
+    SX_CORE_ASSERT(index < Width() * Height(), "Image: index is out of range");
+    return m_Data[index];
+}
+
+SX_INLINE Color Image::Get(size_t x, size_t y)
+{
+    return Color(operator[](x + y * Width()));
+}
+
+SX_INLINE void Image::Set(const Color& color, size_t x, size_t y)
+{
+    // we use here ABGR because of little-endian cpu assumption 
+    operator[](x + y * Width()) = color.ABGR8();
 }
 
 #endif//STRAITX_IMAGE_HPP

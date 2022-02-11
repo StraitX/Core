@@ -14,11 +14,11 @@ Image::Image(Image &&other)noexcept{
 }
 
 Image::~Image(){
-    Free();
+    Clear();
 }
 
 Image &Image::operator=(Image &&other)noexcept{
-    Free();
+    Clear();
 
     m_Data = other.m_Data;
     m_Width = other.m_Width;
@@ -40,7 +40,7 @@ void Image::Create(u32 width, u32 height, const Color &color){
     Fill(color);
 }
 
-void Image::Free(){
+void Image::Clear(){
     Memory::Free(m_Data); 
     m_Data = nullptr;
     m_Width = 0;
@@ -66,7 +66,7 @@ Result Image::LoadFromFile(File &file){
     m_Data = (u32*)pointer;
 
     if (channels != 4){
-        Free();
+        Clear();
         return Result::WrongFormat;
     }
 
