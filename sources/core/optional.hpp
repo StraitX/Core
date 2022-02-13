@@ -4,6 +4,7 @@
 #include "core/types.hpp"
 #include "core/assert.hpp"
 #include "core/move.hpp"
+#include <new>
 
 template<typename Type>
 class alignas(Type) Optional {
