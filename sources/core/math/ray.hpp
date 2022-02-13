@@ -23,7 +23,7 @@ public:
         return m_Direction;
     }
 
-    ArgType At(ArgType arg)const{
+    VectorType At(ArgType arg)const{
         return m_Origin + m_Direction * arg;
     }
 };
