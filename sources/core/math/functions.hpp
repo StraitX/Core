@@ -1,9 +1,7 @@
 #ifndef STRAITX_TRIG_HPP
 #define STRAITX_TRIG_HPP
 
-namespace MathImpl{
 #include <math.h>
-}//namespace MathImpl::
 
 namespace Math{
 
