@@ -14,11 +14,11 @@ public:
 
     constexpr Time(const Time &other) = default;
 
-    constexpr s64 AsMicroseconds();
+    constexpr s64 AsMicroseconds()const;
 
-    constexpr s64 AsMilliseconds();
+    constexpr s64 AsMilliseconds()const;
 
-    constexpr float AsSeconds();
+    constexpr float AsSeconds()const;
 
     friend constexpr Time Seconds(float seconds);
 
@@ -55,16 +55,16 @@ constexpr Time::Time(s64 microseconds):
     m_Microseconds(microseconds)
 {}
 
-constexpr s64 Time::AsMicroseconds(){
+constexpr s64 Time::AsMicroseconds()const{
     return m_Microseconds;
 }
 
-constexpr s64 Time::AsMilliseconds(){
+constexpr s64 Time::AsMilliseconds()const{
     return AsMicroseconds() / 1000;
 }
 
-constexpr float Time::AsSeconds(){
-    return AsMicroseconds() / 1000000.f ;
+constexpr float Time::AsSeconds()const{
+    return AsMicroseconds() / 1000000.f;
 }
 
 constexpr Time Microseconds(s64 microseconds){
