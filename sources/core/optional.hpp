@@ -106,6 +106,14 @@ public:
 		return const_cast<Type&>(const_cast<const Optional<Type>* >(this)->Value());
 	}
 
+    operator Type&(){
+        return Value();
+    }
+
+    operator const Type&()const{
+        return Value();
+    }
+
 private:
 	const Type *ValuePointer() const{
 		return reinterpret_cast<const Type*>(m_Memory);
