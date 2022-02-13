@@ -96,12 +96,40 @@ constexpr Color operator+(const Color &lvalue, const Color &rvalue){
     };
 }
 
+constexpr Color operator-(const Color &lvalue, const Color &rvalue){
+    return {
+        lvalue.R - rvalue.R,
+        lvalue.G - rvalue.G,
+        lvalue.B - rvalue.B,
+        lvalue.A - rvalue.A
+    };
+}
+
+
 constexpr Color operator*(const Color &lvalue, const Color &rvalue){
     return {
         lvalue.R * rvalue.R,
         lvalue.G * rvalue.G,
         lvalue.B * rvalue.B,
         lvalue.A * rvalue.A
+    };
+}
+
+constexpr Color operator*(const Color &lvalue, const float rvalue){
+    return {
+        lvalue.R * rvalue,
+        lvalue.G * rvalue,
+        lvalue.B * rvalue,
+        lvalue.A * rvalue
+    };
+}
+
+constexpr Color operator*(float lvalue, const Color &rvalue){
+    return {
+        lvalue * rvalue.R,
+        lvalue * rvalue.G,
+        lvalue * rvalue.B,
+        lvalue * rvalue.A
     };
 }
 
