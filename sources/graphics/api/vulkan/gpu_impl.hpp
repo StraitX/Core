@@ -35,6 +35,8 @@ public:
 
     void WaitIdle()override;
 
+    bool IsComputePipelineSupported()const override;
+
     VkDevice Handle()const{
         return m_Handle;
     }

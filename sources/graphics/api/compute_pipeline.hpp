@@ -3,9 +3,11 @@
 
 #include "core/noncopyable.hpp"
 #include "graphics/api/shader.hpp"
+#include "graphics/api/descriptor_set.hpp"
 
 struct ComputePipelineProperties {
 	const Shader *ComputeShader = nullptr;
+	const DescriptorSetLayout *Layout = nullptr;
 };
 
 class ComputePipeline: public NonCopyable{

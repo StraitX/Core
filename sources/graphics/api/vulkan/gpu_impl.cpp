@@ -199,4 +199,9 @@ void GPUImpl::WaitIdle() {
     vkDeviceWaitIdle(m_Handle);
 }
 
+bool GPUImpl::IsComputePipelineSupported() const
+{
+    return true;
+}
+
 }//namespace Vk::

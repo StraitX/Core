@@ -93,21 +93,9 @@ VkCompareOp ToVkDepthCompareOp(DepthFunction func){
     return s_DepthFunctionTable[(size_t)func];
 }
 
-GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &props){    
-    VkDescriptorSetLayout set_layout = props.Layout ? VkDescriptorSetLayout(*(Vk::DescriptorSetLayoutImpl*)props.Layout) : VkDescriptorSetLayout(VK_NULL_HANDLE);
-
-    VkPipelineLayoutCreateInfo layout_info;
-    layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    layout_info.pNext = nullptr;
-    layout_info.flags = 0;
-    layout_info.setLayoutCount = (set_layout != VK_NULL_HANDLE);
-    layout_info.pSetLayouts = &set_layout;
-    layout_info.pushConstantRangeCount = 0;
-    layout_info.pPushConstantRanges = nullptr;
-    VkShaderStageFlagBits n;
-
-    SX_VK_ASSERT(vkCreatePipelineLayout(GPUImpl::s_Instance, &layout_info, nullptr, &m_Layout), "Vk: GraphicsPipelineImpl: Can't create Pipeline Layout");
-
+GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &props):
+    Pipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, props.Layout)
+{    
     //===Shader Stages===
     Span<VkPipelineShaderStageCreateInfo> stages(SX_STACK_ARRAY_ALLOC(VkPipelineShaderStageCreateInfo, props.Shaders.Size()), props.Shaders.Size());
 
@@ -285,7 +273,6 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
 }
 
 GraphicsPipelineImpl::~GraphicsPipelineImpl(){
-    vkDestroyPipelineLayout(GPUImpl::s_Instance, m_Layout, nullptr);
     vkDestroyPipeline(GPUImpl::s_Instance, m_Handle, nullptr);
 }
 

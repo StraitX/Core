@@ -4,6 +4,7 @@
 #include "core/fixed_list.hpp"
 #include "core/os/vulkan.hpp"
 #include "graphics/api/graphics_pipeline.hpp"
+#include "graphics/api/vulkan/pipeline.hpp"
 
 namespace Vk{
 
@@ -19,10 +20,8 @@ VkBlendOp ToVkBlendOp(BlendFunction func);
 
 VkCompareOp ToVkDepthCompareOp(DepthFunction func);
 
-class GraphicsPipelineImpl: public GraphicsPipeline{
+class GraphicsPipelineImpl: public GraphicsPipeline, public Pipeline{
 private:
-    VkPipeline m_Handle = VK_NULL_HANDLE;
-    VkPipelineLayout m_Layout = VK_NULL_HANDLE;
     FixedList<VertexAttribute, MaxVertexAttributes> m_VertexAttributes;
 public:
     GraphicsPipelineImpl(const GraphicsPipelineProperties &props);
@@ -30,14 +29,6 @@ public:
     ~GraphicsPipelineImpl();
 
     ConstSpan<VertexAttribute> VertexAttributes()const override;
-
-    operator VkPipeline()const{
-        return m_Handle;
-    }
-
-    VkPipelineLayout Layout()const{
-        return m_Layout;
-    }
 };
 
 }//namespace Vk::

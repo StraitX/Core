@@ -173,13 +173,24 @@ void CommandBufferImpl::EndRenderPass(){
 }
 
 void CommandBufferImpl::Bind(const GraphicsPipeline *pipeline){
-    m_Bindings.Bind(pipeline);
+    const Pipeline *impl = (const Vk::GraphicsPipelineImpl*)pipeline;
+    m_Bindings.Bind(impl);
 
-    vkCmdBindPipeline(m_Handle, VK_PIPELINE_BIND_POINT_GRAPHICS, *(const Vk::GraphicsPipelineImpl*)pipeline);
+    vkCmdBindPipeline(m_Handle, impl->BindPoint(), *impl);
 }
 
 void CommandBufferImpl::Draw(u32 vertices_count){
     vkCmdDraw(m_Handle, vertices_count, 1, 0, 0);
+}
+void CommandBufferImpl::Bind(const ComputePipeline* pipeline) {
+    const Pipeline *impl = (const Vk::ComputePipelineImpl*)pipeline;
+    m_Bindings.Bind(impl);
+
+    vkCmdBindPipeline(m_Handle, impl->BindPoint(), *impl);
+}
+
+void CommandBufferImpl::Dispatch(u32 group_size_x, u32 group_size_y, u32 group_size_z) {
+    vkCmdDispatch(m_Handle, group_size_x, group_size_y, group_size_z);
 }
 
 void CommandBufferImpl::SetScissor(s32 x, s32 y, u32 width, u32 height){
@@ -347,8 +358,8 @@ void CommandBufferImpl::ClearColor(Texture2D *texture, const Color &color){
 
 void CommandBufferImpl::Bind(const DescriptorSet *set){
     VkDescriptorSet handle = *(const Vk::DescriptorSetImpl*)set;
-
-    vkCmdBindDescriptorSets(m_Handle, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Bindings.Pipeline->Layout(), 0, 1, &handle, 0, nullptr);
+    
+    vkCmdBindDescriptorSets(m_Handle, m_Bindings.PipelineBinding->BindPoint(), m_Bindings.PipelineBinding->Layout(), 0, 1, &handle, 0, nullptr);
 }
 
 }//namespace Vk::

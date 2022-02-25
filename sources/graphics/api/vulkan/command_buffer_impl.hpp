@@ -7,6 +7,7 @@
 #include "graphics/api/vulkan/gpu_impl.hpp"
 #include "graphics/api/vulkan/texture_impl.hpp"
 #include "graphics/api/vulkan/graphics_pipeline_impl.hpp"
+#include "graphics/api/vulkan/compute_pipeline_impl.hpp"
 
 namespace Vk{
 
@@ -62,18 +63,18 @@ struct ResourceOperation{
 };
 
 struct CommandBufferBindings{
-    const Vk::GraphicsPipelineImpl* Pipeline;
+    const Pipeline *PipelineBinding;
 
     CommandBufferBindings(){
         Reset();
     }
 
     void Reset(){
-        Pipeline = nullptr;
+        PipelineBinding = nullptr;
     }
 
-    void Bind(const GraphicsPipeline *pipeline){
-        Pipeline = (const Vk::GraphicsPipelineImpl*)pipeline;
+    void Bind(const Pipeline *pipeline){
+        PipelineBinding = pipeline;
     }
 };
 
@@ -123,6 +124,10 @@ public:
     void Bind(const GraphicsPipeline *pipeline)override;
 
     void Draw(u32 vertices_count)override;
+
+    void Bind(const ComputePipeline *pipeline)override;
+
+    void Dispatch(u32 group_size_x, u32 group_size_y, u32 group_size_z)override;
 
     void SetScissor(s32 x, s32 y, u32 width, u32 height)override;
 
