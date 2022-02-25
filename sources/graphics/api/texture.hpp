@@ -52,6 +52,7 @@ namespace TextureUsageBits{
         TransferSrc             = 0x00000001,
         TransferDst             = 0x00000002,
         Sampled                 = 0x00000004,
+        Storage                 = 0x00000008,
         ColorAttachmentOptimal  = 0x00000010,
         DepthStencilOptimal     = 0x00000020,
     };
