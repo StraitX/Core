@@ -20,7 +20,7 @@ namespace BufferUsageBits{
         //UniformTexelBuffer  = 0x04,
         //StorageTexelBuffer  = 0x08,
         UniformBuffer       = 0x10,
-        //StorageBuffer       = 0x20,
+        StorageBuffer       = 0x20,
         IndexBuffer         = 0x40,
         VertexBuffer        = 0x80
     };

@@ -54,6 +54,8 @@ public:
 	virtual ~DescriptorSet() = default;
 
 	virtual void UpdateUniformBinding(size_t binding, size_t index, const Buffer *buffer) = 0;
+
+	virtual void UpdateStorageBufferBinding(size_t binding, size_t index, const Buffer *buffer) = 0;
 	
 	virtual void UpdateTextureBinding(size_t binding, size_t index, const Texture2D *texture, const Sampler *sampler) = 0;
 };

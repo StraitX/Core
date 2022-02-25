@@ -41,6 +41,7 @@ set(SX_BASE_SOURCES_GRAPHICS_API
     ${SX_BASE_SOURCES_DIR}/graphics/api/framebuffer.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/api/shader.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/api/graphics_pipeline.cpp
+    ${SX_BASE_SOURCES_DIR}/graphics/api/compute_pipeline.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/api/buffer.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/api/sampler.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/api/descriptor_set.cpp

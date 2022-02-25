@@ -97,3 +97,9 @@ void GPU::WaitIdle() {
     SX_CORE_ASSERT(IsInitialized(), "GPU Is not initalized");
     s_Impl->WaitIdle();
 }
+
+bool GPU::IsComputePipelineSupported(){
+    SX_CORE_ASSERT(IsInitialized(), "GPU Is not initalized");
+    
+    return s_Impl->IsComputePipelineSupported();
+}

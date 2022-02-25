@@ -8,6 +8,7 @@
 class RenderPass;
 class Framebuffer;
 class GraphicsPipeline;
+class ComputePipeline;
 class Buffer;
 class DescriptorSet;
 
@@ -54,6 +55,10 @@ public:
     virtual void Bind(const GraphicsPipeline *pipeline) = 0;
 
     virtual void Draw(u32 vertices_count) = 0;
+
+    virtual void Bind(const ComputePipeline *pipeline) = 0;
+
+    virtual void Dispatch(u32 group_size_x = 1, u32 group_size_y = 1, u32 group_size_z = 1) = 0;
 
     virtual void SetScissor(s32 x, s32 y, u32 width, u32 height) = 0;
 

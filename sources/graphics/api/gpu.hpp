@@ -35,6 +35,8 @@ struct GPUImpl{
     virtual void SyncSemaphores(ConstSpan<Semaphore> wait, ConstSpan<Semaphore> signal) = 0;
 
     virtual void WaitIdle() = 0;
+
+    virtual bool IsComputePipelineSupported()const = 0;
 };
 
 class GPU{
@@ -72,6 +74,8 @@ public:
     static void SyncSemaphores(const Semaphore &wait, const Semaphore &signal);
 
     static void WaitIdle();
+
+    static bool IsComputePipelineSupported();
 };
 
 #endif//STRAITX_GPU_HPP
