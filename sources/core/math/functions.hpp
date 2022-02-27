@@ -2,6 +2,7 @@
 #define STRAITX_TRIG_HPP
 
 #include <math.h>
+#include "core/env/compiler.hpp"
 
 namespace Math{
 
@@ -27,11 +28,11 @@ constexpr NumberType Rad(NumberType degrees){
     return static_cast<NumberType>(degrees / 180.f * Pi);
 }
 
-constexpr double Sqrt(double number) {
+SX_INLINE double Sqrt(double number) {
     return sqrt(number);
 }
 
-constexpr float Sqrt(float number) {
+SX_INLINE float Sqrt(float number) {
     return sqrtf(number);
 }
 
