@@ -11,8 +11,12 @@ namespace Vk{
 VkDescriptorType ToVkDescriptorType(ShaderBindingType type){
 	static const VkDescriptorType s_DescriptorTypeTable[] = {
 		VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-		VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
+		VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+		VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+		VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
 	};
+
+    SX_CORE_ASSERT((size_t)type < lengthof(s_DescriptorTypeTable),"Descriptor type table out of bounds");
 
 	return s_DescriptorTypeTable[(size_t)type];
 }
@@ -119,11 +123,11 @@ void DescriptorSetImpl::UpdateTextureBinding(size_t binding, size_t index, const
     vkUpdateDescriptorSets(GPUImpl::s_Instance, 1, &write, 0, nullptr);
 }
 
-void DescriptorSetImpl::UpdateStorageTextureBinding(size_t binding, size_t index, const Texture2D *texture, const Sampler *sampler){
+void DescriptorSetImpl::UpdateStorageTextureBinding(size_t binding, size_t index, const Texture2D *texture){
     VkDescriptorImageInfo image;
     image.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;//GPUTextureImpl::s_LayoutTable[(size_t)texture.GetLayout()];
     image.imageView = ((const Vk::Texture2DImpl*)texture)->ViewHandle();
-    image.sampler = *(const Vk::SamplerImpl*)sampler;
+    image.sampler = nullptr;
 
     VkWriteDescriptorSet write;
     write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

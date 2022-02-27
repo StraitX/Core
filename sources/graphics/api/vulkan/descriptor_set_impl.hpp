@@ -35,7 +35,7 @@ public:
 	
 	void UpdateTextureBinding(size_t binding, size_t index, const Texture2D *texture, const Sampler *sampler)override;
 
-	void UpdateStorageTextureBinding(size_t binding, size_t index, const Texture2D *texture, const Sampler *sampler)override;
+	void UpdateStorageTextureBinding(size_t binding, size_t index, const Texture2D *texture)override;
 
 	operator VkDescriptorSet()const{
 		return m_Handle;

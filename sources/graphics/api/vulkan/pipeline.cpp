@@ -1,5 +1,6 @@
 #include "graphics/api/vulkan/pipeline.hpp"
 #include "graphics/api/vulkan/gpu_impl.hpp"
+#include "graphics/api/vulkan/debug.hpp"
 
 namespace Vk{
 

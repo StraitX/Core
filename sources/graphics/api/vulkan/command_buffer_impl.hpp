@@ -63,11 +63,7 @@ struct ResourceOperation{
 };
 
 struct CommandBufferBindings{
-    const Pipeline *PipelineBinding;
-
-    CommandBufferBindings(){
-        Reset();
-    }
+    const Pipeline *PipelineBinding = nullptr;
 
     void Reset(){
         PipelineBinding = nullptr;

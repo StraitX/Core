@@ -60,6 +60,7 @@ set(SX_BASE_SOURCES_GRAPHICS_API_VULKAN
     ${SX_BASE_SOURCES_DIR}/graphics/api/vulkan/render_pass_impl.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/api/vulkan/framebuffer_impl.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/api/vulkan/shader_impl.cpp
+    ${SX_BASE_SOURCES_DIR}/graphics/api/vulkan/pipeline.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/api/vulkan/graphics_pipeline_impl.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/api/vulkan/compute_pipeline_impl.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/api/vulkan/memory.cpp

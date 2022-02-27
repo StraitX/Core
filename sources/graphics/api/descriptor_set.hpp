@@ -61,7 +61,7 @@ public:
 	
 	virtual void UpdateTextureBinding(size_t binding, size_t index, const Texture2D *texture, const Sampler *sampler) = 0;
 
-	virtual void UpdateStorageTextureBinding(size_t binding, size_t index, const Texture2D *texture, const Sampler *sampler) = 0;
+	virtual void UpdateStorageTextureBinding(size_t binding, size_t index, const Texture2D *texture) = 0;
 };
 
 struct DescriptorSetPoolProperties{
