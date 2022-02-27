@@ -2,9 +2,61 @@
 #define STRAITX_STRING_HPP
 
 #include "core/types.hpp"
+#include "core/move.hpp"
+#include "core/noncopyable.hpp"
+#include "core/string_view.hpp"
+#include "core/os/memory.hpp"
 
-class String{
+class String: public StringView, public NonCopyable{
 public:
+    String():
+        StringView(nullptr, 0)
+    {}
+
+    String(const char *string):
+        String(string, StaticCodeunitsCount(string))
+    {}
+
+    String(const char *string, size_t length):
+        StringView(
+            (char*)Memory::Alloc((length + 1) * sizeof(char)),
+            length
+        )
+    {
+        Memory::Copy(string, Data(), length);
+        Data()[length] = 0;
+    }
+
+    String(String&& other)noexcept:
+        StringView(nullptr, 0)
+    {
+        *this = Move(other);
+    }
+
+    ~String() {
+        Clear();
+    }
+
+    String& operator=(String&& other)noexcept {
+        Clear();
+        m_String = other.m_String;
+        m_CodeunitsCount = other.m_CodeunitsCount;
+        other.m_String = nullptr;
+        other.m_CodeunitsCount = 0;
+        return *this;
+    }
+
+    void Clear() {
+        Memory::Free(Data());
+        m_String = nullptr;
+        m_CodeunitsCount = 0;
+    }
+    
+    char* Data(){
+        return const_cast<char*>(m_String);
+    }
+    
+    //XXX: Do something about this
     static bool Contains(const char *string, const char *internal);
 
     static bool Contains(const char *string, size_t limit, const char *internal);

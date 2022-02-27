@@ -2,12 +2,11 @@
 #define STRAITX_STRING_VIEW_HPP
 
 #include "core/types.hpp"
-#include "core/string.hpp"
 #include "core/unicode.hpp"
 #include "core/span.hpp"
 
 class StringView {
-private:
+protected:
 	const char *m_String = nullptr;
 	size_t m_CodeunitsCount = 0;
 public:
@@ -21,12 +20,17 @@ public:
 		m_CodeunitsCount(StaticCodeunitsCount(string))
 	{}
 
+	StringView(StringView &&) = delete;
+
 	StringView(const StringView &) = default;
+
+	StringView &operator=(StringView &&) = delete;
 
 	StringView &operator=(const StringView &) = default;
 
 	constexpr StringView& operator=(const char* string){
-		*this = StringView(string);
+		m_String = string;
+		m_CodeunitsCount = StaticCodeunitsCount(string);
 		return *this;
 	}
 
@@ -60,8 +64,10 @@ public:
 	UnicodeIterator end()const{
 		return {Data() + Size()};
 	}
-private:
+protected:
 	static constexpr size_t StaticCodeunitsCount(const char* string) {
+		if(!string)return 0;
+
 		size_t counter = 0;
 		while (*string++) 
 			counter++;
