@@ -28,13 +28,9 @@ class UniquePtr : private DeleterType{
 private:
 	Type *m_Ptr = nullptr;
 public:
-	UniquePtr(Type *ptr):
+	UniquePtr(Type *ptr, DeleterType deleter = {}):
+        DeleterType(Move(deleter)),
 		m_Ptr(ptr)
-	{}
-
-	UniquePtr(Type *ptr, DeleterType deleter):
-		m_Ptr(ptr),
-        DeleterType(Move(deleter))
 	{}
 
 	UniquePtr(const UniquePtr &) = delete;
@@ -94,13 +90,9 @@ class UniquePtr<Type[], DeleterType> : private DeleterType {
 private:
     Type* m_Ptr = nullptr;
 public:
-    UniquePtr(Type* ptr) :
-        m_Ptr(ptr)
-    {}
-
-	UniquePtr(Type *ptr, DeleterType deleter):
-		m_Ptr(ptr),
-        DeleterType(Move(deleter))
+	UniquePtr(Type *ptr, DeleterType deleter = {}):
+        DeleterType(Move(deleter)),
+		m_Ptr(ptr)
 	{}
 
     UniquePtr(const UniquePtr&) = delete;
