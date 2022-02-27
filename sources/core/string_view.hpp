@@ -4,6 +4,7 @@
 #include "core/types.hpp"
 #include "core/unicode.hpp"
 #include "core/span.hpp"
+#include "core/printer.hpp"
 
 class StringView {
 protected:
@@ -72,6 +73,13 @@ protected:
 		while (*string++) 
 			counter++;
 		return counter;
+	}
+};
+
+template<>
+struct Printer<StringView> {
+	static void Print(const StringView& value, void (*writer)(char, void*), void* writer_data) {
+		Printer<const char*>::Print(value.Data(), writer, writer_data);
 	}
 };
 

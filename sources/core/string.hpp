@@ -94,6 +94,13 @@ public:
     static char *Ignore(char *string, char ch);
 };
 
+template<>
+struct Printer<String> {
+	static void Print(const String& value, void (*writer)(char, void*), void* writer_data) {
+		Printer<StringView>::Print(value, writer, writer_data);
+	}
+};
+
 SX_INLINE bool String::Contains(const char *string, const char *internal){
     return Find(string,internal);
 }
