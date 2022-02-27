@@ -4,44 +4,53 @@
 #include "core/types.hpp"
 #include "core/string.hpp"
 #include "core/unicode.hpp"
+#include "core/span.hpp"
 
 class StringView {
 private:
 	const char *m_String = nullptr;
-	size_t m_Size = 0;
+	size_t m_CodeunitsCount = 0;
 public:
-	StringView(const char *string, size_t size):
+	StringView(const char *string, size_t codeunits_count):
 		m_String(string),
-		m_Size(size)
+		m_CodeunitsCount(codeunits_count)
 	{}
 
 	constexpr StringView(const char *string):
 		m_String(string),
-		m_Size(BytesSize(string))
+		m_CodeunitsCount(StaticCodeunitsCount(string))
 	{}
 
 	StringView(const StringView &) = default;
 
 	StringView &operator=(const StringView &) = default;
 
-	constexpr StringView& operator=(const char* string) {
+	constexpr StringView& operator=(const char* string){
 		*this = StringView(string);
 		return *this;
 	}
 
-	const char* Data()const {
+	const char* Data()const{
 		return m_String;
 	}
 
-	size_t Size()const {
-		return m_Size;
+	size_t Size()const{
+		return CodeunitsCount();
 	}
 
-	size_t UnicodeSize()const {
+	size_t CodeunitsCount()const{
+		return m_CodeunitsCount;
+	}
+
+	size_t CodepointsCount()const{
 		size_t counter = 0;
 		for(u32 ch: *this)
 			counter++;
 		return counter;
+	}
+
+	operator ConstSpan<char>()const{
+		return {Data(), Size()};
 	}
 
 	UnicodeIterator begin()const{
@@ -49,10 +58,10 @@ public:
 	}
 
 	UnicodeIterator end()const{
-		return {Data()  + Size()};
+		return {Data() + Size()};
 	}
 private:
-	static constexpr size_t BytesSize(const char* string) {
+	static constexpr size_t StaticCodeunitsCount(const char* string) {
 		size_t counter = 0;
 		while (*string++) 
 			counter++;
