@@ -32,6 +32,11 @@ public:
 		m_Ptr(ptr)
 	{}
 
+	UniquePtr(Type *ptr, DeleterType deleter):
+		m_Ptr(ptr),
+        DeleterType(Move(deleter))
+	{}
+
 	UniquePtr(const UniquePtr &) = delete;
 
     UniquePtr(UniquePtr&& other) {
@@ -92,6 +97,11 @@ public:
     UniquePtr(Type* ptr) :
         m_Ptr(ptr)
     {}
+
+	UniquePtr(Type *ptr, DeleterType deleter):
+		m_Ptr(ptr),
+        DeleterType(Move(deleter))
+	{}
 
     UniquePtr(const UniquePtr&) = delete;
 
