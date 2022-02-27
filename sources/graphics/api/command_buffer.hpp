@@ -91,4 +91,16 @@ public:
 
 };
 
+struct CommandBufferDeleter {
+    CommandPool *Pool = nullptr;
+
+    CommandBufferDeleter(CommandPool* pool):
+        Pool(pool)
+    {}
+
+    void operator()(CommandBuffer* buffer) {
+        Pool->Free(buffer);
+    }
+};
+
 #endif//STRAITX_COMMAND_BUFFER_HPP
