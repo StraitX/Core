@@ -12,7 +12,9 @@
 
 enum class ShaderBindingType: u8{
     UniformBuffer = 0,
-    Texture       = 1
+    StorageBuffer = 1,
+    Texture       = 2,
+    StorageTexture= 3,
 };
 
 struct ShaderBinding{
@@ -82,6 +84,18 @@ public:
 	virtual const DescriptorSetLayout *Layout()const = 0;
 
 	static DescriptorSetPool *Create(const DescriptorSetPoolProperties &props);
+};
+
+struct DescriptorSetDeleter {
+	DescriptorSetPool *Pool = nullptr;
+
+	DescriptorSetDeleter(DescriptorSetPool *pool):
+		Pool(pool)
+	{}
+
+	void operator()(DescriptorSet* set) {
+		Pool->Free(set);
+	}
 };
 
 class SingleFrameDescriptorSetPool{
