@@ -30,8 +30,12 @@ public:
 	DescriptorSetImpl(VkDescriptorSet handle);
 
 	void UpdateUniformBinding(size_t binding, size_t index, const Buffer *buffer)override;
+
+	void UpdateStorageBufferBinding(size_t binding, size_t index, const Buffer *buffer)override;
 	
 	void UpdateTextureBinding(size_t binding, size_t index, const Texture2D *texture, const Sampler *sampler)override;
+
+	void UpdateStorageTextureBinding(size_t binding, size_t index, const Texture2D *texture, const Sampler *sampler)override;
 
 	operator VkDescriptorSet()const{
 		return m_Handle;

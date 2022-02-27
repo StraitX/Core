@@ -59,7 +59,7 @@ void DescriptorSetImpl::UpdateUniformBinding(size_t binding, size_t index, const
 	SX_CORE_ASSERT(uniform_buffer->MemoryType() == BufferMemoryType::DynamicVRAM || uniform_buffer->MemoryType() == BufferMemoryType::VRAM, "Can't use RAM-based buffer in descriptor set");
     
 	VkDescriptorBufferInfo buffer;
-    buffer.buffer = VkBuffer(*(Vk::BufferImpl*)uniform_buffer);
+    buffer.buffer = *(Vk::BufferImpl*)uniform_buffer;
     buffer.offset = 0;
     buffer.range = VK_WHOLE_SIZE;
 
@@ -71,6 +71,26 @@ void DescriptorSetImpl::UpdateUniformBinding(size_t binding, size_t index, const
     write.dstArrayElement = index;
     write.descriptorCount = 1;
     write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    write.pImageInfo = nullptr;
+    write.pBufferInfo = &buffer;
+    write.pTexelBufferView = nullptr;
+
+    vkUpdateDescriptorSets(GPUImpl::s_Instance, 1, &write, 0, nullptr);
+}
+void DescriptorSetImpl::UpdateStorageBufferBinding(size_t binding, size_t index, const Buffer* storage_buffer) {
+	VkDescriptorBufferInfo buffer;
+    buffer.buffer = *(Vk::BufferImpl*)storage_buffer;
+    buffer.offset = 0;
+    buffer.range = VK_WHOLE_SIZE;
+
+    VkWriteDescriptorSet write;
+    write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    write.pNext = nullptr;
+    write.dstSet = m_Handle;
+    write.dstBinding = binding;
+    write.dstArrayElement = index;
+    write.descriptorCount = 1;
+    write.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
     write.pImageInfo = nullptr;
     write.pBufferInfo = &buffer;
     write.pTexelBufferView = nullptr;
@@ -99,6 +119,26 @@ void DescriptorSetImpl::UpdateTextureBinding(size_t binding, size_t index, const
     vkUpdateDescriptorSets(GPUImpl::s_Instance, 1, &write, 0, nullptr);
 }
 
+void DescriptorSetImpl::UpdateStorageTextureBinding(size_t binding, size_t index, const Texture2D *texture, const Sampler *sampler){
+    VkDescriptorImageInfo image;
+    image.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;//GPUTextureImpl::s_LayoutTable[(size_t)texture.GetLayout()];
+    image.imageView = ((const Vk::Texture2DImpl*)texture)->ViewHandle();
+    image.sampler = *(const Vk::SamplerImpl*)sampler;
+
+    VkWriteDescriptorSet write;
+    write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    write.pNext = nullptr;
+    write.dstSet = m_Handle;
+    write.dstBinding = binding;
+    write.dstArrayElement = index;
+    write.descriptorCount = 1;
+    write.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+    write.pImageInfo = &image;
+    write.pBufferInfo = nullptr;
+    write.pTexelBufferView = nullptr;
+
+    vkUpdateDescriptorSets(GPUImpl::s_Instance, 1, &write, 0, nullptr);
+}
 
 DescriptorSetPoolImpl::DescriptorSetPoolImpl(const DescriptorSetPoolProperties &props):
 	m_Capacity(props.Capacity),
