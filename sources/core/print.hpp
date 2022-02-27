@@ -3,6 +3,7 @@
 
 #include "core/types.hpp"
 #include "core/printer.hpp"
+#include "core/move.hpp"
 
 void STDOutWriter(char ch, void *data = nullptr);
 
@@ -30,16 +31,24 @@ template<>
 struct ImplicitPrintCaster<char *>{
 	typedef char *Type;
 };
+template<size_t N>
+struct ImplicitPrintCaster<char[N]>{
+	typedef char *Type;
+};
+template<size_t N>
+struct ImplicitPrintCaster<const char[N]>{
+	typedef const char *Type;
+};
 
 }//namespace Details::
 
 template <typename T, typename...Args>
-void WriterPrint(void (*writer)(char, void*), void *writer_data, const char *fmt, T arg, const Args&...args){
+void WriterPrint(void (*writer)(char, void*), void *writer_data, const char *fmt, const T &arg, const Args&...args){
 	while(*fmt!=0){
         if(*fmt=='%'){
 			using PrintType = typename Details::ImplicitPrintCaster<T>::Type;
-			Printer<PrintType>::Print((PrintType)arg, writer, writer_data);
-            return WriterPrint(writer, writer_data, fmt+1, args...);
+			Printer<PrintType>::Print((const PrintType&)arg, writer, writer_data);
+            return WriterPrint(writer, writer_data, fmt+1, ((const Args&)(args))...);
         }
         writer(*fmt, writer_data);
         ++fmt;

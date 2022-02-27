@@ -8,6 +8,8 @@ struct Printer<const char *>{
 };
 
 void Printer<const char *>::Print(const char * const &string, void (*writer)(char, void*), void *writer_data){
+	if(!string)return;
+
 	const char *str = string;
 	while(*str)
 		writer(*str++, writer_data);
