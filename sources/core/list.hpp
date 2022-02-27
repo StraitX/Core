@@ -42,9 +42,13 @@ public:
         List(ConstSpan<Type>(span.Pointer(), span.Size())) 
     {}
 
-    List(std::initializer_list<Type> list):
-        List(ConstSpan<Type>(list.begin(), list.size())) 
-    {}
+    template <typename EntryType>
+    List(std::initializer_list<EntryType> list){
+        Reserve(list.size());
+        
+        for(const EntryType &element: list)
+            Emplace(element);
+    }
 
     ~List(){
         Free();
