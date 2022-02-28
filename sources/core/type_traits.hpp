@@ -108,11 +108,11 @@ public:
     static constexpr bool Value = Check(nullptr);
 };
 
-template<typename T>
+template<typename Type>
 class IsRange{
 private:
-    using BaseType = typename RemoveReference<typename RemoveConstVolatile<T>::Type>::Type;
-
+    using BaseType = typename RemoveReference<typename RemoveConstVolatile<Type>::Type>::Type;
+    
     static constexpr bool Check(...){
         return false;
     }
@@ -124,13 +124,13 @@ private:
 public:
     static_assert(!IsPointer<BaseType>::Value, "Underlying type can't be a pointer");
 
-    static constexpr bool Value = Check<BaseType>(nullptr);
+    static constexpr bool Value = Check(nullptr);
 };
 
-template<typename T>
+template<typename Type>
 class IsReverseRange{
 private:
-    using BaseType = typename RemoveReference<typename RemoveConstVolatile<T>::Type>::Type;
+    using BaseType = typename RemoveReference<typename RemoveConstVolatile<Type>::Type>::Type;
 
     static constexpr bool Check(...){
         return false;
