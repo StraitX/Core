@@ -149,4 +149,18 @@ public:
     static constexpr bool Value = Check<BaseType>(nullptr);
 };
 
+template<typename Type, typename ...ArgsType>
+class IsConstructible {
+private:
+    template<typename = decltype(Type(Declval<ArgsType>()...))>
+    static constexpr bool Check(void*) {
+        return true;
+    }
+    static constexpr bool Check(...) {
+        return false;
+    }
+public:
+    static constexpr bool Value = Check(nullptr);
+};
+
 #endif //STRAITX_TYPE_TRAITS_HPP
