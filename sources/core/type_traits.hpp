@@ -160,4 +160,18 @@ public:
     static constexpr bool Value = Check(nullptr);
 };
 
+template<typename Type, typename ...ArgsType>
+class IsNothrowConstructible {
+private:
+    template<bool IsNoexcept = noexcept(Type(Declval<ArgsType>()...))>
+    static constexpr bool Check(void*) {
+        return IsNoexcept;
+    }
+    static constexpr bool Check(...) {
+        return false;
+    }
+public:
+    static constexpr bool Value = Check(nullptr);
+};
+
 #endif //STRAITX_TYPE_TRAITS_HPP
