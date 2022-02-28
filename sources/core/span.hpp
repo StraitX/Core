@@ -59,6 +59,10 @@ public:
 
     Span &operator=(const Span &other) = default;
 
+    operator Span<const Type>()const{
+        return {Pointer(), Size()};
+    }
+
     SizeType Size()const{
         return m_Size;
     }
