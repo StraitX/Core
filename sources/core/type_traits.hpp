@@ -1,6 +1,9 @@
 #ifndef STRAITX_TYPE_TRAITS_HPP
 #define STRAITX_TYPE_TRAITS_HPP
 
+template <typename Type>
+constexpr Type &&Declval()noexcept;
+
 template <typename Type, Type TypeValue>
 struct IntegralConstant{
     static constexpr Type Value = TypeValue;
@@ -93,9 +96,6 @@ public:
 template<typename SrcType, typename DstType>
 class IsCastable{
 private:
-    template<typename Type>
-    static constexpr Type &&Declval()noexcept;
-
     template<typename _SrcType, typename _DstType>
     static constexpr bool Check(...){
         return false;
@@ -113,9 +113,6 @@ template<typename T>
 class IsRange{
 private:
     using BaseType = typename RemoveReference<typename RemoveConstVolatile<T>::Type>::Type;
-
-    template<typename Type>
-    static constexpr Type &&Declval()noexcept;
 
     template<typename Type>
     static constexpr bool Check(...){
@@ -138,9 +135,6 @@ private:
     using BaseType = typename RemoveReference<typename RemoveConstVolatile<T>::Type>::Type;
 
     template<typename Type>
-    static constexpr Type &&Declval()noexcept;
-
-    template<typename Type>
     static constexpr bool Check(...){
         return false;
     }
@@ -154,7 +148,5 @@ public:
 
     static constexpr bool Value = Check<BaseType>(nullptr);
 };
-
-
 
 #endif //STRAITX_TYPE_TRAITS_HPP
