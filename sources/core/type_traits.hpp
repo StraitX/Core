@@ -186,4 +186,10 @@ using IsNothrowMoveConstructible = IsNothrowConstructible<Type, typename RemoveR
 template<typename Type>
 using IsNothrowCopyConstructible = IsNothrowConstructible<Type, const typename RemoveReference<Type>::Type &>;
 
+template<typename Type>
+class IsTriviallyDestructable{
+public:
+    static constexpr bool Value = __has_trivial_destructor(Type);
+};
+
 #endif //STRAITX_TYPE_TRAITS_HPP
