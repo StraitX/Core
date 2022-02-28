@@ -96,17 +96,16 @@ public:
 template<typename SrcType, typename DstType>
 class IsCastable{
 private:
-    template<typename _SrcType, typename _DstType>
     static constexpr bool Check(...){
         return false;
     }
 
-    template<typename _SrcType, typename _DstType>
-    static constexpr bool Check(decltype(static_cast<_DstType>(Declval<_SrcType>()))* ptr){
+    template<typename = decltype(static_cast<DstType>(Declval<SrcType>()))>
+    static constexpr bool Check(void *){
         return true;
     }
 public:
-    static constexpr bool Value = Check<SrcType, DstType>(nullptr);
+    static constexpr bool Value = Check(nullptr);
 };
 
 template<typename T>
@@ -114,12 +113,11 @@ class IsRange{
 private:
     using BaseType = typename RemoveReference<typename RemoveConstVolatile<T>::Type>::Type;
 
-    template<typename Type>
     static constexpr bool Check(...){
         return false;
     }
 
-    template<typename Type, typename = decltype(Declval<Type>().begin()), typename = decltype(Declval<Type>().end())>
+    template<typename = decltype(Declval<Type>().begin()), typename = decltype(Declval<Type>().end())>
     static constexpr bool Check(void *){
         return true;
     }
@@ -134,19 +132,18 @@ class IsReverseRange{
 private:
     using BaseType = typename RemoveReference<typename RemoveConstVolatile<T>::Type>::Type;
 
-    template<typename Type>
     static constexpr bool Check(...){
         return false;
     }
 
-    template<typename Type, typename = decltype(Declval<Type>().rbegin()), typename = decltype(Declval<Type>().rend())>
+    template<typename = decltype(Declval<Type>().rbegin()), typename = decltype(Declval<Type>().rend())>
     static constexpr bool Check(void *){
         return true;
     }
 public:
     static_assert(!IsPointer<BaseType>::Value, "Underlying type can't be a pointer");
 
-    static constexpr bool Value = Check<BaseType>(nullptr);
+    static constexpr bool Value = Check(nullptr);
 };
 
 template<typename Type, typename ...ArgsType>
