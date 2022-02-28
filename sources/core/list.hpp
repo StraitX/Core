@@ -9,12 +9,11 @@
 #include "core/assert.hpp"
 #include "core/allocators/allocator.hpp"
 #include "core/span.hpp"
+#include "core/algorithm.hpp"
 #include <initializer_list>
 
 //TODO: 
-// [ ] Optimize for Types with move ctors
 // [ ] Optimize for Types without copy or mouse ctors
-// [ ] Make it copyable and movable
 // [ ] Get rid of NonCopyable include XD
 
 template<typename Type, typename GeneralAllocator = DefaultGeneralAllocator>
@@ -50,8 +49,18 @@ public:
             Emplace(element);
     }
 
+    List(List<Type> &&other) {
+        *this = Move(other);
+    }
+
     ~List(){
         Free();
+    }
+
+    List &operator=(List<Type> &&other) {
+        Free();
+        Swap(other);
+        return *this;
     }
 
     void Add(const Type &element){
@@ -118,6 +127,12 @@ public:
         m_Capacity = capacity;
     }
 
+    void Swap(List<Type> &other) {
+        ::Swap(m_Memory, other.m_Memory);
+        ::Swap(m_Size, other.m_Size);
+        ::Swap(m_Capacity, other.m_Capacity);
+    }
+
     void Clear(){
         if(IsTriviallyDestructable<Type>::Value) {
             m_Size = 0;
@@ -128,6 +143,7 @@ public:
     }
 
     void Free(){
+        //Size should be zero
         Clear();
         GeneralAllocator::Free(m_Memory);
         m_Memory = nullptr;
