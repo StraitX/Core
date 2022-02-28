@@ -160,6 +160,12 @@ public:
     static constexpr bool Value = Check(nullptr);
 };
 
+template<typename Type>
+using IsMoveConstructible = IsConstructible<Type, typename RemoveReference<Type>::Type &&>;
+
+template<typename Type>
+using IsCopyConstructible = IsConstructible<Type, const typename RemoveReference<Type>::Type &>;
+
 template<typename Type, typename ...ArgsType>
 class IsNothrowConstructible {
 private:
@@ -173,5 +179,11 @@ private:
 public:
     static constexpr bool Value = Check(nullptr);
 };
+
+template<typename Type>
+using IsNothrowMoveConstructible = IsNothrowConstructible<Type, typename RemoveReference<Type>::Type &&>;
+
+template<typename Type>
+using IsNothrowCopyConstructible = IsNothrowConstructible<Type, const typename RemoveReference<Type>::Type &>;
 
 #endif //STRAITX_TYPE_TRAITS_HPP
