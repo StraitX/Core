@@ -14,7 +14,6 @@
 //TODO: 
 // [ ] Optimize for Types with move ctors
 // [ ] Optimize for Types without copy or mouse ctors
-// [ ] Optimize for Types without dtor
 // [ ] Make it copyable and movable
 // [ ] Get rid of NonCopyable include XD
 
@@ -120,8 +119,12 @@ public:
     }
 
     void Clear(){
-        while(Size())
-            RemoveLast();
+        if(IsTriviallyDestructable<Type>::Value) {
+            m_Size = 0;
+        }else{
+            while(Size())
+                RemoveLast();
+        }
     }
 
     void Free(){
