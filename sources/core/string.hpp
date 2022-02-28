@@ -17,6 +17,14 @@ public:
         String(string, StaticCodeunitsCount(string))
     {}
 
+    String(StringView view):
+        String(view.Data(), view.Size())
+    {}
+
+    String(ConstSpan<char> span):
+        String(span.Pointer(), span.Size())
+    {}
+
     String(const char *string, size_t length):
         StringView(
             (char*)Memory::Alloc((length + 1) * sizeof(char)),
