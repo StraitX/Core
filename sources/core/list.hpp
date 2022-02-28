@@ -2,6 +2,7 @@
 #define STRAITX_LIST_HPP
 
 #include "core/type_traits.hpp"
+#include "core/templates.hpp"
 #include "core/types.hpp"
 #include "core/move.hpp"
 #include "core/noncopyable.hpp"
@@ -109,7 +110,7 @@ public:
         Type *new_array = (Type*)GeneralAllocator::Alloc(capacity * sizeof(Type));
 
         for(size_t i = 0; i<Size(); i++){
-            new(&new_array[i]) Type(Move(reinterpret_cast<Type*>(m_Memory)[i]));
+            MoveElseCopyCtor(&new_array[i], &Data()[i]);
             Data()[i].~Type();
         }
 
@@ -194,6 +195,19 @@ public:
 
     ConstIterator end()const{
         return Data() + Size();
+    }
+private:
+    template<typename = typename EnableIf<IsMoveConstructible<Type>::Value>::Type>
+    static void MoveElseCopyCtorImpl(Type *dst, Type *src, void *) {
+        new(dst) Type(Move(*src));
+    }
+
+    template<typename = typename EnableIf<!IsMoveConstructible<Type>::Value>::Type>
+    static void MoveElseCopyCtorImpl(Type *dst, Type *src, ...) {
+        new(dst) Type(*src);
+    }
+    static void MoveElseCopyCtor(Type *dst, Type *src) {
+        MoveElseCopyCtorImpl(dst, src, nullptr);
     }
 };
 
