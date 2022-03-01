@@ -69,7 +69,7 @@ struct ImplicitPrintCaster<char[N]>{
 template<size_t N>
 struct ImplicitPrintCaster<const char[N]>{
 	static const char *Cast(const char value[N]) {
-		return value;s
+		return value;
 	}
 };
 
