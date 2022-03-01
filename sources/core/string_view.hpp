@@ -79,7 +79,8 @@ protected:
 template<>
 struct Printer<StringView> {
 	static void Print(const StringView& value, void (*writer)(char, void*), void* writer_data) {
-		Printer<const char*>::Print(value.Data(), writer, writer_data);
+		for(size_t i = 0; i<value.Size(); i++)
+			Printer<char>::Print(value.Data()[i], writer, writer_data);
 	}
 };
 
