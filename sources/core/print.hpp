@@ -21,8 +21,8 @@ struct ImplicitPrintCaster{
 	}
 	
 	template<typename _Type = Type, typename = typename EnableIf<IsRange<_Type>::Value>::Type>
-	static auto CastImpl(const _Type& value) -> Range<decltype(value.begin())>{
-		return {value.begin(), value.end()};
+	static auto CastImpl(const _Type& value) -> Range<decltype(Begin(value))>{
+		return ToRange(value);
 	}
 
 	template<typename _Type = Type, typename = typename EnableIf<!IsRange<_Type>::Value>::Type>

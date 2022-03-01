@@ -114,44 +114,6 @@ struct IsBoundedArray: IntegralConstant<bool, false>{ };
 template<typename Type, size_t SizeValue>
 struct IsBoundedArray<Type[SizeValue]>: IntegralConstant<bool, true>{ };
 
-template<typename Type>
-class IsRange{
-private:
-    using BaseType = typename RemoveReference<typename RemoveConstVolatile<Type>::Type>::Type;
-    
-    static constexpr bool Check(...){
-        return false;
-    }
-
-    template<typename = decltype(Declval<Type>().begin()), typename = decltype(Declval<Type>().end())>
-    static constexpr bool Check(void *){
-        return true;
-    }
-public:
-    static_assert(!IsPointer<BaseType>::Value, "Underlying type can't be a pointer");
-
-    static constexpr bool Value = Check(nullptr);
-};
-
-template<typename Type>
-class IsReverseRange{
-private:
-    using BaseType = typename RemoveReference<typename RemoveConstVolatile<Type>::Type>::Type;
-
-    static constexpr bool Check(...){
-        return false;
-    }
-
-    template<typename = decltype(Declval<Type>().rbegin()), typename = decltype(Declval<Type>().rend())>
-    static constexpr bool Check(void *){
-        return true;
-    }
-public:
-    static_assert(!IsPointer<BaseType>::Value, "Underlying type can't be a pointer");
-
-    static constexpr bool Value = Check(nullptr);
-};
-
 template<typename Type, typename ...ArgsType>
 class IsConstructible {
 private:

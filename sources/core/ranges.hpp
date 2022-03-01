@@ -44,11 +44,40 @@ template <typename Type, size_t SizeValue>
 Type *End(Type (&range)[SizeValue]) {
     return range + SizeValue;
 }
+template <typename Type, size_t SizeValue>
+Type *Begin(Type (range)[SizeValue]) {
+    return range;
+}
+
+template <typename Type, size_t SizeValue>
+Type *End(Type (range)[SizeValue]) {
+    return range + SizeValue;
+}
 
 template <typename RangeLikeType>
 auto ToRange(RangeLikeType &type)->Range<decltype(Begin(type))>{
     return {Begin(type), End(type)};
 }
+
+template<typename Type>
+class IsRange{
+private:
+    using BaseType = typename RemoveReference<typename RemoveConstVolatile<Type>::Type>::Type;
+    
+    static constexpr bool Check(...){
+        return false;
+    }
+
+    template<typename = decltype(ToRange(Declval<BaseType>()))>
+    static constexpr bool Check(void *){
+        return true;
+    }
+public:
+    static_assert(!IsPointer<BaseType>::Value, "Underlying type can't be a pointer");
+
+    static constexpr bool Value = Check(nullptr);
+};
+
 
 template<typename T>
 struct Printer<Range<T>>{
