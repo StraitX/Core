@@ -4,6 +4,7 @@
 #include "core/types.hpp"
 #include "core/printer.hpp"
 #include "core/move.hpp"
+#include "core/ranges.hpp"
 
 void STDOutWriter(char ch, void *data = nullptr);
 
@@ -13,31 +14,63 @@ void WriterPrint(void (*writer)(char, void*), void *writer_data, const char *fmt
 
 namespace Details{
 
-template<typename T>
+template<typename Type>
 struct ImplicitPrintCaster{
-	typedef T Type;
+	static auto Cast(const Type& value) {
+		return CastImpl(value);
+	}
+	
+	template<typename _Type = Type, typename = typename EnableIf<IsRange<_Type>::Value>::Type>
+	static auto CastImpl(const _Type& value) -> Range<decltype(value.begin())>{
+		return {value.begin(), value.end()};
+	}
+
+	template<typename _Type = Type, typename = typename EnableIf<!IsRange<_Type>::Value>::Type>
+	static const Type& CastImpl(const _Type& value) {
+		return value;
+	}
 };
 
 template<typename T>
 struct ImplicitPrintCaster<T *>{
-	typedef void * Type;
+	static void *Cast(T *value) {
+		return static_cast<void*>(value);
+	}
 };
 
 template<>
 struct ImplicitPrintCaster<const char *>{
-	typedef const char *Type;
+	static const char *Cast(const char *value) {
+		return value;
+	}
 };
+
 template<>
 struct ImplicitPrintCaster<char *>{
-	typedef char *Type;
+	static const char* Cast(const char *value) {
+		return value;
+	}
 };
+
+template<typename T, size_t N>
+struct ImplicitPrintCaster<T[N]>{
+	static Range<const T*> Cast(const T value[N]) {
+		return {value, value + N};
+	}
+};
+
 template<size_t N>
 struct ImplicitPrintCaster<char[N]>{
-	typedef char *Type;
+	static const char *Cast(const char value[N]) {
+		return value;
+	}
 };
+
 template<size_t N>
 struct ImplicitPrintCaster<const char[N]>{
-	typedef const char *Type;
+	static const char *Cast(const char value[N]) {
+		return value;s
+	}
 };
 
 }//namespace Details::
@@ -46,8 +79,8 @@ template <typename T, typename...Args>
 void WriterPrint(void (*writer)(char, void*), void *writer_data, const char *fmt, const T &arg, const Args&...args){
 	while(*fmt!=0){
         if(*fmt=='%'){
-			using PrintType = typename Details::ImplicitPrintCaster<T>::Type;
-			Printer<PrintType>::Print((const PrintType&)arg, writer, writer_data);
+			using PrintType = decltype(Details::ImplicitPrintCaster<T>::Cast(Declval<T>()));
+			Printer<PrintType>::Print(Details::ImplicitPrintCaster<T>::Cast(arg), writer, writer_data);
             return WriterPrint(writer, writer_data, fmt+1, ((const Args&)(args))...);
         }
         writer(*fmt, writer_data);

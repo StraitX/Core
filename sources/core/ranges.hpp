@@ -25,7 +25,6 @@ struct Range{
     }
 };
 
-
 template<typename T>
 struct Printer<Range<T>>{
 	static void Print(const Range<T> &range, void (*writer)(char, void*), void *writer_data){
@@ -48,12 +47,12 @@ struct Printer<Range<T>>{
     }
 };
 
-template<typename RangeType, typename _ = EnableIfType<IsRange<RangeType>::Value, RangeType>> 
+template<typename RangeType> 
 auto ForwardRange(RangeType &range) -> Range<decltype(range.begin())>{
     return {range.begin(), range.end()};
 }
 
-template<typename RangeType, typename _ = EnableIfType<IsRange<RangeType>::Value, RangeType>> 
+template<typename RangeType>
 auto ReverseRange(RangeType &range) -> Range<ReverseIterator<decltype(range.begin())>>{
     //XXX: check if range has rbegin and rend methods
     auto begin = range.end();
@@ -61,7 +60,7 @@ auto ReverseRange(RangeType &range) -> Range<ReverseIterator<decltype(range.begi
     return {--begin, --end};
 }
 
-template<typename RangeType, typename _ = EnableIfType<IsRange<RangeType>::Value, RangeType>> 
+template<typename RangeType>
 auto IndexedRange(RangeType &range) -> Range<IndexedIterator<decltype(range.begin())>>{
     return {range.begin(), range.end()};
 }
