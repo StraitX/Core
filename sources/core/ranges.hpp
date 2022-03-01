@@ -25,6 +25,31 @@ struct Range{
     }
 };
 
+template <typename Range, typename = decltype(Declval<Range>().begin())>
+auto Begin(Range &range) {
+    return range.begin();
+}
+
+template <typename Range, typename = decltype(Declval<Range>().end())>
+auto End(Range &range) {
+    return range.end();
+}
+
+template <typename Type, size_t SizeValue>
+Type *Begin(Type (&range)[SizeValue]) {
+    return range;
+}
+
+template <typename Type, size_t SizeValue>
+Type *End(Type (&range)[SizeValue]) {
+    return range + SizeValue;
+}
+
+template <typename RangeLikeType>
+auto ToRange(RangeLikeType &type)->Range<decltype(Begin(type))>{
+    return {Begin(type), End(type)};
+}
+
 template<typename T>
 struct Printer<Range<T>>{
 	static void Print(const Range<T> &range, void (*writer)(char, void*), void *writer_data){
@@ -48,21 +73,21 @@ struct Printer<Range<T>>{
 };
 
 template<typename RangeType> 
-auto ForwardRange(RangeType &range) -> Range<decltype(range.begin())>{
-    return {range.begin(), range.end()};
+auto ForwardRange(RangeType &range) -> Range<decltype(Begin(range))>{
+    return {Begin(range), End(range)};
 }
 
 template<typename RangeType>
-auto ReverseRange(RangeType &range) -> Range<ReverseIterator<decltype(range.begin())>>{
+auto ReverseRange(RangeType &range) -> Range<ReverseIterator<decltype(Begin(range))>>{
     //XXX: check if range has rbegin and rend methods
-    auto begin = range.end();
-    auto end = range.begin();
+    auto begin = End(range);
+    auto end = Begin(range);
     return {--begin, --end};
 }
 
 template<typename RangeType>
-auto IndexedRange(RangeType &range) -> Range<IndexedIterator<decltype(range.begin())>>{
-    return {range.begin(), range.end()};
+auto IndexedRange(RangeType &range) -> Range<IndexedIterator<decltype(Begin(range))>>{
+    return {Begin(range), End(range)};
 }
 
 #endif//STRAITX_RANGES_HPP
