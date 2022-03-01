@@ -109,6 +109,12 @@ public:
 };
 
 template<typename Type>
+struct IsBoundedArray: IntegralConstant<bool, false>{ };
+
+template<typename Type, size_t SizeValue>
+struct IsBoundedArray<Type[SizeValue]>: IntegralConstant<bool, true>{ };
+
+template<typename Type>
 class IsRange{
 private:
     using BaseType = typename RemoveReference<typename RemoveConstVolatile<Type>::Type>::Type;
