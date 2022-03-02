@@ -26,13 +26,13 @@ private:
 public:
     File() = default;
 
-    File(File &&other);
+    File(File &&other)noexcept;
 
     File(const char *filename, Mode mode, bool create = true);
 
     ~File();
 
-    File &operator=(File &&other);
+    File &operator=(File &&other)noexcept;
 
     Result Open(const char *filename, Mode mode, bool create = true);
 
@@ -56,7 +56,7 @@ public:
 
 };
 
-SX_INLINE File::File(File &&other){
+SX_INLINE File::File(File &&other)noexcept{
     *this = (File&&)other;
 }
 
@@ -65,7 +65,7 @@ SX_INLINE File::~File(){
         Close();
 }
 
-SX_INLINE File &File::operator=(File &&other){
+SX_INLINE File &File::operator=(File &&other)noexcept{
     m_FD = other.m_FD;
     m_Mode = other.m_Mode;
     other.m_FD = InvalidFD;
