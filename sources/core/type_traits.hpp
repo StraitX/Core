@@ -75,6 +75,12 @@ struct IsPointer: IntegralConstant<bool, false>{};
 template <typename T>
 struct IsPointer<T *>: IntegralConstant<bool, true>{};
 
+template <typename FirstType, typename SecondType>
+struct IsSame: IntegralConstant<bool, false>{};
+
+template <typename Type>
+struct IsSame<Type, Type>: IntegralConstant<bool, true>{};
+
 template <typename Base, typename Derived>
 class IsBaseOf{
 private:
