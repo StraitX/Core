@@ -12,21 +12,23 @@ void STDErrWriter(char ch, void *data = nullptr);
 
 void WriterPrint(void (*writer)(char, void*), void *writer_data, const char *fmt);
 
+class StringView;
+class String;
+
 namespace Details{
 
 template<typename Type>
 struct ImplicitPrintCaster{
-	static auto Cast(const Type& value) {
-		return CastImpl(value);
-	}
-	
-	template<typename _Type = Type, typename = typename EnableIf<IsRange<_Type>::Value>::Type>
-	static auto CastImpl(const _Type& value) -> Range<decltype(Begin(value))>{
+	static constexpr bool IsString = IsSame<String, Type>::Value || IsSame<StringView, Type>::Value;
+	static constexpr bool IsTrueRange = IsRange<Type>::Value && !IsString;
+
+	template<typename _Type = Type, typename = typename EnableIf<IsTrueRange>::Type>
+	static auto Cast(const _Type& value) -> Range<decltype(Begin(value))>{
 		return ToRange(value);
 	}
 
-	template<typename _Type = Type, typename = typename EnableIf<!IsRange<_Type>::Value>::Type>
-	static const Type& CastImpl(const _Type& value) {
+	template<typename _Type = Type, typename = typename EnableIf<!IsTrueRange>::Type>
+	static const Type& Cast(const _Type& value) {
 		return value;
 	}
 };
@@ -79,7 +81,8 @@ template <typename T, typename...Args>
 void WriterPrint(void (*writer)(char, void*), void *writer_data, const char *fmt, const T &arg, const Args&...args){
 	while(*fmt!=0){
         if(*fmt=='%'){
-			using PrintType = decltype(Details::ImplicitPrintCaster<T>::Cast(Declval<T>()));
+			using CastResultType = decltype(Details::ImplicitPrintCaster<T>::Cast(Declval<T>()));
+			using PrintType = typename RemoveConst<typename RemoveReference<CastResultType>::Type>::Type;
 			Printer<PrintType>::Print(Details::ImplicitPrintCaster<T>::Cast(arg), writer, writer_data);
             return WriterPrint(writer, writer_data, fmt+1, ((const Args&)(args))...);
         }
