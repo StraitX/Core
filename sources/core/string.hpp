@@ -68,6 +68,10 @@ public:
     char* Data(){
         return const_cast<char*>(m_String);
     }
+
+    const char* Data()const{
+        return m_String;
+    }
     
     //XXX: Do something about this
     static bool Contains(const char *string, const char *internal);
@@ -110,7 +114,7 @@ public:
 template<>
 struct Printer<String> {
 	static void Print(const String& value, void (*writer)(char, void*), void* writer_data) {
-		Printer<StringView>::Print(value, writer, writer_data);
+		Printer<const char*>::Print(value.Data(), writer, writer_data);
 	}
 };
 
