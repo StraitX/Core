@@ -12,4 +12,14 @@ struct EnableIf<true, ConditionType>{
 template<bool ConditionValue, typename ConditionType = void>
 using EnableIfType = typename EnableIf<ConditionValue, ConditionType>::Type;
 
+template<bool ConditionValue, typename TrueType, typename FalseType>
+struct TypeCondition {
+    using Type = FalseType;
+};
+
+template<typename TrueType, typename FalseType>
+struct TypeCondition <true, TrueType, FalseType>{
+    using Type = TrueType;
+};
+
 #endif//STRAITX_CORE_TEMPLATES_HPP
