@@ -25,11 +25,16 @@ public:
         String(span.Pointer(), span.Size())
     {}
 
-    String(const char *string, size_t length):
+    //Uninitialized, beware that string should be nullterminated
+    String(size_t size):
         StringView(
-            (char*)Memory::Alloc((length + 1) * sizeof(char)),
-            length
+            (char*)Memory::Alloc(size * sizeof(char)),
+            size
         )
+    {}
+
+    String(const char *string, size_t length):
+        String(length + 1)
     {
         Memory::Copy(string, Data(), length);
         Data()[length] = 0;
