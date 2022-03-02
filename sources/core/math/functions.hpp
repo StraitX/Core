@@ -36,6 +36,16 @@ SX_INLINE float Sqrt(float number) {
     return sqrtf(number);
 }
 
+template <typename IntegerType>
+constexpr IntegerType AlignUp(IntegerType number, IntegerType alignment) {
+    return number + (alignment - number % alignment) % alignment;
+}
+
+template <typename IntegerType>
+constexpr IntegerType AlignDown(IntegerType number, IntegerType alignment) {
+    return number - number % alignment;
+}
+
 }//namespace Math::
 
 #endif//STRAITX_TRIG_HPP
