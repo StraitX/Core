@@ -38,12 +38,13 @@ constexpr NumberType Rad(NumberType degrees){
     return static_cast<NumberType>(degrees / 180.f * Pi);
 }
 
-SX_INLINE double Sqrt(double number) {
-    return sqrt(number);
+template <typename NumberType, typename = decltype(float(*(NumberType*)nullptr))>
+float Sqrt(NumberType number) {
+    return sqrtf((float)number);
 }
 
-SX_INLINE float Sqrt(float number) {
-    return sqrtf(number);
+double Sqrt(double number) {
+    return sqrt(number);
 }
 
 template <typename IntegerType>
