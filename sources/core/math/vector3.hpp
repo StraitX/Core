@@ -4,6 +4,7 @@
 #include "core/types.hpp"
 #include "core/assert.hpp"
 #include "core/printer.hpp"
+#include "core/math/vector2.hpp"
 
 template<typename T>
 struct Vector3{
@@ -18,6 +19,8 @@ struct Vector3{
 
     // Creates a Vector3(0, 0, 0).
     constexpr Vector3();
+    
+    constexpr Vector3(const Vector2<T> &xy, const T &z);
 
     constexpr Vector3(const T &X, const T &Y, const T &Z);
 
@@ -36,6 +39,12 @@ struct Vector3{
     // acces const elements as if vector was an array
     constexpr const T &operator[](size_t index) const;
 
+    constexpr Vector2<T> XY()const;
+
+    template <typename LengthType = decltype(Math::Sqrt(T{}*T{}))>
+    constexpr LengthType Length()const {
+        return Math::Sqrt(x*x + y*y + z*z);
+    }
 };
 
 
@@ -50,6 +59,13 @@ template <typename T>
 constexpr Vector3<T>::Vector3(const T &X, const T &Y, const T &Z):
     x(X),
     y(Y),
+    z(Z)
+{}
+
+template <typename T>
+constexpr Vector3<T>::Vector3(const Vector2<T> &XY, const T &Z):
+    x(XY.x),
+    y(XY.y),
     z(Z)
 {}
 
@@ -86,6 +102,11 @@ constexpr T &Vector3<T>::operator[](size_t index){
 template <typename T>
 constexpr const T &Vector3<T>::operator[](size_t index) const{
     return const_cast<Vector3<T>*>(this)->operator[](index);
+}
+
+template <typename T>
+constexpr Vector2<T> Vector3<T>::XY() const{
+    return {x, y};
 }
 
 template <typename T>

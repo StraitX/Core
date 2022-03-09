@@ -4,6 +4,7 @@
 #include "core/types.hpp"
 #include "core/assert.hpp"
 #include "core/printer.hpp"
+#include "core/math/vector3.hpp"
 
 template<typename T>
 struct Vector4{
@@ -22,6 +23,10 @@ struct Vector4{
 
     constexpr Vector4(const T &X, const T &Y, const T &Z, const T &W);
 
+    constexpr Vector4(const Vector2<T> &XY, const T &Z, const T &W);
+
+    constexpr Vector4(const Vector3<T> &XYZ, const T &W);
+
     constexpr Vector4(const Vector4 &other) = default;
 
     constexpr Vector4(Vector4 &&other) = default;
@@ -37,6 +42,9 @@ struct Vector4{
     // acces const elements as if vector was an array
     constexpr const T &operator[](size_t index) const;
 
+    constexpr Vector2<T> XY()const;
+
+    constexpr Vector3<T> XYZ()const;
 };
 
 
@@ -53,6 +61,22 @@ constexpr Vector4<T>::Vector4(const T &X, const T &Y, const T &Z, const T &W):
     x(X),
     y(Y),
     z(Z),
+    w(W)
+{}
+
+template <typename T>
+constexpr Vector4<T>::Vector4(const Vector2<T> &XY, const T &Z, const T &W):
+    x(XY.x),
+    y(XY.y),
+    z(Z),
+    w(W)
+{}
+
+template <typename T>
+constexpr Vector4<T>::Vector4(const Vector3<T> &XYZ, const T &W):
+    x(XYZ.x),
+    y(XYZ.y),
+    z(XYZ.z),
     w(W)
 {}
 
@@ -92,6 +116,16 @@ constexpr T &Vector4<T>::operator[](size_t index){
 template <typename T>
 constexpr const T &Vector4<T>::operator[](size_t index) const{
     return const_cast<Vector4<T>*>(this)->operator[](index);
+}
+
+template <typename T>
+constexpr Vector2<T> Vector4<T>::XY() const{
+    return {x, y};
+}
+
+template <typename T>
+constexpr Vector3<T> Vector4<T>::XYZ() const{
+    return {x, y, z};
 }
 
 template <typename T>

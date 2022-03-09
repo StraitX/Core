@@ -5,6 +5,7 @@
 #include "core/assert.hpp"
 #include "core/printer.hpp"
 #include "core/env/compiler.hpp"
+#include "core/math/functions.hpp"
 
 template<typename T>
 struct Vector2{
@@ -35,7 +36,11 @@ struct Vector2{
     constexpr T &operator[](size_t index);
     // acces const elements as if vector was an array
     constexpr const T &operator[](size_t index) const;
-
+    
+    template <typename LengthType = decltype(Math::Sqrt(T{}*T{}))>
+    constexpr LengthType Length()const {
+        return Math::Sqrt(x*x + y*y);
+    }
 };
 
 
