@@ -5,7 +5,7 @@
 #include "core/math/matrix4.hpp"
 #include "core/math/functions.hpp"
 
-namespace Transform{
+namespace Math{
 
 template<typename MatrixType, typename AngleType>
 constexpr Matrix4<MatrixType> RotateZ(AngleType radians){
@@ -42,6 +42,6 @@ constexpr Matrix4<MatrixType> Rotate(Vector3<AngleType> radians){
     return RotateX<MatrixType>(radians.x) * RotateY<MatrixType>(radians.y) * RotateZ<MatrixType>(radians.z);
 }
 
-}//namespace Transform::
+}//namespace Math::
 
 #endif//STRAITX_TRANSFORM_HPP
