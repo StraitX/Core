@@ -25,4 +25,19 @@ constexpr T Lerp(const T &f, const T &s, float c){
     return f + (s - f)*c;
 }
 
+template<typename T, typename ResultT = decltype(T{} / Vector2<T>{}.Length())>
+constexpr Vector2<ResultT> Normalize(const Vector2<T> &vector){
+    auto length = vector.Length();
+
+    return Vector2<ResultT>{vector.x / length, vector.y / length};
+}
+
+template<typename T, typename ResultT = decltype(T{} / Vector3<T>{}.Length())>
+constexpr Vector3<ResultT> Normalize(const Vector3<T> &vector){
+    auto length = vector.Length();
+
+    return Vector3<ResultT>{vector.x / length, vector.y / length, vector.z / length};
+}
+
+
 #endif // STRAITX_LINEAR_HPP
