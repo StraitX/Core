@@ -43,7 +43,7 @@ float Sqrt(NumberType number) {
     return sqrtf((float)number);
 }
 
-double Sqrt(double number) {
+SX_INLINE double Sqrt(double number) {
     return sqrt(number);
 }
 
