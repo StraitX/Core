@@ -19,6 +19,16 @@ constexpr NumberType Cos(NumberType radians){
 }
 
 template<typename NumberType>
+constexpr NumberType Tan(NumberType radians){
+    return tan(radians);
+}
+
+template<typename NumberType>
+constexpr NumberType Cot(NumberType radians){
+    return Tan(Pi/2.0 - radians);
+}
+
+template<typename NumberType>
 constexpr NumberType Deg(NumberType radians){
     return static_cast<NumberType>(radians / Pi * 180.f);
 }
