@@ -56,6 +56,12 @@ public:
     virtual BufferUsage Usage()const = 0;
 
     static Buffer *Create(size_t size, BufferMemoryType mem_type, BufferUsage usage);
+    
+    static Buffer* Create(const void* data, size_t size, BufferMemoryType mem_type, BufferUsage usage) {
+        Buffer *buffer = Create(size, mem_type, usage);
+        buffer->Copy(data, size);
+        return buffer;
+    }
 };
 
 #endif//STRAITX_BUFFER_HPP
