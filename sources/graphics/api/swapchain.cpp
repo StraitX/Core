@@ -24,7 +24,7 @@ FramebufferChain::FramebufferChain(const Window *window, TextureFormat depth_buf
 
     if(IsDepthFormat(depth_buffer_format)){
         m_DepthBuffer = UniquePtr<Texture2D>(
-            Texture2D::Create(m_Swapchain->Size(), depth_buffer_format, TextureUsageBits::DepthStencilOptimal, TextureLayout::DepthStencilAttachmentOptimal)
+            Texture2D::Create(m_Swapchain->Size(), depth_buffer_format, TextureUsageBits::DepthStencilOptimal | TextureUsageBits::TransferDst, TextureLayout::DepthStencilAttachmentOptimal)
         );
     }
 
