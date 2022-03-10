@@ -14,6 +14,12 @@ bool IsDepthFormat(TextureFormat format){
     return false;
 }
 
+bool IsStencilFormat(TextureFormat format) {
+    if(format == TextureFormat::Depth24Stencil8)
+        return true;
+    return false;
+}
+
 bool IsImageFormat(TextureFormat format){
     return !IsDepthFormat(format) && format != TextureFormat::Unknown;
 }

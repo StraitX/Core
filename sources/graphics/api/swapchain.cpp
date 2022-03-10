@@ -1,5 +1,6 @@
 #include "core/os/vulkan.hpp"
 #include "core/array.hpp"
+#include "core/fixed_list.hpp"
 #include "graphics/api/swapchain.hpp"
 #include "graphics/api/graphics_api.hpp"
 
@@ -18,10 +19,16 @@ Swapchain *Swapchain::Create(const Window *window){
 }
 
 
-FramebufferChain::FramebufferChain(const Window *window){
+FramebufferChain::FramebufferChain(const Window *window, TextureFormat depth_buffer_format){
     m_Swapchain = UniquePtr<Swapchain>(Swapchain::Create(window));
 
-    Array<AttachmentDescription, 1> s_Attachments = {
+    if(IsDepthFormat(depth_buffer_format)){
+        m_DepthBuffer = UniquePtr<Texture2D>(
+            Texture2D::Create(m_Swapchain->Size(), depth_buffer_format, TextureUsageBits::DepthStencilOptimal, TextureLayout::DepthStencilAttachmentOptimal)
+        );
+    }
+
+    FixedList<AttachmentDescription, 2> s_Attachments = {
         {
             TextureLayout::PresentSrcOptimal,
             TextureLayout::ColorAttachmentOptimal,
@@ -30,6 +37,16 @@ FramebufferChain::FramebufferChain(const Window *window){
             SamplePoints::Samples_1
         }
     };
+
+    if (HasDepth()) {
+        s_Attachments.Add({
+            TextureLayout::DepthStencilAttachmentOptimal,
+            TextureLayout::DepthStencilAttachmentOptimal,
+            TextureLayout::DepthStencilAttachmentOptimal,
+            m_DepthBuffer->Format(),
+            SamplePoints::Samples_1
+        });
+    }
 
     m_SwapchainPass = UniquePtr<RenderPass>(RenderPass::Create({s_Attachments}));
     
@@ -44,10 +61,15 @@ void FramebufferChain::Recreate() {
 
 void FramebufferChain::CreateFramebuffers() {
     for(Texture2D *image: m_Swapchain->Images()){
+        FixedList<Texture2D *, 2> attachments;
+        attachments.Add(image);
+        if(HasDepth())
+            attachments.Add(m_DepthBuffer.Get());
+
         FramebufferProperties props;
         props.Pass = m_SwapchainPass.Get();
         props.Size = m_Swapchain->Size();
-        props.Attachments = {&image, 1};
+        props.Attachments = attachments;
 
         m_Framebuffers.Add(Framebuffer::Create(props));
     }

@@ -312,7 +312,58 @@ void CommandBufferImpl::Copy(const Buffer *src, Texture2D *dst, Vector2u src_siz
 void CommandBufferImpl::ClearColor(Texture2D *texture, const Color &color){
     VkImageLayout current_layout = GetExecutionTextureLayout(texture);
     TextureLayout clear_layout = TextureLayout::TransferDstOptimal;
-    VkImageAspectFlags aspect = IsDepthFormat(texture->Format()) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+
+    ImageBarrier(
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
+        VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+        VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+        current_layout, 
+        ToVkLayout(clear_layout), 
+        *(Vk::Texture2DImpl*)texture,
+        VK_IMAGE_ASPECT_COLOR_BIT
+    );
+
+    VkClearColorValue value;
+    value.float32[0] = color.R;
+    value.float32[1] = color.G;
+    value.float32[2] = color.B;
+    value.float32[3] = color.A;
+
+    VkImageSubresourceRange range;
+    range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    range.baseMipLevel = 0;
+    range.levelCount = 1;
+    range.baseArrayLayer = 0;
+    range.layerCount = 1;
+
+    vkCmdClearColorImage(m_Handle, *(Vk::Texture2DImpl*)texture, ToVkLayout(clear_layout), &value, 1, &range);
+
+    if(current_layout != VK_IMAGE_LAYOUT_UNDEFINED){
+        ImageBarrier(
+            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
+            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
+            VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+            VK_ACCESS_MEMORY_WRITE_BIT | VK_ACCESS_MEMORY_READ_BIT, 
+            ToVkLayout(clear_layout), 
+            current_layout, 
+            *(Vk::Texture2DImpl*)texture,
+            VK_IMAGE_ASPECT_COLOR_BIT
+        );
+    }else{
+        m_Operations.Add({texture, clear_layout});
+    }
+}
+
+void CommandBufferImpl::ClearDepthStencil(Texture2D *texture, float depth, u8 stencil){
+    VkImageLayout current_layout = GetExecutionTextureLayout(texture);
+    TextureLayout clear_layout = TextureLayout::TransferDstOptimal;
+    VkImageAspectFlags aspect = 0;
+    
+    if(IsDepthFormat(texture->Format()))
+        aspect |= VK_IMAGE_ASPECT_DEPTH_BIT;
+    if(IsStencilFormat(texture->Format()))
+        aspect |= VK_IMAGE_ASPECT_STENCIL_BIT;
 
     ImageBarrier(
         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
@@ -325,11 +376,9 @@ void CommandBufferImpl::ClearColor(Texture2D *texture, const Color &color){
         aspect
     );
 
-    VkClearColorValue value;
-    value.float32[0] = color.R;
-    value.float32[1] = color.G;
-    value.float32[2] = color.B;
-    value.float32[3] = color.A;
+    VkClearDepthStencilValue value;
+    value.depth = depth;
+    value.stencil = stencil;
 
     VkImageSubresourceRange range;
     range.aspectMask = aspect;
@@ -338,7 +387,7 @@ void CommandBufferImpl::ClearColor(Texture2D *texture, const Color &color){
     range.baseArrayLayer = 0;
     range.layerCount = 1;
 
-    vkCmdClearColorImage(m_Handle, *(Vk::Texture2DImpl*)texture, ToVkLayout(clear_layout), &value, 1, &range);
+    vkCmdClearDepthStencilImage(m_Handle, *(Vk::Texture2DImpl*)texture, ToVkLayout(clear_layout), &value, 1, &range);
 
     if(current_layout != VK_IMAGE_LAYOUT_UNDEFINED){
         ImageBarrier(

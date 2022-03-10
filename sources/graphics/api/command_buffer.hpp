@@ -87,6 +87,8 @@ public:
 
     virtual void ClearColor(Texture2D *texture, const Color &color) = 0; 
 
+    virtual void ClearDepthStencil(Texture2D *texture, float depth = 1.f, u8 stencil = 0) = 0; 
+
     virtual void Bind(const DescriptorSet *set) = 0;
 
 };

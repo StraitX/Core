@@ -6,7 +6,7 @@
 
 class RenderWindow : public Window, private FramebufferChain {
 public:
-	RenderWindow(u32 width, u32 height, const char *title = "RenderWindow");
+	RenderWindow(u32 width, u32 height, const char *title = "RenderWindow", TextureFormat depth_buffer_format = TextureFormat::Unknown);
 
 	void AcquireNextFramebuffer(const Semaphore *signal);
 

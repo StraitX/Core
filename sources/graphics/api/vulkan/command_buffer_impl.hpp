@@ -145,6 +145,9 @@ public:
     //Expects Texture to be in either General or TransferDstOptimal layouts
     void ClearColor(Texture2D *texture, const Color &color)override;
 
+    //Expects Texture to be in either General or TransferDstOptimal layouts
+    void ClearDepthStencil(Texture2D *texture, float depth, u8 stencil)override;
+
     void Bind(const DescriptorSet *set)override;
 };
 

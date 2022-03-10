@@ -38,6 +38,8 @@ namespace Vk{class CommandBufferImpl;}//namespace Vk::
 
 bool IsDepthFormat(TextureFormat format);
 
+bool IsStencilFormat(TextureFormat format);
+
 bool IsImageFormat(TextureFormat format);
 
 size_t GetPixelSize(TextureFormat format);

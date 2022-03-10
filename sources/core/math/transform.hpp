@@ -42,6 +42,15 @@ constexpr Matrix4<MatrixType> Rotate(Vector3<AngleType> radians){
     return RotateX<MatrixType>(radians.x) * RotateY<MatrixType>(radians.y) * RotateZ<MatrixType>(radians.z);
 }
 
+template<typename MatrixType>
+constexpr Matrix4<MatrixType> Translate(const Vector3<MatrixType> &translation) {
+    Matrix4f matrix{1};
+    matrix[0][3] = translation[0];
+    matrix[1][3] = translation[1];
+    matrix[2][3] = translation[2];
+    return matrix;
+}
+
 }//namespace Math::
 
 #endif//STRAITX_TRANSFORM_HPP

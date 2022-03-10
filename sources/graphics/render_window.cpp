@@ -1,8 +1,8 @@
 #include "graphics/render_window.hpp"
 
-RenderWindow::RenderWindow(u32 width, u32 height, const char* title):
+RenderWindow::RenderWindow(u32 width, u32 height, const char* title, TextureFormat depth_buffer_format):
 	Window(width, height, title),
-	FramebufferChain(this)
+	FramebufferChain(this, depth_buffer_format)
 {}
 
 void RenderWindow::AcquireNextFramebuffer(const Semaphore* signal) {
