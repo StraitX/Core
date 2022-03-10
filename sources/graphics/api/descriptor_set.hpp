@@ -101,14 +101,23 @@ struct DescriptorSetDeleter {
 class SingleFrameDescriptorSetPool{
 private:
 	DescriptorSetPool *m_Pool = nullptr;
-	List<DescriptorSet*> m_AllocatedSets;
-	size_t m_FreePointer = 0;
+	List<DescriptorSet*> m_TotalAllocatedSets;
+	size_t m_AllocatedThisFrame = 0;
 public:
 	SingleFrameDescriptorSetPool(const DescriptorSetPoolProperties &props, size_t preallocate_sets = 0);
 
 	~SingleFrameDescriptorSetPool();
 
 	DescriptorSet *Alloc();
+
+	size_t AllocatedThisFrame()const {
+		return m_AllocatedThisFrame;
+	}
+
+	DescriptorSet* operator[](size_t index)const {
+		SX_CORE_ASSERT(index < m_AllocatedThisFrame, "Trying to access an unallocated set");
+		return m_TotalAllocatedSets[index];
+	}
 
 	void NextFrame();
 };

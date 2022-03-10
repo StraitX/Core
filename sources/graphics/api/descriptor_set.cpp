@@ -26,26 +26,26 @@ DescriptorSetPool *DescriptorSetPool::Create(const DescriptorSetPoolProperties &
 SingleFrameDescriptorSetPool::SingleFrameDescriptorSetPool(const DescriptorSetPoolProperties &props, size_t preallocate_sets){
     m_Pool = DescriptorSetPool::Create(props);
 
-    m_AllocatedSets.Reserve(preallocate_sets);
+    m_TotalAllocatedSets.Reserve(preallocate_sets);
     for(int i = 0; i<preallocate_sets; i++){
-        m_AllocatedSets.Add(m_Pool->Alloc());
+        m_TotalAllocatedSets.Add(m_Pool->Alloc());
     }
 }
 
 SingleFrameDescriptorSetPool::~SingleFrameDescriptorSetPool(){
-    for(auto *set: m_AllocatedSets)
+    for(auto *set: m_TotalAllocatedSets)
         m_Pool->Free(set);
     delete m_Pool;
 }
 
 DescriptorSet *SingleFrameDescriptorSetPool::Alloc(){
-    if(m_FreePointer == m_AllocatedSets.Size()){
-        m_AllocatedSets.Add(m_Pool->Alloc());
+    if(m_AllocatedThisFrame == m_TotalAllocatedSets.Size()){
+        m_TotalAllocatedSets.Add(m_Pool->Alloc());
     }
 
-    return m_AllocatedSets[m_FreePointer++];
+    return m_TotalAllocatedSets[m_AllocatedThisFrame++];
 }
 
 void SingleFrameDescriptorSetPool::NextFrame(){
-    m_FreePointer = 0;
+    m_AllocatedThisFrame = 0;
 }
