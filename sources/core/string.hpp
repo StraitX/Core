@@ -28,8 +28,8 @@ public:
     //Uninitialized
     String(size_t size):
         StringView(
-            (char*)Memory::Alloc(size * sizeof(char)),
-            size + 1 
+            (char*)Memory::Alloc((size + 1) * sizeof(char)),
+            size
         )
     {
         Data()[size] = 0;
