@@ -65,7 +65,7 @@ public:
 	UnicodeIterator end()const{
 		return {Data() + Size()};
 	}
-protected:
+
 	static constexpr size_t StaticCodeunitsCount(const char* string) {
 		if(!string)return 0;
 

@@ -25,19 +25,20 @@ public:
         String(span.Pointer(), span.Size())
     {}
 
-    //Uninitialized, beware that string should be nullterminated
+    //Uninitialized
     String(size_t size):
         StringView(
             (char*)Memory::Alloc(size * sizeof(char)),
-            size
+            size + 1 
         )
-    {}
+    {
+        Data()[size] = 0;
+    }
 
     String(const char *string, size_t length):
-        String(length + 1)
+        String(length)
     {
         Memory::Copy(string, Data(), length);
-        Data()[length] = 0;
     }
 
     String(String&& other)noexcept:
@@ -110,6 +111,23 @@ public:
 
     static char *Ignore(char *string, char ch);
 };
+
+SX_INLINE String operator+(const StringView& lvalue, const StringView &rvalue) {
+    String sum(lvalue.Size() + rvalue.Size());
+
+    Memory::Copy(lvalue.Data(), sum.Data()                , lvalue.Size());
+    Memory::Copy(rvalue.Data(), sum.Data() + lvalue.Size(), rvalue.Size());
+
+    return sum;
+}
+
+SX_INLINE String operator+(const char* lvalue, const String& rvalue) {
+    return StringView(lvalue) + (const StringView &)rvalue;
+}
+
+SX_INLINE String operator+(const String& lvalue, const char *rvalue) {
+    return (const StringView&)lvalue + StringView(rvalue);
+}
 
 template<>
 struct Printer<String> {
