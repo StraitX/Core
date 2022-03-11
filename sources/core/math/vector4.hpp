@@ -21,6 +21,8 @@ struct Vector4{
     // Creates a Vector4(0, 0, 0, 0).
     constexpr Vector4();
 
+    constexpr Vector4(const T &XYZW);
+
     constexpr Vector4(const T &X, const T &Y, const T &Z, const T &W);
 
     constexpr Vector4(const Vector2<T> &XY, const T &Z, const T &W);
@@ -54,6 +56,14 @@ constexpr Vector4<T>::Vector4():
     y(static_cast<T>(0)),
     z(static_cast<T>(0)),
     w(static_cast<T>(0))
+{}
+
+template <typename T>
+constexpr Vector4<T>::Vector4(const T &XYZW):
+    x(XYZW),
+    y(XYZW),
+    z(XYZW),
+    w(XYZW)
 {}
 
 template <typename T>

@@ -19,6 +19,8 @@ struct Vector3{
 
     // Creates a Vector3(0, 0, 0).
     constexpr Vector3();
+
+    constexpr Vector3(const T &XYZ);
     
     constexpr Vector3(const Vector2<T> &xy, const T &z);
 
@@ -53,6 +55,13 @@ constexpr Vector3<T>::Vector3():
     x(static_cast<T>(0)),
     y(static_cast<T>(0)),
     z(static_cast<T>(0))
+{}
+
+template <typename T>
+constexpr Vector3<T>::Vector3(const T &XYZ):
+    x(XYZ),
+    y(XYZ),
+    z(XYZ)
 {}
 
 template <typename T>

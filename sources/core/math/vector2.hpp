@@ -19,6 +19,8 @@ struct Vector2{
 
     // Creates a Vector2(0, 0).
     constexpr Vector2();
+    
+    constexpr Vector2(const T &XY);
 
     constexpr Vector2(const T &X, const T &Y);
 
@@ -48,6 +50,12 @@ template <typename T>
 constexpr Vector2<T>::Vector2():
     x(static_cast<T>(0)),
     y(static_cast<T>(0))
+{}
+
+template <typename T>
+constexpr Vector2<T>::Vector2(const T &XY):
+    x(XY),
+    y(XY)
 {}
 
 template <typename T>

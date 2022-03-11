@@ -25,17 +25,17 @@ constexpr NumberType Tan(NumberType radians){
 
 template<typename NumberType>
 constexpr NumberType Cot(NumberType radians){
-    return Tan(Pi/2.0 - radians);
+    return Tan(NumberType(Pi/2.0) - radians);
 }
 
 template<typename NumberType>
 constexpr NumberType Deg(NumberType radians){
-    return static_cast<NumberType>(radians / Pi * 180.f);
+    return static_cast<NumberType>(radians / NumberType(Pi) * NumberType(180.0));
 }
 
 template<typename NumberType>
 constexpr NumberType Rad(NumberType degrees){
-    return static_cast<NumberType>(degrees / 180.f * Pi);
+    return static_cast<NumberType>(degrees / NumberType(180.0) * NumberType(Pi));
 }
 
 template <typename NumberType, typename = decltype(float(*(NumberType*)nullptr))>
