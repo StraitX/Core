@@ -19,15 +19,17 @@ namespace Details{
 
 template<typename Type>
 struct ImplicitPrintCaster{
-	static constexpr bool IsString = IsSame<String, Type>::Value || IsSame<StringView, Type>::Value;
-	static constexpr bool IsTrueRange = IsRange<Type>::Value && !IsString;
+	template<typename CheckType>
+	static constexpr bool IsString = IsSame<String, CheckType>::Value || IsSame<StringView, CheckType>::Value;
+	template<typename CheckType>
+	static constexpr bool IsTrueRange = IsRange<CheckType>::Value && !IsString<CheckType>;
 
-	template<typename _Type = Type, typename = typename EnableIf<IsTrueRange>::Type>
+	template<typename _Type = Type, typename = typename EnableIf<IsTrueRange<_Type>>::Type>
 	static auto Cast(const _Type& value) -> Range<decltype(Begin(value))>{
 		return ToRange(value);
 	}
 
-	template<typename _Type = Type, typename = typename EnableIf<!IsTrueRange>::Type>
+	template<typename _Type = Type, typename = typename EnableIf<!IsTrueRange<_Type>>::Type>
 	static const Type& Cast(const _Type& value) {
 		return value;
 	}

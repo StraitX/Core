@@ -216,12 +216,12 @@ public:
         return Data() + Size();
     }
 private:
-    template<typename = typename EnableIf<IsMoveConstructible<Type>::Value>::Type>
+    template<typename _Type = Type, typename = typename EnableIf<IsMoveConstructible<_Type>::Value>::Type>
     static void MoveElseCopyCtorImpl(Type *dst, Type *src, void *) {
         new(dst) Type(Move(*src));
     }
 
-    template<typename = typename EnableIf<!IsMoveConstructible<Type>::Value>::Type>
+    template<typename _Type = Type, typename = typename EnableIf<!IsMoveConstructible<_Type>::Value>::Type>
     static void MoveElseCopyCtorImpl(Type *dst, Type *src, ...) {
         new(dst) Type(*src);
     }

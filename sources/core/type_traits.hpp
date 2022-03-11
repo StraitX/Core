@@ -1,6 +1,8 @@
 #ifndef STRAITX_TYPE_TRAITS_HPP
 #define STRAITX_TYPE_TRAITS_HPP
 
+#include "core/types.hpp"
+
 template <typename Type>
 constexpr Type &&Declval()noexcept;
 

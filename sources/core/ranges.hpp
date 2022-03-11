@@ -68,7 +68,7 @@ private:
         return false;
     }
 
-    template<typename = decltype(ToRange(Declval<BaseType>()))>
+    template<typename _BaseType = BaseType, typename = decltype(ToRange(Declval<_BaseType>()))>
     static constexpr bool Check(void *){
         return true;
     }
