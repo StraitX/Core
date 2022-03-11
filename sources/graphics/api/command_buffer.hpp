@@ -46,7 +46,7 @@ public:
 
     virtual void Reset() = 0;
 
-    virtual void ChangeLayout(Texture2D *texture, TextureLayout new_layout) = 0;
+    virtual void ChangeLayout(const Texture2D *texture, TextureLayout new_layout) = 0;
 
     virtual void BeginRenderPass(const RenderPass *rp, const Framebuffer *fb) = 0;
 
@@ -79,15 +79,15 @@ public:
     //during operations texture it is implicitly translated into transferDstOptimal layout and back
     //if texture layout is undefined, back translation won't happen
     //buffer should contain data in the same format as dst texture
-    virtual void Copy(const Buffer *src, Texture2D *dst, Vector2u src_size, Vector2u dst_offset = {0, 0}) = 0;
+    virtual void Copy(const Buffer *src, const Texture2D *dst, Vector2u src_size, Vector2u dst_offset = {0, 0}) = 0;
 
-    void Copy(const Buffer *src, Texture2D *dst){
+    void Copy(const Buffer *src, const Texture2D *dst){
         Copy(src, dst, dst->Size(), {0, 0});
     }
 
-    virtual void ClearColor(Texture2D *texture, const Color &color) = 0; 
+    virtual void ClearColor(const Texture2D *texture, const Color &color) = 0; 
 
-    virtual void ClearDepthStencil(Texture2D *texture, float depth = 1.f, u8 stencil = 0) = 0; 
+    virtual void ClearDepthStencil(const Texture2D *texture, float depth = 1.f, u8 stencil = 0) = 0; 
 
     virtual void Bind(const DescriptorSet *set) = 0;
 

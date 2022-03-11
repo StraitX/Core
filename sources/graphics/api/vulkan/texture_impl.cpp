@@ -79,7 +79,7 @@ void Texture2DImpl::Copy(void *src_data, Vector2u src_size){
     Immediate::Copy(&tmp, this);
 }
 
-void Texture2DImpl::ChangeLayout(TextureLayout new_layout){
+void Texture2DImpl::ChangeLayout(TextureLayout new_layout)const{
     Immediate::ChangeLayout(this, new_layout);
 }
 

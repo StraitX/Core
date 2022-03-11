@@ -42,7 +42,7 @@ enum class ResourceOperationType{
 };
 
 struct LayoutChangeOp{
-    ::Texture *Texture;
+    const ::Texture *Texture;
     TextureLayout NewLayout;
 };
 
@@ -55,7 +55,7 @@ struct ResourceOperation{
         LayoutChangeOp LayoutChange;
     };
 
-    ResourceOperation(Texture *texture, TextureLayout new_layout){
+    ResourceOperation(const Texture *texture, TextureLayout new_layout){
         Type = ResourceOperationType::LayoutChange;
         LayoutChange.Texture = texture;
         LayoutChange.NewLayout = new_layout;
@@ -111,7 +111,7 @@ public:
 
     void ImageBarrier(VkPipelineStageFlags src, VkPipelineStageFlags dst, VkAccessFlags src_acces, VkAccessFlags dst_access, VkImageLayout old, VkImageLayout next, VkImage img, VkImageAspectFlags aspect = VK_IMAGE_ASPECT_COLOR_BIT)const;
 
-    void ChangeLayout(Texture2D *texture, TextureLayout new_layout)override;
+    void ChangeLayout(const Texture2D *texture, TextureLayout new_layout)override;
 
     void BeginRenderPass(const RenderPass *rp, const Framebuffer *fb)override;
 
@@ -140,13 +140,13 @@ public:
     void Copy(const Buffer *src, const Buffer *dst, size_t size, size_t src_offset, size_t dst_offset)override;
 
     //Expects Texture to be in either General or TransferDstOptimal layouts
-    void Copy(const Buffer *src, Texture2D *dst, Vector2u src_size, Vector2u dst_offset)override;
+    void Copy(const Buffer *src, const Texture2D *dst, Vector2u src_size, Vector2u dst_offset)override;
 
     //Expects Texture to be in either General or TransferDstOptimal layouts
-    void ClearColor(Texture2D *texture, const Color &color)override;
+    void ClearColor(const Texture2D *texture, const Color &color)override;
 
     //Expects Texture to be in either General or TransferDstOptimal layouts
-    void ClearDepthStencil(Texture2D *texture, float depth, u8 stencil)override;
+    void ClearDepthStencil(const Texture2D *texture, float depth, u8 stencil)override;
 
     void Bind(const DescriptorSet *set)override;
 };

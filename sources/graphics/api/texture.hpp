@@ -40,7 +40,7 @@ bool IsDepthFormat(TextureFormat format);
 
 bool IsStencilFormat(TextureFormat format);
 
-bool IsImageFormat(TextureFormat format);
+bool IsColorFormat(TextureFormat format);
 
 size_t GetPixelSize(TextureFormat format);
 
@@ -65,7 +65,7 @@ class Texture: public NonCopyable{
 protected:
     TextureFormat m_Format = TextureFormat::Unknown;
     TextureUsage m_Usage = 0;
-    TextureLayout m_Layout = TextureLayout::Undefined;
+    mutable TextureLayout m_Layout = TextureLayout::Undefined;
 
     friend class Vk::CommandBufferImpl;
 public:
@@ -81,7 +81,7 @@ public:
         return m_Layout;
     }
 
-    virtual void ChangeLayout(TextureLayout new_layout) = 0;
+    virtual void ChangeLayout(TextureLayout new_layout)const = 0;
 };
 
 class Texture2D: public Texture{

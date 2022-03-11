@@ -20,8 +20,12 @@ bool IsStencilFormat(TextureFormat format) {
     return false;
 }
 
-bool IsImageFormat(TextureFormat format){
-    return !IsDepthFormat(format) && format != TextureFormat::Unknown;
+bool IsColorFormat(TextureFormat format){
+    if(format == TextureFormat::RGBA8
+    || format == TextureFormat::RGB8
+    || format == TextureFormat::BGRA8)
+        return true;
+    return false;
 }
 
 size_t GetPixelSize(TextureFormat format){

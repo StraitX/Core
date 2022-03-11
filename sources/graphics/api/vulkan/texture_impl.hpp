@@ -38,7 +38,7 @@ public:
         return m_View;
     }
 
-    void ChangeLayout(TextureLayout new_layout)override;
+    void ChangeLayout(TextureLayout new_layout)const override;
     
     void Copy(void *src_data, Vector2u src_size)override;
 private:

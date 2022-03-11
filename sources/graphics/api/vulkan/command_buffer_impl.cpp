@@ -138,7 +138,7 @@ void CommandBufferImpl::ImageBarrier(VkPipelineStageFlags src, VkPipelineStageFl
     vkCmdPipelineBarrier(m_Handle, src, dst, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 }
 
-void CommandBufferImpl::ChangeLayout(Texture2D *texture, TextureLayout new_layout){
+void CommandBufferImpl::ChangeLayout(const Texture2D *texture, TextureLayout new_layout){
 
     ImageBarrier(
         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
@@ -259,7 +259,7 @@ void CommandBufferImpl::Copy(const Buffer *src, const Buffer *dst, size_t size, 
     );
 }
 
-void CommandBufferImpl::Copy(const Buffer *src, Texture2D *dst, Vector2u src_size, Vector2u dst_offset){
+void CommandBufferImpl::Copy(const Buffer *src, const Texture2D *dst, Vector2u src_size, Vector2u dst_offset){
     VkImageLayout current_layout = GetExecutionTextureLayout(dst);
     TextureLayout copy_layout = TextureLayout::TransferDstOptimal;
     VkImageAspectFlags aspect = IsDepthFormat(dst->Format()) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
@@ -309,7 +309,7 @@ void CommandBufferImpl::Copy(const Buffer *src, Texture2D *dst, Vector2u src_siz
     }
 }
 
-void CommandBufferImpl::ClearColor(Texture2D *texture, const Color &color){
+void CommandBufferImpl::ClearColor(const Texture2D *texture, const Color &color){
     VkImageLayout current_layout = GetExecutionTextureLayout(texture);
     TextureLayout clear_layout = TextureLayout::TransferDstOptimal;
 
@@ -355,7 +355,7 @@ void CommandBufferImpl::ClearColor(Texture2D *texture, const Color &color){
     }
 }
 
-void CommandBufferImpl::ClearDepthStencil(Texture2D *texture, float depth, u8 stencil){
+void CommandBufferImpl::ClearDepthStencil(const Texture2D *texture, float depth, u8 stencil){
     VkImageLayout current_layout = GetExecutionTextureLayout(texture);
     TextureLayout clear_layout = TextureLayout::TransferDstOptimal;
     VkImageAspectFlags aspect = 0;
