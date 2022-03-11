@@ -19,7 +19,7 @@ public:
 
     virtual Vector2u Size()const = 0;
 
-    virtual ConstSpan<Texture2D *> Attachments()const = 0;
+    virtual ConstSpan<const Texture2D *> Attachments()const = 0;
 
     static Framebuffer *Create(const FramebufferProperties &props);
 };

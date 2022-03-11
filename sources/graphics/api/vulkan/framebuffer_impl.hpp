@@ -10,7 +10,7 @@ namespace Vk{
 class FramebufferImpl: public Framebuffer{
 private:
     VkFramebuffer m_Handle = VK_NULL_HANDLE;
-    FixedList<Texture2D *, MaxAttachmentsCount> m_Attachments;
+    FixedList<const Texture2D *, MaxAttachmentsCount> m_Attachments;
     Vector2u m_Size;
 public:
     FramebufferImpl(const FramebufferProperties &props);
@@ -19,7 +19,7 @@ public:
 
     Vector2u Size()const override;
 
-    ConstSpan<Texture2D *> Attachments()const override;
+    ConstSpan<const Texture2D *> Attachments()const override;
 
     operator VkFramebuffer()const{
         return m_Handle;

@@ -42,7 +42,7 @@ Vector2u FramebufferImpl::Size()const{
     return m_Size;
 }
 
-ConstSpan<Texture2D *> FramebufferImpl::Attachments()const{
+ConstSpan<const Texture2D *> FramebufferImpl::Attachments()const{
     return m_Attachments;
 }
 
