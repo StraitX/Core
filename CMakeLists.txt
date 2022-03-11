@@ -172,6 +172,8 @@ elseif(STRAITX_PLATFORM_MACOS)
         ${SX_BASE_SOURCES_DIR}/platform/macos/opengl_context_impl.mm
         ${SX_BASE_SOURCES_DIR}/platform/macos/clock_impl.cpp
         ${SX_BASE_SOURCES_DIR}/platform/macos/input_manager.cpp
+        ${SX_BASE_SOURCES_DIR}/platform/macos/vulkan_macos.cpp
+        ${SX_BASE_SOURCES_DIR}/platform/macos/vulkan_surface_impl.mm
         ${SX_BASE_SOURCES_DIR}/platform/unix/sleep_impl.cpp
         ${SX_BASE_SOURCES_DIR}/platform/unix/file_impl.cpp
         ${SX_BASE_SOURCES_DIR}/platform/unix/memory_impl.cpp
@@ -182,10 +184,15 @@ elseif(STRAITX_PLATFORM_MACOS)
         "-framework AppKit"
         "-framework CoreData"
         "-framework Foundation"
+        "-framework Metal"
+        "-framework IOKit"
+        "-framework IOSurface"
+        "-framework QuartzCore"
+        MoltenVK
     )
 
     set(SX_BASE_LIBS_DIRS_PLATFORM
-
+        ${SX_BASE_THIRDPARTY_DIR}/vulkan-sdk/apple/lib
     )
 
     set(SX_BASE_LINKER_FLAGS_PLATFORM

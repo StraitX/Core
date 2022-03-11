@@ -13,4 +13,5 @@ void STDOutWriter(char ch, void*){
 
 void STDErrWriter(char ch, void *){
 	fputc(ch, stderr);
+	fflush(stderr);
 }

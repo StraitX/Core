@@ -33,10 +33,8 @@ static bool IsRAM(VkMemoryPropertyFlags flags){
 }
 
 static bool IsUncachedRAM(VkMemoryPropertyFlags flags){
-    return !(flags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
-        &&  (flags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
-        && !(flags & VK_MEMORY_PROPERTY_HOST_CACHED_BIT)
-        &&  (flags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+    return  (flags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
+        && !(flags & VK_MEMORY_PROPERTY_HOST_CACHED_BIT);
 }
 
 static bool IsUniform(VkMemoryPropertyFlags flags){
@@ -53,6 +51,12 @@ MemoryProperties MemoryProperties::Get(VkPhysicalDevice device){
     vkGetPhysicalDeviceMemoryProperties(device, &props);
 
     for(u32 i = 0; i<props.memoryTypeCount; i++){
+        LogInfo("Type[%]\nDevice: %\nVisible: %\nCoherent: %\nCached: %", i,
+                bool(props.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT),
+                bool(props.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT),
+                bool(props.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT),
+                bool(props.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_CACHED_BIT)
+                );
         if(IsVRAM(props.memoryTypes[i].propertyFlags)){
             result.AbstractMemoryTypes[MemoryType::VRAM].Index = i;
             result.AbstractMemoryTypes[MemoryType::VRAM].BackingMemoryType = MemoryType::VRAM;
@@ -93,6 +97,15 @@ MemoryProperties MemoryProperties::Get(VkPhysicalDevice device){
 
         result.Layout = MemoryLayout::Uniform;
         return result;
+    }
+    // check for uniform memory;
+    if(result.AbstractMemoryTypes[MemoryType::RAM].Index == InvalidIndex){
+        for(int i = 0; i<props.memoryTypeCount; i++){
+            if(IsUniform(props.memoryTypes[i].propertyFlags)){
+                result.AbstractMemoryTypes[MemoryType::RAM].Index = i;
+                result.AbstractMemoryTypes[MemoryType::RAM].BackingMemoryType = MemoryType::DynamicVRAM;
+            }
+        }
     }
     // first if statement assures that we have RAM and VRAM to fallback to
     if(result.AbstractMemoryTypes[MemoryType::UncachedRAM].Index == InvalidIndex){

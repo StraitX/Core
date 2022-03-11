@@ -151,7 +151,7 @@ DescriptorSetPoolImpl::DescriptorSetPoolImpl(const DescriptorSetPoolProperties &
 	VkDescriptorPoolSize *sizes = SX_STACK_ARRAY_ALLOC(VkDescriptorPoolSize, m_Layout->Bindings().Size());
 
 	for(size_t i = 0; i<m_Layout->Bindings().Size(); i++){
-		sizes[i].descriptorCount = m_Layout->Bindings()[i].ElementsCount;
+		sizes[i].descriptorCount = m_Layout->Bindings()[i].ElementsCount * m_Capacity;
 		sizes[i].type = ToVkDescriptorType(m_Layout->Bindings()[i].Type);
 	}
 
@@ -182,7 +182,8 @@ DescriptorSet *DescriptorSetPoolImpl::Alloc(){
 
 	VkDescriptorSet set = VK_NULL_HANDLE;
 
-	SX_VK_ASSERT(vkAllocateDescriptorSets(GPUImpl::s_Instance, &info, &set), "Vk: Can't allocate descriptor set");
+	auto res = vkAllocateDescriptorSets(GPUImpl::s_Instance, &info, &set);
+    SX_VK_ASSERT(res, "Vk: Can't allocate descriptor set");
 
 	//TODO: use pool allocator
 	return new DescriptorSetImpl(set);

@@ -3,7 +3,7 @@
 
 #include "core/env/os.hpp"
 
-#if defined(SX_OS_LINUX) || defined(SX_OS_WINDOWS)
+#if defined(SX_OS_LINUX) || defined(SX_OS_WINDOWS) || defined (SX_OS_MACOS)
     #define SX_VULKAN_SUPPORTED
     #include <vulkan/vulkan.h>
 #endif
