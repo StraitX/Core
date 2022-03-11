@@ -59,6 +59,9 @@ RenderTexture::RenderTexture(Vector2u size, TextureFormat color_format, TextureF
 }
 
 void RenderTexture::Resize(Vector2u size){
+	if(Size() == size)
+		return;
+
 	TextureFormat color = m_ColorFormat;
 	TextureFormat depth = m_DepthFormat;
 
