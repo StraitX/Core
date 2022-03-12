@@ -69,11 +69,25 @@ enum class DepthFunction{
 	Never
 };
 
+enum class CullMode {
+	None		 = 0,
+    Front		 = 1,
+    Back		 = 2,
+    FrontAndBack = 3,
+};
+
+enum class FrontFace {
+	CounterClockwise = 0,
+    Clockwise        = 1,
+};
+
 struct GraphicsPipelineProperties{
     ConstSpan<const Shader*> Shaders = {};
     ConstSpan<VertexAttribute> VertexAttributes = {};
     enum PrimitivesTopology PrimitivesTopology = PrimitivesTopology::Triangles;
     bool PrimitiveRestartEnable = false;
+	enum CullMode CullMode = CullMode::None;
+	enum FrontFace FrontFace = FrontFace::Clockwise;
     enum RasterizationMode RasterizationMode = RasterizationMode::Fill;
 	enum DepthFunction DepthFunction = DepthFunction::Always;
     enum BlendFunction BlendFunction = BlendFunction::Add;

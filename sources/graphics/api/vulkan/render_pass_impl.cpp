@@ -24,9 +24,9 @@ RenderPassImpl::RenderPassImpl(const RenderPassProperties &props){
         attachments[i].flags = 0;
         attachments[i].format = ToVkFormat(props.Attachments[i].Format);
         attachments[i].samples = VkSampleCountFlagBits(ToVkSamplesCount(props.Attachments[i].Samples));
-        attachments[i].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        attachments[i].loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
         attachments[i].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-        attachments[i].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        attachments[i].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
         attachments[i].stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
         attachments[i].initialLayout = ToVkLayout(props.Attachments[i].InitialLayout);
         attachments[i].finalLayout = ToVkLayout(props.Attachments[i].FinalLayout);

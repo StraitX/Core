@@ -93,6 +93,13 @@ VkCompareOp ToVkDepthCompareOp(DepthFunction func){
     return s_DepthFunctionTable[(size_t)func];
 }
 
+VkCullModeFlags ToVkCullMode(CullMode cull_mode) {
+    return VkCullModeFlags(cull_mode);
+}
+VkFrontFace ToVkFronFace(FrontFace front_face) {
+    return VkFrontFace(front_face);
+}
+
 GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &props):
     Pipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, props.Layout)
 {    
@@ -169,8 +176,8 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     rasterization_info.depthClampEnable = VK_FALSE;
     rasterization_info.rasterizerDiscardEnable = VK_FALSE;
     rasterization_info.polygonMode = ToVkPolygonMode(props.RasterizationMode);
-    rasterization_info.cullMode = VK_CULL_MODE_NONE;// following one is disabled
-    rasterization_info.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+    rasterization_info.cullMode = ToVkCullMode(props.CullMode);
+    rasterization_info.frontFace = ToVkFronFace(props.FrontFace);
     rasterization_info.lineWidth = 1.0f;
     rasterization_info.depthBiasEnable = VK_FALSE; // following is disabled
     rasterization_info.depthBiasConstantFactor = 0.0f;
