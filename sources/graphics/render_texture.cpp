@@ -6,30 +6,32 @@ RenderTexture::RenderTexture(Vector2u size, TextureFormat color_format, TextureF
 	m_Framebuffer(nullptr),
 	m_Pass(nullptr)
 {
-	SX_ASSERT(IsColorFormat(color_format));
 	FixedList<AttachmentDescription, 2> descriptions;
-	
-	Texture2D *color_attachment = Texture2D::Create(
-		size, 
-		color_format,
-		TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, 
-		TextureLayout::ShaderReadOnlyOptimal
-	);
+	SX_CORE_ASSERT(IsColorFormat(color_format) || IsDepthFormat(depth_format), "RenderTexture should have at least one valid color or depth format");
 
-	m_Attachments.Emplace(color_attachment);
-	descriptions.Add({
-		TextureLayout::ShaderReadOnlyOptimal,
-		TextureLayout::ColorAttachmentOptimal,
-		TextureLayout::ShaderReadOnlyOptimal,
-		color_attachment->Format(),
-		SamplePoints::Samples_1
-	});
+	if(IsColorFormat(color_format)){
+		Texture2D *color_attachment = Texture2D::Create(
+			size, 
+			color_format,
+			TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, 
+			TextureLayout::ShaderReadOnlyOptimal
+		);
+
+		m_Attachments.Emplace(color_attachment);
+		descriptions.Add({
+			TextureLayout::ShaderReadOnlyOptimal,
+			TextureLayout::ColorAttachmentOptimal,
+			TextureLayout::ShaderReadOnlyOptimal,
+			color_attachment->Format(),
+			SamplePoints::Samples_1
+		});
+	}
 
 	if(IsDepthFormat(depth_format)){
 		Texture2D* depth_attachment = Texture2D::Create(
 			size,
 			depth_format,
-			TextureUsageBits::DepthStencilOptimal | TextureUsageBits::TransferDst,
+			TextureUsageBits::DepthStencilOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst,
 			TextureLayout::DepthStencilAttachmentOptimal
 		);
 

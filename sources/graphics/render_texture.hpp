@@ -29,12 +29,20 @@ public:
 	}
 
 	const Texture2D* ColorAttachment()const {
-		SX_CORE_ASSERT(m_Attachments.Size() && m_Attachments[0] && IsColorFormat(m_Attachments[0]->Format()), "color attachment was not created");
-		return m_Attachments[0].Get();
+		for (const auto& attach : m_Attachments) {
+			if(IsColorFormat(attach->Format()))
+				return attach.Get();
+		}
+		SX_CORE_ASSERT(false, "color attachment was not created");
+		return nullptr;
 	}
 
 	const Texture2D* DepthAttachment()const {
-		SX_CORE_ASSERT(m_Attachments.Size() == 2 && m_Attachments[1] && IsDepthFormat(m_Attachments[1]->Format()), "depth attachment was not created");
-		return m_Attachments[1].Get();
+		for (const auto& attach : m_Attachments) {
+			if(IsDepthFormat(attach->Format()))
+				return attach.Get();
+		}
+		SX_CORE_ASSERT(false, "depth attachment was not created");
+		return nullptr;
 	}
 };
