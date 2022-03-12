@@ -51,12 +51,14 @@ MemoryProperties MemoryProperties::Get(VkPhysicalDevice device){
     vkGetPhysicalDeviceMemoryProperties(device, &props);
 
     for(u32 i = 0; i<props.memoryTypeCount; i++){
+#if 0
         LogInfo("Type[%]\nDevice: %\nVisible: %\nCoherent: %\nCached: %", i,
                 bool(props.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT),
                 bool(props.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT),
                 bool(props.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT),
                 bool(props.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_CACHED_BIT)
                 );
+#endif
         if(IsVRAM(props.memoryTypes[i].propertyFlags)){
             result.AbstractMemoryTypes[MemoryType::VRAM].Index = i;
             result.AbstractMemoryTypes[MemoryType::VRAM].BackingMemoryType = MemoryType::VRAM;
