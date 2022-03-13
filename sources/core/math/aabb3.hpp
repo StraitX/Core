@@ -32,6 +32,10 @@ struct AABB3 {
 	Vector3<Type> Size()const {
 		return Max - Min;
 	}
+
+	Vector3<Type> Center()const {
+		return Min + Size()/Type(2);
+	}
 };
 
 using AABB3s = AABB3<s32>;
