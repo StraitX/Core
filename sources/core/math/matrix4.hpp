@@ -11,7 +11,7 @@ struct Matrix4{
     Vector4<T> Rows[4];
 
     // Identity Matrix
-    constexpr Matrix4(const T &ident);
+    constexpr Matrix4(const T &ident = T(1));
 
     constexpr Matrix4(const Vector4<T> &row0,
                       const Vector4<T> &row1,
