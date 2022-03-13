@@ -222,8 +222,17 @@ typedef Vector2<u32> Vector2u;
 typedef Vector2<float> Vector2f;
 typedef Vector2<double> Vector2d;
 
+namespace Math{
 
+template <typename NumberType>
+constexpr Vector2<NumberType> Clamp(Vector2<NumberType> vec, NumberType lower, NumberType upper) {
+    return {
+        Math::Clamp(vec.x, lower, upper),
+        Math::Clamp(vec.y, lower, upper)
+    };
+}
 
+}//namespace Math::
 
 
 template<typename T>

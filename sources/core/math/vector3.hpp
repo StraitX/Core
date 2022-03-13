@@ -252,6 +252,18 @@ typedef Vector3<u32> Vector3u;
 typedef Vector3<float> Vector3f;
 typedef Vector3<double> Vector3d;
 
+namespace Math{
+
+template <typename NumberType>
+constexpr Vector3<NumberType> Clamp(Vector3<NumberType> vec, NumberType lower, NumberType upper) {
+    return {
+        Math::Clamp(vec.x, lower, upper),
+        Math::Clamp(vec.y, lower, upper),
+        Math::Clamp(vec.z, lower, upper)
+    };
+}
+
+}//namespace Math::
 
 template<typename T>
 struct Printer<Vector3<T>>{

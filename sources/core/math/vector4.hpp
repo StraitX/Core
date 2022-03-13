@@ -280,6 +280,20 @@ typedef Vector4<u32> Vector4u;
 typedef Vector4<float> Vector4f;
 typedef Vector4<double> Vector4d;
 
+namespace Math{
+
+template <typename NumberType>
+constexpr Vector4<NumberType> Clamp(Vector4<NumberType> vec, NumberType lower, NumberType upper) {
+    return {
+        Math::Clamp(vec.x, lower, upper),
+        Math::Clamp(vec.y, lower, upper),
+        Math::Clamp(vec.z, lower, upper),
+        Math::Clamp(vec.w, lower, upper)
+    };
+}
+
+}//namespace Math::
+
 template<typename T>
 struct Printer<Vector4<T>>{
 	static void Print(const Vector4<T> &value, void (*writer)(char, void*), void *writer_data){

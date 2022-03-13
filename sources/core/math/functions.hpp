@@ -57,6 +57,15 @@ constexpr IntegerType AlignDown(IntegerType number, IntegerType alignment) {
     return number - number % alignment;
 }
 
+template <typename NumberType>
+constexpr NumberType Clamp(NumberType number, NumberType lower, NumberType upper) {
+    if(number > upper)
+        return upper;
+    if(number < lower)
+        return lower;
+    return number;
+}
+
 }//namespace Math::
 
 #endif//STRAITX_TRIG_HPP
