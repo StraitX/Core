@@ -77,6 +77,15 @@ struct IsPointer: IntegralConstant<bool, false>{};
 template <typename T>
 struct IsPointer<T *>: IntegralConstant<bool, true>{};
 
+template <typename T>
+struct IsReference: IntegralConstant<bool, false>{};
+
+template <typename T>
+struct IsReference<T &>: IntegralConstant<bool, true>{};
+
+template <typename T>
+struct IsReference<T &&>: IntegralConstant<bool, true>{};
+
 template <typename FirstType, typename SecondType>
 struct IsSame: IntegralConstant<bool, false>{};
 
