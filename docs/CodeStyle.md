@@ -51,11 +51,11 @@ class MyClass{
     void SetCounter(int counter);
 };
 ```
-- constant variables are mixed case. If const variable is static, s_ prefix should be ignored
+- constant variables are MixedCase. If const variable is static, s_ prefix should be ignored
 ```c++
 const String ApplicationName = "The Best Game"
 ```
-- enums members all are mixed case(like constants)
+- enums members all are MixedCase (like constants)
 ```c++
 enum KeyCodes{
     LeftAlt,
