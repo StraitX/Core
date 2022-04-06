@@ -19,14 +19,14 @@ PerformTask();
 int players_count;
 GameObject main_boss;
 ```
-- member variables have prefix m_ and are MixedCase
+- member private member variables have prefix m_ and are MixedCase
 ```c++
 class Entity{
     AnotherClass m_Variable
     ...
 };
 ```
-- struct members are all MixedCase
+- public members are all MixedCase
 ```c++
 struct Props{
     unsigned Width;
