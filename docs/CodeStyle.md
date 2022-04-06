@@ -19,7 +19,7 @@ PerformTask();
 int players_count;
 GameObject main_boss;
 ```
-- member private member variables have prefix m_ and are MixedCase
+- private member variables have prefix m_ and are MixedCase
 ```c++
 class Entity{
     AnotherClass m_Variable
