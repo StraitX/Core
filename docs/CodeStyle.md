@@ -16,8 +16,8 @@ PerformTask();
 ```
 - regular variables are cameCase
 ```c++
-int playersCount;
-GameObject mainBoss;
+int players_count;
+GameObject main_boss;
 ```
 - member variables have prefix m_
 ```c++
@@ -51,11 +51,11 @@ class MyClass{
     void SetCounter(int counter);
 };
 ```
-- constant variables have prefix k. If const variable is static, s_ prefix should be ignored
+- constant variables are mixed case. If const variable is static, s_ prefix should be ignored
 ```c++
-String kApplicationName = "TheBestApp"
+const String ApplicationName = "TheBestApp"
 ```
-- enums members all are mixed case
+- enums members all are mixed case(like constants)
 ```c++
 enum KeyCodes{
     LeftAlt,
