@@ -37,7 +37,7 @@ struct Props{
 
 ```c++
 class GameObject{
-    String s_Name = "GameObject"
+    static String s_ClassName = "GameObject"
     ...
 };
 ```
@@ -53,7 +53,7 @@ class MyClass{
 ```
 - constant variables are mixed case. If const variable is static, s_ prefix should be ignored
 ```c++
-const String ApplicationName = "TheBestApp"
+const String ApplicationName = "The Best Game"
 ```
 - enums members all are mixed case(like constants)
 ```c++
