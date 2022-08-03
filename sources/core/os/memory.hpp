@@ -19,6 +19,13 @@
 
 class Memory{
 public:
+    static constexpr size_t Byte = 1;
+    static constexpr size_t Kilobyte = Byte * 1024;
+    static constexpr size_t Megabyte = Kilobyte * 1024;
+    static constexpr size_t Gigabyte = Megabyte * 1024;
+    static constexpr size_t Terabyte = Gigabyte * 1024;
+    static constexpr size_t Petabyte = Terabyte * 1024;
+public:
     static void *Alloc(size_t size);
 
     static void Free(void *pointer);
