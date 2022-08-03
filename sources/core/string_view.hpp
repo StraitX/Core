@@ -78,9 +78,8 @@ public:
 
 template<>
 struct Printer<StringView> {
-	static void Print(const StringView& value, void (*writer)(char, void*), void* writer_data) {
-		for(size_t i = 0; i<value.Size(); i++)
-			Printer<char>::Print(value.Data()[i], writer, writer_data);
+	static void Print(const StringView& value, StringWriter &writer) {
+		writer.Write(value.Data(), value.CodeunitsCount());
 	}
 };
 

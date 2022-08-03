@@ -27,7 +27,7 @@ private:
 //implemented in platform layer
 template<>
 struct Printer<Stacktrace>{
-    static void Print(const Stacktrace &value, void (*writer)(char, void*), void *writer_data);
+    static void Print(const Stacktrace &value, StringWriter &writer);
 };
 
 #endif//STRAITX_STACKTRACE_HPP

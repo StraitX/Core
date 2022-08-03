@@ -14,7 +14,7 @@ void Stacktrace::Capture(void *(&frames)[MaxFramesCount], size_t &captured_frame
     captured_frames = CaptureStackBackTrace(1, MaxFramesCount, frames, nullptr);
 }
 
-void Printer<Stacktrace>::Print(const Stacktrace &value, void (*writer)(char, void*), void *writer_data){
+void Printer<Stacktrace>::Print(const Stacktrace &value, StringWriter &writer){
 
     HANDLE process = GetCurrentProcess();
 
@@ -30,8 +30,8 @@ void Printer<Stacktrace>::Print(const Stacktrace &value, void (*writer)(char, vo
         char buffer[1024];
         size_t offset = (byte*)value.m_FramePointers[i] - (byte*)symbol->Address;
         snprintf(buffer, sizeof(buffer),"%-3zi [0x%0llX] %s + %zi", i - value.m_SkipFrames, symbol->Address, symbol->Name, offset);
-        Printer<char>::Print('\n', writer, writer_data);
-        Printer<const char*>::Print(buffer, writer, writer_data);
+        Printer<char>::Print('\n', writer);
+        Printer<const char*>::Print(buffer, writer);
     }
     free(symbol);
 }

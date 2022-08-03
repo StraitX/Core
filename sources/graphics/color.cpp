@@ -15,18 +15,16 @@ const Color Color::White      = {1.f, 1.f, 1.f, 1.f};
 const Color Color::Transparent= {1.f, 1.f, 1.f, 0.f};
 
 template<>
-struct Printer<Color>{
-	static void Print(const Color &value, void (*writer)(char, void*), void *writer_data);
+struct Printer<Color> {
+	static void Print(const Color& value, StringWriter &writer) {
+		Printer<char>::Print('(', writer);
+		Printer<float>::Print(value.R, writer);
+		Printer<char>::Print(',', writer);
+		Printer<float>::Print(value.G, writer);
+		Printer<char>::Print(',', writer);
+		Printer<float>::Print(value.B, writer);
+		Printer<char>::Print(',', writer);
+		Printer<float>::Print(value.A, writer);
+		Printer<char>::Print(')', writer);
+	}
 };
-
-void Printer<Color>::Print(const Color &value, void (*writer)(char, void*), void *writer_data){
-	Printer<char>::Print('(', writer, writer_data);
-	Printer<float>::Print(value.R, writer, writer_data);
-	Printer<char>::Print(',', writer, writer_data);
-	Printer<float>::Print(value.G, writer, writer_data);
-	Printer<char>::Print(',', writer, writer_data);
-	Printer<float>::Print(value.B, writer, writer_data);
-	Printer<char>::Print(',', writer, writer_data);
-	Printer<float>::Print(value.A, writer, writer_data);
-	Printer<char>::Print(')', writer, writer_data);
-}

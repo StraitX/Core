@@ -5,6 +5,7 @@
 #include "core/os/memory.hpp"
 #include "core/move.hpp"
 #include "core/noncopyable.hpp"
+#include "core/printer.hpp"
 
 template<typename T>
 class alignas(T) RawVar: public NonCopyable{
@@ -54,6 +55,13 @@ public:
 
 	const T *Pointer()const{
 		return reinterpret_cast<const T *>(m_Memory);
+	}
+};
+
+template<typename T>
+struct Printer<RawVar<T>> {
+	static void Print(const RawVar<T>& value, StringWriter &writer) {
+		Printer<T>::Print(*value.Pointer(), writer);
 	}
 };
 

@@ -5,12 +5,7 @@
 #include "core/printer.hpp"
 #include "core/move.hpp"
 #include "core/ranges.hpp"
-
-void STDOutWriter(char ch, void *data = nullptr);
-
-void STDErrWriter(char ch, void *data = nullptr);
-
-void WriterPrint(void (*writer)(char, void*), void *writer_data, const char *fmt);
+#include "core/string_writer.hpp"
 
 class StringView;
 class String;
@@ -79,24 +74,26 @@ struct ImplicitPrintCaster<const char[N]>{
 
 }//namespace Details::
 
+void WriterPrint(StringWriter &writer, const char *fmt);
+
 template <typename T, typename...Args>
-void WriterPrint(void (*writer)(char, void*), void *writer_data, const char *fmt, const T &arg, const Args&...args){
+void WriterPrint(StringWriter &writer, const char *fmt, const T &arg, const Args&...args){
 	while(*fmt!=0){
         if(*fmt=='%'){
 			using CastResultType = decltype(Details::ImplicitPrintCaster<T>::Cast(Declval<T>()));
 			using PrintType = typename RemoveConst<typename RemoveReference<CastResultType>::Type>::Type;
-			Printer<PrintType>::Print(Details::ImplicitPrintCaster<T>::Cast(arg), writer, writer_data);
-            return WriterPrint(writer, writer_data, fmt+1, ((const Args&)(args))...);
+			Printer<PrintType>::Print(Details::ImplicitPrintCaster<T>::Cast(arg), writer);
+            return WriterPrint(writer, fmt+1, ((const Args&)(args))...);
         }
-        writer(*fmt, writer_data);
+		writer.Write(*fmt);
         ++fmt;
     }
-	writer('\0', writer_data);
+	writer.Write('\0');
 }
 
 template<typename...Args>
 void Print(const char *fmt, const Args&...args){
-	WriterPrint(STDOutWriter, nullptr, fmt, args...);
+	WriterPrint(*StraitXOut, fmt, args...);
 }
 
 template<typename...Args>

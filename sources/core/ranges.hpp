@@ -81,23 +81,23 @@ public:
 
 template<typename T>
 struct Printer<Range<T>>{
-	static void Print(const Range<T> &range, void (*writer)(char, void*), void *writer_data){
-        writer('[', writer_data);
+	static void Print(const Range<T> &range, StringWriter &writer){
+        writer.Write('[');
         auto begin = range.begin(), end = range.end();
         for(;;){
             using TypePrinter = Printer<typename RemoveConstVolatile<typename RemoveReference<decltype(*begin)>::Type>::Type>;
-            TypePrinter::Print(*begin, writer, writer_data);
+            TypePrinter::Print(*begin, writer);
 
             auto tmp = begin;
             if(++tmp == end)
                 break;
 
-            writer(',', writer_data);
-            writer(' ', writer_data);
+            writer.Write(',');
+            writer.Write(' ');
 
             ++begin;
         }
-        writer(']', writer_data);
+        writer.Write(']');
     }
 };
 

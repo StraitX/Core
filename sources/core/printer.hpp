@@ -2,30 +2,33 @@
 #define STRAITX_PRINTER_HPP
 
 #include "core/types.hpp"
+#include "core/string_writer.hpp"
 
 template<typename T>
 struct Printer{
-	static void Print(const T &value, void (*writer)(char, void*), void *writer_data);
+	static void Print(const T &value, StringWriter &writer);
 };
 
 template<typename T>
 class BufferPrinter{
 private:
-	struct BufferPrinterState{
-		size_t Written;
-		char *Buffer;
+	struct BufferStringWriter {
+		char* Buffer = nullptr;
+		size_t Written = 0;
+
+		BufferStringWriter(char *buffer):
+			Buffer(buffer)
+		{}
+		void Write(const char *string, size_t size)override {
+			for (size_t i = 0; i < size; i++)
+				Buffer[Written++] = string[i];
+		}
 	};
 
-	static void Writer(char ch, void *data){
-		auto state = (BufferPrinterState*)data;
-		state->Buffer[state->Written++] = ch;
-	}
 public:
 	static size_t Print(const T &value, char *buffer){
-		BufferPrinterState state;
-		state.Written = 0;
-		state.Buffer = buffer;
-		Printer<T>::Print(value, Writer, &state);
+		BufferStringWriter writer(buffer);
+		Printer<T>::Print(value, writer);
 		return state.Written;
 	}
 };

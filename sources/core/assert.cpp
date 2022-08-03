@@ -5,17 +5,17 @@
 
 void _AssertFail(const char *assertion, const char *filename, unsigned int line, const char * function){
     char buffer[1024];
-    WriterPrint(STDErrWriter, nullptr, buffer,"Assertion % failed\nfile: %\nline: %\nfunction: %\n", assertion, filename, line, function);
+    WriterPrint(*StraitXError, nullptr, buffer,"Assertion % failed\nfile: %\nline: %\nfunction: %\n", assertion, filename, line, function);
     abort();
 }
 void _AssertFail(const char *assertion, const char *message, const char *filename, unsigned int line, const char * function){
     char buffer[1024];
-    WriterPrint(STDErrWriter, nullptr, "Assertion % failed\nmessage: %\nfile: %\nline: %\nfunction: %\n",assertion, message, filename, line, function);
+    WriterPrint(*StraitXError, nullptr, "Assertion % failed\nmessage: %\nfile: %\nline: %\nfunction: %\n",assertion, message, filename, line, function);
     abort();
 }
 
 void _CoreAssertFail(const char *assertion, const char *message, const char * function){
     char buffer[1024];
-    WriterPrint(STDErrWriter, nullptr, "CoreAssertion % failed\nFrom function: %\nMessage: %\n",assertion,function,message);
+    WriterPrint(*StraitXError, nullptr, "CoreAssertion % failed\nFrom function: %\nMessage: %\n",assertion,function,message);
     abort();
 }

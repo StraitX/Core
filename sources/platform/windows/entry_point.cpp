@@ -11,8 +11,7 @@ int main(int argc, char **argv){
 	(void)argc;
 	(void)argv;
     SetProcessDPIAware();
-    SetConsoleOutputCP(CP_UTF8);
-    SetConsoleCP(CP_UTF8);
+
     if (!WindowImpl::RegisterWindowClass()) {
         MessageBox(nullptr, "Windows: Can't register a window class", "PlatformRuntime", MB_ICONERROR);
         return EXIT_FAILURE;

@@ -267,14 +267,14 @@ constexpr Vector3<NumberType> Clamp(Vector3<NumberType> vec, NumberType lower, N
 
 template<typename T>
 struct Printer<Vector3<T>>{
-	static void Print(const Vector3<T> &value, void (*writer)(char, void*), void *writer_data){
-		Printer<char>::Print('(', writer, writer_data);
-		Printer<T>::Print(value.x, writer, writer_data);
-		Printer<char>::Print(',', writer, writer_data);
-		Printer<T>::Print(value.y, writer, writer_data);
-		Printer<char>::Print(',', writer, writer_data);
-		Printer<T>::Print(value.z, writer, writer_data);
-		Printer<char>::Print(')', writer, writer_data);
+	static void Print(const Vector3<T> &value, StringWriter &writer){
+		Printer<char>::Print('(', writer);
+		Printer<T>::Print(value.x, writer);
+		Printer<char>::Print(',', writer);
+		Printer<T>::Print(value.y, writer);
+		Printer<char>::Print(',', writer);
+		Printer<T>::Print(value.z, writer);
+		Printer<char>::Print(')', writer);
 	}
 };
 

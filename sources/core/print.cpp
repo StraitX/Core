@@ -1,10 +1,9 @@
 #include "core/print.hpp"
+#include "core/string.hpp"
 #include <cstdio>
 
-void WriterPrint(void (*writer)(char, void*), void *writer_data, const char *fmt){
-	while(*fmt)
-		writer(*fmt++, writer_data);
-	writer('\0', writer_data);
+void WriterPrint(StringWriter &writer, const char *fmt){
+	writer.Write(fmt, String::StaticCodeunitsCount(fmt));
 }
 
 void STDOutWriter(char ch, void*){

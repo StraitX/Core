@@ -296,16 +296,16 @@ constexpr Vector4<NumberType> Clamp(Vector4<NumberType> vec, NumberType lower, N
 
 template<typename T>
 struct Printer<Vector4<T>>{
-	static void Print(const Vector4<T> &value, void (*writer)(char, void*), void *writer_data){
-		Printer<char>::Print('(', writer, writer_data);
-		Printer<T>::Print(value.x, writer, writer_data);
-		Printer<char>::Print(',', writer, writer_data);
-		Printer<T>::Print(value.y, writer, writer_data);
-		Printer<char>::Print(',', writer, writer_data);
-		Printer<T>::Print(value.z, writer, writer_data);
-		Printer<char>::Print(',', writer, writer_data);
-		Printer<T>::Print(value.w, writer, writer_data);
-		Printer<char>::Print(')', writer, writer_data);
+	static void Print(const Vector4<T> &value, StringWriter &writer){
+		Printer<char>::Print('(', writer);
+		Printer<T>::Print(value.x, writer);
+		Printer<char>::Print(',', writer);
+		Printer<T>::Print(value.y, writer);
+		Printer<char>::Print(',', writer);
+		Printer<T>::Print(value.z, writer);
+		Printer<char>::Print(',', writer);
+		Printer<T>::Print(value.w, writer);
+		Printer<char>::Print(')', writer);
 	}
 };
 

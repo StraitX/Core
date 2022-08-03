@@ -131,8 +131,8 @@ SX_INLINE String operator+(const String& lvalue, const char *rvalue) {
 
 template<>
 struct Printer<String> {
-	static void Print(const String& value, void (*writer)(char, void*), void* writer_data) {
-		Printer<const char*>::Print(value.Data(), writer, writer_data);
+	static void Print(const String& value, StringWriter &writer) {
+        writer.Write(value.Data(), value.CodeunitsCount());
 	}
 };
 

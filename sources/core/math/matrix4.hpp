@@ -88,15 +88,15 @@ typedef Matrix4<u32> Matrix4u;
 
 template<typename T>
 struct Printer<Matrix4<T>>{
-	static void Print(const Matrix4<T> &value, void (*writer)(char, void*), void *writer_data){
+	static void Print(const Matrix4<T> &value, StringWriter &writer){
+		Printer<char>::Print('\n', writer);
+		Printer<Vector4<T>>::Print(value[0], writer);
 		Printer<char>::Print('\n', writer, writer_data);
-		Printer<Vector4<T>>::Print(value[0], writer, writer_data);
+		Printer<Vector4<T>>::Print(value[1], writer);
 		Printer<char>::Print('\n', writer, writer_data);
-		Printer<Vector4<T>>::Print(value[1], writer, writer_data);
+		Printer<Vector4<T>>::Print(value[2], writer);
 		Printer<char>::Print('\n', writer, writer_data);
-		Printer<Vector4<T>>::Print(value[2], writer, writer_data);
-		Printer<char>::Print('\n', writer, writer_data);
-		Printer<Vector4<T>>::Print(value[3], writer, writer_data);
+		Printer<Vector4<T>>::Print(value[3], writer);
 	}
 };
 

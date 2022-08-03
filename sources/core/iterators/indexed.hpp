@@ -66,12 +66,12 @@ struct IndexedIterator{
 
 template<typename T>
 struct Printer<IndexedIterator<T>>{
-	static void Print(const IndexedIterator<T> &iterator, void (*writer)(char, void*), void *writer_data){
+	static void Print(const IndexedIterator<T> &iterator, StringWriter &writer){
         using TypePrinter = Printer<typename RemoveConstVolatile<typename RemoveReference<decltype(*iterator.It)>::Type>::Type>;
-        Printer<size_t>::Print(iterator.Index, writer, writer_data);
-        writer(':', writer_data);
-        writer(' ', writer_data);
-        TypePrinter::Print(*iterator.It, writer, writer_data);
+        Printer<size_t>::Print(iterator.Index, writer);
+        writer.Write(':');
+        writer.Write(' ');
+        TypePrinter::Print(*iterator.It, writer);
     }
 };
 
