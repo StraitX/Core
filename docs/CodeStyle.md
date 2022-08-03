@@ -1,43 +1,43 @@
 # StraitX Engine codestyle
 
-- files and folders names are all lowercase with underscores
+- files and folders names are snake_case (all lowercase with underscores)
 ```
 core/database_storage.cpp
 ```
-- typenames names are Mixed case
+- typenames names are MixedCase
 ```c++
 class MyExitingClass{...};
 struct Data{...};
 typedef int Flags;
 ```
-- functions are Mixed case
+- functions are MixedCase
 ```c++
 PerformTask();
 ```
-- regular variables are cameCase
+- local variables are snake_case
 ```c++
-int playersCount;
-GameObject mainBoss;
+int players_count;
+GameObject main_boss;
 ```
-- member variables have prefix m_
+- private member variables have prefix m_ and are MixedCase
 ```c++
 class Entity{
     AnotherClass m_Variable
     ...
 };
 ```
-- struct members are all mixed case
+- public members are all MixedCase
 ```c++
 struct Props{
     unsigned Width;
     unsigned Height;
 };
 ```
-- static variables are named with prefix s. In case of being member variable, they don't have m prefix
+- static variables are named with prefix s_ and are MixedCase. In case of being member variable, they don't have m prefix
 
 ```c++
 class GameObject{
-    String s_Name = "GameObject"
+    static String s_ClassName = "GameObject"
     ...
 };
 ```
@@ -51,11 +51,11 @@ class MyClass{
     void SetCounter(int counter);
 };
 ```
-- constant variables have prefix k. If const variable is static, s_ prefix should be ignored
+- constant variables are MixedCase. If const variable is static, s_ prefix should be ignored
 ```c++
-String kApplicationName = "TheBestApp"
+const String ApplicationName = "The Best Game"
 ```
-- enums members all are mixed case
+- enums members all are MixedCase (like constants)
 ```c++
 enum KeyCodes{
     LeftAlt,
