@@ -42,8 +42,6 @@ public:
     const Screen& CurrentScreen()const;
 
     SX_INLINE HWND__ *Handle()const;
-
-    static Result RegisterWindowClass();
 };
 
 SX_INLINE HWND__ *WindowImpl::Handle() const {

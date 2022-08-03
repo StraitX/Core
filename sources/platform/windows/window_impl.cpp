@@ -1,23 +1,51 @@
 #include "platform/windows/window_impl.hpp"
 #include "platform/windows/events.hpp"
 #include "platform/windows/virtual_keys.hpp"
+#include "core/log.hpp"
 #include <windows.h>
 
 namespace Windows{
 
-const char * const s_WindowClassName = "StraitXWindow";
-const DWORD s_WindowStyle = WS_OVERLAPPEDWINDOW;
+LRESULT CALLBACK StraitXWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+static const auto& GetWindowClass() {
+    struct WindowClass {
+        const char* const Name = "StraitXWindow";
+        DWORD Style = WS_OVERLAPPEDWINDOW;
+        Result CreationResult = Result::None;
+
+        WindowClass() {
+            SetProcessDPIAware();
+
+            WNDCLASS windowClass = { 0 };
+            windowClass.lpfnWndProc = StraitXWindowProc;
+            windowClass.lpszClassName = Name;
+            windowClass.hInstance = GetModuleHandle(nullptr);
+            windowClass.style = CS_OWNDC;
+    
+            CreationResult = Result(RegisterClass(&windowClass) != 0);
+        }
+    };
+
+    static WindowClass s_WindowClass;
+    
+    return s_WindowClass;
+}
+
 
 Result WindowImpl::Open(int width, int height, const char *title) {
+    if (!GetWindowClass().CreationResult)
+        return (LogError("Can't create WindowClass"), Result::Failure);
+
     RECT dimensions = { 0, 0, width, height};
 
-    AdjustWindowRect(&dimensions, s_WindowStyle, false);
+    AdjustWindowRect(&dimensions, GetWindowClass().Style, false);
 
     //Warning: width and height now are used for better purpose
     width = dimensions.right - dimensions.left;
     height = dimensions.bottom - dimensions.top;
 
-    m_Handle = CreateWindow(s_WindowClassName, title , s_WindowStyle, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, (HINSTANCE)GetModuleHandle(nullptr), this);
+    m_Handle = CreateWindow(GetWindowClass().Name, title , GetWindowClass().Style, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, (HINSTANCE)GetModuleHandle(nullptr), this);
     ShowWindow(m_Handle, SW_SHOW);
 
     return Result(m_Handle != nullptr);
@@ -104,16 +132,6 @@ const Screen& WindowImpl::CurrentScreen()const{
         m_CurrentScreen.DPI.y = dpi;
     }
     return m_CurrentScreen;
-}
-
-Result WindowImpl::RegisterWindowClass() {
-    WNDCLASS windowClass = { 0 };
-    windowClass.lpfnWndProc = StraitXWindowProc;
-    windowClass.lpszClassName = s_WindowClassName;
-    windowClass.hInstance = GetModuleHandle(nullptr);
-    windowClass.style = CS_OWNDC;
-    
-    return Result(RegisterClass(&windowClass) != 0);
 }
 
 }//namespace Windows::
