@@ -8,10 +8,10 @@
 #ifdef SX_DEBUG
 
 #define DLog(source,error) Print("[%]: %: %\n",error==Result::Success? "Info " : "Result",source, error.Name())
-#define DLogTrace(...) [](){Print("[Trace]: "); Println(__VA_ARGS__); }()
-#define DLogInfo(...)  [](){Print("[Info ]: "); Println(__VA_ARGS__); }()
-#define DLogWarn(...)  [](){Print("[Warn ]: "); Println(__VA_ARGS__); }()
-#define DLogError(...) [](){Print("[Error]: "); Println(__VA_ARGS__); }()
+#define DLogTrace(...) [&](){Print("[Trace]: "); Println(__VA_ARGS__); }()
+#define DLogInfo(...)  [&](){Print("[Info ]: "); Println(__VA_ARGS__); }()
+#define DLogWarn(...)  [&](){Print("[Warn ]: "); Println(__VA_ARGS__); }()
+#define DLogError(...) [&](){Print("[Error]: "); Println(__VA_ARGS__); }()
 #define DLogSeparator() Println("===============================================================")
 
 #else
@@ -26,10 +26,10 @@
 #endif
 
 #define Log(source,error) Print("[%]: %: %\n",error==Result::Success? "Info " : "Result",source, error.Name())
-#define LogTrace(...) [](){Print("[Trace]: "); Println(__VA_ARGS__); }()
-#define LogInfo(...)  [](){Print("[Info ]: "); Println(__VA_ARGS__); }()
-#define LogWarn(...)  [](){Print("[Warn ]: "); Println(__VA_ARGS__); }()
-#define LogError(...) [](){Print("[Error]: "); Println(__VA_ARGS__); }()
+#define LogTrace(...) [&](){Print("[Trace]: "); Println(__VA_ARGS__); }()
+#define LogInfo(...)  [&](){Print("[Info ]: "); Println(__VA_ARGS__); }()
+#define LogWarn(...)  [&](){Print("[Warn ]: "); Println(__VA_ARGS__); }()
+#define LogError(...) [&](){Print("[Error]: "); Println(__VA_ARGS__); }()
 #define LogSeparator() Println("===============================================================")
 
 #endif // STRAITX_LOG_HPP
