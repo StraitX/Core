@@ -29,7 +29,20 @@ size_t Codepoint::Encode(u8* utf8)const {
 }
 
 size_t Codepoint::Encode(u16* utf16)const {
-	SX_ASSERT(false);
+	//TODO: test it out
+	if (Value < 0xD800) {
+		utf16[0] = Value;
+		return 1;
+	} else if (Value < 0x10000) {
+		if (Value < 0xE000)
+			return 0;
+		utf16[0] = Value;
+		return 1;
+    } else if (Value < 0x110000) {
+        utf16[0] = 0xD7C0 + (Value >> 10  );
+        utf16[1] = 0xDC00 + (Value & 0x3FF);
+		return 2;
+    }
 	return 0;
 }
 
@@ -61,7 +74,16 @@ size_t Codepoint::Decode(const u8* utf8) {
 }
 
 size_t Codepoint::Decode(const u16* utf16) {
-	SX_ASSERT(false);
+	if (utf16[0] < 0xD800) {
+		Value = utf16[0];
+		return 1;
+	}
+    if (utf16[0] < 0xDC00){
+        if (utf16[1] >> 10 != 0x37) 
+			return 0;
+		Value = (utf16[0] << 10) + utf16[1]- 0x35FDC00;
+		return 2;
+    }
 	return 0;
 }
 
