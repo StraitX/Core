@@ -4,11 +4,11 @@
 
 static_assert(sizeof(HANDLE) <= sizeof(u64),"Win32 Handle can't fit into File::m_FD");
 
-Result File::Open(const char* filename, Mode mode, bool create) {
+Result File::Open(StringView filename, Mode mode, bool create) {
 	assert(m_FD == InvalidFD);
 
 	OFSTRUCT open_file_struct = {};
-	m_FD = OpenFile(filename, &open_file_struct, (unsigned int)mode | (create ? (!Exist(filename) ? OF_CREATE : 0) : 0));
+	m_FD = OpenFile(filename.Data(), &open_file_struct, (unsigned int)mode | (create ? (!Exists(filename) ? OF_CREATE : 0) : 0));
 
 	if (m_FD == HFILE_ERROR) { 
 		m_FD = InvalidFD;
@@ -75,13 +75,13 @@ u64 File::Size() {
 	return size.U64;
 }
 
-Result File::Delete(const char* filename) {
-	return ResultError(!DeleteFile(filename));
+Result File::Delete(StringView filename) {
+	return ResultError(!DeleteFile(filename.Data()));
 }
 
-bool File::Exist(const char* filename) {
+bool File::Exists(StringView filename) {
 	WIN32_FIND_DATA FindFileData;
-	HANDLE handle = FindFirstFile(filename, &FindFileData);
+	HANDLE handle = FindFirstFile(filename.Data(), &FindFileData);
 
 	if(handle != INVALID_HANDLE_VALUE) {
 		FindClose(handle);

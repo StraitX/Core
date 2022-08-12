@@ -5,6 +5,7 @@
 #include "core/types.hpp"
 #include "core/result.hpp"
 #include "core/noncopyable.hpp"
+#include "core/string_view.hpp"
 
 class File: public NonCopyable{
 public:
@@ -28,13 +29,13 @@ public:
 
     File(File &&other)noexcept;
 
-    File(const char *filename, Mode mode, bool create = true);
+    File(StringView filename, Mode mode, bool create = true);
 
     ~File();
 
     File &operator=(File &&other)noexcept;
 
-    Result Open(const char *filename, Mode mode, bool create = true);
+    Result Open(StringView filename, Mode mode, bool create = true);
 
     bool IsOpen();
 
@@ -50,9 +51,14 @@ public:
 
     u64 Size();
 
+    static Result Delete(StringView filename);
+
     static Result Delete(const char *filename);
 
-    static bool Exist(const char *filename);
+    static bool Exists(StringView filename);
+
+    static bool Exists(const char *filename);
+    
 
 };
 
@@ -73,12 +79,22 @@ SX_INLINE File &File::operator=(File &&other)noexcept{
     return *this;
 }
 
-SX_INLINE File::File(const char *filename, Mode mode, bool create){
+SX_INLINE File::File(StringView filename, Mode mode, bool create){
     (void)Open(filename, mode, create);
 }
 
 SX_INLINE bool File::IsOpen(){
     return m_FD != InvalidFD;
+}
+
+
+SX_INLINE Result File::Delete(const char* filename) {
+    return File::Delete(StringView(filename));
+}
+
+
+SX_INLINE bool File::Exists(const char* filename) {
+    return File::Exists(StringView(filename));
 }
 
 #endif // STRAITX_FILE_HPP

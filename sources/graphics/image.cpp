@@ -48,7 +48,7 @@ void Image::Clear(){
 }
 
 Result Image::LoadFromFile(const char *filename){
-    if(!File::Exist(filename))return Result::NotFound;
+    if(!File::Exists(filename))return Result::NotFound;
 
     File file;
     if(!file.Open(filename, File::Mode::Read))return Result::Failure;
