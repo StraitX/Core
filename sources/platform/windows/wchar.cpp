@@ -5,7 +5,7 @@ namespace Windows {
 
 std::wstring Utf8ToWstr(const StringView& str) {
 
-	if (str.Size())
+	if (!str.Size())
 		return {};
 
 
