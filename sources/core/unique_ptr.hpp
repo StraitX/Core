@@ -46,6 +46,7 @@ public:
 	UniquePtr &operator=(const UniquePtr &) = delete;
 
     UniquePtr &operator=(UniquePtr&& other) {
+        Release();
         DeleterType::operator=(Move(other));
         m_Ptr = other.m_Ptr;
         other.m_Ptr = nullptr;
