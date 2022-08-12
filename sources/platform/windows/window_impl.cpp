@@ -1,6 +1,7 @@
 #include "platform/windows/window_impl.hpp"
 #include "platform/windows/events.hpp"
 #include "platform/windows/virtual_keys.hpp"
+#include "platform/windows/wchar.hpp"
 #include "core/log.hpp"
 #include <windows.h>
 
@@ -10,20 +11,20 @@ LRESULT CALLBACK StraitXWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 
 static const auto& GetWindowClass() {
     struct WindowClass {
-        const char* const Name = "StraitXWindow";
+        const wchar_t* const Name = L"StraitXWindow";
         DWORD Style = WS_OVERLAPPEDWINDOW;
         Result CreationResult = Result::None;
 
         WindowClass() {
             SetProcessDPIAware();
 
-            WNDCLASS windowClass = { 0 };
+            WNDCLASSW windowClass = { 0 };
             windowClass.lpfnWndProc = StraitXWindowProc;
             windowClass.lpszClassName = Name;
             windowClass.hInstance = GetModuleHandle(nullptr);
             windowClass.style = CS_OWNDC;
     
-            CreationResult = Result(RegisterClass(&windowClass) != 0);
+            CreationResult = Result(RegisterClassW(&windowClass) != 0);
         }
     };
 
@@ -45,7 +46,7 @@ Result WindowImpl::Open(int width, int height, StringView title) {
     width = dimensions.right - dimensions.left;
     height = dimensions.bottom - dimensions.top;
 
-    m_Handle = CreateWindow(GetWindowClass().Name, title.Data(), GetWindowClass().Style, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, (HINSTANCE)GetModuleHandle(nullptr), this);
+    m_Handle = CreateWindowW(GetWindowClass().Name, Utf8ToWstr(title).c_str(), GetWindowClass().Style, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, (HINSTANCE)GetModuleHandle(nullptr), this);
     ShowWindow(m_Handle, SW_SHOW);
 
     return Result(m_Handle != nullptr);
@@ -103,7 +104,7 @@ void WindowImpl::DispatchEvents() {
 }
 
 void WindowImpl::SetTitle(StringView title) {
-    (void)SetWindowText(m_Handle, title.Data());
+    (void)SetWindowTextW(m_Handle, Utf8ToWstr(title).c_str());
 }
 
 Vector2u WindowImpl::Size()const{

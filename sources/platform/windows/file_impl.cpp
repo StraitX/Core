@@ -1,14 +1,26 @@
 #include <windows.h>
 #include <assert.h>
 #include "core/os/file.hpp"
+#include "core/log.hpp"
+#include "platform/windows/wchar.hpp"
 
 static_assert(sizeof(HANDLE) <= sizeof(u64),"Win32 Handle can't fit into File::m_FD");
+
+int ToWindowsOpenMode(File::Mode mode) {
+	switch (mode) {
+	case File::Mode::Read: return GENERIC_READ;
+	case File::Mode::Write: return GENERIC_WRITE;
+	case File::Mode::ReadWrite: return GENERIC_READ | GENERIC_WRITE;
+	}
+	return (LogError("Unknown File::Mode"), 0);
+}
 
 Result File::Open(StringView filename, Mode mode, bool create) {
 	assert(m_FD == InvalidFD);
 
 	OFSTRUCT open_file_struct = {};
-	m_FD = OpenFile(filename.Data(), &open_file_struct, (unsigned int)mode | (create ? (!Exists(filename) ? OF_CREATE : 0) : 0));
+	
+	m_FD = (u64)CreateFileW(Windows::Utf8ToWPath(filename).c_str(), ToWindowsOpenMode(mode), 0, nullptr, create ? CREATE_ALWAYS : 0, 0, 0);
 
 	if (m_FD == HFILE_ERROR) { 
 		m_FD = InvalidFD;
@@ -76,12 +88,12 @@ u64 File::Size() {
 }
 
 Result File::Delete(StringView filename) {
-	return ResultError(!DeleteFile(filename.Data()));
+	return ResultError(!DeleteFileW(Windows::Utf8ToWPath(filename).c_str()));
 }
 
 bool File::Exists(StringView filename) {
-	WIN32_FIND_DATA FindFileData;
-	HANDLE handle = FindFirstFile(filename.Data(), &FindFileData);
+	WIN32_FIND_DATAW FindFileData;
+	HANDLE handle = FindFirstFileW(Windows::Utf8ToWPath(filename).c_str(), &FindFileData);
 
 	if(handle != INVALID_HANDLE_VALUE) {
 		FindClose(handle);
