@@ -6,6 +6,7 @@
 #include "core/os/screen.hpp"
 #include "core/function.hpp"
 #include "core/noncopyable.hpp"
+#include "core/string_view.hpp"
 
 struct HWND__;
 
@@ -19,7 +20,7 @@ private:
     mutable Screen m_CurrentScreen;
 public:
 
-    Result Open(int width, int height, const char *title);
+    Result Open(int width, int height, StringView title);
 
     Result Close();
 
@@ -33,7 +34,7 @@ public:
 
     void DispatchEvents();
 
-    void SetTitle(const char *title);
+    void SetTitle(StringView title);
 
     Vector2u Size()const;
 

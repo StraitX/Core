@@ -24,11 +24,11 @@ class Window: private OSWindowImpl{
 private:
 	using Super = OSWindowImpl;
 public:
-	Window(u32 width, u32 height, const char *title);
+	Window(u32 width, u32 height, StringView title);
 
 	~Window();
 
-	Result Open(u32 width, u32 height, const char *title);
+	Result Open(u32 width, u32 height, StringView title);
 
 	void Close();
 
@@ -38,7 +38,7 @@ public:
 
 	void DispatchEvents();
 
-	void SetTitle(const char *title);
+	void SetTitle(StringView title);
 
 	Vector2u Size() const;
 
@@ -51,7 +51,7 @@ public:
 	const OSWindowImpl &Impl()const;
 };
 
-SX_INLINE Window::Window(u32 width, u32 height, const char* title) {
+SX_INLINE Window::Window(u32 width, u32 height, StringView title) {
 	(void)Open(width, height, title);
 }
 
@@ -60,7 +60,7 @@ SX_INLINE Window::~Window() {
 		Close();
 }
 
-SX_INLINE Result Window::Open(u32 width, u32 height, const char *title){
+SX_INLINE Result Window::Open(u32 width, u32 height, StringView title){
 	return Super::Open(width, height, title);
 }
 
@@ -80,7 +80,7 @@ SX_INLINE void Window::DispatchEvents(){
 	Super::DispatchEvents();
 }
 
-SX_INLINE void Window::SetTitle(const char *title){
+SX_INLINE void Window::SetTitle(StringView title){
 	Super::SetTitle(title);
 }
 

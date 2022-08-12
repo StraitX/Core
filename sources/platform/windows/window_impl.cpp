@@ -33,7 +33,7 @@ static const auto& GetWindowClass() {
 }
 
 
-Result WindowImpl::Open(int width, int height, const char *title) {
+Result WindowImpl::Open(int width, int height, StringView title) {
     if (!GetWindowClass().CreationResult)
         return (LogError("Can't create WindowClass"), Result::Failure);
 
@@ -45,7 +45,7 @@ Result WindowImpl::Open(int width, int height, const char *title) {
     width = dimensions.right - dimensions.left;
     height = dimensions.bottom - dimensions.top;
 
-    m_Handle = CreateWindow(GetWindowClass().Name, title , GetWindowClass().Style, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, (HINSTANCE)GetModuleHandle(nullptr), this);
+    m_Handle = CreateWindow(GetWindowClass().Name, title.Data(), GetWindowClass().Style, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, (HINSTANCE)GetModuleHandle(nullptr), this);
     ShowWindow(m_Handle, SW_SHOW);
 
     return Result(m_Handle != nullptr);
@@ -102,8 +102,8 @@ void WindowImpl::DispatchEvents() {
 	}
 }
 
-void WindowImpl::SetTitle(const char* title) {
-    (void)SetWindowText(m_Handle, title);
+void WindowImpl::SetTitle(StringView title) {
+    (void)SetWindowText(m_Handle, title.Data());
 }
 
 Vector2u WindowImpl::Size()const{
