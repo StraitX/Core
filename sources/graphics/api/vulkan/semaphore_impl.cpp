@@ -1,5 +1,6 @@
 #include "graphics/api/vulkan/semaphore_impl.hpp"
 #include "graphics/api/vulkan/gpu_impl.hpp"
+#include "graphics/api/vulkan/immediate.hpp"
 
 namespace Vk{
 
@@ -18,6 +19,10 @@ u64 SemaphoreImpl::Create(){
 void SemaphoreImpl::Destroy(u64 handle){
     VkSemaphore semaphore = reinterpret_cast<VkSemaphore>(handle);
     vkDestroySemaphore(GPUImpl::s_Instance, semaphore, nullptr);
+}
+
+void SemaphoreImpl::WaitFor(u64 handle){
+    Immediate::WaitForSemaphore(handle);
 }
 
 }//namespace Vk::

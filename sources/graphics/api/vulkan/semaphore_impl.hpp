@@ -9,6 +9,8 @@ struct SemaphoreImpl{
     static u64 Create();
 
     static void Destroy(u64 handle);
+
+    static void WaitFor(u64 handle);
 };
 
 }//namespace Vk::

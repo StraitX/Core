@@ -8,6 +8,13 @@
 
 const Semaphore Semaphore::Null(nullptr);
 
+void Semaphore::WaitFor()const{
+#if defined(SX_VULKAN_SUPPORTED)
+    if(GraphicsAPI::Backend() == GraphicsAPIBackend::Vulkan)
+        Vk::SemaphoreImpl::WaitFor(m_Handle);
+#endif
+}
+
 void Semaphore::Create(){
 #if defined(SX_VULKAN_SUPPORTED)
     if(GraphicsAPI::Backend() == GraphicsAPIBackend::Vulkan)

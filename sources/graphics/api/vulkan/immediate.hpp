@@ -62,6 +62,14 @@ public:
 
         fence.WaitFor();
     }
+
+    static void WaitForSemaphore(u64 semaphore) {
+        s_CmdBuffer->Begin();
+        s_CmdBuffer->End();
+
+        GPU::Execute(s_CmdBuffer, *s_OpFence);
+        s_OpFence->WaitAndReset();
+    }
 };
 
 }//namespace Vk::

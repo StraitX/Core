@@ -46,6 +46,8 @@ public:
     u64 Handle()const{
         return m_Handle;
     }
+
+    void WaitFor()const;
 private:
     void Create();
 
