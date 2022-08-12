@@ -48,6 +48,10 @@ public:
     u32 Current()const override;
 
     void Recreate()override;
+
+    const Window* PresentTarget() const override {
+        return m_SurfaceWindow;
+    }
 };
 
 }//namespace Vk::

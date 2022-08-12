@@ -3,6 +3,7 @@
 #include "core/fixed_list.hpp"
 #include "graphics/api/swapchain.hpp"
 #include "graphics/api/graphics_api.hpp"
+#include "graphics/api/gpu.hpp"
 
 #include "core/print.hpp"
 
@@ -56,7 +57,25 @@ FramebufferChain::FramebufferChain(const Window *window, TextureFormat depth_buf
 void FramebufferChain::Recreate() {
     m_Framebuffers.Clear();
     m_Swapchain->Recreate();
+    if (m_DepthBuffer) {
+        m_DepthBuffer = UniquePtr<Texture2D>(
+            Texture2D::Create(m_Swapchain->Size(), m_DepthBuffer->Format(), TextureUsageBits::DepthStencilOptimal | TextureUsageBits::TransferDst, TextureLayout::DepthStencilAttachmentOptimal)
+        );
+    }
     CreateFramebuffers();
+}
+
+
+void FramebufferChain::AcquireNext(const Semaphore *signal_semaphore){
+    while(!m_Swapchain->AcquireNext(*signal_semaphore))
+        Recreate();
+}
+
+void FramebufferChain::PresentCurrent(const Semaphore *wait_semaphore){
+    if (!m_Swapchain->PresentCurrent(*wait_semaphore)) {
+        wait_semaphore->WaitFor();
+        Recreate();
+    }
 }
 
 void FramebufferChain::CreateFramebuffers() {

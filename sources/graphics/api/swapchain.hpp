@@ -36,6 +36,8 @@ public:
         return CurrentImage()->Size();
     }
 
+    virtual const Window *PresentTarget() const = 0;
+
     virtual void Recreate() = 0;
 public:
     static Swapchain *Create(const Window *window);
@@ -50,7 +52,8 @@ private:
     UniquePtr<Texture2D> m_DepthBuffer{nullptr};
 public:
     FramebufferChain(const Window *window, TextureFormat depth_buffer = TextureFormat::Unknown);
-
+    
+    //Requires framebuffers not to be in use.
     void Recreate();
 
     const Framebuffer *CurrentFramebuffer()const{
@@ -61,15 +64,9 @@ public:
         return m_SwapchainPass.Get();
     }
 
-    void AcquireNext(const Semaphore *signal_semaphore){
-        while(!m_Swapchain->AcquireNext(*signal_semaphore))
-            Recreate();
-    }
+    void AcquireNext(const Semaphore* signal_semaphore);
 
-    void PresentCurrent(const Semaphore *wait_semaphore){
-        if(!m_Swapchain->PresentCurrent(*wait_semaphore))
-            Recreate();
-    }
+    void PresentCurrent(const Semaphore* wait_semaphore);
 
     bool HasDepth()const {
         return m_DepthBuffer.Get() != nullptr;
