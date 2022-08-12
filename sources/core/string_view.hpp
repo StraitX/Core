@@ -4,6 +4,7 @@
 #include "core/types.hpp"
 #include "core/unicode.hpp"
 #include "core/span.hpp"
+#include "core/move.hpp"
 #include "core/printer.hpp"
 
 class StringView {
@@ -21,11 +22,18 @@ public:
 		m_CodeunitsCount(StaticCodeunitsCount(string))
 	{}
 
-	StringView(StringView &&) = delete;
+	StringView(StringView &&other) {
+		*this = Move(other);
+	}
 
 	StringView(const StringView &) = default;
 
-	StringView &operator=(StringView &&) = delete;
+	StringView& operator=(StringView &&other) {
+		m_String = other.m_String;
+		m_CodeunitsCount = other.m_CodeunitsCount;
+		other = StringView(nullptr, 0);
+		return *this;
+	}
 
 	StringView &operator=(const StringView &) = default;
 
