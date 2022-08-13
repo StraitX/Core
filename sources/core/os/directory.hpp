@@ -25,7 +25,6 @@ private:
 	DirectoryIterator(StringView path);
 
 	friend class Directory;
-	friend class DirectoryEntry;
 public:
 	~DirectoryIterator();
 
@@ -57,6 +56,8 @@ public:
 	static bool Exists(StringView path);
 
 	static bool IsDirectory(StringView path);
+
+	static String Current();
 };
 
 #endif//STRAITX_DIRECTORY_HPP

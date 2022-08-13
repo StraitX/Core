@@ -130,3 +130,14 @@ bool Directory::IsDirectory(StringView path) {
 
 	return (ftyp & FILE_ATTRIBUTE_DIRECTORY);	
 }
+
+String Directory::Current() {
+
+	int len = GetCurrentDirectoryW(0, nullptr);
+
+	std::wstring path(len, '\0');
+
+	GetCurrentDirectoryW(len, &path[0]);
+
+	return Windows::WPathToUtf8(path.c_str());
+}
