@@ -17,8 +17,17 @@ struct DirectoryIteratorImpl {
 			wpath.push_back(L'/');
 		wpath.push_back(L'*');
 		wpath.push_back(L'*');
-		CurrentFile = FindFirstFileW(wpath.c_str(), &CurrentFileMetadata);
 
+		CurrentFile = FindFirstFileW(wpath.c_str(), &CurrentFileMetadata);
+		while (IsSpecialDirectory(CurrentFileMetadata.cFileName)) {
+			if (!FindNextFileW(CurrentFile, &CurrentFileMetadata)) {
+				Invalidate();
+				break;
+			}
+		}
+
+		if (!IsValid())return;
+		
 		entry = DirectoryEntry{
 			Name(),
 			IsFile(),
