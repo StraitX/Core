@@ -59,6 +59,9 @@ public:
 
     static bool Exists(const char *filename);
     
+    static bool IsFile(StringView filename);
+
+    static bool IsFile(const char *filename);
 
 };
 
@@ -95,6 +98,10 @@ SX_INLINE Result File::Delete(const char* filename) {
 
 SX_INLINE bool File::Exists(const char* filename) {
     return File::Exists(StringView(filename));
+}
+
+SX_INLINE bool File::IsFile(const char* filename) {
+    return File::IsFile(StringView(filename));
 }
 
 #endif // STRAITX_FILE_HPP

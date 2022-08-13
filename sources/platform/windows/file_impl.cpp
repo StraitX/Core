@@ -101,3 +101,11 @@ bool File::Exists(StringView filename) {
 	}
 	return false;
 }
+
+bool File::IsFile(StringView filename) {
+	DWORD ftyp = GetFileAttributesW(Windows::Utf8ToWPath(filename).c_str());
+	if (ftyp == INVALID_FILE_ATTRIBUTES)
+		return false;  //something is wrong with your path!
+
+	return !(ftyp & FILE_ATTRIBUTE_DIRECTORY);
+}

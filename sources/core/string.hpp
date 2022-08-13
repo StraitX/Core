@@ -76,6 +76,10 @@ public:
     const char* Data()const{
         return m_String;
     }
+
+    bool IsEmpty()const {
+        return Data() == s_Empty;
+    }
     
     //XXX: Do something about this
     static bool Contains(const char *string, const char *internal);
