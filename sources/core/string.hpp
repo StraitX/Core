@@ -8,6 +8,8 @@
 #include "core/os/memory.hpp"
 
 class String: public StringView, public NonCopyable{
+private:
+    static const char* s_Empty;
 public:
     String():
         StringView(nullptr, 0)
@@ -61,8 +63,9 @@ public:
     }
 
     void Clear() {
-        Memory::Free(Data());
-        m_String = nullptr;
+        if(Data() != s_Empty)
+            Memory::Free(Data());
+        m_String = s_Empty;
         m_CodeunitsCount = 0;
     }
     

@@ -1,5 +1,7 @@
 #include "core/string.hpp"
 
+const char* String::s_Empty = "";
+
 void String::ToUpperCase(char *string){
     for(;*string; ++string){
         if(*string <= 'z' && *string >= 'a')
