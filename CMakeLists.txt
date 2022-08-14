@@ -27,6 +27,7 @@ set(SX_BASE_SOURCES_CORE
     ${SX_BASE_SOURCES_DIR}/core/os/glloader.cpp
     ${SX_BASE_SOURCES_DIR}/core/os/keyboard.cpp
     ${SX_BASE_SOURCES_DIR}/core/os/memory.cpp
+    ${SX_BASE_SOURCES_DIR}/core/os/file.cpp
 )
 
 set(SX_BASE_SOURCES_GRAPHICS_API

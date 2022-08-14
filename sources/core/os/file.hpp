@@ -6,6 +6,8 @@
 #include "core/result.hpp"
 #include "core/noncopyable.hpp"
 #include "core/string_view.hpp"
+#include "core/string.hpp"
+#include "core/optional.hpp"
 
 class File: public NonCopyable{
 public:
@@ -62,6 +64,10 @@ public:
     static bool IsFile(StringView filename);
 
     static bool IsFile(const char *filename);
+
+    static Optional<String> ReadEntire(StringView filename);
+
+    static bool WriteEntire(StringView filename, StringView content);
 
 };
 
