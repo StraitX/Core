@@ -20,7 +20,7 @@ Result File::Open(StringView filename, Mode mode, bool create) {
 
 	OFSTRUCT open_file_struct = {};
 	
-	m_FD = (u64)CreateFileW(Windows::Utf8ToWPath(filename).c_str(), ToWindowsOpenMode(mode), 0, nullptr, create ? CREATE_ALWAYS : 0, 0, 0);
+	m_FD = (u64)CreateFileW(Windows::Utf8ToWPath(filename).c_str(), ToWindowsOpenMode(mode), 0, nullptr, create ? CREATE_ALWAYS : OPEN_EXISTING, 0, 0);
 
 	if (m_FD == HFILE_ERROR) { 
 		m_FD = InvalidFD;
