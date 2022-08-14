@@ -80,7 +80,7 @@ public:
     }
     
     template<typename OtherGeneralAllocator>
-    void Append(const List<Type, OtherGeneralAllocator>& other) {
+    void Add(const List<Type, OtherGeneralAllocator>& other) {
         for(const auto &element: other)
             Add(element);
     }
