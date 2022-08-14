@@ -81,6 +81,7 @@ public:
     
     template<typename OtherGeneralAllocator>
     void Add(const List<Type, OtherGeneralAllocator>& other) {
+        Reserve(Size() + other.Size());
         for(const auto &element: other)
             Add(element);
     }
