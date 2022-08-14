@@ -21,7 +21,7 @@ void SemaphoreImpl::Destroy(u64 handle){
     vkDestroySemaphore(GPUImpl::s_Instance, semaphore, nullptr);
 }
 
-void SemaphoreImpl::WaitFor(u64 handle){
+void SemaphoreImpl::WaitFor(const Semaphore &handle){
     Immediate::WaitForSemaphore(handle);
 }
 

@@ -10,7 +10,7 @@ struct SemaphoreImpl{
 
     static void Destroy(u64 handle);
 
-    static void WaitFor(u64 handle);
+    static void WaitFor(const Semaphore &sempahore);
 };
 
 }//namespace Vk::

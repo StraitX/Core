@@ -63,11 +63,11 @@ public:
         fence.WaitFor();
     }
 
-    static void WaitForSemaphore(u64 semaphore) {
+    static void WaitForSemaphore(const Semaphore &semaphore) {
         s_CmdBuffer->Begin();
         s_CmdBuffer->End();
 
-        GPU::Execute(s_CmdBuffer, *s_OpFence);
+        GPU::Execute(s_CmdBuffer, { semaphore }, {}, *s_OpFence);
         s_OpFence->WaitAndReset();
     }
 };

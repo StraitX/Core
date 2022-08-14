@@ -11,7 +11,7 @@ const Semaphore Semaphore::Null(nullptr);
 void Semaphore::WaitFor()const{
 #if defined(SX_VULKAN_SUPPORTED)
     if(GraphicsAPI::Backend() == GraphicsAPIBackend::Vulkan)
-        Vk::SemaphoreImpl::WaitFor(m_Handle);
+        Vk::SemaphoreImpl::WaitFor(*this);
 #endif
 }
 
