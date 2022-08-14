@@ -62,6 +62,14 @@ public:
         return *this;
     }
 
+    void Resize(size_t size) {
+        String new_string(size);
+        //XXX: Optimize wasteful memset
+        Memory::Set(new_string.Data(), 0, new_string.Size());
+        Memory::Copy(Data(), new_string.Data(), Size() <= size ? Size() : size);
+        *this = Move(new_string);
+    }
+
     void Clear() {
         if(Data() != s_Empty)
             Memory::Free(Data());
