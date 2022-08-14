@@ -12,7 +12,7 @@ private:
     static const char* s_Empty;
 public:
     String():
-        StringView(nullptr, 0)
+        StringView(s_Empty, 0)
     {}
 
     String(const char *string):
@@ -78,7 +78,7 @@ public:
     }
 
     bool IsEmpty()const {
-        return Data() == s_Empty;
+        return !Size();
     }
     
     //XXX: Do something about this
