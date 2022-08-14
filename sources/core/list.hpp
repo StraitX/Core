@@ -92,7 +92,7 @@ public:
     }
 
     void UnorderedRemove(size_t index){
-        SX_CORE_ASSERT(index < m_Size, "Index is out of range");
+        SX_CORE_ASSERT(IsValidIndex(index), "Index is out of range");
 
         Data()[index] = Move(Last());
         RemoveLast();
@@ -150,12 +150,16 @@ public:
         m_Capacity = 0;
     }
 
+    bool IsValidIndex(size_t index)const {
+        return index < m_Size;
+    }
+
     Type &operator[](size_t index){
         return const_cast<Type&>(const_cast<const List<Type, GeneralAllocator>*>(this)->operator[](index));
     }
 
     const Type &operator[](size_t index)const{
-        SX_CORE_ASSERT(index < m_Size, "Invalid Index");
+        SX_CORE_ASSERT(IsValidIndex(index), "Invalid Index");
 
         return Data()[index];
     }

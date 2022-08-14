@@ -43,7 +43,7 @@ public:
     Array &operator=(Array &&other) = default;
 
     const Type &operator[](size_t index)const{
-        SX_CORE_ASSERT(index < SizeValue, "Array: Index out of range");
+        SX_CORE_ASSERT(IsValidIndex(index), "Array: Index out of range");
 
         return _Elements.Data()[index];
     }
@@ -58,6 +58,10 @@ public:
 
     operator ConstSpan<Type>()const{
         return {Data(), Size()};
+    }
+
+    bool IsValidIndex(size_t index)const {
+        return index < Size();
     }
 
     size_t Size()const{

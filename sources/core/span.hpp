@@ -53,7 +53,7 @@ public:
     {}
 
     Type &operator[](SizeType index)const{
-        SX_CORE_ASSERT(index < m_Size, "Span: can't index more that Span::Size elements");
+        SX_CORE_ASSERT(IsValidIndex(index), "Span: can't index more that Span::Size elements");
         return m_Pointer[index]; 
     }
 
@@ -61,6 +61,10 @@ public:
 
     operator Span<const Type>()const{
         return {Pointer(), Size()};
+    }
+
+    bool IsValidIndex(size_t index)const{
+        return index < Size();
     }
 
     SizeType Size()const{

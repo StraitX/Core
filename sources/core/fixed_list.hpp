@@ -90,6 +90,10 @@ public:
             RemoveLast();
     }
 
+    bool IsValidIndex(size_t index)const {
+        return index < m_Size;
+    }
+
     Iterator Find(const Type &element){
         return const_cast<Iterator>(const_cast<const FixedList<Type, CapacityValue>*>(this)->Find(element));
     }
