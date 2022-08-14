@@ -31,7 +31,8 @@ public:
 	StringView& operator=(StringView &&other) {
 		m_String = other.m_String;
 		m_CodeunitsCount = other.m_CodeunitsCount;
-		other = StringView(nullptr, 0);
+		other.m_String = nullptr;
+		other.m_CodeunitsCount = 0;
 		return *this;
 	}
 

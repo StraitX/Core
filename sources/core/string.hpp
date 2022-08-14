@@ -49,6 +49,10 @@ public:
         *this = Move(other);
     }
 
+    String(const String& other):
+        String(other.Data(), other.Size())
+    {}
+
     ~String() {
         Clear();
     }
@@ -57,7 +61,7 @@ public:
         Clear();
         m_String = other.m_String;
         m_CodeunitsCount = other.m_CodeunitsCount;
-        other.m_String = nullptr;
+        other.m_String = s_Empty;
         other.m_CodeunitsCount = 0;
         return *this;
     }
