@@ -74,6 +74,12 @@ public:
         *this = Move(new_string);
     }
 
+    void Append(StringView string) {
+        size_t start = Size();
+        Resize(Size() + string.Size());
+        Memory::Copy(string.Data(), Data() + start, string.Size());
+    }
+
     void Clear() {
         if(Data() != s_Empty)
             Memory::Free(Data());
