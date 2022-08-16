@@ -141,3 +141,19 @@ String Directory::Current() {
 
 	return Windows::WPathToUtf8(path.c_str());
 }
+
+Result Directory::Delete(StringView path) {
+	auto wpath = Windows::Utf8ToWPath(path) + L'\0';
+    SHFILEOPSTRUCTW file_op = {
+        NULL,
+        FO_DELETE,
+        wpath.c_str(),
+        L"",
+        FOF_NOCONFIRMATION |
+        FOF_NOERRORUI |
+        FOF_SILENT,
+        false,
+        0,
+        L"" };
+    return Result(!SHFileOperationW(&file_op));
+}

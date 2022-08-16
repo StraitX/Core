@@ -58,6 +58,8 @@ public:
 	static bool IsDirectory(StringView path);
 
 	static String Current();
+
+	static Result Delete(StringView path);
 };
 
 #endif//STRAITX_DIRECTORY_HPP
