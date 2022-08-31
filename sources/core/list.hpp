@@ -24,7 +24,7 @@ public:
     using Iterator = Type *;
     using ConstIterator = const Type *;
 private:
-    void *m_Memory = nullptr;
+    Type *m_Memory = nullptr;
     size_t m_Size = 0;
     size_t m_Capacity = 0;
 public:
