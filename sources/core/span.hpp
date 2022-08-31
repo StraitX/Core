@@ -1,6 +1,7 @@
 #ifndef STRAITX_SPAN_HPP
 #define STRAITX_SPAN_HPP 
 
+#include <initializer_list>
 #include "core/types.hpp"
 #include "core/type_traits.hpp"
 #include "core/templates.hpp"
@@ -27,6 +28,12 @@ public:
     Span(Type *pointer, SizeType size):
         m_Pointer(pointer),
         m_Size(size)
+    {}
+    
+    template<typename _ = EnableIf<IsConst<Type>::Value, void>::Type>
+    Span(std::initializer_list<Type> list):
+        m_Pointer(list.begin()),
+        m_Size(static_cast<SizeType>(list.size()))
     {}
 
     template<typename _Type = Type, 
