@@ -183,4 +183,20 @@ public:
     static constexpr bool Value = __has_trivial_destructor(Type);
 };
 
+template<typename Type>
+class IsPolymorhpic {
+private:
+    struct Derived: Type{ };
+
+    template<typename = decltype(dynamic_cast<const volatile Derived*>((Type*)nullptr))>
+    static constexpr bool Check(void*) {
+        return true;
+    }
+    static constexpr bool Check(...) {
+        return false;
+    }
+public:
+    static constexpr bool Value = Check(nullptr);
+};
+
 #endif //STRAITX_TYPE_TRAITS_HPP
