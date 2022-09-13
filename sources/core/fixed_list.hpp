@@ -70,7 +70,7 @@ public:
     }
 
     void UnorderedRemove(size_t index){
-        SX_CORE_ASSERT(index < m_Size, "Index is out of range");
+        SX_CORE_ASSERT(IsValidIndex(index), "Index is out of range");
 
         Data()[index] = Move(Last());
         RemoveLast();
@@ -136,7 +136,7 @@ public:
         Clear();
         for(auto &e: other)
             Emplace(Move(e)); // We assume that moved stuff does not required to be destroyed
-        other.m_Size = 0;
+        other.Clear();
         return *this;
     }
 
