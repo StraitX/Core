@@ -103,7 +103,7 @@ public:
 
 	template<typename SubType, typename = EnableIfType<IsBaseOf<BaseType, SubType>::Value, void>>
 	void Add(const SubType &element) {
-		FindOrCreate<SubType>().Add(&element);
+		FindOrCreate<SubType>().AddByCopy(&element);
 	}
 
 	template<
@@ -114,7 +114,7 @@ public:
 		typename = EnableIfType<IsBaseOf<BaseType, SubType>::Value, void>
 	>
 	void Add(SubType &&element) {
-		FindOrCreate<SubType>().Add(&element);
+		FindOrCreate<SubType>().AddByMove(&element);
 	}
 
 	template<typename SubType, typename = EnableIfType<IsBaseOf<BaseType, SubType>::Value, void>>

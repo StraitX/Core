@@ -49,16 +49,11 @@ public:
 		m_Capacity(0)
 	{
 		static_assert(!IsConst<ActualType>::Value && !IsVolatile<ActualType>::Value && !IsReference<ActualType>::Value, "UntypedList type can't be reference or cv-qualified");
-		m_Destructor = [](void* obj) {
-			((ActualType*)obj)->~ActualType();
-		};
+		AssignDtor<ActualType>(nullptr);
+		AssignCopyCtor<ActualType>(nullptr);
+		AssignMoveElseCopyCtor<ActualType>(nullptr);
 
-		m_CopyConstructor = [](const void* src, void* dst) {
-			new(dst) ActualType(*(const ActualType*)src);
-		};
-		m_MoveElseCopyConstructor = [](void* src, void* dst) {
-			new(dst) ActualType((ActualType&&)*(ActualType*)src);
-		};
+		SX_CORE_ASSERT(m_Destructor && m_MoveElseCopyConstructor, "Type should have a destructor and copy or move constructor");
 	}
 
 	UntypedListBase(UntypedListBase&& other)noexcept:
@@ -93,13 +88,15 @@ public:
 		return *this;
 	}
 
-	void Add(const void* obj) {
+	void AddByCopy(const void* obj) {
+		SX_CORE_ASSERT(m_MoveElseCopyConstructor, "Type does not support copy constructor");
+
 		if (m_Size == m_Capacity)
 			Reserve(m_Size * 2 + !m_Size);
 		m_CopyConstructor(obj, At(m_Size++));
 	}
 
-	void Add(void* obj) {
+	void AddByMove(void* obj) {
 		if (m_Size == m_Capacity)
 			Reserve(m_Size * 2 + !m_Size);
 		m_MoveElseCopyConstructor(obj, At(m_Size++));
@@ -183,6 +180,34 @@ public:
 	std::type_index TypeIndex()const {
 		return m_TypeInfo.TypeIndex;
 	}
+
+private:
+	//XXX: for now assume that all types have desctructors
+	template<typename ActualType>
+	void AssignDtor(void *) {
+		m_Destructor = [](void* obj) {
+			((ActualType*)obj)->~ActualType();
+		};
+	}
+
+	template<typename ActualType, typename = EnableIfType<IsCopyConstructible<ActualType>::Value, void>>
+	void AssignCopyCtor(void *) {
+		m_CopyConstructor = [](const void* src, void* dst) {
+			new(dst) ActualType(*(const ActualType*)src);
+		};
+	}
+	template<typename ActualType, typename = EnableIfType<!IsCopyConstructible<ActualType>::Value, void>>
+	void AssignCopyCtor(...) { }
+
+	template<typename ActualType, typename = EnableIfType<IsCopyConstructible<ActualType>::Value || IsMoveConstructible<ActualType>::Value, void>>
+	void AssignMoveElseCopyCtor(void *){
+		m_MoveElseCopyConstructor = [](void* src, void* dst) {
+			new(dst) ActualType((ActualType&&)*(ActualType*)src);
+		};
+	}
+
+	template<typename ActualType, typename = EnableIfType<!IsCopyConstructible<ActualType>::Value && !IsMoveConstructible<ActualType>::Value, void>>
+	void AssignMoveElseCopyCtor(...) {}
 };
 
 using UntypedList = UntypedListBase<DefaultGeneralAllocator>;
