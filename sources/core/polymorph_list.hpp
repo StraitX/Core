@@ -44,6 +44,52 @@ private:
 			return *(CastType*)m_TypeList->At(m_TypeListIndex);
 		}
 	};
+	
+	template<typename SubType>
+	class SubTypeIterator {
+	private:
+		SubType* m_Pointer = nullptr;
+	public:
+		SubTypeIterator(SubType* pointer) :
+			m_Pointer(pointer)
+		{}
+
+		bool operator!=(const SubTypeIterator& other)const {
+			return m_Pointer != other.m_Pointer;
+		}
+
+		SubTypeIterator& operator++() {
+			m_Pointer++;
+			return *this;
+		}
+
+		SubType* operator->() {
+			return m_Pointer;
+		}
+
+		SubType& operator*() {
+			return *m_Pointer;
+		}
+	};
+
+	template<typename SubType>
+	class SubTypeRange {
+	private:
+		SubTypeIterator<SubType> Begin;
+		SubTypeIterator<SubType> End;
+	public:
+		SubTypeRange(SubTypeIterator<SubType> begin, SubTypeIterator<SubType> end) :
+			Begin(begin),
+			End(end)
+		{}
+
+		auto begin() {
+			return Begin;
+		}
+		auto end() {
+			return End;
+		}
+	};
 private:
 	UntypedList *m_TypeLists = nullptr;
 	size_t m_Size = 0;
@@ -128,6 +174,42 @@ public:
 	IteratorBase<const BaseType> end() const{
 		return { m_TypeLists + m_Size, 0 };
 	}
+
+	template<
+		typename SubType, 
+		typename = EnableIfType<!IsConst<SubType>::Value, void>, 
+		typename = EnableIfType<!IsVolatile<SubType>::Value, void>, 
+		typename = EnableIfType<!IsLValueReference<SubType>::Value, void>, 
+		typename = EnableIfType<IsBaseOf<BaseType, SubType>::Value, void>
+	>
+	auto TypeRange() {
+		UntypedList* list = Find(std::type_index(typeid(SubType)));
+
+		SX_CORE_ASSERT(list, "SubType is not present in Polymorph list");
+		
+		return SubTypeRange<SubType>(
+			{(SubType*)list->Data()},
+			{(SubType*)list->Data() + list->Size()}
+		);
+	}
+
+	template<
+		typename SubType, 
+		typename = EnableIfType<!IsConst<SubType>::Value, void>, 
+		typename = EnableIfType<!IsVolatile<SubType>::Value, void>, 
+		typename = EnableIfType<!IsLValueReference<SubType>::Value, void>, 
+		typename = EnableIfType<IsBaseOf<BaseType, SubType>::Value, void>
+	>
+	auto TypeRange()const{
+		UntypedList* list = Find(std::type_index(typeid(SubType)));
+
+		SX_CORE_ASSERT(list, "SubType is not present in Polymorph list");
+		
+		return SubTypeRange<const SubType>(
+			{(const SubType*)list->Data()},
+			{(const SubType*)list->Data() + list->Size()}
+		);
+	}
 private:
 	template<typename SubType>
 	UntypedList& FindOrCreate() {
@@ -142,7 +224,7 @@ private:
 		return * new (m_TypeLists + m_Size++) UntypedList(UntypedList::Type<SubType>());
 	}
 
-	UntypedList* Find(std::type_index index) {
+	UntypedList* Find(std::type_index index)const{
 		for (size_t i = 0; i < m_Size; i++) {
 			if (m_TypeLists[i].TypeIndex() == index)
 				return &m_TypeLists[i];

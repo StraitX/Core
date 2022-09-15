@@ -172,6 +172,14 @@ public:
 		return m_Size;
 	}
 
+	void* Data() {
+		return m_Memory;
+	}
+
+	const void* Data() const{
+		return m_Memory;
+	}
+
 	std::type_index TypeIndex()const {
 		return m_TypeInfo.TypeIndex;
 	}
