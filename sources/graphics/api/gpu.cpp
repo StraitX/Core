@@ -45,6 +45,9 @@ GPUVendor GPU::Vendor(){
     return s_Impl->Vendor;
 }
 
+void GPU::ForceInit(){
+    static GraphicsResource s_ForceInit;
+}
 
 void GPU::Execute(CommandBuffer *buffer, Span<u64> wait_semaphore_handles, Span<u64> signal_semaphore_handles, const Fence &signal_fence){
     SX_CORE_ASSERT(IsInitialized(), "GPU Is not initalized");

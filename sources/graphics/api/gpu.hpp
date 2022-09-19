@@ -57,6 +57,8 @@ public:
         return s_Impl;
     }
 
+    static void ForceInit();
+
     static void Execute(CommandBuffer *buffer, Span<u64> wait_semaphore_handles = {}, Span<u64> signal_semaphore_handles = {}, const Fence &signal_fence = Fence::Null);
 
     static void Execute(CommandBuffer *buffer, ConstSpan<Semaphore> wait_semaphores = {}, ConstSpan<Semaphore> signal_semaphores = {}, const Fence &signal_fence = Fence::Null);
