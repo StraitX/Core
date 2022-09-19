@@ -17,7 +17,7 @@ Result GPU::Initialize(){
 
 #if defined(SX_VULKAN_SUPPORTED)
     if(GraphicsAPI::Backend() == GraphicsAPIBackend::Vulkan)
-        s_Impl = &Vk::GPUImpl::s_Instance;
+        s_Impl = &Vk::GPUImpl::Get();
 #endif
 
     if(s_Impl)

@@ -276,11 +276,11 @@ GraphicsPipelineImpl::GraphicsPipelineImpl(const GraphicsPipelineProperties &pro
     info.basePipelineHandle = VK_NULL_HANDLE;
     info.basePipelineIndex = InvalidIndex;
 
-    vkCreateGraphicsPipelines(GPUImpl::s_Instance, VK_NULL_HANDLE, 1, &info, nullptr, &m_Handle);
+    vkCreateGraphicsPipelines(GPUImpl::Get(), VK_NULL_HANDLE, 1, &info, nullptr, &m_Handle);
 }
 
 GraphicsPipelineImpl::~GraphicsPipelineImpl(){
-    vkDestroyPipeline(GPUImpl::s_Instance, m_Handle, nullptr);
+    vkDestroyPipeline(GPUImpl::Get(), m_Handle, nullptr);
 }
 
 ConstSpan<VertexAttribute> GraphicsPipelineImpl::VertexAttributes()const{

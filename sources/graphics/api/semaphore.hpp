@@ -2,24 +2,26 @@
 #define STRAITX_SEMAPHORE_HPP
 
 #include "core/types.hpp"
-#include "core/noncopyable.hpp"
 #include "core/move.hpp"
+#include "graphics/api/graphics_resource.hpp"
 
-class Semaphore: public NonCopyable{
+class Semaphore: public GraphicsResource{
     static constexpr u64 s_NullHandle = 0;
+
+    struct NullSemaphore {};
 private:
     u64 m_Handle = s_NullHandle;
 public:
-    static const Semaphore Null;
+    static const NullSemaphore Null;
 
     Semaphore(){
         Create();
     }
-private:
-    Semaphore(nullptr_t):
+
+    Semaphore(NullSemaphore):
         m_Handle(s_NullHandle)
     {}
-public:
+
     Semaphore(Semaphore &&other)noexcept{
         *this = Move(other);
     }

@@ -31,11 +31,11 @@ FramebufferImpl::FramebufferImpl(const FramebufferProperties &props):
     info.height = props.Size.y;
     info.layers = 1;
 
-    SX_VK_ASSERT(vkCreateFramebuffer(GPUImpl::s_Instance, &info, nullptr, &m_Handle), "Vk: FramebufferImpl: Can't create Framebuffer");  
+    SX_VK_ASSERT(vkCreateFramebuffer(GPUImpl::Get(), &info, nullptr, &m_Handle), "Vk: FramebufferImpl: Can't create Framebuffer");  
 }
 
 FramebufferImpl::~FramebufferImpl(){
-    vkDestroyFramebuffer(GPUImpl::s_Instance, m_Handle, nullptr);
+    vkDestroyFramebuffer(GPUImpl::Get(), m_Handle, nullptr);
 }
 
 Vector2u FramebufferImpl::Size()const{

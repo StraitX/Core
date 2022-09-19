@@ -38,7 +38,7 @@ constexpr size_t MaxUniformBuffersBindings = 16;
 
 constexpr size_t MaxShaderBindings = MaxTexturesBindings + MaxUniformBuffersBindings;
 
-class DescriptorSetLayout: public NonCopyable{
+class DescriptorSetLayout: public GraphicsResource{
 public:
 	DescriptorSetLayout() = default;
 
@@ -49,7 +49,7 @@ public:
 	static DescriptorSetLayout *Create(ConstSpan<ShaderBinding> bindings);
 };
 
-class DescriptorSet: public NonCopyable{
+class DescriptorSet: public GraphicsResource{
 public:
 	DescriptorSet() = default;
 
@@ -69,7 +69,7 @@ struct DescriptorSetPoolProperties{
 	const DescriptorSetLayout *Layout = nullptr;
 };
 
-class DescriptorSetPool: public NonCopyable{
+class DescriptorSetPool: public GraphicsResource{
 public:
 	DescriptorSetPool() = default;
 

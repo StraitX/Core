@@ -1,9 +1,9 @@
 #ifndef STRAITX_SHADER_HPP
 #define STRAITX_SHADER_HPP
 
-#include "core/noncopyable.hpp"
 #include "core/types.hpp"
 #include "core/span.hpp"
+#include "graphics/api/graphics_resource.hpp"
 
 constexpr size_t MaxUniformBindings = 8;
 
@@ -27,7 +27,7 @@ enum class ShaderLang: u8{
     //SPIRV,
 };
 //after creation of Pipeline shaders can be immediately destroyed
-class Shader: public NonCopyable{
+class Shader: public GraphicsResource{
 public:
     virtual ~Shader() = default;
 

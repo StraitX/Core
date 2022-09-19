@@ -1,8 +1,8 @@
 #ifndef STRAITX_RENDER_PASS_HPP
 #define STRAITX_RENDER_PASS_HPP
 
-#include "core/noncopyable.hpp"
 #include "core/span.hpp"
+#include "graphics/api/graphics_resource.hpp"
 #include "graphics/api/texture.hpp"
 
 struct AttachmentDescription{
@@ -20,7 +20,7 @@ struct RenderPassProperties{
 // Due to OpenGL Limitations
 constexpr size_t MaxAttachmentsCount = 8;
 
-class RenderPass: public NonCopyable{
+class RenderPass: public GraphicsResource{
 public:
     virtual ~RenderPass() = default;
 

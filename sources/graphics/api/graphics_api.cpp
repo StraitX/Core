@@ -6,16 +6,15 @@
 #endif
 
 GraphicsAPIBackendImpl *GraphicsAPI::s_Impl = nullptr;
-GraphicsAPIBackend GraphicsAPI::s_Backend = GraphicsAPIBackend::None;
+GraphicsAPIBackend GraphicsAPI::s_Backend = GraphicsAPIBackend::Vulkan;
 
-Result GraphicsAPI::CreateBackend(GraphicsAPIBackend backend){
+Result GraphicsAPI::CreateBackend(){
 #if defined(SX_VULKAN_SUPPORTED)
-    if(backend == GraphicsAPIBackend::Vulkan)
-        s_Impl = &Vk::GraphicsAPIBackendImpl::s_Instance;
+    if(s_Backend == GraphicsAPIBackend::Vulkan)
+        s_Impl = &Vk::GraphicsAPIBackendImpl::Get();
 #endif
 
     if(s_Impl){
-        s_Backend = backend;
         return s_Impl->Create();
     }
     

@@ -58,10 +58,13 @@ VkPhysicalDevice PickBestPhysicalDevice(VkInstance instance){
     return best;
 }
 
-GPUImpl GPUImpl::s_Instance;
+GPUImpl& GPUImpl::Get() {
+    static GPUImpl s_Instance;
+    return s_Instance;
+}
 
 Result GPUImpl::Initialize(){
-    m_PhysicalHandle = PickBestPhysicalDevice(GraphicsAPIBackendImpl::s_Instance.Instance());
+    m_PhysicalHandle = PickBestPhysicalDevice(GraphicsAPIBackendImpl::Get().Instance());
 
     m_MemoryProperties = MemoryProperties::Get(m_PhysicalHandle);
     m_QueueProperties = QueueProperties::Get(m_PhysicalHandle);

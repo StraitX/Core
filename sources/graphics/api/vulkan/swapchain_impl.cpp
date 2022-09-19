@@ -29,20 +29,20 @@ bool IsSupported(VkPhysicalDevice dev, VkSurfaceKHR surface, VkFormat format, Vk
 SwapchainImpl::SwapchainImpl(const Window *window):
     m_SurfaceWindow(window),
     m_TargetQueueFamily(QueueFamily::Graphics),
-    m_TargetQueue(GPUImpl::s_Instance.Queue(m_TargetQueueFamily)),
-    m_TargetQueueIndex(GPUImpl::s_Instance.QueueIndex(m_TargetQueueFamily))
+    m_TargetQueue(GPUImpl::Get().Queue(m_TargetQueueFamily)),
+    m_TargetQueueIndex(GPUImpl::Get().QueueIndex(m_TargetQueueFamily))
 {
     SX_CORE_ASSERT(window && window->IsOpen(), "Can't create swapchain with a closed window");
 
     SX_CORE_CALL_ASSERT(
-        m_Surface.Create(Vk::GraphicsAPIBackendImpl::s_Instance.Instance(), m_SurfaceWindow->Impl()), 
+        m_Surface.Create(Vk::GraphicsAPIBackendImpl::Get().Instance(), m_SurfaceWindow->Impl()), 
         Result::Success, 
         "Vk: Swapchain: Can't obtain surface"
     );
     
     {
         VkBool32 supported;
-        vkGetPhysicalDeviceSurfaceSupportKHR(GPUImpl::s_Instance.PhysicalHandle(), m_TargetQueueIndex, m_Surface.Handle, &supported);
+        vkGetPhysicalDeviceSurfaceSupportKHR(GPUImpl::Get().PhysicalHandle(), m_TargetQueueIndex, m_Surface.Handle, &supported);
         if(!supported){
             LogError("Vk: Swapchain: Current Physical Device does not support swapchain");
             return;
@@ -50,7 +50,7 @@ SwapchainImpl::SwapchainImpl(const Window *window):
     }
     
     VkSurfaceCapabilitiesKHR capabilities;
-    SX_VK_ASSERT(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(GPUImpl::s_Instance.PhysicalHandle(), m_Surface.Handle, &capabilities), "Vk: Swapchain: can't obtain surface sapabilites");
+    SX_VK_ASSERT(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(GPUImpl::Get().PhysicalHandle(), m_Surface.Handle, &capabilities), "Vk: Swapchain: can't obtain surface sapabilites");
 
     if(capabilities.minImageCount > m_ImagesCount){
         LogWarn("Vk: Swapchain: System requires % framebuffers", capabilities.minImageCount);
@@ -59,7 +59,7 @@ SwapchainImpl::SwapchainImpl(const Window *window):
 
     SX_CORE_ASSERT((!capabilities.maxImageCount || m_ImagesCount <= capabilities.maxImageCount), "Vk: Swapchain: current system does not support this amount of framebuffers");
     
-    if(!IsSupported(GPUImpl::s_Instance.PhysicalHandle(), m_Surface.Handle, m_Format, m_Colorspace)){
+    if(!IsSupported(GPUImpl::Get().PhysicalHandle(), m_Surface.Handle, m_Format, m_Colorspace)){
         LogError("Vk: Swapchain: ColorSpace and Format are not supported");
         return;
     }
@@ -87,11 +87,11 @@ SwapchainImpl::SwapchainImpl(const Window *window):
     info.imageArrayLayers = 1;
     info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
-    SX_VK_ASSERT(vkCreateSwapchainKHR(GPUImpl::s_Instance, &info, nullptr, &m_Handle), "Vk: Swapchain: Can't create a swapchain");
+    SX_VK_ASSERT(vkCreateSwapchainKHR(GPUImpl::Get(), &info, nullptr, &m_Handle), "Vk: Swapchain: Can't create a swapchain");
 
-    vkGetSwapchainImagesKHR(GPUImpl::s_Instance, m_Handle, &m_ImagesCount, nullptr);
+    vkGetSwapchainImagesKHR(GPUImpl::Get(), m_Handle, &m_ImagesCount, nullptr);
     VkImage *images = SX_STACK_ARRAY_ALLOC(VkImage, m_ImagesCount);
-    SX_VK_ASSERT(vkGetSwapchainImagesKHR(GPUImpl::s_Instance, m_Handle, &m_ImagesCount, images), "Vk: Swapchain: can't get images");
+    SX_VK_ASSERT(vkGetSwapchainImagesKHR(GPUImpl::Get(), m_Handle, &m_ImagesCount, images), "Vk: Swapchain: can't get images");
 
     for(u32 i = 0; i<m_ImagesCount; i++)
         m_Images.Emplace(images[i], m_Size.x, m_Size.y, TextureFormat::BGRA8, TextureUsageBits::TransferDst | TextureUsageBits::ColorAttachmentOptimal, TextureLayout::Undefined);
@@ -109,7 +109,7 @@ SwapchainImpl::~SwapchainImpl(){
     m_ImagesPointers.Clear();
     m_Images.Clear();
 
-    vkDestroySwapchainKHR(GPUImpl::s_Instance, m_Handle, nullptr);
+    vkDestroySwapchainKHR(GPUImpl::Get(), m_Handle, nullptr);
 
     m_Surface.Destroy();
 }
@@ -143,7 +143,7 @@ bool SwapchainImpl::AcquireNext(const Semaphore &signal_semaphore, const Fence &
     VkSemaphore signal_semaphore_handle = (VkSemaphore)signal_semaphore.Handle();
     VkFence signal_fence_handle = (VkFence)signal_fence.Handle();
 
-    return vkAcquireNextImageKHR(GPUImpl::s_Instance, m_Handle, 0, signal_semaphore_handle, signal_fence_handle, &m_CurrentImage) == VK_SUCCESS;
+    return vkAcquireNextImageKHR(GPUImpl::Get(), m_Handle, 0, signal_semaphore_handle, signal_fence_handle, &m_CurrentImage) == VK_SUCCESS;
 }
 
 ConstSpan<Texture2D *> SwapchainImpl::Images()const{

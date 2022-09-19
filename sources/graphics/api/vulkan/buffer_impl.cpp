@@ -9,7 +9,7 @@ namespace Vk{
 BufferImpl::BufferImpl(size_t size, BufferMemoryType mem_type, BufferUsage usage):
     m_Size(size),
     m_AbstractMemoryType(mem_type),
-    m_BackingMemoryType(GPUImpl::s_Instance.BackingMemoryType(MemoryType::Type(mem_type))),
+    m_BackingMemoryType(GPUImpl::Get().BackingMemoryType(MemoryType::Type(mem_type))),
     m_Usage(usage)
 {
     VkBufferCreateInfo info;
@@ -22,14 +22,14 @@ BufferImpl::BufferImpl(size_t size, BufferMemoryType mem_type, BufferUsage usage
     info.size                   = size;
     info.usage                  = usage;
 
-    SX_VK_ASSERT(vkCreateBuffer(GPUImpl::s_Instance, &info, nullptr, &m_Handle), "Vk: GPUBufferImpl: Can't create buffer");
+    SX_VK_ASSERT(vkCreateBuffer(GPUImpl::Get(), &info, nullptr, &m_Handle), "Vk: GPUBufferImpl: Can't create buffer");
 
     VkMemoryRequirements req;
-    vkGetBufferMemoryRequirements(GPUImpl::s_Instance, m_Handle, &req);
+    vkGetBufferMemoryRequirements(GPUImpl::Get(), m_Handle, &req);
 
     m_Memory = MemoryAllocator::Alloc(req.size, MemoryType::Type(mem_type));
 
-    SX_VK_ASSERT(vkBindBufferMemory(GPUImpl::s_Instance, m_Handle, m_Memory, 0), "GPUBuffer: can't bind buffer's memory");
+    SX_VK_ASSERT(vkBindBufferMemory(GPUImpl::Get(), m_Handle, m_Memory, 0), "GPUBuffer: can't bind buffer's memory");
 }
 
 BufferImpl::~BufferImpl(){
@@ -38,7 +38,7 @@ BufferImpl::~BufferImpl(){
 
     MemoryAllocator::Free(m_Memory);
 
-    vkDestroyBuffer(GPUImpl::s_Instance, m_Handle, nullptr);
+    vkDestroyBuffer(GPUImpl::Get(), m_Handle, nullptr);
 }
 
 void BufferImpl::Copy(Buffer *src, size_t size, size_t src_offset, size_t dst_offset){
@@ -78,13 +78,13 @@ bool BufferImpl::IsMapped()const{
 
 void *BufferImpl::Map(){
     if(!IsMapped())
-        vkMapMemory(GPUImpl::s_Instance, m_Memory, 0, m_Size, 0, &m_Pointer);
+        vkMapMemory(GPUImpl::Get(), m_Memory, 0, m_Size, 0, &m_Pointer);
     return m_Pointer;
 }
 
 void BufferImpl::Unmap(){
     if(IsMapped()){
-        vkUnmapMemory(GPUImpl::s_Instance, m_Memory);
+        vkUnmapMemory(GPUImpl::Get(), m_Memory);
         m_Pointer = nullptr;
     }
 }

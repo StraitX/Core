@@ -3,7 +3,6 @@
 
 #include "core/math/vector2.hpp"
 #include "core/span.hpp"
-#include "core/noncopyable.hpp"
 #include "graphics/api/texture.hpp"
 #include "graphics/api/render_pass.hpp"
 
@@ -13,7 +12,7 @@ struct FramebufferProperties{
     const RenderPass *Pass = nullptr;
 };
 
-class Framebuffer: public NonCopyable{
+class Framebuffer: public GraphicsResource{
 public:
     virtual ~Framebuffer() = default;
 

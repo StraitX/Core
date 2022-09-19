@@ -23,7 +23,7 @@ private:
     CommandPool *m_SyncCommandBufferPool = nullptr;
     List<Pair<CommandBuffer*, Fence>> m_SyncPairs;
 public:
-    static GPUImpl s_Instance;
+    static GPUImpl &Get();
 
     Result Initialize()override;
 

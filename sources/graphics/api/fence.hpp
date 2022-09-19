@@ -2,23 +2,26 @@
 #define STRAITX_FENCE_HPP
 
 #include "core/types.hpp"
-#include "core/noncopyable.hpp"
 #include "core/move.hpp"
+#include "graphics/api/graphics_resource.hpp"
 
-class Fence: public NonCopyable{
+class Fence: public GraphicsResource{
     static constexpr u64 s_NullHandle = 0;
+
+    struct NullFence {};
 private:
     u64 m_Handle = s_NullHandle;
 public:
-    static const Fence Null;
+    static const NullFence Null;
+public:
     Fence(){
         Create();
     }
-private:
-    Fence(u64 handle):
-        m_Handle(handle)
+
+    Fence(NullFence):
+        m_Handle(s_NullHandle)
     {}
-public:
+
     Fence(Fence &&other)noexcept{
         *this = Move(other);
     }

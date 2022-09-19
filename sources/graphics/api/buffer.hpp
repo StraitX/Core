@@ -2,7 +2,7 @@
 #define STRAITX_BUFFER_HPP
 
 #include "core/types.hpp"
-#include "core/noncopyable.hpp"
+#include "graphics/api/graphics_resource.hpp"
 
 enum class BufferMemoryType{
     VRAM,
@@ -26,7 +26,7 @@ namespace BufferUsageBits{
     };
 }//namespace BufferUsage::
 
-class Buffer: public NonCopyable{
+class Buffer: public GraphicsResource{
 public:
     virtual ~Buffer() = default;
 

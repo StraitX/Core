@@ -6,7 +6,7 @@
     #include "graphics/api/vulkan/semaphore_impl.hpp"
 #endif
 
-const Semaphore Semaphore::Null(nullptr);
+const Semaphore::NullSemaphore Semaphore::Null;
 
 void Semaphore::WaitFor()const{
 #if defined(SX_VULKAN_SUPPORTED)

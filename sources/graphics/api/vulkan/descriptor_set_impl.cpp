@@ -44,11 +44,11 @@ DescriptorSetLayoutImpl::DescriptorSetLayoutImpl(ConstSpan<ShaderBinding> bindin
 
 	VkDescriptorSetLayout handle = VK_NULL_HANDLE;
 
-	vkCreateDescriptorSetLayout(GPUImpl::s_Instance, &info, nullptr, &m_Handle);	
+	vkCreateDescriptorSetLayout(GPUImpl::Get(), &info, nullptr, &m_Handle);	
 }
 
 DescriptorSetLayoutImpl::~DescriptorSetLayoutImpl(){
-	vkDestroyDescriptorSetLayout(GPUImpl::s_Instance, m_Handle, nullptr);
+	vkDestroyDescriptorSetLayout(GPUImpl::Get(), m_Handle, nullptr);
 }
 
 ConstSpan<ShaderBinding> DescriptorSetLayoutImpl::Bindings()const{
@@ -79,7 +79,7 @@ void DescriptorSetImpl::UpdateUniformBinding(size_t binding, size_t index, const
     write.pBufferInfo = &buffer;
     write.pTexelBufferView = nullptr;
 
-    vkUpdateDescriptorSets(GPUImpl::s_Instance, 1, &write, 0, nullptr);
+    vkUpdateDescriptorSets(GPUImpl::Get(), 1, &write, 0, nullptr);
 }
 void DescriptorSetImpl::UpdateStorageBufferBinding(size_t binding, size_t index, const Buffer* storage_buffer) {
 	VkDescriptorBufferInfo buffer;
@@ -99,7 +99,7 @@ void DescriptorSetImpl::UpdateStorageBufferBinding(size_t binding, size_t index,
     write.pBufferInfo = &buffer;
     write.pTexelBufferView = nullptr;
 
-    vkUpdateDescriptorSets(GPUImpl::s_Instance, 1, &write, 0, nullptr);
+    vkUpdateDescriptorSets(GPUImpl::Get(), 1, &write, 0, nullptr);
 }
 	
 void DescriptorSetImpl::UpdateTextureBinding(size_t binding, size_t index, const Texture2D *texture, const Sampler *sampler){
@@ -120,7 +120,7 @@ void DescriptorSetImpl::UpdateTextureBinding(size_t binding, size_t index, const
     write.pBufferInfo = nullptr;
     write.pTexelBufferView = nullptr;
 
-    vkUpdateDescriptorSets(GPUImpl::s_Instance, 1, &write, 0, nullptr);
+    vkUpdateDescriptorSets(GPUImpl::Get(), 1, &write, 0, nullptr);
 }
 
 void DescriptorSetImpl::UpdateStorageTextureBinding(size_t binding, size_t index, const Texture2D *texture){
@@ -141,7 +141,7 @@ void DescriptorSetImpl::UpdateStorageTextureBinding(size_t binding, size_t index
     write.pBufferInfo = nullptr;
     write.pTexelBufferView = nullptr;
 
-    vkUpdateDescriptorSets(GPUImpl::s_Instance, 1, &write, 0, nullptr);
+    vkUpdateDescriptorSets(GPUImpl::Get(), 1, &write, 0, nullptr);
 }
 
 DescriptorSetPoolImpl::DescriptorSetPoolImpl(const DescriptorSetPoolProperties &props):
@@ -163,11 +163,11 @@ DescriptorSetPoolImpl::DescriptorSetPoolImpl(const DescriptorSetPoolProperties &
     info.poolSizeCount = m_Layout->Bindings().Size();
     info.pPoolSizes = sizes;
 
-	vkCreateDescriptorPool(GPUImpl::s_Instance, &info, nullptr, &m_Handle);
+	vkCreateDescriptorPool(GPUImpl::Get(), &info, nullptr, &m_Handle);
 }
 
 DescriptorSetPoolImpl::~DescriptorSetPoolImpl(){
-	vkDestroyDescriptorPool(GPUImpl::s_Instance, m_Handle, nullptr);
+	vkDestroyDescriptorPool(GPUImpl::Get(), m_Handle, nullptr);
 }
 
 DescriptorSet *DescriptorSetPoolImpl::Alloc(){
@@ -182,7 +182,7 @@ DescriptorSet *DescriptorSetPoolImpl::Alloc(){
 
 	VkDescriptorSet set = VK_NULL_HANDLE;
 
-	auto res = vkAllocateDescriptorSets(GPUImpl::s_Instance, &info, &set);
+	auto res = vkAllocateDescriptorSets(GPUImpl::Get(), &info, &set);
     SX_VK_ASSERT(res, "Vk: Can't allocate descriptor set");
 
 	//TODO: use pool allocator
@@ -191,7 +191,7 @@ DescriptorSet *DescriptorSetPoolImpl::Alloc(){
 
 void DescriptorSetPoolImpl::Free(DescriptorSet *set){
 	VkDescriptorSet handle = *(Vk::DescriptorSetImpl*)set;
-	vkFreeDescriptorSets(GPUImpl::s_Instance, m_Handle, 1, &handle);
+	vkFreeDescriptorSets(GPUImpl::Get(), m_Handle, 1, &handle);
 	delete set;
 }
 

@@ -18,11 +18,11 @@ Pipeline::Pipeline(VkPipelineBindPoint bind_point, const DescriptorSetLayout* la
 	info.pushConstantRangeCount = 0;
     info.pPushConstantRanges = nullptr;
         
-    SX_VK_ASSERT(vkCreatePipelineLayout(GPUImpl::s_Instance, &info, nullptr, &m_Layout), "Can't create pipeline layout");
+    SX_VK_ASSERT(vkCreatePipelineLayout(GPUImpl::Get(), &info, nullptr, &m_Layout), "Can't create pipeline layout");
 }
 
 Pipeline::~Pipeline(){
-	vkDestroyPipelineLayout(GPUImpl::s_Instance, m_Layout, nullptr);
+	vkDestroyPipelineLayout(GPUImpl::Get(), m_Layout, nullptr);
 }
 
 }//namespace Vk::

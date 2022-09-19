@@ -1,7 +1,6 @@
 #ifndef STRAITX_SWAPCHAIN_HPP
 #define STRAITX_SWAPCHAIN_HPP
 
-#include "core/noncopyable.hpp"
 #include "core/span.hpp"
 #include "core/list.hpp"
 #include "graphics/api/semaphore.hpp"
@@ -11,7 +10,7 @@
 #include "core/os/window.hpp"
 #include "core/unique_ptr.hpp"
 
-class Swapchain: public NonCopyable{
+class Swapchain: public GraphicsResource{
 public:
     virtual ~Swapchain() = default;
 

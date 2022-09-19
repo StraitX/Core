@@ -6,14 +6,5 @@
 extern int StraitXMain(Span<const char *> args);
 
 int GuardedMain(int argc, const char **argv){
-
-    if(!GraphicsAPI::CreateBackend(GraphicsAPIBackend::Vulkan)
-    || !GPU::Initialize())
-        return -1;
-
-    int sx_main_result = StraitXMain({argv, (size_t)argc});
-
-    GPU::Finalize();
-
-    return sx_main_result;
+    return StraitXMain({argv, (size_t)argc});
 }

@@ -64,11 +64,11 @@ RenderPassImpl::RenderPassImpl(const RenderPassProperties &props){
     info.dependencyCount = 0;
     info.pDependencies = nullptr;
 
-    SX_VK_ASSERT(vkCreateRenderPass(GPUImpl::s_Instance, &info, nullptr, &m_Handle), "Vk: RenderPassImpl: Creation failed");
+    SX_VK_ASSERT(vkCreateRenderPass(GPUImpl::Get(), &info, nullptr, &m_Handle), "Vk: RenderPassImpl: Creation failed");
 }
 
 RenderPassImpl::~RenderPassImpl(){
-    vkDestroyRenderPass(GPUImpl::s_Instance, m_Handle, nullptr);
+    vkDestroyRenderPass(GPUImpl::Get(), m_Handle, nullptr);
 }
 
 ConstSpan<AttachmentDescription> RenderPassImpl::Attachments()const{

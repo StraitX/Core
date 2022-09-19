@@ -10,9 +10,8 @@ class GraphicsAPIBackendImpl: public ::GraphicsAPIBackendImpl{
 private:
     VkInstance m_Instance = VK_NULL_HANDLE;
     VkDebugUtilsMessengerEXT m_Messenger = VK_NULL_HANDLE;
-
 public:
-    static GraphicsAPIBackendImpl s_Instance;
+    static GraphicsAPIBackendImpl &Get();
 
     Result Create()override;
 

@@ -105,14 +105,14 @@ void Texture2DImpl::CreateImage(){
     info.pQueueFamilyIndices = nullptr;
     info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;// should be undefined by the spec
 
-    vkCreateImage(GPUImpl::s_Instance, &info, nullptr, &m_Handle);
+    vkCreateImage(GPUImpl::Get(), &info, nullptr, &m_Handle);
 
     VkMemoryRequirements req;
-    vkGetImageMemoryRequirements(GPUImpl::s_Instance, m_Handle, &req);
+    vkGetImageMemoryRequirements(GPUImpl::Get(), m_Handle, &req);
 
     m_Memory = MemoryAllocator::Alloc(req.size, MemoryType::VRAM);
 
-    vkBindImageMemory(GPUImpl::s_Instance, m_Handle, m_Memory, 0);
+    vkBindImageMemory(GPUImpl::Get(), m_Handle, m_Memory, 0);
 }
 
 void Texture2DImpl::CreateImageView(){
@@ -133,15 +133,15 @@ void Texture2DImpl::CreateImageView(){
     view_info.subresourceRange.layerCount = 1;
     view_info.subresourceRange.levelCount = 1;
 
-    vkCreateImageView(GPUImpl::s_Instance, &view_info, nullptr, &m_View);
+    vkCreateImageView(GPUImpl::Get(), &view_info, nullptr, &m_View);
 }
 
 void Texture2DImpl::DestroyImageView(){
-    vkDestroyImageView(GPUImpl::s_Instance, m_View, nullptr);
+    vkDestroyImageView(GPUImpl::Get(), m_View, nullptr);
 }
 
 void Texture2DImpl::DestroyImage(){
-    vkDestroyImage(GPUImpl::s_Instance, m_Handle, nullptr);
+    vkDestroyImage(GPUImpl::Get(), m_Handle, nullptr);
 
     MemoryAllocator::Free(m_Memory);
 }

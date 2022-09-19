@@ -11,14 +11,14 @@ u64 SemaphoreImpl::Create(){
     info.flags = 0;
 
     VkSemaphore semaphore = VK_NULL_HANDLE;
-    vkCreateSemaphore(GPUImpl::s_Instance, &info, nullptr, &semaphore);
+    vkCreateSemaphore(GPUImpl::Get(), &info, nullptr, &semaphore);
 
     return reinterpret_cast<u64>(semaphore);
 }
 
 void SemaphoreImpl::Destroy(u64 handle){
     VkSemaphore semaphore = reinterpret_cast<VkSemaphore>(handle);
-    vkDestroySemaphore(GPUImpl::s_Instance, semaphore, nullptr);
+    vkDestroySemaphore(GPUImpl::Get(), semaphore, nullptr);
 }
 
 void SemaphoreImpl::WaitFor(const Semaphore &handle){

@@ -21,7 +21,7 @@ private:
     static GraphicsAPIBackendImpl *s_Impl;
     static GraphicsAPIBackend s_Backend;
 public:
-    static Result CreateBackend(GraphicsAPIBackend backend);
+    static Result CreateBackend();
 
     static void DestroyBackend();
 

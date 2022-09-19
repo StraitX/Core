@@ -4,6 +4,7 @@
 #include "core/noncopyable.hpp"
 #include "graphics/color.hpp"
 #include "graphics/api/texture.hpp"
+#include "graphics/api/graphics_resource.hpp"
 
 class RenderPass;
 class Framebuffer;
@@ -14,7 +15,7 @@ class DescriptorSet;
 
 class CommandBuffer;
 
-class CommandPool: public NonCopyable{
+class CommandPool: public GraphicsResource{
 public:
     CommandPool() = default;
 
@@ -34,7 +35,7 @@ enum class IndicesType{
     Uint32
 };
 
-class CommandBuffer: public NonCopyable{
+class CommandBuffer: public GraphicsResource{
 public:
     CommandBuffer() = default;
 

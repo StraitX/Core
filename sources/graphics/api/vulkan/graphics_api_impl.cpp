@@ -7,8 +7,6 @@
 
 namespace Vk{
 
-GraphicsAPIBackendImpl GraphicsAPIBackendImpl::s_Instance;
-
 bool CheckLayers(const Span<const char *> &layers){
     u32 count = 0;
     vkEnumerateInstanceLayerProperties(&count, nullptr);
@@ -49,6 +47,11 @@ bool CheckExtensions(const Span<const char *> &extensions){
     }
 
     return true; 
+}
+
+GraphicsAPIBackendImpl& GraphicsAPIBackendImpl::Get() {
+    static GraphicsAPIBackendImpl s_Instance;
+    return s_Instance;
 }
 
 Result GraphicsAPIBackendImpl::Create(){

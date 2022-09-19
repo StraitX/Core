@@ -2,7 +2,7 @@
 #define STRAITX_SAMPLER_HPP
 
 #include "core/types.hpp"
-#include "core/noncopyable.hpp"
+#include "graphics/api/graphics_resource.hpp"
 
 enum class FilteringMode: u8{
     Linear,
@@ -24,7 +24,7 @@ struct SamplerProperties{
     WrapMode WrapS = WrapMode::ClampToEdge;
 };
 
-class Sampler: public NonCopyable{
+class Sampler: public GraphicsResource{
 public:
     Sampler() = default;
 

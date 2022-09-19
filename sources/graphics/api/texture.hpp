@@ -3,8 +3,8 @@
 
 #include "core/types.hpp"
 #include "core/math/vector2.hpp"
-#include "core/noncopyable.hpp"
 #include "graphics/image.hpp"
+#include "graphics/api/graphics_resource.hpp"
 
 enum class SamplePoints{
     Samples_1 = 0,
@@ -61,7 +61,7 @@ namespace TextureUsageBits{
 
 }//namespace TextureUsageBits::
 
-class Texture: public NonCopyable{
+class Texture: public GraphicsResource{
 protected:
     TextureFormat m_Format = TextureFormat::Unknown;
     TextureUsage m_Usage = 0;

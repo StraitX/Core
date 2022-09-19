@@ -29,12 +29,12 @@ ComputePipelineImpl::ComputePipelineImpl(const ComputePipelineProperties& props)
         info.basePipelineHandle = VK_NULL_HANDLE;
         info.basePipelineIndex = -1;
 
-        SX_VK_ASSERT(vkCreateComputePipelines(GPUImpl::s_Instance, VK_NULL_HANDLE, 1, &info, nullptr, &m_Handle), "Can't create ComputePipeline");
+        SX_VK_ASSERT(vkCreateComputePipelines(GPUImpl::Get(), VK_NULL_HANDLE, 1, &info, nullptr, &m_Handle), "Can't create ComputePipeline");
     }
 }
 
 ComputePipelineImpl::~ComputePipelineImpl(){
-    vkDestroyPipeline(GPUImpl::s_Instance, m_Handle, nullptr);
+    vkDestroyPipeline(GPUImpl::Get(), m_Handle, nullptr);
 }
 
 }//namespace Vk::

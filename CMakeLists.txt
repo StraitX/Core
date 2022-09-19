@@ -37,6 +37,7 @@ set(SX_BASE_SOURCES_CORE
 
 set(SX_BASE_SOURCES_GRAPHICS_API
     ${SX_BASE_SOURCES_DIR}/graphics/api/graphics_api.cpp
+    ${SX_BASE_SOURCES_DIR}/graphics/api/graphics_resource.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/api/gpu.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/api/texture.cpp
     ${SX_BASE_SOURCES_DIR}/graphics/api/semaphore.cpp

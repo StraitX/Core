@@ -47,7 +47,7 @@ private:
 
     static void Finalize();
 
-    friend int GuardedMain(int argc, const char **argv);
+    friend class GraphicsResource;
 public:
     static GPUType Type();
 

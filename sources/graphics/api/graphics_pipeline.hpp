@@ -103,7 +103,7 @@ size_t GetVertexAttributeSize(VertexAttribute attribute);
 
 size_t CalculateStride(Span<VertexAttribute> attributes);
 
-class GraphicsPipeline: public NonCopyable{
+class GraphicsPipeline: public GraphicsResource{
 public:
     virtual ~GraphicsPipeline() = default;
 

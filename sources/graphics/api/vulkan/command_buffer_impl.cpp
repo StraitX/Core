@@ -11,7 +11,7 @@ namespace Vk{
 
 CommandPoolImpl::CommandPoolImpl(QueueFamily::Type target_queue_family):
     m_TargetQueueFamily(target_queue_family),
-    m_TargetQueueFamilyIndex(GPUImpl::s_Instance.QueueIndex(target_queue_family))
+    m_TargetQueueFamilyIndex(GPUImpl::Get().QueueIndex(target_queue_family))
 {
     VkCommandPoolCreateInfo info;
     info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -19,11 +19,11 @@ CommandPoolImpl::CommandPoolImpl(QueueFamily::Type target_queue_family):
     info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
     info.queueFamilyIndex = m_TargetQueueFamilyIndex;
 
-    vkCreateCommandPool(GPUImpl::s_Instance, &info, nullptr, &m_Handle);
+    vkCreateCommandPool(GPUImpl::Get(), &info, nullptr, &m_Handle);
 }
 
 CommandPoolImpl::~CommandPoolImpl(){
-    vkDestroyCommandPool(GPUImpl::s_Instance, m_Handle, nullptr);
+    vkDestroyCommandPool(GPUImpl::Get(), m_Handle, nullptr);
 }
 
 CommandBuffer *CommandPoolImpl::Alloc(){
@@ -44,11 +44,11 @@ CommandBufferImpl::CommandBufferImpl(CommandPoolImpl *pool):
     info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     info.commandBufferCount = 1;
 
-    vkAllocateCommandBuffers(GPUImpl::s_Instance, &info, &m_Handle);
+    vkAllocateCommandBuffers(GPUImpl::Get(), &info, &m_Handle);
 }
 
 CommandBufferImpl::~CommandBufferImpl(){
-    vkFreeCommandBuffers(GPUImpl::s_Instance, *m_Pool, 1, &m_Handle);
+    vkFreeCommandBuffers(GPUImpl::Get(), *m_Pool, 1, &m_Handle);
 }
 
 LayoutChangeOp *CommandBufferImpl::GetLastTextureLayoutChange(const Texture *texture){

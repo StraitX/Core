@@ -41,11 +41,11 @@ SamplerImpl::SamplerImpl(const SamplerProperties &props):
     info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
     info.unnormalizedCoordinates = VK_FALSE;
 
-    vkCreateSampler(GPUImpl::s_Instance, &info, nullptr, &m_Handle);
+    vkCreateSampler(GPUImpl::Get(), &info, nullptr, &m_Handle);
 }
 
 SamplerImpl::~SamplerImpl(){
-    vkDestroySampler(GPUImpl::s_Instance, m_Handle, nullptr);
+    vkDestroySampler(GPUImpl::Get(), m_Handle, nullptr);
 }
 
 SamplerProperties SamplerImpl::Properties()const{

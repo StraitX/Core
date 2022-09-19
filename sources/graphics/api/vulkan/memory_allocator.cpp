@@ -9,10 +9,10 @@ VkDeviceMemory MemoryAllocator::Alloc(u32 size, MemoryType::Type type){
     info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     info.pNext = nullptr;
     info.allocationSize = size;
-    info.memoryTypeIndex = GPUImpl::s_Instance.MemoryIndex(type);
+    info.memoryTypeIndex = GPUImpl::Get().MemoryIndex(type);
 
     VkDeviceMemory memory;
-    if(vkAllocateMemory(GPUImpl::s_Instance, &info, nullptr, &memory) != VK_SUCCESS){
+    if(vkAllocateMemory(GPUImpl::Get(), &info, nullptr, &memory) != VK_SUCCESS){
         LogError("VulkanMemoryAllocator: Can't allocate memory of size '%' of type '%'", size, MemoryType::Name(type));
         return VK_NULL_HANDLE;
     }
@@ -20,7 +20,7 @@ VkDeviceMemory MemoryAllocator::Alloc(u32 size, MemoryType::Type type){
 }
 
 void MemoryAllocator::Free(VkDeviceMemory memory){
-    vkFreeMemory(GPUImpl::s_Instance, memory, nullptr);
+    vkFreeMemory(GPUImpl::Get(), memory, nullptr);
 }
 
 }//namespace Vk::

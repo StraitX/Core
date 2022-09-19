@@ -51,11 +51,11 @@ ShaderImpl::ShaderImpl(ShaderLang lang, ShaderStageBits::Value stage, Span<const
     info.codeSize = sources.Size();
     info.pCode = (u32*)sources.Pointer();
 
-    vkCreateShaderModule(GPUImpl::s_Instance, &info, nullptr, &m_Handle);
+    vkCreateShaderModule(GPUImpl::Get(), &info, nullptr, &m_Handle);
 }
 
 ShaderImpl::~ShaderImpl(){
-    vkDestroyShaderModule(GPUImpl::s_Instance, m_Handle, nullptr);
+    vkDestroyShaderModule(GPUImpl::Get(), m_Handle, nullptr);
 }
 
 ShaderLang ShaderImpl::Lang()const{

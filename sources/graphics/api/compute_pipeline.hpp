@@ -1,7 +1,8 @@
 #ifndef STRAITX_COMPUTE_PIPELINE_HPP
 #define STRAITX_COMPUTE_PIPELINE_HPP
 
-#include "core/noncopyable.hpp"
+
+#include "graphics/api/graphics_resource.hpp"
 #include "graphics/api/shader.hpp"
 #include "graphics/api/descriptor_set.hpp"
 
@@ -10,7 +11,7 @@ struct ComputePipelineProperties {
 	const DescriptorSetLayout *Layout = nullptr;
 };
 
-class ComputePipeline: public NonCopyable{
+class ComputePipeline: public GraphicsResource{
 public:
 	virtual ~ComputePipeline() = default;
 
