@@ -86,10 +86,6 @@ set(SX_BASE_SOURCES_GRAPHICS
     ${SX_BASE_SOURCES_DIR}/graphics/render_texture.cpp
 )
 
-set(SX_BASE_SOURCES_MAIN
-    ${SX_BASE_SOURCES_DIR}/main/guarded_main.cpp
-)
-
 if(STRAITX_PLATFORM_LINUX)
 
     set(SX_BASE_SOURCES_PLATFORM
@@ -129,8 +125,6 @@ if(STRAITX_PLATFORM_LINUX)
 
 elseif(STRAITX_PLATFORM_WINDOWS)
     set(SX_BASE_SOURCES_PLATFORM
-       ${SX_BASE_SOURCES_DIR}/platform/windows/entry_point.cpp
-
        ${SX_BASE_SOURCES_DIR}/platform/windows/mouse_impl.cpp
        ${SX_BASE_SOURCES_DIR}/platform/windows/keyboard_impl.cpp
        ${SX_BASE_SOURCES_DIR}/platform/windows/virtual_keys.cpp
@@ -247,7 +241,6 @@ add_library(StraitXBase STATIC
     ${SX_BASE_SOURCES_GRAPHICS}
     ${SX_BASE_SOURCES_GRAPHICS_API}
     ${SX_BASE_SOURCES_GRAPHICS_API_VULKAN}
-    ${SX_BASE_SOURCES_MAIN}
 )
 
 target_link_options(StraitXBase 
