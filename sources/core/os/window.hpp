@@ -34,7 +34,7 @@ public:
 
 	bool IsOpen()const;
 
-	void SetEventsHanlder(Function<void(const Event &e)> handler);
+	void SetEventsHandler(Function<void(const Event &e)> handler);
 
 	void DispatchEvents();
 
@@ -72,7 +72,7 @@ SX_INLINE bool Window::IsOpen()const{
 	return Super::IsOpen();
 }
 
-SX_INLINE void Window::SetEventsHanlder(Function<void(const Event& e)> handler) {
+SX_INLINE void Window::SetEventsHandler(Function<void(const Event& e)> handler) {
 	Super::SetEventsHandler(handler);
 }
 
