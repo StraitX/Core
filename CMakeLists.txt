@@ -28,6 +28,11 @@ set(SX_BASE_SOURCES_CORE
     ${SX_BASE_SOURCES_DIR}/core/os/keyboard.cpp
     ${SX_BASE_SOURCES_DIR}/core/os/memory.cpp
     ${SX_BASE_SOURCES_DIR}/core/os/file.cpp
+
+    ${SX_BASE_SOURCES_DIR}/core/net/ip.cpp
+    ${SX_BASE_SOURCES_DIR}/core/net/tcp_listener.cpp
+    ${SX_BASE_SOURCES_DIR}/core/net/tcp_socket.cpp
+    ${SX_BASE_SOURCES_DIR}/core/net/udp_socket.cpp
 )
 
 set(SX_BASE_SOURCES_GRAPHICS_API
@@ -144,6 +149,7 @@ elseif(STRAITX_PLATFORM_WINDOWS)
        ${SX_BASE_SOURCES_DIR}/platform/windows/wchar.cpp
        ${SX_BASE_SOURCES_DIR}/platform/windows/directory_impl.cpp
        ${SX_BASE_SOURCES_DIR}/platform/windows/dialog_impl.cpp
+       ${SX_BASE_SOURCES_DIR}/platform/windows/net_impl.cpp
     )
 
     set(SX_BASE_LIBS_PLATFORM
@@ -151,6 +157,7 @@ elseif(STRAITX_PLATFORM_WINDOWS)
         vulkan-1
         winmm
         DbgHelp
+        ws2_32
     )
 
     set(SX_BASE_LIBS_DIRS_PLATFORM
