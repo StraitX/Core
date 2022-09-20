@@ -20,7 +20,10 @@ Result File::Open(StringView filename, Mode mode, bool create) {
 
 	OFSTRUCT open_file_struct = {};
 	
+	int pre = GetLastError();
 	m_FD = (u64)CreateFileW(Windows::Utf8ToWPath(filename).c_str(), ToWindowsOpenMode(mode), 0, nullptr, create ? OPEN_ALWAYS : OPEN_EXISTING, 0, 0);
+	
+	int post = GetLastError();
 
 	if ((HANDLE)m_FD == INVALID_HANDLE_VALUE) { 
 		m_FD = InvalidFD;

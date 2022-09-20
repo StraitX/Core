@@ -142,6 +142,10 @@ String Directory::Current() {
 	return Windows::WPathToUtf8(path.c_str());
 }
 
+bool Directory::Change(StringView path) {
+	return SetCurrentDirectoryW(Windows::Utf8ToWPath(path).c_str()) != 0;
+}
+
 Result Directory::Delete(StringView path) {
 	auto wpath = Windows::Utf8ToWPath(path) + L'\0';
     SHFILEOPSTRUCTW file_op = {

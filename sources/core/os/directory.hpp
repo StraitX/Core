@@ -59,6 +59,8 @@ public:
 
 	static String Current();
 
+	static bool Change(StringView path);
+
 	static Result Delete(StringView path);
 };
 
