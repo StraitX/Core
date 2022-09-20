@@ -24,7 +24,7 @@ public:
     using Iterator = Type *;
     using ConstIterator = const Type *;
 private:
-    Type *m_Memory = nullptr;
+    Type *m_Elements = nullptr;
     size_t m_Size = 0;
     size_t m_Capacity = 0;
 public:
@@ -89,19 +89,19 @@ public:
     void RemoveLast(){
         SX_CORE_ASSERT(m_Size, "Can't remove last element from empty List");
 
-        Data()[--m_Size].~Type();
+        m_Elements[--m_Size].~Type();
     }
 
     void UnorderedRemove(size_t index){
         SX_CORE_ASSERT(IsValidIndex(index), "Index is out of range");
 
-        Data()[index] = Move(Last());
+        At(index) = Move(Last());
         RemoveLast();
     }
 
     void UnorderedRemove(const Type &type){
         for(size_t i = 0; i<Size(); i++){
-            if(Data()[i] == type){
+            if(At(i) == type){
                 UnorderedRemove(i);
                 break;
             }
@@ -116,20 +116,20 @@ public:
     void Reserve(size_t capacity){
         if(capacity <= m_Capacity)return;
 
-        Type *new_array = (Type*)GeneralAllocator::Alloc(capacity * sizeof(Type));
+        Type *new_elements = (Type*)GeneralAllocator::Alloc(capacity * sizeof(Type));
 
         for(size_t i = 0; i<Size(); i++){
-            MoveElseCopyCtor(&new_array[i], &Data()[i]);
-            Data()[i].~Type();
+            new(&new_elements[i]) Type(Move(m_Elements[i]));
+            m_Elements[i].~Type();
         }
 
-        GeneralAllocator::Free(m_Memory);
-        m_Memory = new_array;
+        GeneralAllocator::Free(m_Elements);
+        m_Elements = new_elements;
         m_Capacity = capacity;
     }
 
     void Swap(List<Type> &other) {
-        ::Swap(m_Memory, other.m_Memory);
+        ::Swap(m_Elements, other.m_Elements);
         ::Swap(m_Size, other.m_Size);
         ::Swap(m_Capacity, other.m_Capacity);
     }
@@ -146,8 +146,8 @@ public:
     void Free(){
         //Size should be zero
         Clear();
-        GeneralAllocator::Free(m_Memory);
-        m_Memory = nullptr;
+        GeneralAllocator::Free(m_Elements);
+        m_Elements = nullptr;
         m_Capacity = 0;
     }
 
@@ -155,14 +155,21 @@ public:
         return index < m_Size;
     }
 
+    Type &At(size_t index) {
+        SX_CORE_ASSERT(IsValidIndex(index), "Invalid Index");
+        return m_Elements[index];
+    }
+    const Type &At(size_t index)const{
+        SX_CORE_ASSERT(IsValidIndex(index), "Invalid Index");
+        return m_Elements[index];
+    }
+
     Type &operator[](size_t index){
-        return const_cast<Type&>(const_cast<const List<Type, GeneralAllocator>*>(this)->operator[](index));
+        return At(index);
     }
 
     const Type &operator[](size_t index)const{
-        SX_CORE_ASSERT(IsValidIndex(index), "Invalid Index");
-
-        return Data()[index];
+        return At(index);
     }
 
     operator Span<Type>(){
@@ -174,11 +181,11 @@ public:
     }
 
     Type *Data(){
-        return reinterpret_cast<Type*>(m_Memory);
+        return m_Elements;
     }
 
     const Type *Data()const{
-        return reinterpret_cast<const Type*>(m_Memory);
+        return m_Elements;
     }
 
     size_t Size()const{
@@ -190,19 +197,19 @@ public:
     }
 
     Type &First(){
-        return operator[](0);
+        return At(0);
     }
 
     const Type &First()const{
-        return operator[](0);
+        return At(0);
     }
 
     Type &Last(){
-        return operator[](Size() - 1);
+        return At(Size() - 1);
     }
 
     const Type &Last()const{
-        return operator[](Size() - 1);
+        return At(Size() - 1);
     }
 
     Iterator begin(){
