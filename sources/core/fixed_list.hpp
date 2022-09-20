@@ -28,7 +28,15 @@ private:
 		const Type *Data()const{
 			return reinterpret_cast<const Type*>(m_Memory);
 		}
-	}m_Array;
+
+        Type& operator[](size_t index) {
+            return Data()[index];
+        }
+
+        const Type& operator[](size_t index)const{
+            return Data()[index];
+        }
+	}m_Elements;
 public:
 
     FixedList() = default;
@@ -66,19 +74,19 @@ public:
     }
 
     void RemoveLast(){
-        Data()[--m_Size].~Type();
+        m_Elements[--m_Size].~Type();
     }
 
     void UnorderedRemove(size_t index){
         SX_CORE_ASSERT(IsValidIndex(index), "Index is out of range");
 
-        Data()[index] = Move(Last());
+        m_Elements[index] = Move(Last());
         RemoveLast();
     }
 
     void UnorderedRemove(const Type &type){
         for(size_t i = 0; i<Size(); i++){
-            if(Data()[i] == type){
+            if(m_Elements[i] == type){
                 UnorderedRemove(i);
                 break;
             }
@@ -115,14 +123,21 @@ public:
         return *new(&begin()[m_Size++])Type(Forward<ArgsType>(args)...);
     }
 
+    Type& At(size_t index) {
+        SX_CORE_ASSERT(IsValidIndex(index), "FixedList: Can't index more than FixedList::Size() elements");
+        return m_Elements[index];
+    }
+    const Type& At(size_t index)const{
+        SX_CORE_ASSERT(IsValidIndex(index), "FixedList: Can't index more than FixedList::Size() elements");
+        return m_Elements[index];
+    }
+
     Type &operator[](size_t index){
-        return const_cast<Type &>(const_cast<const FixedList<Type, CapacityValue>*>(this)->operator[](index));
+        return At(index);
     }
 
     const Type &operator[](size_t index)const{
-        SX_CORE_ASSERT(index < m_Size, "FixedList: Can't index more than FixedList::Size() elements");
-
-        return begin()[index];
+        return At(index);
     }
 
     FixedList &operator=(const FixedList &other){
@@ -141,11 +156,11 @@ public:
     }
 
     operator Span<Type>(){
-        return {m_Array.Data(), Size()};
+        return {m_Elements.Data(), Size()};
     }
 
     operator ConstSpan<Type>()const{
-        return {m_Array.Data(), Size()};
+        return {m_Elements.Data(), Size()};
     }
 
     size_t Size()const{
@@ -157,27 +172,27 @@ public:
     }
 
     Type *Data(){
-        return m_Array.Data();
+        return m_Elements.Data();
     }
 
     const Type *Data()const{
-        return m_Array.Data();
+        return m_Elements.Data();
     }
 
     Type &First(){
-        return operator[](0);
+        return At(0);
     }
 
     const Type &First()const{
-        return operator[](0);
+        return At(0);
     }
 
     Type &Last(){
-        return operator[](Size() - 1);
+        return At(Size() - 1);
     }
 
     const Type &Last()const{
-        return operator[](Size() - 1);
+        return At(Size() - 1);
     }
 
     Iterator begin(){
