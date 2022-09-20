@@ -14,6 +14,8 @@ public:
 	~GraphicsResource();
 
 	GraphicsResource &operator=(GraphicsResource&& other)noexcept;
+
+	static size_t Count();
 };
 
 #endif//STRAITX_GRAPHICS_RESOURCE_HPP

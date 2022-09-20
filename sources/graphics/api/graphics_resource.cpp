@@ -22,3 +22,7 @@ GraphicsResource& GraphicsResource::operator=(GraphicsResource&& other) noexcept
 	SX_ASSERT(false);
 	return *this;
 }
+
+size_t GraphicsResource::Count() {
+	return s_GraphicsResourceCount;
+}
