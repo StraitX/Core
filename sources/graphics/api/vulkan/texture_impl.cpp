@@ -8,16 +8,17 @@
 namespace Vk{
 
 VkFormat ToVkFormat(TextureFormat format){
-    static VkFormat s_FormatTable[] = {
-        VK_FORMAT_UNDEFINED,
-        VK_FORMAT_R8G8B8A8_UNORM,
-        VK_FORMAT_D24_UNORM_S8_UINT,
-        VK_FORMAT_B8G8R8A8_UNORM,
-        VK_FORMAT_D32_SFLOAT,
-        // XXX pick proper one later
-        VK_FORMAT_R8G8B8A8_UNORM
-    };
-    return s_FormatTable[(size_t)format];
+    switch (format) {
+    case TextureFormat::Unknown:         return VK_FORMAT_UNDEFINED;
+    case TextureFormat::RGBA8:           return VK_FORMAT_R8G8B8A8_UNORM;
+    case TextureFormat::RGB8:            return VK_FORMAT_R8G8B8_UNORM;
+    case TextureFormat::RGBA16F:         return VK_FORMAT_R16G16B16A16_SFLOAT;
+    case TextureFormat::BGRA8:           return VK_FORMAT_B8G8R8A8_UNORM;
+    case TextureFormat::Depth32:         return VK_FORMAT_D32_SFLOAT;
+    case TextureFormat::Depth24Stencil8: return VK_FORMAT_D24_UNORM_S8_UINT;
+    }
+    SX_CORE_ASSERT(false, "unhandled texture format");
+    return VK_FORMAT_UNDEFINED;
 }
 
 VkImageLayout ToVkLayout(TextureLayout layout){

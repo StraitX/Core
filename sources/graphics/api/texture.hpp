@@ -29,6 +29,7 @@ enum class TextureFormat : u8{
     Unknown = 0,
     RGBA8,
     RGB8,
+    RGBA16F,
     BGRA8,
     Depth32,
     Depth24Stencil8

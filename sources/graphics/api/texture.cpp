@@ -23,22 +23,24 @@ bool IsStencilFormat(TextureFormat format) {
 bool IsColorFormat(TextureFormat format){
     if(format == TextureFormat::RGBA8
     || format == TextureFormat::RGB8
+    || format == TextureFormat::RGBA16F
     || format == TextureFormat::BGRA8)
         return true;
     return false;
 }
 
 size_t GetPixelSize(TextureFormat format){
-    static const size_t s_FormatPixelSizeTable[]={
-        0,
-        4,
-        3,
-        4,
-        4,
-        4
-    };
-
-    return s_FormatPixelSizeTable[(size_t)format];
+    switch (format){
+    case TextureFormat::Unknown:        return 0;
+    case TextureFormat::RGBA8:          return 4;
+    case TextureFormat::RGB8:           return 3;
+    case TextureFormat::RGBA16F:         return 8;
+    case TextureFormat::BGRA8:          return 4;
+    case TextureFormat::Depth32:        return 4;
+    case TextureFormat::Depth24Stencil8:return 4;
+    }
+    SX_CORE_ASSERT(false, "Unhandled texture format");
+    return 0;
 }
 
 Texture2D *Texture2D::Create(u32 width, u32 height, TextureFormat format, TextureUsage usage, TextureLayout initial_layout){
