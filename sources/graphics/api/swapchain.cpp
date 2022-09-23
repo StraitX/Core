@@ -73,7 +73,6 @@ void FramebufferChain::AcquireNext(const Semaphore *signal_semaphore){
 
 void FramebufferChain::PresentCurrent(const Semaphore *wait_semaphore){
     if (!m_Swapchain->PresentCurrent(*wait_semaphore)) {
-        wait_semaphore->WaitFor();
         Recreate();
     }
 }
