@@ -53,7 +53,7 @@ public:
     FramebufferChain(const Window *window, TextureFormat depth_buffer = TextureFormat::Unknown);
     
     //Requires framebuffers not to be in use.
-    void Recreate();
+    virtual void Recreate();
 
     const Framebuffer *CurrentFramebuffer()const{
         return m_Framebuffers[m_Swapchain->Current()].Get();
@@ -70,6 +70,11 @@ public:
     bool HasDepth()const {
         return m_DepthBuffer.Get() != nullptr;
     }
+
+    const Window* PresentTarget()const {
+        return m_Swapchain->PresentTarget();
+    }
+
 private:
     void CreateFramebuffers();
 };
