@@ -14,7 +14,7 @@ struct AttachmentDescription{
 };
 
 struct RenderPassProperties{
-    Span<AttachmentDescription> Attachments;
+    ConstSpan<AttachmentDescription> Attachments;
 };
 
 // Due to OpenGL Limitations
