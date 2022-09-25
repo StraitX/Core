@@ -23,7 +23,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
         break;
     }
 
-    std::fprintf(stderr,"[%s:[%i]]: VulkanValidator: \n", prefix, pCallbackData->messageIdNumber);
+    std::fprintf(stderr,"[Vulkan%s:%lld]:", prefix, (unsigned long long)pCallbackData->messageIdNumber);
     std::fprintf(stderr,"%s\n",pCallbackData->pMessage);
 
     return VK_FALSE;
