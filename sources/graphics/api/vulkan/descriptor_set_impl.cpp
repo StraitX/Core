@@ -125,7 +125,7 @@ void DescriptorSetImpl::UpdateTextureBinding(size_t binding, size_t index, const
 
 void DescriptorSetImpl::UpdateStorageTextureBinding(size_t binding, size_t index, const Texture2D *texture){
     VkDescriptorImageInfo image;
-    image.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;//GPUTextureImpl::s_LayoutTable[(size_t)texture.GetLayout()];
+    image.imageLayout = VK_IMAGE_LAYOUT_GENERAL;//GPUTextureImpl::s_LayoutTable[(size_t)texture.GetLayout()];
     image.imageView = ((const Vk::Texture2DImpl*)texture)->ViewHandle();
     image.sampler = nullptr;
 
