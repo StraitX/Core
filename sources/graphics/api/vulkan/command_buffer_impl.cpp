@@ -54,7 +54,7 @@ CommandBufferImpl::~CommandBufferImpl(){
 LayoutChangeOp *CommandBufferImpl::GetLastTextureLayoutChange(const Texture *texture){
     if(!m_Operations.Size())return nullptr;
 
-    for(size_t i = m_Operations.Size()-1; i>=0; i--){
+    for(int i = m_Operations.Size()-1; i>=0; i--){
         if(m_Operations[i].Type == ResourceOperationType::LayoutChange){
             if(m_Operations[i].LayoutChange.Texture == texture)
                 return &m_Operations[i].LayoutChange;
