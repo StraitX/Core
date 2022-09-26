@@ -116,6 +116,21 @@ public:
 	void Add(SubType &&element) {
 		FindOrCreate<SubType>().AddByMove(&element);
 	}
+	
+	void Add(PolymorphList&& other) {
+		for (size_t i = 0; i < other.m_Size; i++)
+			Add(Move(other.m_TypeLists[i]));
+	}
+
+	void Add(UntypedList&& other) {
+		UntypedList* list = Find(other.TypeIndex());
+		if (list) {
+			list->AddByMove(Move(other));
+		} else {
+			Reserve(m_Size + 1);
+			new (&m_TypeLists[m_Size++]) UntypedList(Move(other));
+		}
+	}
 
 	template<typename SubType, typename = EnableIfType<IsBaseOf<BaseType, SubType>::Value, void>>
 	void UnorderedRemove(SubType *element) {
@@ -126,12 +141,10 @@ public:
 	}
 
 	void Free() {
-		for (size_t i = 0; i < m_Size; i++)
-			m_TypeLists[i].~UntypedList();
+		Clear();
 
 		GeneralAllocatorType::Free(m_TypeLists);
 		m_TypeLists = nullptr;
-		m_Size = 0;
 		m_Capacity = 0;
 	}
 	
@@ -157,6 +170,12 @@ public:
         GeneralAllocatorType::Free(old_types_list);
         m_TypeLists = new_types_list;
         m_Capacity = new_capacity;
+	}
+
+	void Clear() {
+		for (size_t i = 0; i < m_Size; i++)
+			m_TypeLists[i].~UntypedList();
+		m_Size = 0;
 	}
 
 	IteratorBase<BaseType> begin() {

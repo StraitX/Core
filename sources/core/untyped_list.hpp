@@ -4,6 +4,7 @@
 #include <typeindex>
 #include "core/types.hpp"
 #include "core/move.hpp"
+#include "core/assert.hpp"
 #include "core/templates.hpp"
 #include "core/type_traits.hpp"
 #include "core/allocators/allocator.hpp"
@@ -100,6 +101,12 @@ public:
 		if (m_Size == m_Capacity)
 			Reserve(m_Size * 2 + !m_Size);
 		m_MoveElseCopyConstructor(obj, At(m_Size++));
+	}
+
+	void AddByMove(UntypedListBase&& other) {
+		for (size_t i = 0; i < other.Size(); i++)
+			AddByMove(other.At(i));
+		other.Clear();
 	}
 
 	void UnorderedRemove(void* element) {
