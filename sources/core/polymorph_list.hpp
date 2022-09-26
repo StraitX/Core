@@ -2,6 +2,7 @@
 #define STRAITX_POLYMORPH_LIST
 
 #include "core/untyped_list.hpp"
+#include "core/span.hpp"
 
 //XXX: Allocator usage is not optimal for custom ones
 
@@ -44,52 +45,6 @@ private:
 			return *(CastType*)m_TypeList->At(m_TypeListIndex);
 		}
 	};
-	
-	template<typename SubType>
-	class SubTypeIterator {
-	private:
-		SubType* m_Pointer = nullptr;
-	public:
-		SubTypeIterator(SubType* pointer) :
-			m_Pointer(pointer)
-		{}
-
-		bool operator!=(const SubTypeIterator& other)const {
-			return m_Pointer != other.m_Pointer;
-		}
-
-		SubTypeIterator& operator++() {
-			m_Pointer++;
-			return *this;
-		}
-
-		SubType* operator->() {
-			return m_Pointer;
-		}
-
-		SubType& operator*() {
-			return *m_Pointer;
-		}
-	};
-
-	template<typename SubType>
-	class SubTypeRange {
-	private:
-		SubTypeIterator<SubType> Begin;
-		SubTypeIterator<SubType> End;
-	public:
-		SubTypeRange(SubTypeIterator<SubType> begin, SubTypeIterator<SubType> end) :
-			Begin(begin),
-			End(end)
-		{}
-
-		auto begin() {
-			return Begin;
-		}
-		auto end() {
-			return End;
-		}
-	};
 private:
 	UntypedList *m_TypeLists = nullptr;
 	size_t m_Size = 0;
@@ -97,8 +52,23 @@ private:
 public:
 	PolymorphList() = default;
 
+	PolymorphList(PolymorphList&& other) {
+		*this = Move(other);
+	}
+
 	~PolymorphList() {
 		Free();
+	}
+
+	PolymorphList& operator=(PolymorphList&& other) {
+		Free();
+		m_TypeLists = other.m_TypeLists;
+		m_Size = other.m_Size;
+		m_Capacity = other.m_Capacity;
+		other.m_TypeLists = nullptr;
+		other.m_Size = 0;
+		other.m_Capacity = 0;
+		return *this;
 	}
 
 	template<typename SubType, typename = EnableIfType<IsBaseOf<BaseType, SubType>::Value, void>>
@@ -201,15 +171,12 @@ public:
 		typename = EnableIfType<!IsLValueReference<SubType>::Value, void>, 
 		typename = EnableIfType<IsBaseOf<BaseType, SubType>::Value, void>
 	>
-	auto TypeRange() {
+	Span<SubType> TypeRange() {
 		UntypedList* list = Find(std::type_index(typeid(SubType)));
 
 		SX_CORE_ASSERT(list, "SubType is not present in Polymorph list");
 		
-		return SubTypeRange<SubType>(
-			{(SubType*)list->Data()},
-			{(SubType*)list->Data() + list->Size()}
-		);
+		return { (SubType*)list->Data(), list->Size() };
 	}
 
 	template<
@@ -219,15 +186,12 @@ public:
 		typename = EnableIfType<!IsLValueReference<SubType>::Value, void>, 
 		typename = EnableIfType<IsBaseOf<BaseType, SubType>::Value, void>
 	>
-	auto TypeRange()const{
+	ConstSpan<SubType>TypeRange()const{
 		UntypedList* list = Find(std::type_index(typeid(SubType)));
 
 		SX_CORE_ASSERT(list, "SubType is not present in Polymorph list");
 		
-		return SubTypeRange<const SubType>(
-			{(const SubType*)list->Data()},
-			{(const SubType*)list->Data() + list->Size()}
-		);
+		return {(const SubType*)list->Data(), list->Size()};
 	}
 private:
 	template<typename SubType>
