@@ -188,10 +188,10 @@ public:
 	>
 	ConstSpan<SubType>TypeRange()const{
 		UntypedList* list = Find(std::type_index(typeid(SubType)));
-
-		SX_CORE_ASSERT(list, "SubType is not present in Polymorph list");
 		
-		return {(const SubType*)list->Data(), list->Size()};
+		if(list)
+			return {(const SubType*)list->Data(), list->Size()};
+		return { nullptr, 0 };
 	}
 private:
 	template<typename SubType>
