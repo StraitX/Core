@@ -4,6 +4,7 @@
 #include "core/math/vector4.hpp"
 #include "core/assert.hpp"
 #include "core/printer.hpp"
+#include "core/math/linear.hpp"
 
 // Row Major Matrix
 template <typename T>
@@ -23,6 +24,10 @@ struct Matrix4{
     constexpr const Vector4<T> &operator[](size_t index)const;
 
     constexpr Matrix4 GetTransposed();
+
+    constexpr Vector4<T> Row(size_t index)const;
+
+    constexpr Vector4<T> Column(size_t index)const;
 };
 
 template <typename T>
@@ -63,21 +68,31 @@ constexpr Matrix4<T> Matrix4<T>::GetTransposed(){
 }
 
 template <typename T>
+constexpr Vector4<T> Matrix4<T>::Column(size_t index) const{
+    return { Rows[0][index], Rows[1][index], Rows[2][index], Rows[3][index] };
+}
+
+template <typename T>
+constexpr Vector4<T> Matrix4<T>::Row(size_t index) const{
+    return Rows[index];
+}
+
+template <typename T>
 constexpr Matrix4<T> operator*(const Matrix4<T> &l, const Matrix4<T> &r){
     Matrix4<T> res{T{}};
     for(size_t i = 0; i<4; i++)
         for(size_t j = 0; j<4; j++)
-            res[i][j] = l[i][0] * r[0][j] + l[i][1] * r[1][j] + l[i][2] * r[2][j] + l[i][3] * r[3][j];    
+            res[i][j] = Dot(l.Row(i), r.Column(j));    
     return res;
 }
 
 template <typename T>
 constexpr Vector4<T> operator*(const Matrix4<T> &l, const Vector4<T> &r){
     return {
-        l[0][0] * r[0] + l[0][1] * r[1] + l[0][2] * r[2] + l[0][3] * r[3],
-        l[1][0] * r[0] + l[1][1] * r[1] + l[1][2] * r[2] + l[1][3] * r[3],
-        l[2][0] * r[0] + l[2][1] * r[1] + l[2][2] * r[2] + l[2][3] * r[3],
-        l[3][0] * r[0] + l[3][1] * r[1] + l[3][2] * r[2] + l[3][3] * r[3]
+        Dot(l.Row(0), r),
+        Dot(l.Row(1), r),
+        Dot(l.Row(2), r),
+        Dot(l.Row(3), r)
     };
 }
 
@@ -91,11 +106,11 @@ struct Printer<Matrix4<T>>{
 	static void Print(const Matrix4<T> &value, StringWriter &writer){
 		Printer<char>::Print('\n', writer);
 		Printer<Vector4<T>>::Print(value[0], writer);
-		Printer<char>::Print('\n', writer, writer_data);
+		Printer<char>::Print('\n', writer);
 		Printer<Vector4<T>>::Print(value[1], writer);
-		Printer<char>::Print('\n', writer, writer_data);
+		Printer<char>::Print('\n', writer);
 		Printer<Vector4<T>>::Print(value[2], writer);
-		Printer<char>::Print('\n', writer, writer_data);
+		Printer<char>::Print('\n', writer);
 		Printer<Vector4<T>>::Print(value[3], writer);
 	}
 };
