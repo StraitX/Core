@@ -9,6 +9,7 @@
 #include "graphics/api/framebuffer.hpp"
 #include "core/os/window.hpp"
 #include "core/unique_ptr.hpp"
+#include "core/delegate.hpp"
 
 class Swapchain: public GraphicsResource{
 public:
@@ -49,6 +50,8 @@ private:
     UniquePtr<RenderPass> m_SwapchainPass{nullptr};
     List<UniquePtr<Framebuffer>> m_Framebuffers;
     UniquePtr<Texture2D> m_DepthBuffer{nullptr};
+public:
+    Delegate<FramebufferChain *> OnRecreate;
 public:
     FramebufferChain(const Window *window, TextureFormat depth_buffer = TextureFormat::Unknown);
     

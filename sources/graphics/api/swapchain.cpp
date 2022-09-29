@@ -63,6 +63,8 @@ void FramebufferChain::Recreate() {
         );
     }
     CreateFramebuffers();
+
+    OnRecreate(this);
 }
 
 
