@@ -71,7 +71,7 @@ public:
 
     virtual void BindIndexBuffer(const Buffer *buffer, IndicesType type) = 0;
 
-    virtual void DrawIndexed(u32 indices_count, u32 indices_offset = 0) = 0;
+    virtual void DrawIndexed(u32 indices_count, u32 indices_offset = 0, u32 base_vertex = 0) = 0;
 
     virtual void Copy(const Buffer *src, const Buffer *dst, size_t size, size_t src_offset = 0, size_t dst_offset = 0) = 0;
 

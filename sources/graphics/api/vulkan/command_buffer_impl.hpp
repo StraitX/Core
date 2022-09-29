@@ -135,7 +135,7 @@ public:
 
     void BindIndexBuffer(const Buffer *buffer, IndicesType type)override;
 
-    void DrawIndexed(u32 indices_count, u32 indices_offset)override;
+    void DrawIndexed(u32 indices_count, u32 indices_offset, u32 base_vertex)override;
 
     void Copy(const Buffer *src, const Buffer *dst, size_t size, size_t src_offset, size_t dst_offset)override;
 
