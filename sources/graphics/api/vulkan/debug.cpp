@@ -1,5 +1,5 @@
 #include "graphics/api/vulkan/debug.hpp"
-#include <cstdio>
+#include "core/print.hpp"
 
 namespace Vk{
 
@@ -23,8 +23,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
         break;
     }
 
-    std::fprintf(stderr,"[Vulkan%s:%lld]:", prefix, (unsigned long long)pCallbackData->messageIdNumber);
-    std::fprintf(stderr,"%s\n",pCallbackData->pMessage);
+    WriterPrint(*StraitXError, "[Vulkan%:%: %\n", prefix, pCallbackData->messageIdNumber, pCallbackData->pMessage);
 
     return VK_FALSE;
 }
