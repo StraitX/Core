@@ -13,7 +13,7 @@ RenderTexture::RenderTexture(Vector2u size, TextureFormat color_format, TextureF
 		Texture2D *color_attachment = Texture2D::Create(
 			size, 
 			color_format,
-			TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, 
+			TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst | TextureUsageBits::Storage, 
 			TextureLayout::ShaderReadOnlyOptimal
 		);
 
