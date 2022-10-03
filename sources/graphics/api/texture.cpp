@@ -2,6 +2,7 @@
 #include "graphics/api/graphics_api.hpp"
 #include "core/os/vulkan.hpp"
 #include "core/assert.hpp"
+#include "core/unique_ptr.hpp"
 
 #ifdef SX_VULKAN_SUPPORTED
     #include "graphics/api/vulkan/texture_impl.hpp"
@@ -70,4 +71,14 @@ Texture2D *Texture2D::Create(const char *filepath, TextureUsage usage, TextureLa
     SX_CORE_ASSERT(res == Result::Success, "Can't load image from a file");
 
     return Create(staging, usage, initial_layout);
+}
+
+Texture2D* Texture2D::Black(){
+    static UniquePtr<Texture2D> s_BlackTexture = Texture2D::Create(Image(1, 1, Color::Black), TextureUsageBits::Sampled, TextureLayout::ShaderReadOnlyOptimal);
+    return s_BlackTexture.Get();
+}
+
+Texture2D* Texture2D::White(){
+    static UniquePtr<Texture2D> s_WhiteTexture = Texture2D::Create(Image(1, 1, Color::White), TextureUsageBits::Sampled, TextureLayout::ShaderReadOnlyOptimal);
+    return s_WhiteTexture.Get();
 }

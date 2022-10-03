@@ -113,6 +113,10 @@ public:
     static Texture2D *Create(const Image &image, TextureUsage usage = TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout initial_layout = TextureLayout::ShaderReadOnlyOptimal);
 
     static Texture2D *Create(const char *filepath, TextureUsage usage = TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout initial_layout = TextureLayout::ShaderReadOnlyOptimal);
+
+    static Texture2D* Black();
+
+    static Texture2D* White();
 };
 
 #endif//STRAITX_TEXTURE_HPP
