@@ -99,16 +99,36 @@ public:
         RemoveLast();
     }
 
-    void UnorderedRemove(const Type &type){
-        for(size_t i = 0; i<Size(); i++){
-            if(At(i) == type){
-                UnorderedRemove(i);
-                break;
-            }
-        }
+    bool UnorderedRemove(const Type &type){
+        ConstIterator it = Find(type);
+        if (it != end())
+            return (UnorderedRemove(it), true);
+        else
+            return false;
     }
 
-    void UnorderedRemove(ConstIterator *iterator){
+    bool Contains(const Type& value)const {
+        return Find(value) != end();
+    }
+
+    ConstIterator Find(const Type& value)const{
+        ConstIterator it = begin();
+        for (; it != end(); ++it)
+            if (*it == value)
+                return it;
+        return it;
+    }
+    
+    template<typename Predicate>
+    ConstIterator FindByPredicate(Predicate predicate) {
+        ConstIterator it = begin();
+        for (; it != end(); ++it)
+            if (predicate(*it))
+                return it;
+        return it;
+    }
+
+    void UnorderedRemove(ConstIterator iterator){
         SX_CORE_ASSERT(iterator >= begin() && iterator < end(), "iterator is out of range");
         UnorderedRemove(iterator - begin());
     }

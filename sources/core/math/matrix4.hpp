@@ -23,7 +23,9 @@ struct Matrix4{
 
     constexpr const Vector4<T> &operator[](size_t index)const;
 
-    constexpr Matrix4 GetTransposed();
+    constexpr Matrix4 GetTransposed()const;
+
+    constexpr Matrix4 GetInverse()const;
 
     constexpr Vector4<T> Row(size_t index)const;
 
@@ -58,13 +60,18 @@ constexpr const Vector4<T> &Matrix4<T>::operator[](size_t index)const{
     return Rows[index];
 }
 template <typename T>
-constexpr Matrix4<T> Matrix4<T>::GetTransposed(){
+constexpr Matrix4<T> Matrix4<T>::GetTransposed()const{
     return {
         {Rows[0][0], Rows[1][0], Rows[2][0], Rows[3][0]},
         {Rows[0][1], Rows[1][1], Rows[2][1], Rows[3][1]},
         {Rows[0][2], Rows[1][2], Rows[2][2], Rows[3][2]},
         {Rows[0][3], Rows[1][3], Rows[2][3], Rows[3][3]}
     };
+}
+
+template <typename T>
+constexpr Matrix4<T> Matrix4<T>::GetInverse()const{
+    return *this;
 }
 
 template <typename T>

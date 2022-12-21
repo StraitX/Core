@@ -165,7 +165,7 @@ public:
 	}
 
 	bool IsValidElement(void* element)const {
-		return element >= m_Memory && element < (byte*)m_Memory + m_Size && ((byte*)element - (byte*)m_Memory) % m_TypeInfo.Size == 0;
+		return element >= m_Memory && element < (byte*)m_Memory + m_Size * m_TypeInfo.Size && ((byte*)element - (byte*)m_Memory) % m_TypeInfo.Size == 0;
 	}
 	
 	size_t Size()const {

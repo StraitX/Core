@@ -90,6 +90,7 @@ public:
 	void Add(PolymorphList&& other) {
 		for (size_t i = 0; i < other.m_Size; i++)
 			Add(Move(other.m_TypeLists[i]));
+		other.Clear();
 	}
 
 	void Add(UntypedList&& other) {
