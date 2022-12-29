@@ -15,7 +15,7 @@
 
 
 #define SX_STACK_ALLOC(size) alloca(size)
-#define SX_STACK_ARRAY_ALLOC(type, count) (type*)SX_STACK_ALLOC(sizeof(type)*count)
+#define SX_STACK_ARRAY_ALLOC(type, count) (type*)SX_STACK_ALLOC(sizeof(type)*(count))
 
 class Memory{
 public:
