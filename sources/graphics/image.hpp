@@ -29,13 +29,13 @@ public:
 
     void Clear();
 
-    Result LoadFromFile(const char *filename);
+    Result LoadFromFile(StringView filename);
 
     Result LoadFromFile(File &file);
 
     Result SaveToFile(File &file, ImageFileFormat save_format);
 
-    Result SaveToFile(const char *filename);
+    Result SaveToFile(StringView filename);
 
     void Fill(const Color &color);
 

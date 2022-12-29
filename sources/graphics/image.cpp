@@ -47,7 +47,7 @@ void Image::Clear(){
     m_Height = 0;
 }
 
-Result Image::LoadFromFile(const char *filename){
+Result Image::LoadFromFile(StringView filename){
     if(!File::Exists(filename))return Result::NotFound;
 
     File file;
@@ -77,15 +77,19 @@ Result Image::SaveToFile(File &file, ImageFileFormat save_format){
     return ImageLoader::SaveImage(file, m_Width, m_Height, 4, save_format, m_Data);
 }
 
-Result Image::SaveToFile(const char *filename){
+Result Image::SaveToFile(StringView filename){
     ImageFileFormat format;
     {
-        const char *end = String::FindLast(filename, ".");
+        char* filename_terminated = SX_STACK_ARRAY_ALLOC(char, filename.Size() + 1);
+        Memory::Copy(filename.Data(), filename_terminated, filename.Size());
+        filename_terminated[filename.Size()] = 0;
+
+        const char *end = String::FindLast(filename_terminated, ".");
 
         if(!end)return Result::WrongFormat;
 
         auto length = String::Length(end) + 1;
-        char *extension = (char*)alloca(length);
+        char *extension = SX_STACK_ARRAY_ALLOC(char,length);
 
         Memory::Copy(end+1, extension, length);
 
