@@ -22,13 +22,13 @@ public:
 		m_CodeunitsCount(StaticCodeunitsCount(string))
 	{}
 
-	StringView(StringView &&other) {
+	StringView(StringView &&other)noexcept{
 		*this = Move(other);
 	}
 
 	StringView(const StringView &) = default;
 
-	StringView& operator=(StringView &&other) {
+	StringView& operator=(StringView &&other)noexcept{
 		m_String = other.m_String;
 		m_CodeunitsCount = other.m_CodeunitsCount;
 		other.m_String = nullptr;
