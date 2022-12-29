@@ -112,7 +112,7 @@ public:
 
     static Texture2D *Create(const Image &image, TextureUsage usage = TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout initial_layout = TextureLayout::ShaderReadOnlyOptimal);
 
-    static Texture2D *Create(const char *filepath, TextureUsage usage = TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout initial_layout = TextureLayout::ShaderReadOnlyOptimal);
+    static Texture2D *Create(StringView filepath, TextureUsage usage = TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout initial_layout = TextureLayout::ShaderReadOnlyOptimal);
 
     static Texture2D* Black();
 

@@ -64,7 +64,7 @@ Texture2D *Texture2D::Create(const Image &image, TextureUsage usage, TextureLayo
     return texture;
 }
 
-Texture2D *Texture2D::Create(const char *filepath, TextureUsage usage, TextureLayout initial_layout){
+Texture2D *Texture2D::Create(StringView filepath, TextureUsage usage, TextureLayout initial_layout){
     Image staging;
     Result res = staging.LoadFromFile(filepath);
 
