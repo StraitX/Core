@@ -1,12 +1,29 @@
 #ifndef STRAITX_TRIG_HPP
 #define STRAITX_TRIG_HPP
 
-#include <math.h>
+#include <cmath>
+#include <float.h>
 #include "core/env/compiler.hpp"
 
 namespace Math{
 
 constexpr double Pi = 3.14159265368979323;
+
+template<typename NumberType>
+constexpr NumberType Epsilon() {
+    static_assert(false, "Epsilon is not implemented for this type");
+    return NumberType();
+}
+
+template<>
+constexpr float Epsilon<float>() {
+    return FLT_EPSILON;
+}
+
+template<typename NumberType>
+constexpr NumberType Abs(NumberType radians){
+    return std::abs(radians);
+}
 
 template<typename NumberType>
 constexpr NumberType Sin(NumberType radians){
@@ -26,6 +43,24 @@ constexpr NumberType Tan(NumberType radians){
 template<typename NumberType>
 constexpr NumberType Cot(NumberType radians){
     return Tan(NumberType(Pi/2.0) - radians);
+}
+
+template<typename NumberType>
+constexpr NumberType Asin(NumberType radians){
+    return asin(radians);
+}
+
+template<typename NumberType>
+constexpr NumberType Acos(NumberType radians){
+    return acos(radians);
+}
+template<typename NumberType>
+constexpr NumberType Atan(NumberType radians){
+    return atan(radians);
+}
+template<typename NumberType>
+constexpr NumberType Atan2(NumberType y_radians, NumberType x_radians){
+    return atan2(y_radians, x_radians);
 }
 
 template<typename NumberType>

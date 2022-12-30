@@ -1,6 +1,7 @@
 #ifndef STRAITX_MATRIX4_HPP
 #define STRAITX_MATRIX4_HPP
 
+#include "core/math/vector3.hpp"
 #include "core/math/vector4.hpp"
 #include "core/assert.hpp"
 #include "core/printer.hpp"
@@ -27,6 +28,8 @@ struct Matrix4{
 
     constexpr Matrix4 GetInverse()const;
 
+    constexpr void Decompose(Vector3<T>& position, Vector3<T>& rotation, Vector3<T>& scale)const;
+
     constexpr Vector4<T> Row(size_t index)const;
 
     constexpr Vector4<T> Column(size_t index)const;
@@ -34,6 +37,8 @@ struct Matrix4{
     constexpr T& Flat(size_t index);
 
     constexpr const T& Flat(size_t index)const;
+
+    constexpr T GetDeterminant()const;
 };
 
 template <typename T>
@@ -75,143 +80,84 @@ constexpr Matrix4<T> Matrix4<T>::GetTransposed()const{
 
 template <typename T>
 constexpr Matrix4<T> Matrix4<T>::GetInverse()const {
-    T inv[16];
-    T det{};
-    int i;
+    const T det = GetDeterminant();
 
-    struct FlatMatrix {
-        Matrix4<T> Matrix;
+    if(det == static_cast<T>(0))
+        return Matrix4<T>();
 
-        T& operator[](size_t index) {
-            return Matrix.Flat(index);
-        }
-    };
+    const T invdet = static_cast<T>(1.0) / det;
+    const Matrix4<T>& m = *this;
 
-    FlatMatrix m{ *this };
+    Matrix4<T> res;
+    res[0][0] = invdet  * (m[1][1] * (m[2][2] * m[3][3] - m[2][3] * m[3][2]) + m[1][2] * (m[2][3] * m[3][1] - m[2][1] * m[3][3]) + m[1][3] * (m[2][1] * m[3][2] - m[2][2] * m[3][1]));
+    res[0][1] = -invdet * (m[0][1] * (m[2][2] * m[3][3] - m[2][3] * m[3][2]) + m[0][2] * (m[2][3] * m[3][1] - m[2][1] * m[3][3]) + m[0][3] * (m[2][1] * m[3][2] - m[2][2] * m[3][1]));
+    res[0][2] = invdet  * (m[0][1] * (m[1][2] * m[3][3] - m[1][3] * m[3][2]) + m[0][2] * (m[1][3] * m[3][1] - m[1][1] * m[3][3]) + m[0][3] * (m[1][1] * m[3][2] - m[1][2] * m[3][1]));
+    res[0][3] = -invdet * (m[0][1] * (m[1][2] * m[2][3] - m[1][3] * m[2][2]) + m[0][2] * (m[1][3] * m[2][1] - m[1][1] * m[2][3]) + m[0][3] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]));
+    res[1][0] = -invdet * (m[1][0] * (m[2][2] * m[3][3] - m[2][3] * m[3][2]) + m[1][2] * (m[2][3] * m[3][0] - m[2][0] * m[3][3]) + m[1][3] * (m[2][0] * m[3][2] - m[2][2] * m[3][0]));
+    res[1][1] = invdet  * (m[0][0] * (m[2][2] * m[3][3] - m[2][3] * m[3][2]) + m[0][2] * (m[2][3] * m[3][0] - m[2][0] * m[3][3]) + m[0][3] * (m[2][0] * m[3][2] - m[2][2] * m[3][0]));
+    res[1][2] = -invdet * (m[0][0] * (m[1][2] * m[3][3] - m[1][3] * m[3][2]) + m[0][2] * (m[1][3] * m[3][0] - m[1][0] * m[3][3]) + m[0][3] * (m[1][0] * m[3][2] - m[1][2] * m[3][0]));
+    res[1][3] = invdet  * (m[0][0] * (m[1][2] * m[2][3] - m[1][3] * m[2][2]) + m[0][2] * (m[1][3] * m[2][0] - m[1][0] * m[2][3]) + m[0][3] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]));
+    res[2][0] = invdet  * (m[1][0] * (m[2][1] * m[3][3] - m[2][3] * m[3][1]) + m[1][1] * (m[2][3] * m[3][0] - m[2][0] * m[3][3]) + m[1][3] * (m[2][0] * m[3][1] - m[2][1] * m[3][0]));
+    res[2][1] = -invdet * (m[0][0] * (m[2][1] * m[3][3] - m[2][3] * m[3][1]) + m[0][1] * (m[2][3] * m[3][0] - m[2][0] * m[3][3]) + m[0][3] * (m[2][0] * m[3][1] - m[2][1] * m[3][0]));
+    res[2][2] = invdet  * (m[0][0] * (m[1][1] * m[3][3] - m[1][3] * m[3][1]) + m[0][1] * (m[1][3] * m[3][0] - m[1][0] * m[3][3]) + m[0][3] * (m[1][0] * m[3][1] - m[1][1] * m[3][0]));
+    res[2][3] = -invdet * (m[0][0] * (m[1][1] * m[2][3] - m[1][3] * m[2][1]) + m[0][1] * (m[1][3] * m[2][0] - m[1][0] * m[2][3]) + m[0][3] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]));
+    res[3][0] = -invdet * (m[1][0] * (m[2][1] * m[3][2] - m[2][2] * m[3][1]) + m[1][1] * (m[2][2] * m[3][0] - m[2][0] * m[3][2]) + m[1][2] * (m[2][0] * m[3][1] - m[2][1] * m[3][0]));
+    res[3][1] = invdet  * (m[0][0] * (m[2][1] * m[3][2] - m[2][2] * m[3][1]) + m[0][1] * (m[2][2] * m[3][0] - m[2][0] * m[3][2]) + m[0][2] * (m[2][0] * m[3][1] - m[2][1] * m[3][0]));
+    res[3][2] = -invdet * (m[0][0] * (m[1][1] * m[3][2] - m[1][2] * m[3][1]) + m[0][1] * (m[1][2] * m[3][0] - m[1][0] * m[3][2]) + m[0][2] * (m[1][0] * m[3][1] - m[1][1] * m[3][0]));
+    res[3][3] = invdet  * (m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) + m[0][1] * (m[1][2] * m[2][0] - m[1][0] * m[2][2]) + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]));
 
-    inv[0] = m[5]  * m[10] * m[15] - 
-             m[5]  * m[11] * m[14] - 
-             m[9]  * m[6]  * m[15] + 
-             m[9]  * m[7]  * m[14] +
-             m[13] * m[6]  * m[11] - 
-             m[13] * m[7]  * m[10];
+    return *this;
+}
 
-    inv[4] = -m[4]  * m[10] * m[15] + 
-              m[4]  * m[11] * m[14] + 
-              m[8]  * m[6]  * m[15] - 
-              m[8]  * m[7]  * m[14] - 
-              m[12] * m[6]  * m[11] + 
-              m[12] * m[7]  * m[10];
+template <typename T>
+constexpr void Matrix4<T>::Decompose(Vector3<T>& position, Vector3<T>& rotation, Vector3<T>& scale)const{
+	position.x = Rows[0][3]; 
+	position.y = Rows[1][3]; 
+	position.z = Rows[2][3]; 
 
-    inv[8] = m[4]  * m[9] * m[15] - 
-             m[4]  * m[11] * m[13] - 
-             m[8]  * m[5] * m[15] + 
-             m[8]  * m[7] * m[13] + 
-             m[12] * m[5] * m[11] - 
-             m[12] * m[7] * m[9];
+	Vector3<T> cols[3] = { 
+		Vector3<T>(Rows[0][0], Rows[1][0], Rows[2][0]), 
+		Vector3<T>(Rows[0][1], Rows[1][1], Rows[2][1]), 
+		Vector3<T>(Rows[0][2], Rows[1][2], Rows[2][2]) 
+	}; 
 
-    inv[12] = -m[4]  * m[9] * m[14] + 
-               m[4]  * m[10] * m[13] +
-               m[8]  * m[5] * m[14] - 
-               m[8]  * m[6] * m[13] - 
-               m[12] * m[5] * m[10] + 
-               m[12] * m[6] * m[9];
+	scale.x = cols[0].Length(); 
+	scale.y = cols[1].Length(); 
+	scale.z = cols[2].Length(); 
 
-    inv[1] = -m[1]  * m[10] * m[15] + 
-              m[1]  * m[11] * m[14] + 
-              m[9]  * m[2] * m[15] - 
-              m[9]  * m[3] * m[14] - 
-              m[13] * m[2] * m[11] + 
-              m[13] * m[3] * m[10];
+	if (GetDeterminant() < 0) scale = -scale; 
 
-    inv[5] = m[0]  * m[10] * m[15] - 
-             m[0]  * m[11] * m[14] - 
-             m[8]  * m[2] * m[15] + 
-             m[8]  * m[3] * m[14] + 
-             m[12] * m[2] * m[11] - 
-             m[12] * m[3] * m[10];
+	if(scale.x) cols[0] /= scale.x; 
+	if(scale.y) cols[1] /= scale.y;
+	if(scale.z) cols[2] /= scale.z;
 
-    inv[9] = -m[0]  * m[9] * m[15] + 
-              m[0]  * m[11] * m[13] + 
-              m[8]  * m[1] * m[15] - 
-              m[8]  * m[3] * m[13] - 
-              m[12] * m[1] * m[11] + 
-              m[12] * m[3] * m[9];
 
-    inv[13] = m[0]  * m[9] * m[14] - 
-              m[0]  * m[10] * m[13] - 
-              m[8]  * m[1] * m[14] + 
-              m[8]  * m[2] * m[13] + 
-              m[12] * m[1] * m[10] - 
-              m[12] * m[2] * m[9];
+    const T epsilon = Math::Epsilon<T>();
 
-    inv[2] = m[1]  * m[6] * m[15] - 
-             m[1]  * m[7] * m[14] - 
-             m[5]  * m[2] * m[15] + 
-             m[5]  * m[3] * m[14] + 
-             m[13] * m[2] * m[7] - 
-             m[13] * m[3] * m[6];
+	rotation.y  = Math::Asin(-cols[0].z);// D. Angle around oY.
 
-    inv[6] = -m[0]  * m[6] * m[15] + 
-              m[0]  * m[7] * m[14] + 
-              m[4]  * m[2] * m[15] - 
-              m[4]  * m[3] * m[14] - 
-              m[12] * m[2] * m[7] + 
-              m[12] * m[3] * m[6];
+	T C = Math::Cos(rotation.y);
 
-    inv[10] = m[0]  * m[5] * m[15] - 
-              m[0]  * m[7] * m[13] - 
-              m[4]  * m[1] * m[15] + 
-              m[4]  * m[3] * m[13] + 
-              m[12] * m[1] * m[7] - 
-              m[12] * m[3] * m[5];
+	if(Math::Abs(C) > epsilon)
+	{
+		T tan_x = cols[2].z / C;// A
+		T tan_y = cols[1].z / C;// B
 
-    inv[14] = -m[0]  * m[5] * m[14] + 
-               m[0]  * m[6] * m[13] + 
-               m[4]  * m[1] * m[14] - 
-               m[4]  * m[2] * m[13] - 
-               m[12] * m[1] * m[6] + 
-               m[12] * m[2] * m[5];
+		rotation.x = Math::Atan2(tan_y, tan_x);
 
-    inv[3] = -m[1] * m[6] * m[11] + 
-              m[1] * m[7] * m[10] + 
-              m[5] * m[2] * m[11] - 
-              m[5] * m[3] * m[10] - 
-              m[9] * m[2] * m[7] + 
-              m[9] * m[3] * m[6];
+		tan_x = cols[0].x / C;// E
+		tan_y = cols[0].y / C;// F
+		rotation.z = Math::Atan2(tan_y, tan_x);
+	}
+	else
+	{// oY is fixed.
+		rotation.x = 0;
 
-    inv[7] = m[0] * m[6] * m[11] - 
-             m[0] * m[7] * m[10] - 
-             m[4] * m[2] * m[11] + 
-             m[4] * m[3] * m[10] + 
-             m[8] * m[2] * m[7] - 
-             m[8] * m[3] * m[6];
+		T tan_x =  cols[1].y;// BDF+AE => E
+		T tan_y = -cols[1].x;// BDE-AF => F
 
-    inv[11] = -m[0] * m[5] * m[11] + 
-               m[0] * m[7] * m[9] + 
-               m[4] * m[1] * m[11] - 
-               m[4] * m[3] * m[9] - 
-               m[8] * m[1] * m[7] + 
-               m[8] * m[3] * m[5];
-
-    inv[15] = m[0] * m[5] * m[10] - 
-              m[0] * m[6] * m[9] - 
-              m[4] * m[1] * m[10] + 
-              m[4] * m[2] * m[9] + 
-              m[8] * m[1] * m[6] - 
-              m[8] * m[2] * m[5];
-
-    det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
-
-    if (det == 0)
-        return {};
-
-    det = 1.0 / det;
-    
-    Matrix4<T> result;
-    for (i = 0; i < 16; i++)
-        result.Flat(i) = inv[i] * det;
-    return result;
+		rotation.z = Math::Atan2(tan_y, tan_x);
+	}
 }
 
 template <typename T>
@@ -226,11 +172,23 @@ constexpr Vector4<T> Matrix4<T>::Row(size_t index) const{
 
 template <typename T>
 constexpr const T &Matrix4<T>::Flat(size_t index) const{
-    return Rows[index/4][index % 4];
+    return (&Rows[0][0])[index];
 }
 template <typename T>
 constexpr T &Matrix4<T>::Flat(size_t index) {
-    return Rows[index/4][index % 4];
+    return (&Rows[0][0])[index];
+}
+
+template <typename T>
+constexpr T Matrix4<T>::GetDeterminant() const{
+    const Matrix4<T>& m = *this;
+
+    return m[0][0]*m[1][1]*m[2][2]*m[3][3] - m[0][0]*m[1][1]*m[2][3]*m[3][2] + m[0][0]*m[1][2]*m[2][3]*m[3][1] - m[0][0]*m[1][2]*m[2][1]*m[3][3]
+        + m[0][0]*m[1][3]*m[2][1]*m[3][2] - m[0][0]*m[1][3]*m[2][2]*m[3][1] - m[0][1]*m[1][2]*m[2][3]*m[3][0] + m[0][1]*m[1][2]*m[2][0]*m[3][3]
+        - m[0][1]*m[1][3]*m[2][0]*m[3][2] + m[0][1]*m[1][3]*m[2][2]*m[3][0] - m[0][1]*m[1][0]*m[2][2]*m[3][3] + m[0][1]*m[1][0]*m[2][3]*m[3][2]
+        + m[0][2]*m[1][3]*m[2][0]*m[3][1] - m[0][2]*m[1][3]*m[2][1]*m[3][0] + m[0][2]*m[1][0]*m[2][1]*m[3][3] - m[0][2]*m[1][0]*m[2][3]*m[3][1]
+        + m[0][2]*m[1][1]*m[2][3]*m[3][0] - m[0][2]*m[1][1]*m[2][0]*m[3][3] - m[0][3]*m[1][0]*m[2][1]*m[3][2] + m[0][3]*m[1][0]*m[2][2]*m[3][1]
+        - m[0][3]*m[1][1]*m[2][2]*m[3][0] + m[0][3]*m[1][1]*m[2][0]*m[3][2] - m[0][3]*m[1][2]*m[2][0]*m[3][1] + m[0][3]*m[1][2]*m[2][1]*m[3][0];
 }
 
 template <typename T>

@@ -45,9 +45,16 @@ constexpr Matrix4<MatrixType> Rotate(Vector3<AngleType> radians){
 template<typename MatrixType>
 constexpr Matrix4<MatrixType> Translate(const Vector3<MatrixType> &translation) {
     Matrix4f matrix{1};
-    matrix[0][3] = translation[0];
-    matrix[1][3] = translation[1];
-    matrix[2][3] = translation[2];
+    for (int i = 0; i < 3; i++)
+        matrix[i][3] = translation[i];
+    return matrix;
+}
+
+template<typename MatrixType>
+constexpr Matrix4<MatrixType> Scale(const Vector3<MatrixType>& scale) {
+    Matrix4f matrix{ 1 };
+    for (int i = 0; i < 3; i++)
+        matrix[i][i] = scale[i];
     return matrix;
 }
 
