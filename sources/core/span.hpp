@@ -17,21 +17,21 @@ private:
     SizeType m_Size = 0;
 public:
 
-    Span() = default;
+    constexpr Span() = default;
 
-    Span(const Span &other) = default;
+    constexpr Span(const Span &other) = default;
 
-    Span(Type &element):
+    constexpr Span(Type &element):
         Span(&element, 1)
     {}
 
-    Span(Type *pointer, SizeType size):
+    constexpr Span(Type *pointer, SizeType size):
         m_Pointer(pointer),
         m_Size(size)
     {}
     
     template<typename _ = EnableIf<IsConst<Type>::Value, void>::Type>
-    Span(std::initializer_list<Type> list):
+    constexpr Span(std::initializer_list<Type> list):
         m_Pointer(list.begin()),
         m_Size(static_cast<SizeType>(list.size()))
     {}
@@ -39,13 +39,13 @@ public:
     template<typename _Type = Type, 
              typename NonConstType = typename RemoveConst<_Type>::Type,
              EnableIfType<IsConst<_Type>::Value, bool> = true>
-    Span(NonConstType *pointer, SizeType size):
+    constexpr Span(NonConstType *pointer, SizeType size):
         m_Pointer(pointer),
         m_Size(size)
     {}
 
     template<size_t ArraySize>
-    Span(Type (&array)[ArraySize]):
+    constexpr Span(Type (&array)[ArraySize]):
         m_Pointer(&array[0]),
         m_Size(ArraySize)
     {}
@@ -54,47 +54,47 @@ public:
              typename _Type = Type,
              typename NonConstType = typename RemoveConst<_Type>::Type,
              EnableIfType<IsConst<_Type>::Value, bool> = true>
-    Span(NonConstType (&array)[ArraySize]):
+    constexpr Span(NonConstType (&array)[ArraySize]):
         m_Pointer(&array[0]),
         m_Size(ArraySize)
     {}
 
-    Type &operator[](SizeType index)const{
+    constexpr Type &operator[](SizeType index)const{
         SX_CORE_ASSERT(IsValidIndex(index), "Span: can't index more that Span::Size elements");
         return m_Pointer[index]; 
     }
 
-    Span &operator=(const Span &other) = default;
+    constexpr Span &operator=(const Span &other) = default;
 
-    operator Span<const Type>()const{
+    constexpr operator Span<const Type>()const{
         return {Pointer(), Size()};
     }
 
-    bool IsValidIndex(size_t index)const{
+    constexpr bool IsValidIndex(size_t index)const{
         return index < Size();
     }
 
-    SizeType Size()const{
+    constexpr SizeType Size()const{
         return m_Size;
     }
     // XXX Change it to Data()
-    Type *Pointer()const{
+    constexpr Type *Pointer()const{
         return m_Pointer;
     }
 
-    Type &First(){
+    constexpr Type &First(){
         return operator[](0);
     }
 
-    Type &Last(){
+    constexpr Type &Last(){
         return operator[](Size() - 1);
     }
 
-    Iterator begin()const{
+    constexpr Iterator begin()const{
         return Pointer();
     }
 
-    Iterator end()const{
+    constexpr Iterator end()const{
         return Pointer() + Size();
     }
 };
