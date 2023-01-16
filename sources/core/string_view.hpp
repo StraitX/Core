@@ -12,7 +12,7 @@ protected:
 	const char *m_String = nullptr;
 	size_t m_CodeunitsCount = 0;
 public:
-	StringView(const char *string, size_t codeunits_count):
+	constexpr StringView(const char *string, size_t codeunits_count):
 		m_String(string),
 		m_CodeunitsCount(codeunits_count)
 	{}
@@ -22,13 +22,13 @@ public:
 		m_CodeunitsCount(StaticCodeunitsCount(string))
 	{}
 
-	StringView(StringView &&other)noexcept{
+	constexpr StringView(StringView &&other)noexcept{
 		*this = Move(other);
 	}
 
-	StringView(const StringView &) = default;
+	constexpr StringView(const StringView &) = default;
 
-	StringView& operator=(StringView &&other)noexcept{
+	constexpr StringView& operator=(StringView &&other)noexcept{
 		m_String = other.m_String;
 		m_CodeunitsCount = other.m_CodeunitsCount;
 		other.m_String = nullptr;
@@ -36,7 +36,7 @@ public:
 		return *this;
 	}
 
-	StringView &operator=(const StringView &) = default;
+	constexpr StringView &operator=(const StringView &) = default;
 
 	constexpr StringView& operator=(const char* string){
 		m_String = string;
@@ -44,15 +44,15 @@ public:
 		return *this;
 	}
 
-	const char* Data()const{
+	constexpr const char* Data()const{
 		return m_String;
 	}
 
-	size_t Size()const{
+	constexpr size_t Size()const{
 		return CodeunitsCount();
 	}
 
-	size_t CodeunitsCount()const{
+	constexpr size_t CodeunitsCount()const{
 		return m_CodeunitsCount;
 	}
 
@@ -63,7 +63,7 @@ public:
 		return counter;
 	}
 
-	operator ConstSpan<char>()const{
+	constexpr operator ConstSpan<char>()const{
 		return {Data(), Size()};
 	}
 
