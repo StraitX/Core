@@ -14,7 +14,7 @@ private:
     ShaderLang m_Lang;
     ShaderStageBits::Value m_Stage;
 public:
-    ShaderImpl(ShaderLang lang, ShaderStageBits::Value stage, Span<const char> sources);
+    ShaderImpl(ShaderStageBits::Value stage, StringView sources, ShaderCompileOptions opts);
 
     ~ShaderImpl();
 

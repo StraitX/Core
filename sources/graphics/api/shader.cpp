@@ -6,10 +6,10 @@
     #include "graphics/api/vulkan/shader_impl.hpp"
 #endif
 
-Shader *Shader::Create(ShaderLang lang, ShaderStageBits::Value stage, Span<const char> sources){
+Shader *Shader::Create(ShaderStageBits::Value stage, StringView sources, ShaderCompileOptions opts){
 #ifdef SX_VULKAN_SUPPORTED
     if(GraphicsAPI::Backend() == GraphicsAPIBackend::Vulkan)
-        return new Vk::ShaderImpl(lang, stage, sources);
+        return new Vk::ShaderImpl(stage, sources, opts);
 #endif
     return nullptr;
 }
