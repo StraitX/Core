@@ -113,17 +113,19 @@ public:
         Free();
     }
 
-    void Add(KeyType key, ValueType value) {
+    bool Add(KeyType key, ValueType value) {
         auto it = Find(key);
 
         if (it != end()){
             SX_ASSERT(it->Key == key);
             it->Value = value;
+            return false;
         } else {
             EnsureCapacity();
 
             HashedEntry& entry = m_Table[m_Size++];
             entry.Construct(key, value, 0);
+            return true;
         }
     }
 
