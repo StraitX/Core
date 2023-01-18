@@ -5,12 +5,13 @@
 #include "core/move.hpp"
 #include "core/noncopyable.hpp"
 #include "core/templates.hpp"
+#include "core/algorithm.hpp"
 #include "core/allocators/allocator.hpp"
 #include <functional>
 
 template <typename KeyType, typename ValueType, typename HashType = std::hash<KeyType>, typename GeneralAllocatorType = DefaultGeneralAllocator>
 class Table: private HashType, private GeneralAllocatorType, public NonCopyable{
-    static_assert(!IsConst<KeyType>::Value && !IsConst<ValueType>::Value);
+    static_assert(!IsConst<KeyType>::Value && !IsConst<ValueType>::Value, "Key and Value types should not be const");
 public:
     struct Entry {
         KeyType Key;
@@ -57,21 +58,33 @@ private:
 	template<typename DereferenceType>
     class IteratorBase {
     private:
+        template <typename Other>
+        friend class IteratorBase;
+
         HashedEntry* Current;
         size_t TillTheEnd;
     public:
+        template<typename OtherDereferencedType, typename _ = EnableIfType<IsCastable<OtherDereferencedType, DereferenceType>::Value,void>>
+        explicit IteratorBase(const IteratorBase<OtherDereferencedType> &it):
+            IteratorBase(it.Current, it.TillTheEnd)
+        {}
+
         explicit IteratorBase(HashedEntry *entry, size_t till_the_end):
             Current(entry),
             TillTheEnd(till_the_end)
         {
-            while (!Current->IsConstructed() && TillTheEnd) {
+            while (TillTheEnd && !Current->IsConstructed()) {
                 Current++;
                 TillTheEnd--;
             }
         }
 
-        bool operator!=(const IteratorBase& other) {
-            return Current != other.Current && TillTheEnd != other.TillTheEnd;
+        bool operator!=(const IteratorBase& other) const{
+            return !(*this == other);
+        }
+
+        bool operator==(const IteratorBase& other) const{
+            return Current == other.Current && TillTheEnd == other.TillTheEnd;
         }
 
         IteratorBase& operator++() {
@@ -101,37 +114,46 @@ public:
     }
 
     void Add(KeyType key, ValueType value) {
-        size_t hash = DoHash(key);
-        Add(HashedEntry{ Move(key), Move(value),  hash});
+        auto it = Find(key);
+
+        if (it != end()){
+            SX_ASSERT(it->Key == key);
+            it->Value = value;
+        } else {
+            EnsureCapacity();
+
+            HashedEntry& entry = m_Table[m_Size++];
+            entry.Construct(key, value, 0);
+        }
     }
 
     IteratorBase<const Entry> Find(const KeyType &key)const{
-        size_t key_hash = DoHash(key);
-        size_t index = IndexOf(key, key_hash);
-        
-        if (!m_Table[index].IsConstructed())
-            return end();
+        for (auto it = begin(); it != end(); ++it)
+            if (it->Key == key)
+                return it;
 
-        return IteratorBase<const Entry>( &m_Table[index], m_Capacity - index );
+        return end();
+    }
+
+    IteratorBase<Entry> Find(const KeyType& key) { 
+        return IteratorBase<Entry>(const_cast<const Table*>(this)->Find(key));
     }
 
     void Remove(KeyType key) {
-        size_t key_hash = DoHash(key);
-        size_t index = IndexOf(key, key_hash);
         
-        if (!m_Table[index].IsConstructed())
+        IteratorBase<Entry> it = Find(key);
+
+        if (it == end())
             return;
-        
-        m_Table[index].Destruct();
+
+        *((HashedEntry*)&*it) = Move(m_Table[m_Size - 1]);
+        m_Table[m_Size - 1].Destruct();
 
         m_Size -= 1;
     }
 
     bool Contains(const KeyType& key)const {
-        size_t key_hash = DoHash(key);
-        size_t index = IndexOf(key, key_hash);
-        
-        return m_Table[index].IsConstructed();
+        return Find(key) != end();
     }
 
     auto begin()const{
@@ -140,6 +162,14 @@ public:
 
     auto end()const{
         return IteratorBase<const Entry>(m_Table + m_Capacity, m_Capacity - m_Capacity);
+    }
+
+    auto begin(){
+        return IteratorBase<Entry>(m_Table, m_Capacity);
+    }
+
+    auto end(){
+        return IteratorBase<Entry>(m_Table + m_Capacity, m_Capacity - m_Capacity);
     }
 
     size_t Size()const {
@@ -158,12 +188,12 @@ public:
         size_t old_capacity = m_Capacity;
 
         m_Capacity = new_capacity;
-        m_Table = NewTable(m_Capacity);
+	    m_Table = NewTable(new_capacity);
         m_Size = 0;
 
         for (size_t i = 0; i < old_capacity; i++) {
             if (old_table[i].IsConstructed()) {
-                Add(Move(old_table[i]));
+                Add(Move(old_table[i].Key), Move(old_table[i].Value));
                 old_table[i].Destruct();
             }
         }
@@ -191,33 +221,8 @@ private:
         Reserve(GetNextCapacity(m_Capacity));
     }
 
-    void Add(HashedEntry entry) {
-        EnsureCapacity();
-
-        size_t index = IndexOf(entry.Key, entry.Hash);
-
-        if (!m_Table[index].IsConstructed()) {
-            m_Table[index].Construct(Move(entry));
-            m_Size += 1;
-        } else {
-            m_Table[index].Value = Move(entry.Value);
-        }
-    }
-
-    size_t IndexOf(const KeyType &key, size_t key_hash)const{
-        size_t index = key_hash % m_Capacity;
-        size_t index_increment = 1;
-
-        while (m_Table[index].IsConstructed() && !(m_Table[index].Key == key)) {
-            index = (index + index_increment) % m_Capacity;
-            index_increment += 1;
-        }
-        return index;
-    }
-
-
     HashedEntry* NewTable(size_t capacity) {
-        auto table = (HashedEntry*)GeneralAllocatorType::Alloc(capacity * sizeof(HashedEntry));
+        HashedEntry *table = (HashedEntry*)GeneralAllocatorType::Alloc(capacity * sizeof(HashedEntry));
         for (size_t i = 0; i < capacity; i++)
             table[i].Hash = InvalidHash;
         return table;
