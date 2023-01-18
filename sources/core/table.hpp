@@ -129,6 +129,17 @@ public:
         }
     }
 
+    ValueType& operator[](const KeyType& key) {
+        auto it = Find(key);
+
+        if (it == end()) {
+            Add(key, ValueType{});
+            it = Find(key);
+        } 
+
+        return it->Value;
+    }
+
     IteratorBase<const Entry> Find(const KeyType &key)const{
         for (auto it = begin(); it != end(); ++it)
             if (it->Key == key)
