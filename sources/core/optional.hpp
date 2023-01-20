@@ -55,6 +55,8 @@ public:
 		if (other.m_HasValue)
 			new(ValuePointer()) Type(Move(other.Value()));
 		m_HasValue = other.m_HasValue;
+		
+		other.Clear();
 
 		return *this;
 	}
