@@ -62,7 +62,7 @@ auto ToRange(RangeLikeType &type)->Range<decltype(Begin(type))>{
 template<typename Type>
 class IsRange{
 private:
-    using BaseType = typename RemoveReference<typename RemoveConstVolatile<Type>::Type>::Type;
+    using BaseType = typename RemoveConstVolatile<typename RemoveReference<Type>::Type>::Type;
     
     static constexpr bool Check(...){
         return false;
