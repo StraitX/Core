@@ -32,7 +32,7 @@ auto RangeToValue(PredicateType predicate) {
 
 template <typename PredicateType>
 auto FindByPredicate(const PredicateType &predicate) {
-	return RangeToValue([&](auto&& range) {
+	return RangeToValue([=](auto&& range) {
 		auto it = range.begin();
 		auto end = range.end();
 
@@ -46,14 +46,14 @@ auto FindByPredicate(const PredicateType &predicate) {
 
 template <typename ValueType>
 auto Find(const ValueType &value) {
-	return FindByPredicate([&](const auto& target) {
+	return FindByPredicate([=](const auto& target) {
 		return value == target;
 	});
 }
 
 template <typename PredicateType>
 auto ContainsByPredicate(const PredicateType &predicate) {
-	return RangeToValue([&](auto&& range) {
+	return RangeToValue([=](auto&& range) {
 		for (const auto& element : range)
 			if (predicate(element))
 				return true;
@@ -63,7 +63,7 @@ auto ContainsByPredicate(const PredicateType &predicate) {
 
 template <typename ValueType>
 auto Contains(const ValueType &value) {
-	return ContainsByPredicate([&](const auto &target) {
+	return ContainsByPredicate([=](const auto &target) {
 		return value == target;
 	});
 }

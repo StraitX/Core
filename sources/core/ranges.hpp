@@ -89,7 +89,7 @@ struct Printer<Range<T>>{
             TypePrinter::Print(*begin, writer);
 
             auto tmp = begin;
-            if(++tmp == end)
+            if(!(++tmp != end))
                 break;
 
             writer.Write(',');
