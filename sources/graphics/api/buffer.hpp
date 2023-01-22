@@ -64,4 +64,45 @@ public:
     }
 };
 
+
+template <typename ContentStruct>
+class StructBuffer{
+private:
+    UniquePtr<Buffer> m_StructBuffer;
+    UniquePtr<Buffer> m_StagingBuffer;
+    ContentStruct *m_StagingDataPtr{m_StagingBuffer->Map<ContentStruct>()};
+public:
+    StructBuffer():
+        m_StructBuffer(
+            Buffer::Create(
+                sizeof(ContentStruct), 
+                BufferMemoryType::DynamicVRAM, 
+                BufferUsageBits::UniformBuffer | BufferUsageBits::TransferDestination
+            )
+        ),
+        m_StagingBuffer(
+            Buffer::Create(
+                sizeof(ContentStruct), 
+                BufferMemoryType::UncachedRAM, 
+                BufferUsageBits::TransferSource
+            )
+        )
+    {}
+
+    void CmdUpdate(CommandBuffer& cmd_buffer, const ContentStruct& content)const{
+        *m_StagingDataPtr = content;
+        cmd_buffer.Copy(m_StagingBuffer.Get(), m_StructBuffer.Get(), sizeof(ContentStruct));
+    }
+
+    void Update(const ContentStruct& content){
+        *m_StructBuffer->Map<ContentStruct>() = content;
+        m_StructBuffer->Unmap();
+    }
+    
+    operator const Buffer*()const{
+        return m_StructBuffer.Get();
+    }
+};
+
+
 #endif//STRAITX_BUFFER_HPP
