@@ -67,3 +67,24 @@ auto Contains(const ValueType &value) {
 		return value == target;
 	});
 }
+
+template <typename PredicateType>
+auto IndexOfByPredicate(const PredicateType& predicate) {
+	return RangeToValue([=](auto&& range)->size_t{
+		auto it = range.begin();
+		auto end = range.end();
+
+		for (size_t i = 0; it != end; ++it, ++i) {
+			if (predicate(*it))
+				return i;
+		}
+		return -1;
+	});
+}
+
+template <typename ValueType>
+auto IndexOf(const ValueType& value) {
+	return IndexOfByPredicate([=](const auto &target)->bool{
+		return value == target;
+	});
+}
