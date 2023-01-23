@@ -94,7 +94,7 @@ public:
     virtual void Bind(const DescriptorSet *set) = 0;
     
     template<typename ContentStructType>
-    void Copy(const ContentStructType &src, const StructBuffer<ContentStructType> &dst)const{
+    void Copy(const ContentStructType &src, const StructBuffer<ContentStructType> &dst){
         *dst.m_StagingDataPtr = src;
         Copy(dst.m_StagingBuffer.Get(), dst.m_StructBuffer.Get(), sizeof(ContentStructType));
     }
