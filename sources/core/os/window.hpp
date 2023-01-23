@@ -23,6 +23,8 @@
 class Window: private OSWindowImpl{
 private:
 	using Super = OSWindowImpl;
+	bool m_IsFocused = true;
+	Function<void(const Event& e)> m_EventsHandler;
 public:
 	Window(u32 width, u32 height, StringView title);
 
@@ -33,6 +35,8 @@ public:
 	void Close();
 
 	bool IsOpen()const;
+
+	bool IsFocused()const;
 
 	void SetEventsHandler(Function<void(const Event &e)> handler);
 
@@ -49,10 +53,14 @@ public:
 	const Screen &CurrentScreen()const;
 
 	const OSWindowImpl &Impl()const;
+private:
+	void OnEvent(const Event& e);
 };
 
 SX_INLINE Window::Window(u32 width, u32 height, StringView title) {
 	(void)Open(width, height, title);
+
+	Super::SetEventsHandler({this, &Window::OnEvent});
 }
 
 SX_INLINE Window::~Window() {
@@ -71,9 +79,12 @@ SX_INLINE void Window::Close(){
 SX_INLINE bool Window::IsOpen()const{
 	return Super::IsOpen();
 }
+SX_INLINE bool Window::IsFocused()const {
+	return m_IsFocused;
+}
 
 SX_INLINE void Window::SetEventsHandler(Function<void(const Event& e)> handler) {
-	Super::SetEventsHandler(handler);
+	m_EventsHandler = handler;
 }
 
 SX_INLINE void Window::DispatchEvents(){
@@ -102,6 +113,16 @@ SX_INLINE const Screen &Window::CurrentScreen()const{
 
 SX_INLINE const OSWindowImpl &Window::Impl()const{
 	return *this;
+}
+
+SX_INLINE void Window::OnEvent(const Event& e) {
+	if (e.Type == EventType::FocusIn)
+		m_IsFocused = true;
+
+	if (e.Type == EventType::FocusOut)
+		m_IsFocused = false;
+
+	m_EventsHandler.TryCall(e);
 }
 
 #endif // STRAITX_WINDOW_HPP
