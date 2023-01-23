@@ -26,9 +26,9 @@ public:
 
     friend constexpr Time Microseconds(s64 microseconds);
 
-    constexpr Time operator+(const Time &other);
+    constexpr Time operator+(const Time &other)const;
     
-    constexpr Time operator-(const Time &other);
+    constexpr Time operator-(const Time &other)const;
 
     friend constexpr Time operator-(const Time &other);
 
@@ -38,17 +38,17 @@ public:
 
     constexpr Time &operator-=(const Time &other);
 
-    constexpr bool operator==(const Time &other);
+    constexpr bool operator==(const Time &other)const;
 
-    constexpr bool operator!=(const Time &other);
+    constexpr bool operator!=(const Time &other)const;
 
-    constexpr bool operator<(const Time &other);
+    constexpr bool operator<(const Time &other)const;
     
-    constexpr bool operator>(const Time &other);
+    constexpr bool operator>(const Time &other)const;
     
-    constexpr bool operator<=(const Time &other);
+    constexpr bool operator<=(const Time &other)const;
 
-    constexpr bool operator>=(const Time &other);
+    constexpr bool operator>=(const Time &other)const;
 };
 
 constexpr Time::Time(s64 microseconds):
@@ -79,11 +79,11 @@ constexpr Time Seconds(float seconds){
     return Microseconds(static_cast<s64>(seconds * 1000000));
 }
 
-constexpr Time Time::operator+(const Time &other){
+constexpr Time Time::operator+(const Time &other)const{
     return Time(m_Microseconds+other.m_Microseconds);
 }
     
-constexpr Time Time::operator-(const Time &other){
+constexpr Time Time::operator-(const Time &other)const{
     return Time(m_Microseconds-other.m_Microseconds);
 }
 
@@ -106,27 +106,27 @@ constexpr Time &Time::operator-=(const Time &other){
     return *this;
 }
 
-constexpr bool Time::operator==(const Time &other){
+constexpr bool Time::operator==(const Time &other)const{
     return m_Microseconds==other.m_Microseconds;
 }
 
-constexpr bool Time::operator!=(const Time &other){
+constexpr bool Time::operator!=(const Time &other)const{
     return m_Microseconds!=other.m_Microseconds;
 }
 
-constexpr bool Time::operator<(const Time &other){
+constexpr bool Time::operator<(const Time &other)const{
     return m_Microseconds<other.m_Microseconds;
 }
     
-constexpr bool Time::operator>(const Time &other){
+constexpr bool Time::operator>(const Time &other)const{
     return m_Microseconds>other.m_Microseconds;
 }
     
-constexpr bool Time::operator<=(const Time &other){
+constexpr bool Time::operator<=(const Time &other)const{
     return m_Microseconds<=other.m_Microseconds;
 }
 
-constexpr bool Time::operator>=(const Time &other){
+constexpr bool Time::operator>=(const Time &other)const{
     return m_Microseconds>=other.m_Microseconds;
 }
 
