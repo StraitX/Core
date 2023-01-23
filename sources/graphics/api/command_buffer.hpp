@@ -4,6 +4,7 @@
 #include "core/noncopyable.hpp"
 #include "graphics/color.hpp"
 #include "graphics/api/texture.hpp"
+#include "graphics/api/buffer.hpp"
 #include "graphics/api/graphics_resource.hpp"
 
 class RenderPass;
@@ -91,6 +92,12 @@ public:
     virtual void ClearDepthStencil(const Texture2D *texture, float depth = 1.f, u8 stencil = 0) = 0; 
 
     virtual void Bind(const DescriptorSet *set) = 0;
+    
+    template<typename ContentStructType>
+    void Copy(const ContentStructType &src, const StructBuffer<ContentStructType> &dst)const{
+        *dst.m_StagingDataPtr = src;
+        Copy(dst.m_StagingBuffer.Get(), dst.m_StructBuffer.Get(), sizeof(ContentStructType));
+    }
 
 };
 

@@ -2,6 +2,7 @@
 #define STRAITX_BUFFER_HPP
 
 #include "core/types.hpp"
+#include "core/unique_ptr.hpp"
 #include "graphics/api/graphics_resource.hpp"
 
 enum class BufferMemoryType{
@@ -65,37 +66,34 @@ public:
 };
 
 
-template <typename ContentStruct>
+template <typename ContentStructType>
 class StructBuffer{
 private:
     UniquePtr<Buffer> m_StructBuffer;
     UniquePtr<Buffer> m_StagingBuffer;
-    ContentStruct *m_StagingDataPtr{m_StagingBuffer->Map<ContentStruct>()};
+    ContentStructType *m_StagingDataPtr{m_StagingBuffer->Map<ContentStructType>()};
+
+    friend class CommandBuffer;
 public:
     StructBuffer():
         m_StructBuffer(
             Buffer::Create(
-                sizeof(ContentStruct), 
+                sizeof(ContentStructType), 
                 BufferMemoryType::DynamicVRAM, 
                 BufferUsageBits::UniformBuffer | BufferUsageBits::TransferDestination
             )
         ),
         m_StagingBuffer(
             Buffer::Create(
-                sizeof(ContentStruct), 
+                sizeof(ContentStructType), 
                 BufferMemoryType::UncachedRAM, 
                 BufferUsageBits::TransferSource
             )
         )
     {}
 
-    void CmdUpdate(CommandBuffer& cmd_buffer, const ContentStruct& content)const{
-        *m_StagingDataPtr = content;
-        cmd_buffer.Copy(m_StagingBuffer.Get(), m_StructBuffer.Get(), sizeof(ContentStruct));
-    }
-
-    void Update(const ContentStruct& content){
-        *m_StructBuffer->Map<ContentStruct>() = content;
+    void Copy(const ContentStructType& content){
+        *m_StructBuffer->Map<ContentStructType>() = content;
         m_StructBuffer->Unmap();
     }
     
@@ -103,6 +101,5 @@ public:
         return m_StructBuffer.Get();
     }
 };
-
 
 #endif//STRAITX_BUFFER_HPP
