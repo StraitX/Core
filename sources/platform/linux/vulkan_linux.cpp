@@ -1,5 +1,5 @@
 #define VK_USE_PLATFORM_XLIB_KHR
-#include "core/os/vulkan.hpp"
+#include "graphics/api/vulkan/vulkan.hpp"
 #include "core/env/compiler.hpp"
 
 namespace Vk{
