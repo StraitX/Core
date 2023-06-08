@@ -44,6 +44,15 @@ public:
         m_Size(size)
     {}
 
+    template<typename _Type = Type, 
+             typename NonConstType = typename RemoveConst<_Type>::Type,
+             EnableIfType<IsConst<_Type>::Value, bool> = true>
+    constexpr Span(Span<NonConstType> span):
+        m_Pointer(span.Pointer()),
+        m_Size(span.Size())
+    {}
+
+
     template<size_t ArraySize>
     constexpr Span(Type (&array)[ArraySize]):
         m_Pointer(&array[0]),
