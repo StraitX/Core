@@ -13,14 +13,14 @@ private:
     struct ArrayStorage{
         StorageType m_Data[StorageSizeValue];
 
-        StorageType *Data()const{
+        constexpr StorageType *Data()const{
             return const_cast<StorageType*>(m_Data);
         }
     };
 
     template<typename StorageType>
     struct ArrayStorage<StorageType, 0>{ 
-        StorageType *Data()const{
+        constexpr StorageType *Data()const{
             return nullptr;
         }
     };
@@ -30,17 +30,17 @@ public:
 public:
     ArrayStorage<Type, SizeValue> _Elements;
 public:
-    Array() = default;
+    constexpr Array() = default;
 
-    Array(const Array &other) = default;
+    constexpr Array(const Array &other) = default;
 
-    Array(Array &&other) = default;
+    constexpr Array(Array &&other) = default;
 
     ~Array() = default;
 
-    Array &operator=(const Array &other) = default;
+    constexpr Array &operator=(const Array &other) = default;
 
-    Array &operator=(Array &&other) = default;
+    constexpr Array &operator=(Array &&other) = default;
 
     const Type &operator[](size_t index)const{
         SX_CORE_ASSERT(IsValidIndex(index), "Array: Index out of range");
@@ -60,19 +60,19 @@ public:
         return {Data(), Size()};
     }
 
-    bool IsValidIndex(size_t index)const {
+    constexpr bool IsValidIndex(size_t index)const {
         return index < Size();
     }
 
-    size_t Size()const{
+    constexpr size_t Size()const{
         return SizeValue;
     }
 
-    const Type *Data()const{
+    constexpr const Type *Data()const{
         return _Elements.Data();
     }
 
-    Type *Data(){
+    constexpr Type *Data(){
         return _Elements.Data();
     }
 
@@ -93,19 +93,19 @@ public:
     }
 
 
-    ConstIterator begin()const{
+    constexpr ConstIterator begin()const{
         return Data();
     }
 
-    ConstIterator end()const{
+    constexpr ConstIterator end()const{
         return Data() + Size();
     }
 
-    Iterator begin(){
+    constexpr Iterator begin(){
         return Data();
     }
 
-    Iterator end(){
+    constexpr Iterator end(){
         return Data() + Size();
     }
 };
