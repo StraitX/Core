@@ -5,6 +5,7 @@
 #include "core/iterators/reverse.hpp"
 #include "core/printer.hpp"
 #include "core/type_traits.hpp"
+#include "core/assert.hpp"
 
 template<typename BaseIt>
 struct Range{
@@ -118,5 +119,53 @@ template<typename RangeType>
 auto IndexedRange(RangeType &range) -> Range<IndexedIterator<decltype(Begin(range))>>{
     return {Begin(range), End(range)};
 }
+
+template<typename T>
+class IntRangeIterator{
+    T m_Value;
+    T m_Increment;
+public:
+	IntRangeIterator() = default;
+
+    IntRangeIterator(T v, T inc): 
+        m_Value(v),
+        m_Increment(inc)
+    {}
+
+    const IntRangeIterator& operator++() { 
+        m_Value += m_Increment; 
+        return *this;
+    }
+
+    bool operator!=(const IntRangeIterator & o) { 
+        return o.m_Value != m_Value;
+    }
+
+    T operator*() const { 
+        return m_Value;
+    }
+};
+
+template<typename T>
+auto IntRange(T begin, T end, T inc = T(1)) {
+    auto abs = [](T num) {
+        if(num < 0)
+            return -num;
+        return num;
+    };
+    SX_CORE_ASSERT(begin <= end, "begin should be less or equel end");
+    SX_CORE_ASSERT(inc != 0, "inc should not be null");
+    SX_CORE_ASSERT(abs(end - begin) % inc == 0, "inc should direct into end");
+    return Range<IntRangeIterator<T>>(
+        {begin, inc},
+        {end, inc}
+    );
+}
+
+template<typename T>
+auto IntRange(T end) {
+    return IntRange(T(0), end);
+}
+
 
 #endif//STRAITX_RANGES_HPP
