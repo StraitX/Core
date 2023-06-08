@@ -91,6 +91,15 @@ void Printer<short>::Print(const short &value, StringWriter &writer){
 }
 
 template<>
+struct Printer<signed char>{
+	static void Print(const signed char &ch, StringWriter &writer);
+};
+
+void Printer<signed char>::Print(const signed char &ch, StringWriter &writer){
+	Printer<short>::Print(ch, writer);
+}
+
+template<>
 struct Printer<unsigned short>{
 	static void Print(const unsigned short &value, StringWriter &writer);
 };
