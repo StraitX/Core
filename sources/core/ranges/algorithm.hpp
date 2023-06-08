@@ -25,6 +25,11 @@ auto operator|(RangeType&& range, const RangeToValueConvertor<PredicateType>& ra
 	return range_to_value.Convert(Forward<RangeType>(range));
 }
 
+template <typename ArrayType, size_t N, typename PredicateType>
+auto operator|(ArrayType (&range)[N], const RangeToValueConvertor<PredicateType>& range_to_value) {
+	return range_to_value.Convert(ToRange(range));
+}
+
 template <typename PredicateType>
 auto RangeToValue(PredicateType predicate) {
 	return RangeToValueConvertor<PredicateType>(predicate);
@@ -33,8 +38,8 @@ auto RangeToValue(PredicateType predicate) {
 template <typename PredicateType>
 auto FindByPredicate(const PredicateType &predicate) {
 	return RangeToValue([=](auto&& range) {
-		auto it = range.begin();
-		auto end = range.end();
+		auto it = Begin(range);
+		auto end = End(range);
 
 		for (; it != end; ++it) {
 			if (predicate(*it))
@@ -71,8 +76,8 @@ auto Contains(const ValueType &value) {
 template <typename PredicateType>
 auto IndexOfByPredicate(const PredicateType& predicate) {
 	return RangeToValue([=](auto&& range)->size_t{
-		auto it = range.begin();
-		auto end = range.end();
+		auto it = Begin(range);
+		auto end = End(range);
 
 		for (size_t i = 0; it != end; ++it, ++i) {
 			if (predicate(*it))
@@ -88,3 +93,41 @@ auto IndexOf(const ValueType& value) {
 		return value == target;
 	});
 }
+
+template <typename PredicateType>
+auto CountByPredicate(const PredicateType& predicate) {
+	return RangeToValue([=](auto&& range)->size_t {
+		auto it = Begin(range);
+		auto end = End(range);
+
+		size_t count = 0;
+		for (; it != end; ++it) {
+			if (predicate(*it))
+				count += 1;
+		}
+
+		return count;
+	});
+}
+
+auto Count() {
+	return CountByPredicate([](const auto&) {
+		return true;
+	});
+}
+
+template<typename ValueType>
+auto Count(const ValueType &value) {
+	return CountByPredicate([=](const auto& target) {
+		return value == target;
+	});
+}
+
+template<typename ValueType>
+auto CountExcept(const ValueType &value) {
+	return CountByPredicate([=](const auto& target) {
+		return value != target;
+	});
+}
+
+
