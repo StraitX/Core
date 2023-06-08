@@ -19,6 +19,13 @@ public:
         String(string, StaticCodeunitsCount(string))
     {}
 
+    String(char ch, size_t size):
+        String(size)
+    {
+        for (size_t i = 0; i < size; i++)
+            Data()[i] = ch;
+    }
+
     String(StringView view):
         String(view.Data(), view.Size())
     {}
