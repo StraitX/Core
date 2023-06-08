@@ -2,6 +2,7 @@
 #define STRAITX_ALGORITHM_HPP
 
 #include "core/move.hpp"
+#include "core/span.hpp"
 
 template <typename Type>
 constexpr void Swap(Type& f, Type& s){
@@ -41,6 +42,21 @@ constexpr FwdIt FindIf(FwdIt begin, FwdIt end, Predicate predicate){
 			return begin;
 	}
 	return begin;
+}
+
+template<typename ElementType>
+constexpr ElementType Sum(ConstSpan<ElementType> elements) {
+	ElementType sum{};
+
+	for(const auto &element: elements)
+		sum += element;
+
+	return sum;
+}
+
+template<typename ElementType>
+constexpr auto Avg(ConstSpan<ElementType> elements) {
+	return Sum(elements) / elements.Size();
 }
 
 #endif // STRAITX_ALGORITHM_HPP
