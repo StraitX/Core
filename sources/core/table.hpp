@@ -109,8 +109,25 @@ private:
 public:
     Table() = default;
 
+    Table(std::initializer_list<Entry> entries) {
+        for(const Entry &entry: entries)
+            Add(entry.Key, entry.Value);
+    }
+
+    Table(Table&& other) {
+        *this = Move(other);
+    }
+
     ~Table() {
         Free();
+    }
+
+    Table &operator=(Table&& other) {
+        Free();
+        Swap(m_Table, other.m_Table);
+        Swap(m_Size, other.m_Size);
+        Swap(m_Capacity, other.m_Capacity);
+        return *this;
     }
 
     bool Add(KeyType key, ValueType value) {
@@ -137,6 +154,12 @@ public:
             it = Find(key);
         } 
 
+        return it->Value;
+    }
+
+    const ValueType& operator[](const KeyType& key)const{
+        auto it = Find(key);
+        SX_CORE_ASSERT(it != end(), "Key was not created");
         return it->Value;
     }
 
