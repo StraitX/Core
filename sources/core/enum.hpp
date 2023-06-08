@@ -92,9 +92,6 @@ public: \
 	constexpr size_t AsInt()const{ \
 	    return (size_t)m_Value; \
 	} \
-    constexpr operator size_t()const { \
-	    return AsInt(); \
-	} \
 	constexpr Type AsType()const{ \
 	    return m_Value; \
 	} \
