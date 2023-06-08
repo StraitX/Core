@@ -12,6 +12,8 @@ protected:
 	const char *m_String = nullptr;
 	size_t m_CodeunitsCount = 0;
 public:
+	constexpr StringView() = default;
+
 	constexpr StringView(const char *string, size_t codeunits_count):
 		m_String(string),
 		m_CodeunitsCount(codeunits_count)
