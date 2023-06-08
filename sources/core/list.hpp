@@ -197,12 +197,20 @@ public:
         return At(index);
     }
 
-    operator Span<Type>(){
+    Span<Type> AsSpan() {
         return {Data(), Size()};
     }
 
-    operator ConstSpan<Type>()const{
+    ConstSpan<Type> AsSpan()const{
         return {Data(), Size()};
+    }
+
+    operator Span<Type>(){
+        return AsSpan();
+    }
+
+    operator ConstSpan<Type>()const{
+        return AsSpan();
     }
 
     Type *Data(){
