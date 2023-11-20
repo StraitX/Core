@@ -18,33 +18,33 @@ constexpr size_t CountChars(const char* string, char search) {
 	return count;
 }
 
-template<size_t N>
-constexpr void SplitElementsIntoArray(const char *string, Array<StringView, N> &array) {
-	int splited = 0;
-	int start = 0;
-
-	for (int i = 0; *string; i++) {
-		char ch = string[i];
-
-		if(!ch)
-			break;
-
-		if (ch == ',') {
-			array.Data()[splited++] = StringView(&string[start], i - start );
-			i += 2;
-			start = i;
-		}
-	}
-
-	array.Data()[splited] = StringView(&string[start]);
-}
-
 constexpr bool EnsureNoValueAssignment(const char* string) {
 	return CountChars(string, '=') == 0;
 }
 
 template<typename EnumType, size_t SizeValue>
 struct EnumNamesArray : Array<StringView, SizeValue> {
+	
+	constexpr EnumNamesArray(const char *string) {
+		int splited = 0;
+		int start = 0;
+
+		for (int i = 0; *string; i++) {
+			char ch = string[i];
+
+			if (!ch)
+				break;
+
+			if (ch == ',') {
+				Data()[splited++] = StringView(&string[start], i - start);
+				i += 2;
+				start = i;
+			}
+		}
+
+		Data()[splited] = StringView(&string[start]);
+	}
+
 	constexpr const StringView &operator[](EnumType Value)const{
 		return Data()[(size_t)Value];
 	}
@@ -53,11 +53,7 @@ struct EnumNamesArray : Array<StringView, SizeValue> {
 }//namespace Details::
 
 #define GEN_ENUM_NAMES_NAMED(EnumType, NamesArrayName, ...) \
-    static constexpr auto NamesArrayName = [](){ \
-        Details::EnumNamesArray<EnumType, Details::CountChars(#__VA_ARGS__, ',') + 1> result{}; \
-		Details::SplitElementsIntoArray(#__VA_ARGS__, result); \
-		return result; \
-	}();
+    static constexpr auto NamesArrayName = Details::EnumNamesArray<EnumType, Details::CountChars(#__VA_ARGS__, ',') + 1>{#__VA_ARGS__};
 
 #define GEN_ENUM_VALUES_NAMED(EnumType, ValuesArrayName, ...) \
     static constexpr EnumType ValuesArrayName[] = {__VA_ARGS__}; 
@@ -75,7 +71,7 @@ struct EnumNamesArray : Array<StringView, SizeValue> {
 
 #define SX_GEN_ENUM_START(EnumName) \
 class EnumName{ \
-    using ThisEnumType = EnumName; 
+    using ThisEnumType = EnumName;
 #define SX_GEN_ENUM_MEMBERS_AND_END(...) \
 public: \
     enum Type{ \
