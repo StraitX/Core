@@ -5,6 +5,7 @@
 #include <assert.h>
 #include "core/os/file.hpp"
 #include "core/env/os.hpp"
+#include "core/string.hpp"
 
 #if defined(SX_ARCH_64_BIT)
     #define lseek64(fd, offset, whence) (off_t)lseek(fd, (off_t)offset, whence)
@@ -14,12 +15,13 @@
 
 constexpr u32 FileCreatePermission = 0664;
 
-Result File::Open(const char *filename, Mode mode, bool create){
+Result File::Open(StringView filename, Mode mode, bool create){
     assert(m_FD == InvalidFD);
 
     errno = 0;
 
-    m_FD = open(filename, (create ? O_CREAT : 0) | (int)mode, FileCreatePermission);
+    //TODO: do something with allocations
+    m_FD = open(String(filename).Data(), (create ? O_CREAT : 0) | (int)mode, FileCreatePermission);
 
     if(m_FD == InvalidFD){
         switch (errno) {
@@ -77,10 +79,10 @@ u64 File::Size(){
     return st.st_size;
 }
 
-Result File::Delete(const char *filename){
-    return ResultError(unlink(filename) == -1);
+Result File::Delete(StringView filename){
+    return ResultError(unlink(String(filename).Data()) == -1);
 }
 
-bool File::Exist(const char *filename){
-    return access(filename, F_OK) == 0;
+bool File::Exists(StringView filename){
+    return access(String(filename).Data(), F_OK) == 0;
 }

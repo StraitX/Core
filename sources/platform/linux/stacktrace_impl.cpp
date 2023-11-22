@@ -10,19 +10,19 @@ void Stacktrace::Capture(void *(&frames)[MaxFramesCount], size_t &captured_frame
     captured_frames = backtrace(frames, MaxFramesCount);
 }
 
-void Printer<Stacktrace>::Print(const Stacktrace &value, void (*writer)(char, void*), void *writer_data){
+void Printer<Stacktrace>::Print(const Stacktrace &value, StringWriter &writer){
     char **symbols = backtrace_symbols(value.m_FramePointers, value.m_CapturedFrames);
     char buf[2048];
     for(int i = 1 + value.m_SkipFrames; i < value.m_CapturedFrames; i++) {
-        Printer<char>::Print('\n', writer, writer_data);
+        Printer<char>::Print('\n', writer);
 
         Dl_info info;
         if(dladdr(value.m_FramePointers[i], &info) && info.dli_sname){
-            char *demangled = NULL;
+            char *demangled = nullptr;
 
             int status = -1;
             if (info.dli_sname[0] == '_')
-                demangled = abi::__cxa_demangle(info.dli_sname, NULL, 0, &status);
+                demangled = abi::__cxa_demangle(info.dli_sname, nullptr, 0, &status);
 
             const char *proc_name = (status == 0 ? demangled : (info.dli_sname == 0 ? symbols[i] : info.dli_sname));
             size_t offset = (u8 *)value.m_FramePointers[i] - (u8 *)info.dli_saddr;
@@ -35,7 +35,7 @@ void Printer<Stacktrace>::Print(const Stacktrace &value, void (*writer)(char, vo
         }else{
             snprintf(buf, sizeof(buf), "%-3lu 0x%016lx %s", i - value.m_SkipFrames, (size_t)value.m_FramePointers[i], symbols[i]);
         }
-        Printer<const char*>::Print(buf, writer, writer_data);
+        Printer<const char*>::Print((char*)buf, writer);
         
     }
     free(symbols);
