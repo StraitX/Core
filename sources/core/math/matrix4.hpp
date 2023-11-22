@@ -27,7 +27,7 @@ struct Matrix4{
     constexpr Matrix4 GetTransposed()const;
 
     constexpr Matrix4 GetInverse()const;
-
+    
     constexpr void Decompose(Vector3<T>& position, Vector3<T>& rotation, Vector3<T>& scale)const;
 
     constexpr Vector4<T> Row(size_t index)const;

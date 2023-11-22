@@ -2,6 +2,7 @@
 #define STRAITX_PRINTER_HPP
 
 #include "core/types.hpp"
+#include "core/os/memory.hpp"
 #include "core/string_writer.hpp"
 
 template<typename T>
@@ -20,8 +21,8 @@ private:
 			Buffer(buffer)
 		{}
 		void Write(const char *string, size_t size)override {
-			for (size_t i = 0; i < size; i++)
-				Buffer[Written++] = string[i];
+			Written += size;
+			Memory::Copy(string, Buffer, size);
 		}
 	};
 
@@ -29,7 +30,7 @@ public:
 	static size_t Print(const T &value, char *buffer){
 		BufferStringWriter writer(buffer);
 		Printer<T>::Print(value, writer);
-		return state.Written;
+		return writer.Written;
 	}
 };
 

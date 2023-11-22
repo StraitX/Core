@@ -10,10 +10,7 @@ namespace Math{
 constexpr double Pi = 3.14159265368979323;
 
 template<typename NumberType>
-constexpr NumberType Epsilon() {
-    static_assert(false, "Epsilon is not implemented for this type");
-    return NumberType();
-}
+constexpr NumberType Epsilon();
 
 template<>
 constexpr float Epsilon<float>() {
