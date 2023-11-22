@@ -8,10 +8,13 @@ namespace Mouse{
 using namespace Linux;	
 
 bool IsButtonPressed(Mouse::Button button){
+    static DisplayServerClient s_DisplayServerClient;
+    auto X11Handle = s_DisplayServerClient.GetX11ServerHandle();
+
     X11::Window root,child;
     int x,y;
     unsigned int button_mask;
-    X11::XQueryPointer(DisplayServer::Handle, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)),&root,&child,&x,&y,&x,&y,&button_mask);
+    X11::XQueryPointer(X11Handle, X11::XRootWindow(X11Handle, X11::XDefaultScreen(X11Handle)),&root,&child,&x,&y,&x,&y,&button_mask);
 
     switch (button)
     {
@@ -25,11 +28,14 @@ bool IsButtonPressed(Mouse::Button button){
 }
 
 Vector2s GlobalPosition(){
+    static DisplayServerClient s_DisplayServerClient;
+    auto X11Handle = s_DisplayServerClient.GetX11ServerHandle();
+
     X11::Window root,child;
     Vector2s choosen,global;
     unsigned int mask;
     
-    X11::XQueryPointer(DisplayServer::Handle, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
+    X11::XQueryPointer(X11Handle, X11::XRootWindow(X11Handle, X11::XDefaultScreen(X11Handle)),&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
 
     return global;
 }
@@ -39,16 +45,20 @@ Vector2s RelativePosition(const Window &window){
     Vector2s choosen,global;
     unsigned int mask;
 
-    X11::XQueryPointer(DisplayServer::Handle, window.Impl().Handle() ,&root,&child,&global.x,&global.y,&choosen.x,&choosen.y,&mask);
+    X11::XQueryPointer(window.Impl().GetX11ServerHandle(), window.Impl().Handle(), &root, &child, &global.x, &global.y, &choosen.x, &choosen.y, &mask);
     
     return choosen;
 }
 
 void SetGlobalPosition(const Vector2s &position){
-    X11::XWarpPointer(DisplayServer::Handle, 0, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)),0,0,0,0,position.x, position.y);
+    static DisplayServerClient s_DisplayServerClient;
+    auto X11Handle = s_DisplayServerClient.GetX11ServerHandle();
+    X11::XWarpPointer(X11Handle, 0, X11::XRootWindow(X11Handle, X11::XDefaultScreen(X11Handle)),0,0,0,0,position.x, position.y);
 }
 
 static X11::Cursor BlankCursor(){
+    static DisplayServerClient s_DisplayServerClient;
+    auto X11Handle = s_DisplayServerClient.GetX11ServerHandle();
     static bool is_created;
     static X11::Cursor cursor;
 
@@ -59,20 +69,22 @@ static X11::Cursor BlankCursor(){
         X11::Pixmap blank;
         X11::XColor dummy;
 
-        blank = X11::XCreateBitmapFromData(DisplayServer::Handle, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)), data, 1, 1);
+        blank = X11::XCreateBitmapFromData(X11Handle, X11::XRootWindow(X11Handle, X11::XDefaultScreen(X11Handle)), data, 1, 1);
         if(blank == 0)
             is_created = false;
-        cursor = X11::XCreatePixmapCursor(DisplayServer::Handle, blank, blank, &dummy, &dummy, 0, 0);
-        X11::XFreePixmap(DisplayServer::Handle, blank);
+        cursor = X11::XCreatePixmapCursor(X11Handle, blank, blank, &dummy, &dummy, 0, 0);
+        X11::XFreePixmap(X11Handle, blank);
     }
     return cursor;
 }
 
 void SetVisible(bool is_visible){
+    static DisplayServerClient s_DisplayServerClient;
+    auto X11Handle = s_DisplayServerClient.GetX11ServerHandle();
     if(is_visible){
-        X11::XUndefineCursor(DisplayServer::Handle, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)));
+        X11::XUndefineCursor(X11Handle, X11::XRootWindow(X11Handle, X11::XDefaultScreen(X11Handle)));
     }else{
-        X11::XDefineCursor(DisplayServer::Handle, X11::XRootWindow(DisplayServer::Handle, X11::XDefaultScreen(DisplayServer::Handle)), BlankCursor());
+        X11::XDefineCursor(X11Handle, X11::XRootWindow(X11Handle, X11::XDefaultScreen(X11Handle)), BlankCursor());
     }
 }
 

@@ -1,21 +1,33 @@
+#include <cassert>
 #include "platform/linux/display_server.hpp"
 
 namespace Linux{
 
-X11::Display *DisplayServer::Handle = nullptr;
+static X11::_XDisplay* s_DisplayServerHandle = nullptr;
+static size_t s_DisplayServerClientCount = 0;
 
-Result DisplayServer::Open(){
-	Handle = X11::XOpenDisplay(nullptr);
-	return Result(IsOpen());
+DisplayServerClient::DisplayServerClient() {
+	if (s_DisplayServerClientCount++ == 0){
+		s_DisplayServerHandle = X11::XOpenDisplay(nullptr);
+		X11::XInitThreads();
+	}
 }
 
-void DisplayServer::Close(){
-	X11::XCloseDisplay(Handle);
-	Handle = nullptr;
+DisplayServerClient::~DisplayServerClient() {
+	if (s_DisplayServerClientCount-- == 0) {
+		X11::XCloseDisplay(s_DisplayServerHandle);
+		s_DisplayServerHandle = nullptr;
+	}
 }
 
-bool DisplayServer::IsOpen(){
-	return Handle != nullptr;
+X11::_XDisplay* DisplayServerClient::GetX11ServerHandle()const {
+	assert(s_DisplayServerHandle);
+	return s_DisplayServerHandle;
 }
+
+void DisplayServerClient::ForceInit() {
+	static DisplayServerClient client;
+}
+
 
 }//namespace Linux::

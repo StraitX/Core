@@ -6,6 +6,8 @@
 #include "core/noncopyable.hpp"
 #include "core/os/screen.hpp"
 #include "core/function.hpp"
+#include "core/string_view.hpp"
+#include "platform/linux/display_server.hpp"
 
 namespace X11{
 struct _XIM;
@@ -15,7 +17,7 @@ struct __GLXFBConfigRec;
 
 namespace Linux{
 
-class WindowImpl: NonCopyable{
+class WindowImpl: public DisplayServerClient, public NonCopyable{
 private:
     unsigned long m_Handle = 0;
     X11::__GLXFBConfigRec *m_FBConfig = nullptr;
@@ -28,7 +30,7 @@ private:
 public:
     WindowImpl() = default;
 
-    Result Open(int width, int height, const char *title);
+    Result Open(int width, int height, StringView title);
 
     Result Close();
 
@@ -38,7 +40,7 @@ public:
 
     void DispatchEvents();
 
-    void SetTitle(const char *title);
+    void SetTitle(StringView title);
 
     void SetSize(int width, int height);
 
@@ -48,13 +50,13 @@ public:
         return m_Handle;
     }
 
+	const Screen &CurrentScreen()const;
+private:
     X11::__GLXFBConfigRec *FBConfig()const{
         return m_FBConfig;
     }
 
-	const Screen &CurrentScreen()const;
-
-    static X11::__GLXFBConfigRec *PickBestFBConfig(int screen_index);
+    X11::__GLXFBConfigRec *PickBestFBConfig(int screen_index);
 };
 
 }//namespace Linux::

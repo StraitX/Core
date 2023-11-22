@@ -10,14 +10,15 @@ struct _XDisplay;
 
 namespace Linux{
 
-struct DisplayServer{
-	static X11::_XDisplay *Handle;
+class DisplayServerClient{
+public:
+	DisplayServerClient();
 
-	static Result Open();
+	~DisplayServerClient();
 
-	static void Close();
+	X11::_XDisplay *GetX11ServerHandle()const;
 
-	static bool IsOpen();
+	static void ForceInit();
 };
 
 }//namespace Linux::

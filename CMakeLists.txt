@@ -37,8 +37,6 @@ set(SX_CORE_SOURCES_CORE
 if(STRAITX_PLATFORM_LINUX)
 
     set(SX_CORE_SOURCES_PLATFORM
-		${SX_CORE_SOURCES_DIR}/platform/linux/entry_point.cpp
-
         ${SX_CORE_SOURCES_DIR}/platform/linux/display_server.cpp
         ${SX_CORE_SOURCES_DIR}/platform/linux/mouse_impl.cpp
         ${SX_CORE_SOURCES_DIR}/platform/linux/keyboard_impl.cpp
