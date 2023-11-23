@@ -1,30 +1,41 @@
 #ifndef STRAITX_STRING_HPP
 #define STRAITX_STRING_HPP
 
+#include <string>
 #include "core/types.hpp"
 #include "core/move.hpp"
 #include "core/noncopyable.hpp"
 #include "core/string_view.hpp"
 #include "core/os/memory.hpp"
+#include "core/unicode.hpp"
 
-class String: public StringView, public NonCopyable{
+class String: public std::string{
 private:
     static const char* s_Empty;
+
+    using ImplStringClass = std::string;
 public:
-    String():
-        StringView(s_Empty, 0)
+    String() = default;
+
+    String(const char *string, size_t size) :
+        ImplStringClass(string, size)
     {}
+
+    String(char ch, size_t size) :
+        ImplStringClass(ch, size)
+    {}
+
+    String(ImplStringClass&& string) {
+        Assign(Move(string));
+    }
+
+    String(const ImplStringClass& string) {
+        Assign(string);
+    }
 
     String(const char *string):
-        String(string, StaticCodeunitsCount(string))
+        String(string, Length(string))
     {}
-
-    String(char ch, size_t size):
-        String(size)
-    {
-        for (size_t i = 0; i < size; i++)
-            Data()[i] = ch;
-    }
 
     String(StringView view):
         String(view.Data(), view.Size())
@@ -34,25 +45,7 @@ public:
         String(span.Pointer(), span.Size())
     {}
 
-    //Uninitialized
-    String(size_t size):
-        StringView(
-            (char*)Memory::Alloc((size + 1) * sizeof(char)),
-            size
-        )
-    {
-        Data()[size] = 0;
-    }
-
-    String(const char *string, size_t length):
-        String(length)
-    {
-        Memory::Copy(string, Data(), length);
-    }
-
-    String(String&& other)noexcept:
-        StringView(nullptr, 0)
-    {
+    String(String&& other)noexcept{
         *this = Move(other);
     }
 
@@ -60,50 +53,85 @@ public:
         String(other.Data(), other.Size())
     {}
 
-    ~String() {
-        Clear();
+    String& operator=(String&& other)noexcept {
+        return Assign(Move(other));
     }
 
-    String& operator=(String&& other)noexcept {
-        Clear();
-        m_String = other.m_String;
-        m_CodeunitsCount = other.m_CodeunitsCount;
-        other.m_String = s_Empty;
-        other.m_CodeunitsCount = 0;
+    String& operator=(const String& other)noexcept {
+        return Assign(other);
+    }
+
+    String& operator=(ImplStringClass&& other)noexcept {
+        return Assign(Move(other));
+    }
+
+    String& operator=(const ImplStringClass& other)noexcept {
+        return Assign(other);
+    }
+    
+    template<typename StringType>
+    String& Assign(StringType &&other)noexcept {
+        ImplStringClass::assign(Forward<StringType>(other));
         return *this;
     }
 
+    StringView View()const {
+        return {Data(), Size()};
+    }
+
     void Resize(size_t size) {
-        String new_string(size);
-        //XXX: Optimize wasteful memset
-        Memory::Set(new_string.Data(), 0, new_string.Size());
-        Memory::Copy(Data(), new_string.Data(), Size() <= size ? Size() : size);
-        *this = Move(new_string);
+        ImplStringClass::resize(size);
+    }
+
+    void Append(const String &string) {
+        Append(string.View());
     }
 
     void Append(StringView string) {
-        size_t start = Size();
-        Resize(Size() + string.Size());
-        Memory::Copy(string.Data(), Data() + start, string.Size());
+        ImplStringClass::append(string.Data(), string.Size());
     }
 
     void Clear() {
-        if(Data() != s_Empty)
-            Memory::Free(Data());
-        m_String = s_Empty;
-        m_CodeunitsCount = 0;
+        ImplStringClass::clear();
     }
     
     char* Data(){
-        return const_cast<char*>(m_String);
+        return &ImplStringClass::operator[](0);
     }
 
     const char* Data()const{
-        return m_String;
+        return ImplStringClass::data();
+    }
+
+    size_t Size()const {
+        return ImplStringClass::size();
     }
 
     bool IsEmpty()const {
         return !Size();
+    }
+
+    size_t CodeunitsCount()const {
+        return Size();
+    }
+
+    size_t CodepointsCount()const {
+        size_t counter = 0;
+        for (u32 ch : *this)
+            counter++;
+        return counter;
+    }
+
+    operator ConstSpan<char>()const {
+        return { Data(), Size() };
+    }
+
+    UnicodeIterator begin()const {
+        return { Data() };
+    }
+
+    UnicodeIterator end()const {
+        return { Data() + Size() };
     }
     
     //XXX: Do something about this
@@ -164,7 +192,7 @@ SX_INLINE String operator+(const String& lvalue, const char *rvalue) {
 template<>
 struct Printer<String> {
 	static void Print(const String& value, StringWriter &writer) {
-        writer.Write(value.Data(), value.CodeunitsCount());
+        writer.Write(value.Data(), value.Size());
 	}
 };
 

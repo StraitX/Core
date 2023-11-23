@@ -1,6 +1,6 @@
 #include "core/printer.hpp"
 #include "core/types.hpp"
-#include "core/string.hpp"
+#include "core/string_view.hpp"
 #include <cstdio>
 
 template<>
@@ -10,8 +10,8 @@ struct Printer<const char *>{
 
 void Printer<const char *>::Print(const char * const &string, StringWriter &writer){
 	if(!string)return;
-
-	writer.Write(string, String::StaticCodeunitsCount(string));
+	
+	Printer<StringView>::Print(string, writer);
 }
 
 template<>
