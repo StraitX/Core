@@ -14,7 +14,7 @@ String Format(const char *fmt, const ArgsType&...args) {
 		{}
 
 		void Write(const char* string, size_t size)override{
-			m_String.Append({ string, size });
+			m_String.Append(StringView{ string, size });
 		}
 	};
 	
