@@ -1,3 +1,4 @@
+#include <clocale>
 #include "platform/linux/window_impl.hpp"
 #include "platform/linux/display_server.hpp"
 #include "platform/linux/x11.hpp"
