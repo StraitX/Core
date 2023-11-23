@@ -1,6 +1,6 @@
 #include "core/string.hpp"
 
-const char* String::s_Empty = "";
+const String String::Empty = "";
 
 void String::ToUpperCase(char *string){
     for(;*string; ++string){

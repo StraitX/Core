@@ -11,9 +11,9 @@
 
 class String: public std::string{
 private:
-    static const char* s_Empty;
-
     using ImplStringClass = std::string;
+public:
+    static const String Empty;
 public:
     String() = default;
 
@@ -29,8 +29,8 @@ public:
         Assign(Move(string));
     }
 
-    String(const ImplStringClass& string) {
-        Assign(string);
+    static String FromStdString(const ImplStringClass& string) {
+        return String().Assign(string);
     }
 
     String(const char *string):
@@ -65,10 +65,6 @@ public:
         return Assign(Move(other));
     }
 
-    String& operator=(const ImplStringClass& other)noexcept {
-        return Assign(other);
-    }
-    
     template<typename StringType>
     String& Assign(StringType &&other)noexcept {
         ImplStringClass::assign(Forward<StringType>(other));
@@ -193,6 +189,13 @@ template<>
 struct Printer<String> {
 	static void Print(const String& value, StringWriter &writer) {
         writer.Write(value.Data(), value.Size());
+	}
+};
+
+template<>
+struct Printer<std::string> {
+	static void Print(const std::string& value, StringWriter &writer) {
+        writer.Write(value.data(), value.size());
 	}
 };
 
