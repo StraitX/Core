@@ -76,7 +76,7 @@ public:
         if(m_Size == m_Capacity)
             Reserve(m_Size * 2 + (m_Size == 0));
 
-        new(&Data()[m_Size++]) Type{Forward<ArgsType>(args)...};
+        new(&Data()[m_Size++]) Type(Forward<ArgsType>(args)...);
     }
     
     template<typename OtherGeneralAllocator>
