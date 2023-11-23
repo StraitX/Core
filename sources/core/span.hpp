@@ -29,9 +29,10 @@ public:
         m_Pointer(pointer),
         m_Size(size)
     {}
-    
-    template<typename _ = typename EnableIf<IsConst<Type>::Value, void>::Type>
-    constexpr Span(std::initializer_list<Type> list):
+
+    template<typename _Type = Type, 
+             typename _ = typename EnableIf<IsConst<_Type>::Value, void>::Type>
+    constexpr Span(std::initializer_list<_Type> list):
         m_Pointer(list.begin()),
         m_Size(static_cast<SizeType>(list.size()))
     {}
