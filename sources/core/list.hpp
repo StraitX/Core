@@ -49,6 +49,10 @@ public:
             Emplace(element);
     }
 
+    List(std::initializer_list<Type> list):
+        List(ConstSpan<Type>(list.begin(), list.size()))
+    {}
+
     List(List<Type> &&other) {
         *this = Move(other);
     }
