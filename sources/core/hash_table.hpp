@@ -91,6 +91,14 @@ public:
         }
         return values;
     }
+
+    List<Pair<KeyType, ValueType>> ToList()const {
+        List<Pair<KeyType, ValueType>> list;
+        for (auto pair : *this) {
+            list.Emplace(Move(pair.first), Move(pair.second));
+        }
+        return list;
+    }
 };
 
 #endif//STRAITX_TABLE_HPP
