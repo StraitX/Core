@@ -1,6 +1,7 @@
 #ifndef STRAITX_STRING_VIEW_HPP
 #define STRAITX_STRING_VIEW_HPP
 
+#include <string>
 #include "core/types.hpp"
 #include "core/unicode.hpp"
 #include "core/span.hpp"
@@ -13,6 +14,10 @@ protected:
 	size_t m_CodeunitsCount = 0;
 public:
 	constexpr StringView() = default;
+	
+	StringView(const std::string &string):
+		StringView(string.data(), string.size())
+	{}
 
 	constexpr StringView(const char *string, size_t codeunits_count):
 		m_String(string),
@@ -93,5 +98,23 @@ struct Printer<StringView> {
 		writer.Write(value.Data(), value.CodeunitsCount());
 	}
 };
+
+namespace std {
+	template<typename T>
+	struct hash;
+
+	template<>
+	struct hash<StringView>{
+		size_t operator()(StringView view)const {
+			unsigned int hash = 5381;
+
+			for (size_t i = 0; i < view.Size(); ++i) {
+				hash = ((hash << 5) + hash) + static_cast<unsigned char>(view.Data()[i]);
+			}
+
+			return hash;
+		}
+	};
+}
 
 #endif//STRAITX_STRING_VIEW_HPP

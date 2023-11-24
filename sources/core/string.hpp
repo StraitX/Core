@@ -122,6 +122,10 @@ public:
         return { Data(), Size() };
     }
 
+    operator StringView()const {
+        return View();
+    }
+
     UnicodeIterator begin()const {
         return { Data() };
     }
@@ -198,6 +202,15 @@ struct Printer<std::string> {
         writer.Write(value.data(), value.size());
 	}
 };
+
+namespace std {
+	template<>
+	struct hash<String>{
+		size_t operator()(const String &string)const {
+			return std::hash<std::string>()(string);
+		}
+	};
+}
 
 SX_INLINE bool String::Contains(const char *string, const char *internal){
     return Find(string,internal);
