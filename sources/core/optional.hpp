@@ -98,6 +98,10 @@ public:
 		return m_HasValue;
 	}
 
+	Type Value(Type default_value)const{
+		return HasValue() ? Value() : default_value;
+	}
+
 	const Type &Value()const{
 		SX_CORE_ASSERT(HasValue(), "Optional: There is no value");
 
