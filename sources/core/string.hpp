@@ -21,9 +21,13 @@ public:
         ImplStringClass(string, size)
     {}
 
-    String(char ch, size_t size) :
-        ImplStringClass(ch, size)
+    String(size_t size, char ch) :
+        ImplStringClass(size, ch)
     {}
+
+    static String Uninitialized(size_t size) {
+        return String(size, '\0');
+    }
 
     String(ImplStringClass&& string) {
         Assign(Move(string));

@@ -1,15 +1,17 @@
 #include "core/os/file.hpp"
+#include "core/print.hpp"
 
 Optional<String> File::ReadEntire(StringView filename) {
 	File file;
 	if (!file.Open(filename, File::Mode::Read, false))
 		return {};
-	
-	String buffer(file.Size());
+
+	String buffer = String::Uninitialized(file.Size());
+
 	if (file.Read(buffer.Data(), buffer.Size()) != buffer.Size())
 		return {};
 
-	return { Move(buffer) };
+	return Move(buffer);
 }
 
 bool File::WriteEntire(StringView filename, StringView content) {
