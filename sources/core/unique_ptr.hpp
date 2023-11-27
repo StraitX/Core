@@ -2,6 +2,7 @@
 #define STRAITX_UNIQUE_PTR_HPP
 
 #include <core/move.hpp>
+#include <core/type_traits.hpp>
 
 template <typename Type>
 struct DefaultDelete {
@@ -28,6 +29,13 @@ class UniquePtr : private DeleterType{
 private:
 	Type *m_Ptr = nullptr;
 public:
+    UniquePtr() = default;
+    
+    template<typename DerivedType, typename = EnableIfType<IsBaseOf<Type, DerivedType>::Value>>
+    UniquePtr(UniquePtr<DerivedType> derived) {
+        m_Ptr = derived.Release();
+    }
+
 	UniquePtr(Type *ptr, DeleterType deleter = {}):
         DeleterType(Move(deleter)),
 		m_Ptr(ptr)
@@ -40,13 +48,13 @@ public:
     }
 
 	~UniquePtr() {
-        Release();
+        Reset();
 	}
 
 	UniquePtr &operator=(const UniquePtr &) = delete;
 
     UniquePtr &operator=(UniquePtr&& other) {
-        Release();
+        Reset();
         DeleterType::operator=(Move(other));
         m_Ptr = other.m_Ptr;
         other.m_Ptr = nullptr;
@@ -81,8 +89,15 @@ public:
         return m_Ptr;
     }
 
-    void Release() {
+    [[nodiscard]] Type *Release() {
+        auto *ptr = m_Ptr; 
+        m_Ptr = nullptr;
+        return ptr;
+    }
+
+    void Reset() {
 		DeleterType::operator()(m_Ptr);
+        m_Ptr = nullptr;
     }
 };
 
@@ -91,6 +106,8 @@ class UniquePtr<Type[], DeleterType> : private DeleterType {
 private:
     Type* m_Ptr = nullptr;
 public:
+    UniquePtr() = default;
+
 	UniquePtr(Type *ptr, DeleterType deleter = {}):
         DeleterType(Move(deleter)),
 		m_Ptr(ptr)
@@ -103,13 +120,13 @@ public:
     }
 
     ~UniquePtr() {
-        Release();
+        Reset();
     }
 
     UniquePtr& operator=(const UniquePtr&) = delete;
 
     UniquePtr& operator=(UniquePtr&& other) {
-        Release();
+        Reset();
         DeleterType::operator=(Move(other));
         m_Ptr = other.m_Ptr;
         other.m_Ptr = nullptr;
@@ -144,8 +161,16 @@ public:
         return m_Ptr;
     }
 
-    void Release() {
+    [[nodiscard]] Type *Release() {
+        auto *ptr = m_Ptr; 
+        m_Ptr = nullptr;
+        return ptr;
+    }
+
+
+    void Reset() {
 		DeleterType::operator()(m_Ptr);
+        m_Ptr = nullptr;
     }
 
     Type &operator[](size_t index) {
@@ -155,5 +180,15 @@ public:
         return m_Ptr[index];
     }
 };
+
+template<typename Type, typename ...ArgsType>
+UniquePtr<Type> MakeUnique(ArgsType&&...args) {
+    return {new Type(Forward<ArgsType>(args)...)};
+}
+
+template<typename Type, typename ...ArgsType>
+UniquePtr<Type[]> MakeUnique(size_t count) {
+    return {new Type[count]{}};
+}
 
 #endif//STRAITX_UNIQUE_PTR_HPP
