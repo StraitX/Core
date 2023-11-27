@@ -91,6 +91,11 @@ void WriterPrint(StringWriter &writer, const char *fmt, const T &arg, const Args
 	writer.Write('\0');
 }
 
+template <typename T, typename...Args>
+void WriterPrint(StringWriter *writer, const char* fmt, const Args&...args) {
+	return WriterPrint(*writer, fmt, args...);
+}
+
 template<typename...Args>
 void Print(const char *fmt, const Args&...args){
 	WriterPrint(*StraitXOut, fmt, args...);
@@ -98,8 +103,18 @@ void Print(const char *fmt, const Args&...args){
 
 template<typename...Args>
 void Println(const char *fmt, const Args&...args){
-    Print(fmt, args...);
-    Print("\n");
+    Print(fmt, args...); Print("\n");
+}
+
+template<typename...Args>
+int Error(const char *fmt, const Args&...args){
+	WriterPrint(*StraitXError, fmt, args...);
+	return -1;
+}
+
+template<typename...Args>
+int Errorln(const char *fmt, const Args&...args){
+	return (Error(fmt, args...), Error("\n"));
 }
 
 #endif //STRAITX_PLATFORM_HPP
