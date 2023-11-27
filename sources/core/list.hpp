@@ -5,7 +5,6 @@
 #include "core/templates.hpp"
 #include "core/types.hpp"
 #include "core/move.hpp"
-#include "core/noncopyable.hpp"
 #include "core/assert.hpp"
 #include "core/allocators/allocator.hpp"
 #include "core/span.hpp"
@@ -14,15 +13,24 @@
 
 //TODO: 
 // [ ] Optimize for Types without copy or mouse ctors
-// [ ] Get rid of NonCopyable include XD
 
 template<typename Type, typename GeneralAllocator = DefaultGeneralAllocator>
-class List: private GeneralAllocator, public NonCopyable{
+class List: private GeneralAllocator{
 public:
     static_assert(!IsConst<Type>::Value && !IsVolatile<Type>::Value, "Type can't be const or volatile");
 
     using Iterator = Type *;
     using ConstIterator = const Type *;
+
+    using value_type = Type;
+    using allocator_type = GeneralAllocator;
+    using reference = Type&;
+    using const_reference = const Type&;
+    using pointer = Type *;
+    using const_pointer = const Type *;
+    using iterator = Iterator;
+    using const_iterator = ConstIterator;
+    using size_type = size_t;
 private:
     Type *m_Elements = nullptr;
     size_t m_Size = 0;
@@ -57,6 +65,10 @@ public:
         *this = Move(other);
     }
 
+    List(const List<Type> &other):
+        List(ConstSpan<Type>(other.Data(), other.Size()))
+    {}
+
     ~List(){
         Free();
     }
@@ -64,6 +76,14 @@ public:
     List &operator=(List<Type> &&other) {
         Free();
         Swap(other);
+        return *this;
+    }
+
+    List &operator=(const List<Type> &other) {
+        Free();
+        for (const auto& e : other) {
+            Add(e);
+        }
         return *this;
     }
 
@@ -93,6 +113,13 @@ public:
 
         for (const auto& element : elements)
             Add(element);
+    }
+
+    void AddUnique(const Type &element){
+        if(Contains(element))
+            return;
+
+        Add(element);
     }
 
     void RemoveLast(){
@@ -155,6 +182,32 @@ public:
         GeneralAllocator::Free(m_Elements);
         m_Elements = new_elements;
         m_Capacity = capacity;
+    }
+    
+    template<
+        typename _Type = Type,
+        typename DelimiterType = _Type,
+        typename _ = decltype(
+            _Type(),
+            Declval<_Type>() += Declval<_Type>(),
+            Declval<_Type>() += Declval<DelimiterType>()
+        )
+    >
+    Type Join(DelimiterType delimiter) {
+        Type result();
+
+        for (size_t i = 0; i < Size(); i++) {
+            result += At(i);
+
+            if (i == Size() - 1) {
+                break;
+            }
+
+            result += delimiter;
+        }
+
+        return result;
+
     }
 
     void Swap(List<Type> &other) {
@@ -278,5 +331,23 @@ private:
         MoveElseCopyCtorImpl(dst, src, nullptr);
     }
 };
+
+template<typename T, typename LeftAllocator, typename RightAllocator>
+bool operator==(const List<T, LeftAllocator>& left, const List<T, RightAllocator>& right) {
+    if(left.Size() != right.Size())
+        return false;
+
+    for (size_t i = 0; i < left.Size(); i++) {
+        if(left[i] != right[i])
+            return false;
+    }
+
+    return true;
+}
+
+template<typename T, typename LeftAllocator, typename RightAllocator>
+bool operator!=(const List<T, LeftAllocator>& left, const List<T, RightAllocator>& right) {
+    return !(left == right);
+}
 
 #endif//STRAITX_LIST_HPP
