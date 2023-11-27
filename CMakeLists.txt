@@ -26,6 +26,7 @@ set(SX_CORE_SOURCES_CORE
     ${SX_CORE_SOURCES_DIR}/core/os/keyboard.cpp
     ${SX_CORE_SOURCES_DIR}/core/os/memory.cpp
     ${SX_CORE_SOURCES_DIR}/core/os/file.cpp
+    ${SX_CORE_SOURCES_DIR}/core/os/date_time.cpp
 
     ${SX_CORE_SOURCES_DIR}/core/net/ip.cpp
     ${SX_CORE_SOURCES_DIR}/core/net/tcp_listener.cpp
