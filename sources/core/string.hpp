@@ -29,6 +29,10 @@ public:
         Assign(Move(string));
     }
 
+    String(const ImplStringClass& string) {
+        Assign(string);
+    }
+
     static String FromStdString(const ImplStringClass& string) {
         return String().Assign(string);
     }
@@ -75,6 +79,10 @@ public:
         return {Data(), Size()};
     }
 
+    UnicodeString Unicode()const {
+        return UnicodeString(Data(), Size());
+    }
+
     void Resize(size_t size) {
         ImplStringClass::resize(size);
     }
@@ -113,7 +121,7 @@ public:
 
     size_t CodepointsCount()const {
         size_t counter = 0;
-        for (u32 ch : *this)
+        for (u32 ch : Unicode())
             counter++;
         return counter;
     }
@@ -126,12 +134,26 @@ public:
         return View();
     }
 
-    UnicodeIterator begin()const {
-        return { Data() };
+    operator UnicodeString()const {
+        return Unicode();
     }
 
-    UnicodeIterator end()const {
-        return { Data() + Size() };
+    size_t Count(char ch)const {
+        size_t count = 0;
+        for (char character : *(std::string*)this) {
+            if(character == ch)
+                count++; 
+        }
+        return count;
+    }
+
+    size_t Count(u32 ch)const {
+        size_t count = 0;
+        for (u32 character : *this) {
+            if(character == ch)
+                count++; 
+        }
+        return count;
     }
     
     //XXX: Do something about this
@@ -210,6 +232,14 @@ namespace std {
 			return std::hash<std::string>()(string);
 		}
 	};
+
+    inline std::string to_string(String&& string) {
+        return std::string(Move(string));
+    }
+
+    inline std::string to_string(const String& string) {
+        return std::string(string);
+    }
 }
 
 SX_INLINE bool String::Contains(const char *string, const char *internal){

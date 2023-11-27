@@ -72,4 +72,22 @@ public:
 	}
 };
 
+class UnicodeString{
+	const char *m_String;
+	size_t m_Size;
+public:
+	UnicodeString(const char *string, size_t size):
+		m_String(string),
+		m_Size(size)
+	{}
+
+	UnicodeIterator begin()const {
+		return UnicodeIterator(m_String);
+	}
+
+	UnicodeIterator end()const {
+		return UnicodeIterator(m_String + m_Size);
+	}
+};
+
 #endif//STRAITX_UNICODE_HPP

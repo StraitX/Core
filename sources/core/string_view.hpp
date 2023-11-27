@@ -65,21 +65,34 @@ public:
 
 	size_t CodepointsCount()const{
 		size_t counter = 0;
-		for(u32 ch: *this)
+		for(u32 ch: Unicode())
 			counter++;
 		return counter;
+	}
+
+	
+    UnicodeString Unicode()const {
+        return UnicodeString(Data(), Size());
+    }
+
+	char operator[](size_t size)const {
+		return Data()[size];
 	}
 
 	constexpr operator ConstSpan<char>()const{
 		return {Data(), Size()};
 	}
 
-	UnicodeIterator begin()const{
-		return {Data()};
+	operator UnicodeString()const {
+		return Unicode();
 	}
 
-	UnicodeIterator end()const{
-		return {Data() + Size()};
+	const char *begin()const{
+		return Data();
+	}
+
+	const char *end()const{
+		return Data() + Size();
 	}
 
 	static constexpr size_t StaticCodeunitsCount(const char* string) {
