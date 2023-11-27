@@ -6,7 +6,6 @@ project(
     LANGUAGES CXX
 )
 
-set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 set(SX_CORE_SOURCES_DIR ${PROJECT_SOURCE_DIR}/sources)
@@ -45,6 +44,7 @@ if(STRAITX_PLATFORM_LINUX)
         ${SX_CORE_SOURCES_DIR}/platform/linux/screen_impl.cpp
         ${SX_CORE_SOURCES_DIR}/platform/linux/clock_impl.cpp
         ${SX_CORE_SOURCES_DIR}/platform/linux/stacktrace_impl.cpp
+        ${SX_CORE_SOURCES_DIR}/platform/unix/string_writer_impl.cpp
         ${SX_CORE_SOURCES_DIR}/platform/unix/sleep_impl.cpp
 		${SX_CORE_SOURCES_DIR}/platform/unix/memory_impl.cpp
         ${SX_CORE_SOURCES_DIR}/platform/unix/file_impl.cpp
@@ -142,6 +142,8 @@ add_library(StraitXCore STATIC
     ${SX_CORE_SOURCES_PLATFORM} 
     ${SX_CORE_SOURCES_CORE}
 )
+
+target_compile_features(StraitXCore PUBLIC cxx_std_17)
 
 target_link_options(StraitXCore
     PUBLIC ${SX_CORE_LINKER_FLAGS_PLATFORM}
