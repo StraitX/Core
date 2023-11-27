@@ -4,13 +4,14 @@
 #include "core/types.hpp"
 #include "core/move.hpp"
 #include "core/templates.hpp"
+#include "core/type_traits.hpp"
 #include "core/pair.hpp"
 #include "core/list.hpp"
 #include <functional>
 #include <unordered_map>
 
 template <typename KeyType, typename ValueType, typename HashType = std::hash<KeyType>>
-class HashTable: public std::unordered_map<KeyType, ValueType, HashType>, public NonCopyable{
+class HashTable: public std::unordered_map<KeyType, ValueType, HashType>{
 private:
     using ImplHashTableType = std::unordered_map<KeyType, ValueType, HashType>;
 public:
@@ -21,7 +22,11 @@ public:
 
     HashTable(std::initializer_list<Pair<KeyType, ValueType>> entries) {
         for(const auto &entry: entries)
-            Add(entry.Key, entry.Value);
+            Add(entry.First, entry.Second);
+    }
+    
+    HashTable(const HashTable& other) {
+        *this = other;
     }
 
     HashTable(HashTable&& other) {
@@ -32,13 +37,26 @@ public:
         return Assign(Move(other));
     }
 
+    HashTable &operator=(const HashTable &other) {
+        return Assign(other);
+    }
+
     HashTable& Assign(HashTable&& other) {
         ImplHashTableType::operator=(Move(other));
         return *this;
     }
 
+    HashTable& Assign(const HashTable& other) {
+        ImplHashTableType::operator=(other);
+        return *this;
+    }
+
     void Add(KeyType &&key, ValueType &&value) {
         ImplHashTableType::emplace(Move(key), Move(value));
+    }
+
+    void Add(const KeyType &key, const ValueType &value) {
+        ImplHashTableType::emplace(key, value);
     }
 
     using ImplHashTableType::operator[];
@@ -76,26 +94,37 @@ public:
     }
 
     //TODO: rewrite using ranges
+    template<
+        typename _KeyType = KeyType,
+        typename = EnableIfType<IsCopyConstructible<_KeyType>::Value>>
     List<KeyType> Keys()const {
         List<KeyType> keys;
-        for (auto pair : *this) {
-            keys.Add(Move(pair.first));
+        for (const auto &[key, _] : *this) {
+            keys.Add(key);
         }
         return keys;
     }
 
+    template<
+        typename _ValueType = ValueType,
+        typename = EnableIfType<IsCopyConstructible<_ValueType>::Value>>
     List<ValueType> Values()const {
         List<KeyType> values;
-        for (auto pair : *this) {
-            values.Add(Move(pair.second));
+        for (const auto &[_, value] : *this) {
+            values.Add(value);
         }
         return values;
     }
 
+    template<
+        typename _KeyType = KeyType,
+        typename = EnableIfType<IsCopyConstructible<_KeyType>::Value>,
+        typename _ValueType = ValueType,
+        typename = EnableIfType<IsCopyConstructible<_ValueType>::Value>>
     List<Pair<KeyType, ValueType>> ToList()const {
         List<Pair<KeyType, ValueType>> list;
-        for (auto pair : *this) {
-            list.Emplace(Move(pair.first), Move(pair.second));
+        for (const auto &[key, value]: *this) {
+            list.Emplace(key, value);
         }
         return list;
     }
