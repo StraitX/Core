@@ -22,3 +22,12 @@ struct DateTime {
 
 String FmtDate(const DateTime &date_time);
 
+String FmtDateTime(const DateTime &date_time);
+
+template<>
+struct Printer<DateTime> {
+	static void Print(const DateTime& value, StringWriter &writer) {
+		String format = FmtDateTime(value);
+		writer.Write(format.Data(), format.CodeunitsCount());
+	}
+};

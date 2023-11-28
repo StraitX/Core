@@ -22,3 +22,7 @@ DateTime DateTime::Now() {
 String FmtDate(const DateTime& date_time) {
     return Format("%-%-%", (int)date_time.Year, (int)date_time.Month, (int)date_time.Day);
 }
+
+String FmtDateTime(const DateTime& date_time) {
+    return Format("%-%-%:%:%:%", (int)date_time.Year, (int)date_time.Month, (int)date_time.Day, (int)date_time.Hours, (int)date_time.Minutes, (int)date_time.Seconds);
+}
