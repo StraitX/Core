@@ -2,13 +2,12 @@
 #define STRAITX_STRING_VIEW_HPP
 
 #include <string>
-#include "core/types.hpp"
 #include "core/unicode.hpp"
-#include "core/span.hpp"
 #include "core/move.hpp"
 #include "core/printer.hpp"
+#include "core/string_mixin.hpp"
 
-class StringView {
+class StringView: public StringMixin<StringView>{
 protected:
 	const char *m_String = nullptr;
 	size_t m_CodeunitsCount = 0;
@@ -55,55 +54,38 @@ public:
 		return m_String;
 	}
 
-	constexpr size_t Size()const{
-		return CodeunitsCount();
-	}
-
 	constexpr size_t CodeunitsCount()const{
 		return m_CodeunitsCount;
 	}
 
-	size_t CodepointsCount()const{
-		size_t counter = 0;
-		for(u32 ch: Unicode())
-			counter++;
-		return counter;
+	char operator[](size_t index)const{
+		SX_ASSERT(index < Size());
+		return Data()[index];
 	}
 
-	
-    UnicodeString Unicode()const {
-        return UnicodeString(Data(), Size());
-    }
-
-	char operator[](size_t size)const {
-		return Data()[size];
-	}
-
-	constexpr operator ConstSpan<char>()const{
-		return {Data(), Size()};
-	}
-
-	operator UnicodeString()const {
-		return Unicode();
-	}
-
-	const char *begin()const{
+	const char* begin()const {
 		return Data();
 	}
 
-	const char *end()const{
+	const char* end()const {
 		return Data() + Size();
 	}
-
-	static constexpr size_t StaticCodeunitsCount(const char* string) {
-		if(!string)return 0;
-
-		size_t counter = 0;
-		while (*string++) 
-			counter++;
-		return counter;
-	}
 };
+
+inline bool operator==(const StringView &left, const StringView &right) {
+	if(left.Size() != right.Size())
+		return false;
+	
+	for(size_t i = 0; i<left.Size(); i++)
+		if(left[i] != right[i])
+			return false;
+
+	return true;
+}
+
+inline bool operator!=(const StringView &left, const StringView &right) {
+	return !(left == right);
+}
 
 template<>
 struct Printer<StringView> {

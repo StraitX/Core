@@ -2,14 +2,10 @@
 #define STRAITX_STRING_HPP
 
 #include <string>
-#include "core/types.hpp"
-#include "core/move.hpp"
-#include "core/noncopyable.hpp"
 #include "core/string_view.hpp"
 #include "core/os/memory.hpp"
-#include "core/unicode.hpp"
 
-class String: public std::string{
+class String: public std::string, public StringMixin<String>{
 private:
     using ImplStringClass = std::string;
 public:
@@ -39,6 +35,10 @@ public:
 
     static String FromStdString(const ImplStringClass& string) {
         return String().Assign(string);
+    }
+
+    static String FromStdString(ImplStringClass&& string) {
+        return String().Assign(Move(string));
     }
 
     String(const char *string):
@@ -83,10 +83,6 @@ public:
         return {Data(), Size()};
     }
 
-    UnicodeString Unicode()const {
-        return UnicodeString(Data(), Size());
-    }
-
     void Resize(size_t size) {
         ImplStringClass::resize(size);
     }
@@ -111,53 +107,12 @@ public:
         return ImplStringClass::data();
     }
 
-    size_t Size()const {
-        return ImplStringClass::size();
-    }
-
-    bool IsEmpty()const {
-        return !Size();
-    }
-
     size_t CodeunitsCount()const {
-        return Size();
-    }
-
-    size_t CodepointsCount()const {
-        size_t counter = 0;
-        for (u32 ch : Unicode())
-            counter++;
-        return counter;
-    }
-
-    operator ConstSpan<char>()const {
-        return { Data(), Size() };
+        return ImplStringClass::size();
     }
 
     operator StringView()const {
         return View();
-    }
-
-    operator UnicodeString()const {
-        return Unicode();
-    }
-
-    size_t Count(char ch)const {
-        size_t count = 0;
-        for (char character : *(std::string*)this) {
-            if(character == ch)
-                count++; 
-        }
-        return count;
-    }
-
-    size_t Count(u32 ch)const {
-        size_t count = 0;
-        for (u32 character : *this) {
-            if(character == ch)
-                count++; 
-        }
-        return count;
     }
     
     //XXX: Do something about this
