@@ -49,6 +49,11 @@ public:
         List(ConstSpan<Type>(span.Pointer(), span.Size())) 
     {}
 
+    template <typename RangeType>
+    List(const RangeType &range){
+        Append(range);
+    }
+
     template <typename EntryType>
     List(std::initializer_list<EntryType> list){
         Reserve(list.size());
@@ -114,6 +119,13 @@ public:
         for (const auto& element : elements)
             Add(element);
     }
+    
+    //TODO: better checking later
+    template<typename RangeType>
+    void Append(const RangeType& range) {
+        for(const auto &e: range)
+            Add(e);
+    }
 
     void AddUnique(const Type &element){
         if(Contains(element))
@@ -122,10 +134,27 @@ public:
         Add(element);
     }
 
+    void AddUnique(Type &&element){
+        if(Contains(element))
+            return;
+
+        Add(Move(element));
+    }
+
     void RemoveLast(){
         SX_CORE_ASSERT(m_Size, "Can't remove last element from empty List");
 
         m_Elements[--m_Size].~Type();
+    }
+
+    void RemoveLast(size_t count){
+        SX_CORE_ASSERT(count <= Size(), "Can't remove more elements than in list");
+
+        if(count > Size())
+            count = Size();
+
+        for(size_t i = 0; i<count; i++)
+            RemoveLast();
     }
 
     void UnorderedRemove(size_t index){
