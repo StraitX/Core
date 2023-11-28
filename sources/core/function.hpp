@@ -20,20 +20,20 @@ private:
         ReturnType (Object::*ConstMethod)(ArgsType...)const;
     };
 
-    using ProxyFunction = ReturnType (*)(void *, CallableUnion &, ArgsType...);
+    using ProxyFunction = ReturnType (*)(void *, const CallableUnion &, ArgsType...);
 
-    static ReturnType FunctionProxy(void *, CallableUnion &callable, ArgsType...args){
+    static ReturnType FunctionProxy(void *, const CallableUnion &callable, ArgsType...args){
         return reinterpret_cast<Signature>(callable.Function)(Forward<ArgsType>(args)...);
     }
 
     template<typename ObjectType>
-    static ReturnType MethodProxy(void *obj, CallableUnion &callable, ArgsType...args){
+    static ReturnType MethodProxy(void *obj, const CallableUnion &callable, ArgsType...args){
         auto method = reinterpret_cast<ReturnType(ObjectType::*)(ArgsType...)>(callable.Method);
         return (reinterpret_cast<ObjectType*>(obj)->*method)(Forward<ArgsType>(args)...);
     }
 
     template<typename ObjectType>
-    static ReturnType ConstMethodProxy(void *obj, CallableUnion &callable, ArgsType...args){
+    static ReturnType ConstMethodProxy(void *obj, const CallableUnion &callable, ArgsType...args){
         auto method = reinterpret_cast<ReturnType(ObjectType::*)(ArgsType...)const>(callable.ConstMethod);
         return (reinterpret_cast<ObjectType*>(obj)->*method)(Forward<ArgsType>(args)...);
     }
@@ -104,13 +104,13 @@ public:
         return !(*this == other);
     }
 
-    ReturnType Call(ArgsType...args){
+    ReturnType Call(ArgsType...args)const{
         SX_CORE_ASSERT(m_Proxy, "Can't call empty function");
 
         return m_Proxy(m_ObjectPtr, m_Callable, Forward<ArgsType>(args)...);
     }
 
-    ReturnType operator()(ArgsType...args){
+    ReturnType operator()(ArgsType...args)const{
         return Call(Forward<ArgsType>(args)...);
     }
 
@@ -156,7 +156,7 @@ public:
         return IsBound();
     }
     //XXX: use optional for return value
-    void TryCall(ArgsType...args){
+    void TryCall(ArgsType...args)const{
         if(IsBound())
             (void)Call(Forward<ArgsType>(args)...);
     }

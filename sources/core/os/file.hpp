@@ -39,7 +39,7 @@ public:
 
     Result Open(StringView filename, Mode mode, bool create = true);
 
-    bool IsOpen();
+    bool IsOpen()const;
 
     void Close();
 
@@ -92,7 +92,7 @@ SX_INLINE File::File(StringView filename, Mode mode, bool create){
     (void)Open(filename, mode, create);
 }
 
-SX_INLINE bool File::IsOpen(){
+SX_INLINE bool File::IsOpen()const{
     return m_FD != InvalidFD;
 }
 
