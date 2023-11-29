@@ -5,9 +5,10 @@
 #include "core/types.hpp"
 #include "core/assert.hpp"
 #include "core/span.hpp"
+#include "core/mixins.hpp"
 
 template<typename Type, size_t SizeValue>
-class Array{
+class Array: public ArrayMixin<Array<Type, SizeValue>, Type>{
 private:
     template<typename StorageType, size_t StorageSizeValue>
     struct ArrayStorage{
@@ -43,25 +44,11 @@ public:
     constexpr Array &operator=(Array &&other) = default;
 
     const Type &operator[](size_t index)const{
-        SX_CORE_ASSERT(IsValidIndex(index), "Array: Index out of range");
-
-        return _Elements.Data()[index];
+        return this->At(index);
     }
 
     Type &operator[](size_t index){
-        return const_cast<Type&>(const_cast<const Array<Type, SizeValue>*>(this)->operator[](index));
-    }
-
-    operator Span<Type>(){
-        return {Data(), Size()};
-    }
-
-    operator ConstSpan<Type>()const{
-        return {Data(), Size()};
-    }
-
-    constexpr bool IsValidIndex(size_t index)const {
-        return index < Size();
+        return this->At(index);
     }
 
     constexpr size_t Size()const{
@@ -74,39 +61,6 @@ public:
 
     constexpr Type *Data(){
         return _Elements.Data();
-    }
-
-    Type &First(){
-        return operator[](0);
-    }
-
-    const Type &First()const{
-        return operator[](0);
-    }
-
-    Type &Last(){
-        return operator[](Size() - 1);
-    }
-
-    const Type &Last()const{
-        return operator[](Size() - 1);
-    }
-
-
-    constexpr ConstIterator begin()const{
-        return Data();
-    }
-
-    constexpr ConstIterator end()const{
-        return Data() + Size();
-    }
-
-    constexpr Iterator begin(){
-        return Data();
-    }
-
-    constexpr Iterator end(){
-        return Data() + Size();
     }
 };
 

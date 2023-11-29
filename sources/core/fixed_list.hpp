@@ -7,9 +7,10 @@
 #include "core/assert.hpp"
 #include "core/move.hpp"
 #include "core/span.hpp"
+#include "core/mixins.hpp"
 
 template<typename Type, size_t CapacityValue>
-class FixedList{
+class FixedList: public ListMixin<FixedList<Type, CapacityValue>, Type>{
     static_assert(!IsConst<Type>() && !IsVolatile<Type>(), "Type can't be cv-qualified");
 public:
     using Iterator = Type *;
@@ -65,85 +66,34 @@ public:
         Clear();
     }
 
-    void Add(const Type &element){
-        Emplace(element);
-    }
-
-    void Add(Type &&element){
-        Emplace(Move(element));
-    }
-
-    void RemoveLast(){
-        m_Elements[--m_Size].~Type();
-    }
-
-    void UnorderedRemove(size_t index){
-        SX_CORE_ASSERT(IsValidIndex(index), "Index is out of range");
-
-        m_Elements[index] = Move(Last());
-        RemoveLast();
-    }
-
-    void UnorderedRemove(const Type &type){
-        for(size_t i = 0; i<Size(); i++){
-            if(m_Elements[i] == type){
-                UnorderedRemove(i);
-                break;
-            }
-        }
-    }
-
     void Clear(){
         while(Size())
             RemoveLast();
     }
 
-    bool IsValidIndex(size_t index)const {
-        return index < m_Size;
-    }
-
-    Iterator Find(const Type &element){
-        return const_cast<Iterator>(const_cast<const FixedList<Type, CapacityValue>*>(this)->Find(element));
-    }
-
-    ConstIterator Find(const Type &element)const{
-        auto it = begin();
-        for(;it != end(); ++it){
-            if(*it == element)
-                return it;
-        }
-        return it;
-    }
-
-
     template<typename ...ArgsType>
     Type &Emplace(ArgsType&&...args){
         SX_CORE_ASSERT(m_Size < CapacityValue, "FixedList: Can't add an element, array is full");
 
-        return *new(&begin()[m_Size++])Type(Forward<ArgsType>(args)...);
+        return *new(&m_Elements[m_Size++])Type(Forward<ArgsType>(args)...);
     }
 
-    Type& At(size_t index) {
-        SX_CORE_ASSERT(IsValidIndex(index), "FixedList: Can't index more than FixedList::Size() elements");
-        return m_Elements[index];
-    }
-    const Type& At(size_t index)const{
-        SX_CORE_ASSERT(IsValidIndex(index), "FixedList: Can't index more than FixedList::Size() elements");
-        return m_Elements[index];
+    void RemoveLast() {
+        m_Elements[--m_Size].~Type();
     }
 
     Type &operator[](size_t index){
-        return At(index);
+        return this->At(index);
     }
 
     const Type &operator[](size_t index)const{
-        return At(index);
+        return this->At(index);
     }
 
     FixedList &operator=(const FixedList &other){
         Clear();
         for(auto &e: other)
-            Add(e);
+            this->Add(e);
         return *this;
     }
 
@@ -153,14 +103,6 @@ public:
             Emplace(Move(e)); // We assume that moved stuff does not required to be destroyed
         other.Clear();
         return *this;
-    }
-
-    operator Span<Type>(){
-        return {m_Elements.Data(), Size()};
-    }
-
-    operator ConstSpan<Type>()const{
-        return {m_Elements.Data(), Size()};
     }
 
     size_t Size()const{
@@ -177,38 +119,6 @@ public:
 
     const Type *Data()const{
         return m_Elements.Data();
-    }
-
-    Type &First(){
-        return At(0);
-    }
-
-    const Type &First()const{
-        return At(0);
-    }
-
-    Type &Last(){
-        return At(Size() - 1);
-    }
-
-    const Type &Last()const{
-        return At(Size() - 1);
-    }
-
-    Iterator begin(){
-        return Data();
-    }
-
-    Iterator end(){
-        return Data() + Size();
-    }
-
-    ConstIterator begin()const{
-        return Data();
-    }
-
-    ConstIterator end()const{
-        return Data() + Size();
     }
 };
 

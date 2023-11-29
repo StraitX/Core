@@ -9,18 +9,20 @@
 #include "core/allocators/allocator.hpp"
 #include "core/span.hpp"
 #include "core/algorithm.hpp"
+#include "core/mixins.hpp"
 #include <initializer_list>
 
 //TODO: 
 // [ ] Optimize for Types without copy or mouse ctors
 
 template<typename Type, typename GeneralAllocator = DefaultGeneralAllocator>
-class List: private GeneralAllocator{
+class List: public ListMixin<List<Type>, Type>, private GeneralAllocator{
 public:
     static_assert(!IsConst<Type>::Value && !IsVolatile<Type>::Value, "Type can't be const or volatile");
 
     using Iterator = Type *;
     using ConstIterator = const Type *;
+    using ElementType = Type;
 
     using value_type = Type;
     using allocator_type = GeneralAllocator;
@@ -38,20 +40,14 @@ private:
 public:
     List() = default;
 
-    List(ConstSpan<Type> span){
-        Reserve(span.Size());
-
-        for(const Type &element: span)
-            Add(element);
-    }
-
     List(Span<Type> span):
         List(ConstSpan<Type>(span.Pointer(), span.Size())) 
     {}
 
     template <typename RangeType>
     List(const RangeType &range){
-        Append(range);
+        for(const auto &e: range) 
+            Emplace(e);
     }
 
     template <typename EntryType>
@@ -92,14 +88,6 @@ public:
         return *this;
     }
 
-    void Add(const Type &element){
-        Emplace(element);
-    }
-
-    void Add(Type &&element){
-        Emplace(Move(element));
-    }
-
     template<typename...ArgsType>
     void Emplace(ArgsType&&...args){
         if(m_Size == m_Capacity)
@@ -107,95 +95,11 @@ public:
 
         new(&Data()[m_Size++]) Type(Forward<ArgsType>(args)...);
     }
-    
-    template<typename OtherGeneralAllocator>
-    void Append(const List<Type, OtherGeneralAllocator>& other) {
-        Append({ other.Data(), other.Size() });
-    }
-
-    void Append(ConstSpan<Type> elements) {
-        Reserve(Size() + elements.Size());
-
-        for (const auto& element : elements)
-            Add(element);
-    }
-    
-    //TODO: better checking later
-    template<typename RangeType>
-    void Append(const RangeType& range) {
-        for(const auto &e: range)
-            Add(e);
-    }
-
-    void AddUnique(const Type &element){
-        if(Contains(element))
-            return;
-
-        Add(element);
-    }
-
-    void AddUnique(Type &&element){
-        if(Contains(element))
-            return;
-
-        Add(Move(element));
-    }
 
     void RemoveLast(){
         SX_CORE_ASSERT(m_Size, "Can't remove last element from empty List");
 
         m_Elements[--m_Size].~Type();
-    }
-
-    void RemoveLast(size_t count){
-        SX_CORE_ASSERT(count <= Size(), "Can't remove more elements than in list");
-
-        if(count > Size())
-            count = Size();
-
-        for(size_t i = 0; i<count; i++)
-            RemoveLast();
-    }
-
-    void UnorderedRemove(size_t index){
-        SX_CORE_ASSERT(IsValidIndex(index), "Index is out of range");
-
-        At(index) = Move(Last());
-        RemoveLast();
-    }
-
-    bool UnorderedRemove(const Type &type){
-        ConstIterator it = Find(type);
-        if (it != end())
-            return (UnorderedRemove(it), true);
-        else
-            return false;
-    }
-
-    bool Contains(const Type& value)const {
-        return Find(value) != end();
-    }
-
-    ConstIterator Find(const Type& value)const{
-        ConstIterator it = begin();
-        for (; it != end(); ++it)
-            if (*it == value)
-                return it;
-        return it;
-    }
-    
-    template<typename Predicate>
-    ConstIterator FindByPredicate(Predicate predicate) {
-        ConstIterator it = begin();
-        for (; it != end(); ++it)
-            if (predicate(*it))
-                return it;
-        return it;
-    }
-
-    void UnorderedRemove(ConstIterator iterator){
-        SX_CORE_ASSERT(iterator >= begin() && iterator < end(), "iterator is out of range");
-        UnorderedRemove(iterator - begin());
     }
 
     void Reserve(size_t capacity){
@@ -211,32 +115,6 @@ public:
         GeneralAllocator::Free(m_Elements);
         m_Elements = new_elements;
         m_Capacity = capacity;
-    }
-    
-    template<
-        typename _Type = Type,
-        typename DelimiterType = _Type,
-        typename _ = decltype(
-            _Type(),
-            Declval<_Type>() += Declval<_Type>(),
-            Declval<_Type>() += Declval<DelimiterType>()
-        )
-    >
-    Type Join(DelimiterType delimiter) {
-        Type result();
-
-        for (size_t i = 0; i < Size(); i++) {
-            result += At(i);
-
-            if (i == Size() - 1) {
-                break;
-            }
-
-            result += delimiter;
-        }
-
-        return result;
-
     }
 
     void Swap(List<Type> &other) {
@@ -262,41 +140,12 @@ public:
         m_Capacity = 0;
     }
 
-    bool IsValidIndex(size_t index)const {
-        return index < m_Size;
-    }
-
-    Type &At(size_t index) {
-        SX_CORE_ASSERT(IsValidIndex(index), "Invalid Index");
-        return m_Elements[index];
-    }
-    const Type &At(size_t index)const{
-        SX_CORE_ASSERT(IsValidIndex(index), "Invalid Index");
-        return m_Elements[index];
-    }
-
     Type &operator[](size_t index){
-        return At(index);
+        return this->At(index);
     }
 
     const Type &operator[](size_t index)const{
-        return At(index);
-    }
-
-    Span<Type> AsSpan() {
-        return {Data(), Size()};
-    }
-
-    ConstSpan<Type> AsSpan()const{
-        return {Data(), Size()};
-    }
-
-    operator Span<Type>(){
-        return AsSpan();
-    }
-
-    operator ConstSpan<Type>()const{
-        return AsSpan();
+        return this->At(index);
     }
 
     Type *Data(){
@@ -315,37 +164,6 @@ public:
         return m_Capacity;
     }
 
-    Type &First(){
-        return At(0);
-    }
-
-    const Type &First()const{
-        return At(0);
-    }
-
-    Type &Last(){
-        return At(Size() - 1);
-    }
-
-    const Type &Last()const{
-        return At(Size() - 1);
-    }
-
-    Iterator begin(){
-        return Data();
-    }
-
-    Iterator end(){
-        return Data() + Size();
-    }
-
-    ConstIterator begin()const{
-        return Data();
-    }
-
-    ConstIterator end()const{
-        return Data() + Size();
-    }
 private:
     template<typename _Type = Type, typename = typename EnableIf<IsMoveConstructible<_Type>::Value>::Type>
     static void MoveElseCopyCtorImpl(Type *dst, Type *src, void *) {

@@ -5,7 +5,7 @@
 #include "core/unicode.hpp"
 #include "core/move.hpp"
 #include "core/printer.hpp"
-#include "core/string_mixin.hpp"
+#include "core/mixins.hpp"
 
 class StringView: public StringMixin<StringView>{
 protected:

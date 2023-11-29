@@ -60,6 +60,16 @@ struct RemoveReference<T&&>{
 };
 
 template <typename T>
+struct RemovePointer{
+    typedef T Type;
+};
+
+template <typename T>
+struct RemovePointer<T*>{
+    typedef T Type;
+};
+
+template <typename T>
 struct IsConst: IntegralConstant<bool, false>{};
 
 template <typename T>
